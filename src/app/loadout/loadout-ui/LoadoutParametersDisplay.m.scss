@@ -1,0 +1,62 @@
+@use 'sass:math';
+@use '../../variables.scss' as *;
+
+.loParams {
+  composes: flexColumn from '../../dim-ui/common.m.scss';
+  max-width: 100%;
+  gap: 4px;
+  align-items: center;
+}
+
+.loStats {
+  composes: flexRow from '../../dim-ui/common.m.scss';
+  align-items: center;
+  width: 100%;
+  gap: 8px;
+}
+
+.loStat {
+  composes: flexRow from '../../dim-ui/common.m.scss';
+  align-items: center;
+  font-weight: bold;
+  font-size: 11px;
+  gap: math.div(2, 11) * 1em;
+
+  img {
+    height: 14px;
+    width: 14px;
+  }
+}
+
+.loExotic {
+  --item-size: 17px;
+  width: fit-content;
+  span {
+    margin-left: 4px;
+  }
+}
+
+.loQuery {
+  overflow: hidden;
+  max-width: 100%;
+  max-height: 4em;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  width: fit-content;
+
+  :global(.app-icon) {
+    margin-left: 3px;
+    margin-right: 6px;
+  }
+}
+
+.constraintRange {
+  composes: flexRow from '../../dim-ui/common.m.scss';
+  align-items: center;
+  gap: math.div(2, 11) * 1em;
+  :global(.app-icon) {
+    font-size: 0.7em;
+  }
+}

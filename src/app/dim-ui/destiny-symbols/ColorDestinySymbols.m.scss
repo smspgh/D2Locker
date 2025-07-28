@@ -1,0 +1,25 @@
+@use '../../variables.scss' as *;
+
+.thermal {
+  color: $solar;
+}
+
+.stasis {
+  color: $stasis;
+}
+
+.arc {
+  color: $arc;
+}
+
+.void {
+  color: $void;
+}
+
+.strand {
+  color: $strand;
+}
+
+.prismatic {
+  color: $prismatic;
+}

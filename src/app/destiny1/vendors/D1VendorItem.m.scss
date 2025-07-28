@@ -1,0 +1,19 @@
+.notEnough {
+  color: #cc5c58;
+}
+
+.currency img {
+  height: 12px;
+  width: 12px;
+  margin-left: 4px;
+  vertical-align: text-bottom;
+}
+
+.cost {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-end;
+  font-size: 10px;
+  margin-top: 1px;
+}

@@ -1,0 +1,93 @@
+@use '../variables.scss' as *;
+
+.badge {
+  margin-top: -1 * $item-border-width;
+  background-color: var(--theme-item-polaroid);
+  color: var(--theme-item-polaroid-txt);
+  height: calc(#{$badge-height});
+  font-size: calc(#{$badge-font-size});
+  width: 100%;
+  display: flex;
+  text-align: right;
+  box-sizing: border-box;
+  padding: 0 2px;
+  white-space: pre;
+  align-items: center;
+  justify-content: flex-end;
+  line-height: calc(#{$badge-height});
+  overflow: hidden;
+}
+
+/* this width keeps the span aligned right (short text appears on right side of polaroid)
+     but if the text is too long, it will overflow(hidden) off the right side instead of left. */
+.badgeContent {
+  max-width: 100%;
+  max-height: 100%;
+}
+
+.engram {
+  width: fit-content;
+  border-radius: 2px;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 0 4px;
+}
+
+.shapedIcon {
+  width: calc((8 / 50) * var(--item-size));
+  height: calc((8 / 50) * var(--item-size));
+  margin-right: auto;
+  color: var(--theme-item-shaped-icon);
+  &.enhancedIcon {
+    width: calc((10 / 50) * var(--item-size));
+    height: calc((10 / 50) * var(--item-size));
+  }
+}
+
+.quality {
+  display: none;
+  margin-right: auto;
+
+  :global(.itemQuality) & {
+    display: block;
+    padding: 0 2px;
+    margin-left: -2px;
+  }
+
+  :global(.app-icon) {
+    filter: drop-shadow(0 0 1px rgb(0, 0, 0, 0.8));
+  }
+}
+
+.fullstack {
+  font-weight: bold;
+  color: var(--theme-item-polaroid-capped-txt);
+}
+
+.capped {
+  background-color: var(--theme-item-polaroid-capped);
+}
+
+.masterwork {
+  background-color: var(--theme-item-polaroid-masterwork);
+  color: var(--theme-item-polaroid-masterwork-txt);
+}
+
+.deepsight {
+  border-bottom: 1px solid $deepsight-border-color;
+  border-left: 1px solid $deepsight-border-color;
+  border-right: 1px solid $deepsight-border-color;
+  padding: 0 1px;
+}
+
+.energyCapacity {
+  font-weight: bold;
+  font-size: calc((9 / 50) * var(--item-size)); // 9px at default 50px item size
+  margin-right: auto;
+}
+
+/* some elements icons (arc / void / strand) don't show up well on polaroid white. we darken these. */
+.fixContrast {
+  filter: brightness(var(--theme-item-polaroid-element-adjust-brightness)) saturate(2.5);
+  background-color: transparent !important;
+}

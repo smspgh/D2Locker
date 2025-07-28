@@ -1,0 +1,97 @@
+.armorySearchControls {
+  padding: 16px;
+  border-bottom: 1px solid var(--theme-separator);
+  
+  h1 {
+    margin: 0 0 8px 0;
+    font-size: 24px;
+    color: var(--theme-text);
+  }
+  
+  p {
+    margin: 0 0 16px 0;
+    color: var(--theme-text-muted);
+    font-size: 14px;
+    line-height: 1.4;
+  }
+  
+  .resultsCount {
+    font-size: 12px;
+    color: var(--theme-text-muted);
+    font-style: italic;
+  }
+}
+
+.armorySearchResults {
+  padding: 16px;
+  
+  .weaponTypeSection {
+    margin-bottom: 24px;
+    
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+  
+  .noResults {
+    text-align: center;
+    color: var(--theme-text-muted);
+    font-style: italic;
+    padding: 48px 16px;
+    font-size: 16px;
+  }
+}
+
+// Enhance the existing item grid for armory search
+:global(.armory-search-results) {
+  .item-grid {
+    .item {
+      position: relative;
+      
+      // Add visual indicator for items not owned
+      &:not(.owned)::after {
+        content: '';
+        position: absolute;
+        top: 2px;
+        right: 2px;
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--theme-accent);
+        border: 1px solid var(--theme-background);
+      }
+      
+      // Slightly dim items not owned
+      &:not(.owned) {
+        opacity: 0.85;
+      }
+      
+      &.owned {
+        box-shadow: inset 0 0 0 2px var(--theme-accent-secondary);
+      }
+    }
+  }
+}
+
+.searchHelp {
+  margin-bottom: 16px;
+  font-size: 13px;
+  color: var(--theme-text-muted);
+  line-height: 1.6;
+  
+  strong {
+    color: var(--theme-text);
+    display: block;
+    margin-bottom: 4px;
+  }
+  
+  .helpExample {
+    display: inline-block;
+    background: var(--theme-surface-2);
+    padding: 2px 6px;
+    border-radius: 3px;
+    margin: 0 4px;
+    font-family: monospace;
+    font-size: 12px;
+  }
+}

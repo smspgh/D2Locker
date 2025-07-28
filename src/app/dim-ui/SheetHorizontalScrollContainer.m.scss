@@ -1,0 +1,10 @@
+.horizontalScrollContainer {
+  flex: 1;
+  white-space: nowrap;
+  overflow: auto hidden;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  contain: content;
+  touch-action: none;
+}

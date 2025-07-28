@@ -1,0 +1,109 @@
+@use '../../variables.scss' as *;
+
+// TODO: Dedupe with LoadoutItemCategorySection
+
+.itemCategory {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--item-margin);
+  flex: 1;
+
+  :global(.stat-row) {
+    justify-content: space-between;
+  }
+
+  :global(.stat-bars) {
+    margin-top: 0;
+  }
+}
+
+.itemsInCategory {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, var(--item-size));
+  gap: var(--item-margin);
+  width: 100%;
+}
+
+.itemBucket {
+  display: flex;
+  flex-direction: column;
+  width: var(--item-size);
+  gap: var(--item-margin);
+}
+
+.items {
+  display: grid;
+  gap: 2px;
+  grid-template-columns: 1fr;
+  min-height: unset !important;
+  justify-content: center;
+}
+
+.equipped {
+  composes: sub-bucket from global;
+  width: 100%;
+  padding: 0;
+}
+
+.unequipped {
+  --item-icon-size: calc(var(--item-size) - 6px);
+  composes: sub-bucket from global;
+  width: 100%;
+  padding: 0;
+  gap: 4px;
+  grid-template-columns: var(--item-icon-size);
+  > * {
+    --item-size: var(--item-icon-size);
+  }
+}
+
+@mixin items-width($numItems) {
+  width: calc(#{$numItems} * var(--item-size) + #{$numItems - 1} * var(--item-margin));
+}
+
+.categoryWeapons {
+  @include items-width(3);
+}
+.categoryArmor {
+  @include items-width(5);
+}
+.categoryGeneral {
+  // 2x2 grid
+  @include items-width(2);
+
+  @include phone-portrait {
+    // 4 in a line
+    @include items-width(4);
+  }
+}
+
+.missingItem {
+  opacity: 0.3;
+  height: calc(var(--item-size) + #{$badge-height} - #{$item-border-width});
+}
+
+.buttons {
+  display: flex;
+  flex-flow: row wrap;
+  gap: 4px;
+  justify-content: center;
+}
+
+.addButton {
+  composes: resetButton from '../../dim-ui/common.m.scss';
+  composes: pullItemButton from '../../inventory-page/StoreBucket.m.scss';
+  color: currentColor;
+  width: 100%;
+  padding: 0 0 4px 0;
+}
+
+.canDrop {
+  filter: invert(20%);
+  background-color: rgb(255, 255, 255, 0.2);
+}
+
+.isOver {
+  filter: invert(40%);
+  background-color: rgb(255, 255, 255, 0.4);
+}

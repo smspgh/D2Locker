@@ -1,0 +1,17 @@
+@use '../variables.scss' as *;
+
+.shapedIcon {
+  vertical-align: middle;
+  margin-right: 0.5em;
+  margin-bottom: 4px;
+  height: 12px;
+  width: 12px;
+  color: $shaped;
+}
+
+.seasonalExpiration {
+  color: rgb(218, 149, 45);
+  :global(.app-icon) {
+    margin-right: 4px;
+  }
+}

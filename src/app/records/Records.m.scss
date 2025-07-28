@@ -1,0 +1,15 @@
+@use '../variables' as *;
+
+.page {
+  user-select: text;
+}
+
+.presentationNodeOptions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  @include phone-portrait {
+    padding: 8px 10px;
+  }
+}

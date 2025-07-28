@@ -1,0 +1,56 @@
+<svg enable-background="new 0 0 921 921" viewBox="0 0 921 921" xmlns="http://www.w3.org/2000/svg">
+<defs>
+  <!-- Gradient for exotic gold -->
+  <linearGradient id="exoticGold" x1="0%" y1="0%" x2="100%" y2="100%">
+    <stop offset="0%" style="stop-color:#FFD700;stop-opacity:1" />
+    <stop offset="50%" style="stop-color:#FFA500;stop-opacity:1" />
+    <stop offset="100%" style="stop-color:#FF8C00;stop-opacity:1" />
+  </linearGradient>
+  
+  <!-- Gradient for legendary purple -->
+  <linearGradient id="legendaryPurple" x1="0%" y1="0%" x2="100%" y2="100%">
+    <stop offset="0%" style="stop-color:#9966CC;stop-opacity:1" />
+    <stop offset="50%" style="stop-color:#7B68EE;stop-opacity:1" />
+    <stop offset="100%" style="stop-color:#6A5ACD;stop-opacity:1" />
+  </linearGradient>
+</defs>
+
+<g fill="#f37321">
+  <!-- Main locker body (skinnier) -->
+  <rect x="310" y="150" width="300" height="620" rx="20" ry="20"/>
+  
+  <!-- Door inset -->
+  <rect x="330" y="180" width="260" height="560" fill="#2a2a2a" opacity="0.3"/>
+  
+  <!-- Ventilation slots (transparent) -->
+  <rect x="350" y="220" width="220" height="8" rx="4" ry="4" fill="none" stroke="#f37321" stroke-width="2"/>
+  <rect x="350" y="240" width="220" height="8" rx="4" ry="4" fill="none" stroke="#f37321" stroke-width="2"/>
+  <rect x="350" y="260" width="220" height="8" rx="4" ry="4" fill="none" stroke="#f37321" stroke-width="2"/>
+  <rect x="350" y="280" width="220" height="8" rx="4" ry="4" fill="none" stroke="#f37321" stroke-width="2"/>
+  
+  <!-- Handle window (transparent) -->
+  <rect x="520" y="420" width="60" height="20" rx="10" ry="10" fill="none" stroke="url(#legendaryPurple)" stroke-width="3"/>
+  
+  <!-- Handle mount (transparent) -->
+  <rect x="530" y="400" width="40" height="60" rx="8" ry="8" fill="none" stroke="url(#legendaryPurple)" stroke-width="3"/>
+  
+  <!-- Lock window (transparent) -->
+  <circle cx="550" cy="500" r="25" fill="none" stroke="url(#exoticGold)" stroke-width="3"/>
+  <circle cx="550" cy="500" r="15" fill="none" stroke="url(#exoticGold)" stroke-width="2"/>
+  <circle cx="550" cy="500" r="8" fill="url(#exoticGold)"/>
+  
+  <!-- Lock keyhole -->
+  <rect x="548" y="495" width="4" height="10" rx="2" ry="2" fill="#2a2a2a"/>
+  
+  <!-- Door edge -->
+  <rect x="580" y="180" width="6" height="560"/>
+  
+  <!-- Hinge indicators -->
+  <rect x="320" y="200" width="15" height="30" rx="7" ry="7"/>
+  <rect x="320" y="400" width="15" height="30" rx="7" ry="7"/>
+  <rect x="320" y="600" width="15" height="30" rx="7" ry="7"/>
+  
+  <!-- Exotic glow effect around lock (transparent) -->
+  <circle cx="550" cy="500" r="30" fill="url(#exoticGold)" opacity="0.1"/>
+</g>
+</svg>

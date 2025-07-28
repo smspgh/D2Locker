@@ -1,0 +1,33 @@
+@use '../../variables.scss' as *;
+
+.content {
+  display: flex;
+  flex-direction: column;
+  row-gap: 8px;
+  padding: 10px;
+}
+
+.header {
+  margin: 0;
+}
+
+.slots {
+  display: flex;
+  flex-flow: row wrap;
+  gap: 4px;
+  margin-bottom: 8px;
+}
+
+.emptySlot {
+  display: block;
+  height: 48px;
+  width: 48px;
+}
+
+.slotNum {
+  position: absolute;
+  font-weight: bold;
+  bottom: 3px;
+  right: 7px;
+  font-size: 14px;
+}

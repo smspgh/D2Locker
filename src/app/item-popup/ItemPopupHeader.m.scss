@@ -1,0 +1,152 @@
+@use '../variables.scss' as *;
+@use 'sass:math';
+
+.header {
+  composes: resetButton from 'app/dim-ui/common.m.scss';
+  display: block;
+  text-align: left;
+  width: 100%;
+  font-size: 15px;
+  line-height: 17px;
+  letter-spacing: -0.02em;
+  padding: 10px;
+
+  background-color: #555;
+  color: #eee;
+
+  &:has(.iconOverlay) {
+    padding-right: 20px;
+  }
+}
+
+.armory {
+  @include interactive($hover: true, $focus: true) {
+    outline: none;
+    cursor: pointer;
+    h1 {
+      text-decoration: underline;
+    }
+  }
+}
+
+.title {
+  font-size: 21px !important;
+  line-height: 24px;
+  text-decoration: none;
+  margin: 0 !important;
+  padding: 0;
+
+  @include destiny-header;
+
+  // Prevent the title running into the sheet close button
+  @include phone-portrait {
+    margin: 0 32px 0 0 !important;
+  }
+}
+
+.subtitle {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 4px;
+}
+
+.type,
+.details {
+  display: flex;
+  align-self: flex-end;
+  align-items: center;
+}
+
+.type {
+  flex: 1;
+}
+
+.elementIcon {
+  height: 16px;
+  width: 16px;
+}
+
+.rare,
+.common,
+.exotic {
+  .elementIcon {
+    filter: drop-shadow(0 0 1px #222) drop-shadow(0 0 0 #222);
+  }
+}
+
+.itemType {
+  opacity: 0.7;
+}
+
+.power {
+  margin: 0 4px 0 2px;
+}
+
+.masterwork {
+  background-image: url('../../images/masterworkHeader.png');
+  background-repeat: repeat-x;
+  background-size: cover;
+  background-position: top center;
+  &.exotic {
+    background-image: url('../../images/exoticMasterworkHeader.png');
+  }
+}
+
+.common {
+  background-color: $common;
+}
+
+.common,
+.exotic {
+  color: #222;
+  /* stylelint-disable-next-line no-descending-specificity */
+  a {
+    color: #222;
+  }
+}
+
+.uncommon {
+  background-color: $uncommon;
+}
+
+.rare {
+  background-color: $rare;
+}
+
+.pursuit {
+  background-color: #333;
+  color: #eee;
+  /* stylelint-disable-next-line no-descending-specificity */
+  a {
+    color: #eee;
+  }
+}
+
+.legendary {
+  background-color: $legendary;
+}
+
+.exotic {
+  background-color: $exotic;
+  .itemType {
+    opacity: 0.9;
+  }
+}
+
+.iconOverlay {
+  $scale: math.div(65, 92);
+  composes: flexColumn from '../dim-ui/common.m.scss';
+  position: absolute;
+  box-sizing: border-box;
+  align-items: center;
+  top: 0;
+  right: 0;
+  width: 24px * $scale;
+  height: 96px * $scale;
+  background-size: cover;
+  background-position: -2px * $scale -2px * $scale;
+  background-repeat: no-repeat;
+  pointer-events: none;
+  padding-top: 28px * $scale;
+  font-size: 12px;
+}

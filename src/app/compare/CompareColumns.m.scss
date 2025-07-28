@@ -1,0 +1,89 @@
+@use '../variables.scss' as *;
+
+.name {
+  padding-top: 2px;
+  padding-bottom: 2px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+
+  // Add the magnifying glass icons to items that can be clicked to find them
+  &:global(.compare-findable) {
+    cursor: pointer;
+    &::after {
+      content: '\f002';
+      // Copied from .fas classes:
+      /* stylelint-disable-next-line font-family-no-missing-generic-family-keyword */
+      font-family: 'Font Awesome 5 Free';
+      font-weight: 900;
+      -moz-osx-font-smoothing: grayscale;
+      -webkit-font-smoothing: antialiased;
+      display: inline-block;
+      font-style: normal;
+      font-variant: normal;
+      text-rendering: auto;
+      line-height: 1;
+      font-size: 8px;
+      margin-left: 4px;
+      margin-right: 0;
+      vertical-align: initial;
+    }
+  }
+}
+
+.initialItem {
+  color: var(--theme-accent-primary);
+  font-weight: bold;
+}
+
+.energy {
+  composes: flexRow from '../dim-ui/common.m.scss';
+  align-items: center;
+}
+
+.stat {
+  // the goal width is 64px at normal item tile size (50px)
+  // but allow the stat bars to shrink to account for bigger tiles,
+  // so that this doesn't blow out the overall compare width
+  max-width: calc(50px + 64px + 4px - var(--item-size));
+}
+
+.noWrap {
+  white-space: nowrap;
+}
+
+.archetype {
+  --item-size-mod: calc(24 / 50 * var(--item-size));
+  composes: noWrap;
+  height: var(--item-size-mod) !important;
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+// Perks in the perk/mod columns
+
+.perks {
+  --mod-size: calc(24 / 50 * var(--item-size));
+  padding-top: 4px;
+  padding-bottom: 4px;
+
+  @include phone-portrait {
+    --mod-size: 26px;
+  }
+}
+
+.weaponPerksHeader {
+  align-items: flex-start !important;
+}
+
+// Make room for the item image
+.imageRoom {
+  padding-right: calc(var(--item-size) + 16px) !important;
+}
+
+.archetypeRow {
+  --archetype-size: 22px !important;
+  composes: flexRow from '../dim-ui/common.m.scss';
+  align-items: center;
+  gap: 2px;
+}

@@ -1,0 +1,46 @@
+@use '../variables.scss' as *;
+
+.trayContainer {
+  position: fixed;
+  right: 0;
+  height: calc(var(--viewport-height) - var(--header-height));
+  z-index: 10;
+  box-sizing: border-box;
+  width: 0;
+
+  @include below-header;
+}
+
+.expanded {
+  transform: translate(calc(-1 * var(--sidebar-size)), 0);
+}
+
+.sideTray {
+  background-color: var(--theme-item-feed-bg);
+  width: var(--sidebar-size);
+  height: 100%;
+  box-sizing: border-box;
+}
+
+.trayButton {
+  composes: resetButton from '../dim-ui/common.m.scss';
+  transform: rotate(-90deg);
+  background: black;
+  position: absolute;
+  right: 100%;
+  color: var(--theme-text);
+  padding: 8px;
+  top: 25px;
+  transform-origin: bottom right;
+  white-space: nowrap;
+  font-size: 16px;
+
+  @include interactive($hover: true) {
+    color: var(--theme-text-invert);
+    background-color: var(--theme-accent-primary);
+  }
+
+  :global(.app-icon) {
+    margin-left: 2px;
+  }
+}

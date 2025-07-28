@@ -1,0 +1,21 @@
+@use '../variables.scss' as *;
+
+.button {
+  margin: 10px auto 0;
+  padding: 6px;
+  border-radius: 4px;
+  text-align: center;
+  color: var(--theme-text);
+  background-color: #222;
+  display: block;
+  width: 30%;
+  cursor: pointer;
+
+  @include interactive($hover: true) {
+    background-color: var(--theme-accent-secondary);
+    color: #222;
+  }
+  & > svg {
+    margin-right: 0.5em;
+  }
+}

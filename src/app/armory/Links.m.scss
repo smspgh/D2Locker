@@ -1,0 +1,33 @@
+@use '../variables' as *;
+
+.links {
+  display: flex;
+  flex-direction: column;
+  float: right;
+  margin: 0 0 0 32px;
+  padding: 0;
+  list-style: none;
+  gap: 4px;
+
+  @include phone-portrait {
+    margin-right: 38px;
+  }
+
+  @media (max-width: 675px) {
+    margin: 0 0 8px 0;
+    float: none;
+    flex-flow: row wrap;
+    justify-content: space-between;
+    > li {
+      padding: 8px;
+    }
+  }
+
+  li {
+    white-space: nowrap;
+    img {
+      vertical-align: text-bottom;
+      margin-right: 0.2em;
+    }
+  }
+}

@@ -1,0 +1,67 @@
+@use '../variables.scss' as *;
+
+.tile {
+  cursor: pointer;
+  height: 54px;
+  width: 123px;
+}
+
+.ownershipIcon {
+  width: calc(var(--item-size) / 4) !important;
+  height: calc(var(--item-size) / 4) !important;
+  font-size: calc(var(--item-size) / 6) !important;
+  vertical-align: -0.125em;
+  border-radius: 50%;
+  padding: 3px;
+  box-sizing: border-box;
+  position: absolute;
+  top: calc(#{$item-border-width} - 4px - var(--item-size) / 4 + var(--item-size));
+  right: $item-border-width + 2px;
+  box-shadow: 0 0 2px rgb(0, 0, 0, 0.8);
+  display: flex;
+  justify-content: center;
+}
+
+.acquiredIcon {
+  composes: ownershipIcon;
+  background: #3c94ff;
+}
+
+.ownedIcon {
+  composes: ownershipIcon;
+  background: $acquiredGreen;
+}
+
+.lockedIcon {
+  composes: ownershipIcon;
+  background: grey;
+  align-items: center;
+}
+
+.vendorItem {
+  composes: flexColumn from '../dim-ui/common.m.scss';
+  align-items: center;
+  position: relative;
+  width: min-content;
+  text-align: center;
+
+  :global(.item) {
+    cursor: pointer;
+  }
+
+  :global(.item-img) {
+    object-fit: cover;
+  }
+}
+
+.unavailable {
+  :global(.item) {
+    opacity: 0.3;
+  }
+}
+
+.cost {
+  font-size: 10px;
+  margin-top: 1px;
+  text-align: center;
+}

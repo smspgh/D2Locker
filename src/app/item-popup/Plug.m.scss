@@ -1,0 +1,93 @@
+@use '../variables.scss' as *;
+
+.perkCircle {
+  display: block;
+  -webkit-touch-callout: none;
+  height: var(--item-size);
+  width: var(--item-size);
+  border: none;
+
+  @include interactive($hover: true) {
+    .perkOutline {
+      stroke: var(--theme-accent-primary);
+      stroke-width: 6px;
+    }
+  }
+}
+
+.plug {
+  --item-size-adjusted: calc(32 / 50 * var(--item-size));
+  position: relative; // to position the thumbs-up correctly
+  display: flex;
+  flex-direction: row;
+
+  @include phone-portrait {
+    --item-size-adjusted: 32px;
+  }
+
+  // Mods and intrinsic perks are all images, while perks are SVGs.
+  // You can adjust the size of mods/intrinsics by setting --mod-size.
+  img {
+    --item-size: var(--mod-size, var(--item-size-adjusted));
+  }
+  .perkCircle {
+    --item-size: var(--perk-size, var(--item-size-adjusted));
+  }
+}
+
+// In game, mods have a border around them that isn't part of the icon
+.mod {
+  :global(.item-img) {
+    border-color: var(--theme-item-socket-border);
+  }
+}
+
+// In game, mods have a border around them that isn't part of the icon
+.masterwork {
+  :global(.item-img) {
+    border-color: var(--theme-item-polaroid-masterwork) !important;
+  }
+}
+
+.none {
+  fill: transparent;
+}
+
+// Another plug was selected by the user
+.notSelected {
+  fill: #4887ba80;
+}
+
+.plugged {
+  fill: #4887ba;
+}
+// This has been selected by the user but isn't the original plugged item
+.selected {
+  fill: var(--theme-accent-primary);
+}
+
+.cannotRoll {
+  stroke-dasharray: 12 6;
+  stroke-width: 3;
+  stroke-dashoffset: -4;
+}
+
+.disabled {
+  opacity: 0.4;
+}
+
+.selectable {
+  cursor: pointer;
+}
+
+.hasMenu {
+  cursor: pointer;
+
+  @include interactive($hover: true, $focus: true) {
+    outline: 1px solid var(--theme-accent-primary);
+  }
+
+  :global(.item-img) {
+    border-color: var(--theme-item-socket-border);
+  }
+}

@@ -1,0 +1,7 @@
+.canDrop {
+  outline: 1px solid white;
+  outline-offset: 4px;
+  &.over {
+    outline: 1px solid var(--theme-accent-primary);
+  }
+}

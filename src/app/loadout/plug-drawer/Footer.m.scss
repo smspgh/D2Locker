@@ -1,0 +1,22 @@
+@use '../../variables.scss' as *;
+
+.footer {
+  composes: flexRow from '../../dim-ui/common.m.scss';
+  align-items: center;
+}
+
+.submitButton {
+  composes: dim-button from global;
+  padding-right: 16px;
+  padding-left: 16px;
+  margin-right: 8px;
+}
+
+.selectedPlugs {
+  --item-size: 32px;
+  gap: 4px;
+
+  > * {
+    flex-shrink: 0;
+  }
+}

@@ -1,0 +1,169 @@
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// Move Popup
+//
+// The popup displaying info and actions for an single item.
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+@use '../variables.scss' as *;
+
+.arrow {
+  width: $theme-tooltip-arrow-size;
+  height: $theme-tooltip-arrow-size;
+  border-style: solid;
+  position: absolute;
+  border-width: $theme-tooltip-arrow-size;
+  border-color: transparent;
+}
+
+.desktopPopupRoot {
+  pointer-events: none;
+}
+
+.movePopupDialog {
+  --background-color: rgb(0, 0, 0, 1); // Fallback background
+
+  &.exotic {
+    --background-color: rgb(22, 18, 4, 1);
+  }
+  &.legendary {
+    --background-color: rgb(14, 8, 17, 1);
+  }
+  &.rare {
+    --background-color: rgb(10, 15, 21, 1);
+  }
+  &.uncommon {
+    --background-color: rgb(8, 17, 9, 1);
+  }
+  &.common {
+    --background-color: rgb(18, 18, 18, 1);
+  }
+
+  &[data-popper-placement^='top'] .arrow {
+    width: 0;
+    height: 0;
+    border-bottom-width: 0;
+    border-top-color: var(--theme-item-popup-arrow);
+    bottom: calc(-1 * $theme-tooltip-arrow-size);
+  }
+
+  &[data-popper-placement^='bottom'] .arrow {
+    width: 0;
+    height: 0;
+    border-top-width: 0;
+    border-bottom-color: var(--theme-item-popup-arrow);
+    top: calc(-1 * $theme-tooltip-arrow-size);
+
+    &.exotic {
+      border-bottom-color: $exotic;
+    }
+    &.legendary {
+      border-bottom-color: $legendary;
+    }
+    &.rare {
+      border-bottom-color: $rare;
+    }
+    &.uncommon {
+      border-bottom-color: $uncommon;
+    }
+    &.common {
+      border-bottom-color: $common;
+    }
+  }
+  &[data-popper-placement^='right'] .arrow {
+    width: 0;
+    height: 0;
+    border-left-width: 0;
+    border-right-color: var(--theme-item-popup-arrow);
+    left: calc(-1 * $theme-tooltip-arrow-size);
+  }
+  &[data-popper-placement^='left'] .arrow {
+    width: 0;
+    height: 0;
+    border-right-width: 0;
+    border-left-color: var(--theme-item-popup-arrow);
+    right: calc(-1 * $theme-tooltip-arrow-size);
+  }
+  textarea {
+    resize: vertical;
+  }
+}
+
+.popupBackground {
+  background-color: var(--background-color);
+  contain: content;
+  box-shadow:
+    0 0 0 1px var(--theme-item-popup-border),
+    var(--theme-drop-shadow);
+
+  @include phone-portrait {
+    box-shadow: none;
+  }
+}
+
+.desktopPopup {
+  display: flex;
+  flex-direction: row;
+  .movePopupDialog[data-popper-placement^='right'] & {
+    flex-direction: row-reverse;
+  }
+}
+
+.desktopPopupBody {
+  width: 320px;
+  display: block;
+  pointer-events: auto;
+}
+
+.desktopActions {
+  display: block;
+  > div {
+    pointer-events: auto;
+  }
+}
+
+.mobileItemActions {
+  padding: 5px 0;
+  display: flex;
+  justify-content: space-between;
+  background: #111;
+  border-bottom: 1px solid #333;
+  border-top: 1px solid #333;
+  &:empty {
+    display: none;
+  }
+}
+
+.mobileMoveLocations {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.sheetHeader {
+  padding: 0;
+  border: none;
+}
+
+.sheetClose {
+  padding: 10px;
+  color: black;
+  opacity: 0.7;
+
+  .uncommon &,
+  .rare &,
+  .legendary & {
+    color: var(--theme-text);
+  }
+}
+
+.failureReason {
+  color: var(--theme-text);
+  background-color: #923c3c;
+  margin: 0;
+  padding: 2px 8px;
+}
+
+.header {
+  display: flex;
+  flex-flow: column nowrap;
+}

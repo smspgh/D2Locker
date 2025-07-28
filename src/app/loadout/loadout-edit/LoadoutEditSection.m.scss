@@ -1,0 +1,37 @@
+@use '../../variables.scss' as *;
+
+.header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-bottom: 8px;
+  margin-right: -8px;
+
+  > .title {
+    display: flex;
+    flex-direction: row;
+    align-items: baseline;
+    flex: 1;
+
+    > h3 {
+      margin: 0;
+      padding: 0;
+      margin-right: 4px;
+    }
+  }
+
+  :global(.app-icon) {
+    font-size: 14px;
+  }
+}
+
+.clear {
+  composes: resetButton from 'app/dim-ui/common.m.scss';
+  color: #999;
+  padding: 4px;
+  transition: all 150ms ease-out;
+
+  @include interactive($hover: true, $focus: true, $active: true) {
+    color: var(--theme-text);
+  }
+}

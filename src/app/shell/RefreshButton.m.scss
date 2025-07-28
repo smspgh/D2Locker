@@ -1,0 +1,55 @@
+@use 'sass:color';
+@use '../variables' as *;
+@use '../dim-ui/tooltip-mixins' as *;
+
+.refreshButton {
+  composes: resetButton from '../dim-ui/common.m.scss';
+  position: relative;
+}
+
+.userIsPlaying {
+  background-color: #3fe700;
+  // Just for fun - on Safari, on wide color displays, this is a very bright green
+  background-color: lch(81% 132 132);
+  height: 6px;
+  width: 6px;
+  border-radius: 50%;
+  position: absolute;
+  bottom: -4px;
+  right: -4px;
+}
+
+.outOfDate {
+  color: $red;
+  background-color: #1b1b2d;
+  padding: 2px;
+  border-radius: 50%;
+  position: absolute;
+  bottom: -8px;
+  right: -8px;
+  :global(.app-icon) {
+    font-size: 10px !important;
+    display: block;
+  }
+}
+
+.errorTooltip {
+  max-width: 800px;
+
+  @include tooltip-background-color(color.scale($red, $lightness: -90%));
+  @include tooltip-border-color($red);
+  @include tooltip-ribbon-color($red);
+
+  @include phone-portrait {
+    max-width: 95%;
+  }
+}
+
+.errorDetails {
+  h2 {
+    margin: 0 0 8px 0;
+  }
+  p {
+    margin-bottom: 1em;
+  }
+}

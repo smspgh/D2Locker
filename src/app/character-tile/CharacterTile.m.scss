@@ -1,0 +1,221 @@
+@use '../variables.scss' as *;
+
+// Shared styles between vault and character tile
+.tileCommon {
+  flex: 1;
+  position: relative;
+  height: $emblem-height;
+  max-width: $emblem-width;
+  text-align: left;
+  white-space: nowrap;
+  box-sizing: border-box;
+
+  // Set the text off from the background
+  text-shadow:
+    1px 1px 1px rgb(0, 0, 0, 0.5),
+    0 0 10px rgb(0, 0, 0, 0.5);
+  :global(.app-icon) {
+    filter: drop-shadow(1px 1px 1px rgb(0, 0, 0, 0.5)) drop-shadow(0 0 10px rgb(0, 0, 0, 0.5));
+  }
+}
+
+.characterTile {
+  composes: tileCommon;
+  display: grid;
+  grid-template-areas:
+    'emblem class power'
+    'emblem bottom bottom';
+  grid-template-columns: 36px 1fr min-content;
+  grid-template-rows: min-content 1fr;
+  gap: 0 6px;
+  padding: 0 6px;
+
+  // Use the emblem as a background
+  background-size: $emblem-width $emblem-height;
+  background-position: left center;
+  background-repeat: no-repeat;
+
+  @include phone-portrait {
+    grid-template-areas:
+      'emblem class power'
+      'emblem bottom maxTotalPower';
+  }
+}
+
+.vaultTile {
+  composes: tileCommon;
+  display: grid;
+  grid-template-areas: 'emblem class power' !important;
+  grid-template-columns: 46px 1fr min-content;
+  grid-template-rows: 1fr;
+  align-items: center;
+  box-sizing: border-box;
+  gap: 0 6px;
+  padding: 0 6px;
+  // The vault needs a little border to stand out against some backgrounds
+  border: 1px solid rgb(0, 0, 0, 0.3);
+  border-right: none;
+  background-size: cover;
+  background-repeat: no-repeat;
+
+  background-color: rgb(49, 50, 51);
+  background-image: url('images/vault-background.svg');
+
+  @include phone-portrait {
+    grid-template-areas: 'emblem class vaultCapacity' !important;
+  }
+}
+
+// The "current character" triangle
+.current::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  border-top: 13px solid var(--theme-accent-primary);
+  border-right: 13px solid transparent;
+}
+
+.bigText {
+  font-size: 18px;
+  margin-top: 2px;
+}
+
+.smallText {
+  font-size: 12px;
+  line-height: 10px;
+}
+
+// Either the equipped title, or the character race
+.bottom {
+  composes: smallText;
+  grid-area: bottom;
+  min-width: 0; // prevents expanding beyond the grid cell with long contents
+  display: flex;
+  align-items: stretch;
+}
+
+// The emblem is only shown for D1 and the vault - D2 bakes it into the
+// background
+.emblem {
+  grid-area: emblem;
+  place-self: center;
+  width: 32px;
+  height: 32px;
+}
+
+.vaultEmblem {
+  grid-area: emblem;
+  place-self: center;
+  height: 40px;
+  width: 40px;
+}
+
+.vaultName {
+  font-size: 16px;
+  grid-area: class;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  color: white;
+  min-width: 0; // prevents expanding beyond the grid cell with long contents
+
+  @include phone-portrait {
+    font-size: 16px;
+  }
+}
+
+// The class name (Hunter, Titan, etc)
+.class {
+  composes: bigText;
+  grid-area: class;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  color: white;
+  min-width: 0; // prevents expanding beyond the grid cell with long contents
+}
+
+// Current power level
+.powerLevel {
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif, 'Destiny Symbols';
+  font-weight: 500;
+  color: $power;
+
+  // The power icon
+  :global(.app-icon) {
+    vertical-align: 70%;
+    font-size: 40%;
+    margin-right: 2px;
+  }
+}
+
+.bigPowerLevel {
+  composes: bigText;
+  grid-area: power;
+
+  .vaultTile & {
+    font-size: 16px;
+  }
+}
+
+.smallPowerLevel {
+  text-align: right;
+
+  :global(.app-icon) {
+    font-size: 80%;
+  }
+}
+
+// The max power shown on mobile under the current power
+.maxTotalPower {
+  composes: smallText;
+  grid-area: maxTotalPower;
+  justify-self: self-end;
+}
+
+// Detailed info about vault capacity, shown on mobile.
+.vaultCapacity {
+  grid-area: vaultCapacity;
+  display: grid;
+  grid-template-columns: repeat(2, 16px minmax(min-content, 1fr));
+  grid-auto-rows: 16px;
+  gap: 3px 2px;
+}
+
+// The currently equipped title (from a seal)
+.title {
+  display: flex;
+  flex-direction: row;
+  font-style: italic;
+  color: $sealtitle;
+  text-shadow:
+    1px 1px 1px rgb(0, 0, 0, 0.5),
+    0 0 10px rgb(0, 0, 0, 0.5);
+  width: 100%;
+
+  > *:first-child {
+    flex-shrink: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding-right: 3px;
+  }
+}
+
+.gildedCurrentSeason {
+  color: $gildedtitle;
+  text-shadow:
+    1px 1px 1px rgb(0, 0, 0, 0.5),
+    0 0 10px rgb(0, 0, 0, 0.5);
+}
+
+.gildedIcon {
+  font-style: normal;
+  margin-left: 4px;
+}
+
+.gildedNum {
+  font-size: 10px;
+  font-style: normal;
+  margin-left: 1px;
+  vertical-align: super;
+  line-height: 0;
+}

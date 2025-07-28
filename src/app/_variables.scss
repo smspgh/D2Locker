@@ -1,0 +1,169 @@
+@use 'sass:color';
+
+// Variables and mixins that can be used from any SCSS file
+$dim-brand: #e8a534;
+$red: #ff3232; // For warnings/errors
+$green: #51a351; // For success statuses or positive deltas
+$stat-modded: #68a0b7; // For highlighting the difference in modded item stats
+$stat-masterworked: #e8a534;
+$new-notification-dot: #cf0707;
+$upgrade-notification-dot: #e8a534;
+
+// Blue used to denote community-provided data
+$communityBlue: #0d7fad;
+
+// Green used to indicate the subject has been acquired
+$acquiredGreen: #44bd32;
+
+// Elemental damage types
+$arc: #79bbe8;
+$solar: #f0631e;
+$void: #8e749e;
+$stasis: #4d88ff;
+$strand: #35e366;
+$prismatic: #e3619b;
+
+// Item rarities
+$common: #dcdcdc;
+$uncommon: #366e42;
+$rare: #5076a3;
+$legendary: #513065;
+$exotic: #c3a019;
+
+// The color of XP bars
+$xp: #5ea16a;
+// Border for completed items/quests/bounties
+$gold: #f5dc56;
+$power: $gold;
+
+// The in-game color for the shaped weapon icon
+$shaped: #d25336;
+
+// Colors for the titles below guardians' names
+$sealtitle: #e1c2ec;
+$gildedtitle: #f9deb8;
+
+// Color of the item border for masterworks
+$masterwork-border-color: #eade8b;
+$deepsight-border-color: $shaped;
+$gilded-triumph-border-color: #a78355;
+
+// Yellow used for enhanced weapon perks
+$enhancedYellow: #f3cf55;
+
+// Item tiles' border
+$item-border-width: 1px;
+
+// Border around equipped items
+$equipped-item-border: 1px;
+$equipped-item-padding: 2px;
+$equipped-item-total-outset: #{2 * ($equipped-item-border + $equipped-item-padding)};
+
+// Full tile size including borders
+$badge-font-size: '(var(--item-size) / 5)';
+$badge-height: '(#{$badge-font-size} + 4px)';
+
+// The height of our "issue banner" for charities/causes
+$issue-banner-height: 101px;
+
+// From ceaser-easing package
+$easeInCubic: cubic-bezier(0.55, 0.055, 0.675, 0.19);
+$easeOutCubic: cubic-bezier(0.215, 0.61, 0.355, 1);
+$easeInOutCubic: cubic-bezier(0.645, 0.045, 0.355, 1);
+
+// Theme style properties that remain consistent across all themes
+// Tooltips and arrows
+$theme-tooltip-arrow-size: 8px; // Ensure this stays in sync with 'popperArrowSize' in 'usePopper.ts'
+$theme-tooltip-arrow-size-mini: 5px;
+$theme-tooltip-corner-radius: 6px;
+
+// Search
+$theme-corner-radius-search: 6px;
+$search-bar-height: 28px;
+
+// Character Tile emblem native size - beyond this the emblem gets distorted
+$emblem-width: 237px;
+$emblem-height: 48px;
+
+// The z-index for our "temp container" where all temporary items get placed.
+$tempContainerZindex: 1000;
+
+// A mixin that allows targeting styles only when in phone-portrait display mode
+@mixin phone-portrait {
+  // This seems like a good breakpoint for portrait based on https://material.io/devices/
+  // We can't use orientation:portrait because Android Chrome messes up when the keyboard is shown: https://www.chromestatus.com/feature/5656077370654720
+  @media (max-width: 540px) {
+    @content;
+  }
+}
+
+// Position something directly below the header
+@mixin below-header {
+  top: var(--header-height);
+}
+
+// A header for items or perks that matches the in-game display
+@mixin destiny-header {
+  text-transform: uppercase;
+  font-weight: 600;
+  font-family: Helvetica, Arial, sans-serif;
+}
+
+@mixin draggable-hover-border {
+  outline: 1px solid var(--theme-item-polaroid-hover-border);
+
+  @include phone-portrait {
+    outline: none;
+  }
+}
+
+// Utility functions to allow for augmenting a hex color value with an alpha component.
+// e.g.
+//   --my-base-color-rgb: #{dim-hex-to-rgb-values(#ff7b00)};
+//   background-color: dim-rgb-values-to-rgba(var(--my-base-color-rgb));
+//   border-color: dim-rgb-values-to-rgba(var(--my-base-color-rgb), $alpha: 0.75);
+// produces
+//   --my-base-color-rgb: 255, 128, 0;
+//   background-color: rgb(255, 128, 0, 1);
+//   border-color: rgb(255, 128, 0, 0.75);
+
+// Converts a 6-character hex color into a comma-separated list of RGB values, to use within the 'rgba' function.
+@function dim-hex-to-rgb-values($hex) {
+  @return color.channel($hex, 'red', $space: rgb), color.channel($hex, 'green', $space: rgb),
+    color.channel($hex, 'blue', $space: rgb);
+}
+
+// Produces an 'rgba' function usage for the specified comma-separated RGB values and alpha.
+@function dim-rgb-values-to-rgba($values, $alpha: 1) {
+  @return #{'rgba(' + $values + ', ' + $alpha + ')'};
+}
+
+@mixin interactive($hover: false, $focus: false, $focusWithin: false, $active: false) {
+  // Declares hover rules only if a device can hover over elements. This avoids issues on mobile
+  // browsers where tapping an element triggers and persists its hover state.
+  @if $hover == true {
+    @media (any-hover: hover) {
+      &:hover {
+        @content;
+      }
+    }
+  }
+
+  @if $focus == true {
+    &:focus-visible {
+      @content;
+    }
+  }
+
+  @if $focusWithin == true {
+    &:focus-within {
+      @content;
+    }
+  }
+
+  @if $active == true {
+    &:active {
+      @content;
+    }
+  }
+}

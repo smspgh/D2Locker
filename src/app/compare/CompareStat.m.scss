@@ -1,0 +1,44 @@
+@use '../variables.scss' as *;
+
+.range {
+  font-size: 0.9em;
+}
+
+.stat {
+  composes: flexRow from '../dim-ui/common.m.scss';
+  align-items: center;
+  height: 16px;
+  position: relative;
+  font-variant-numeric: tabular-nums;
+  gap: 4px;
+}
+
+.statValue {
+  composes: flexRow from '../dim-ui/common.m.scss';
+  align-items: center;
+  gap: 3px;
+  min-width: 2ch; // Try to right-align 2-digit numbers
+
+  &.noMinWidth {
+    min-width: unset;
+  }
+}
+
+.bar {
+  height: 80%;
+  width: 100%;
+  > span {
+    display: block;
+    background-color: rgb(255, 255, 255, 0.25);
+    height: 100%;
+  }
+}
+
+.masterwork::after {
+  content: '';
+  display: block;
+  border-radius: 50%;
+  background-color: $stat-masterworked;
+  height: 4px;
+  width: 4px;
+}

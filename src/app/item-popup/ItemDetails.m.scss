@@ -1,0 +1,58 @@
+@use '../variables.scss' as *;
+
+.itemDetailsBody {
+  overflow: hidden;
+}
+
+.itemDescription {
+  margin: 5px 10px;
+  white-space: pre-wrap;
+  font-style: italic;
+}
+
+.itemSource {
+  font-style: italic;
+  opacity: 0.7;
+}
+
+.itemShader {
+  display: block;
+  margin: 15px auto;
+}
+
+.acquiredIcon {
+  background: #3c94ff;
+}
+
+.ownedIcon {
+  background: $acquiredGreen;
+}
+
+.fullImage {
+  max-width: 100%;
+  aspect-ratio: auto 16/9;
+
+  &.milestoneImage {
+    aspect-ratio: auto 7/2;
+  }
+}
+
+.ownedIcon,
+.acquiredIcon {
+  width: calc(var(--item-size) / 4) !important;
+  height: calc(var(--item-size) / 4) !important;
+  font-size: calc(var(--item-size) / 6) !important;
+  border-radius: 50%;
+  padding: 3px;
+  box-sizing: border-box;
+
+  .mods & {
+    width: calc(var(--item-size) / 3) !important;
+    font-size: calc(var(--item-size) / 5) !important;
+    vertical-align: middle;
+    padding: 0;
+    border-radius: 0;
+    filter: invert(1);
+    background: none !important;
+  }
+}

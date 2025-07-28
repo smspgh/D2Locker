@@ -1,0 +1,43 @@
+@use '../variables' as *;
+@use '../dim-ui/tooltip-mixins' as *;
+
+.title {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  > img {
+    height: 24px;
+    width: 24px;
+  }
+  > *:last-child {
+    margin-left: auto;
+  }
+}
+
+.value {
+  font-weight: normal;
+}
+
+.row {
+  display: contents;
+  &.boostedValue {
+    color: $stat-modded;
+  }
+}
+
+.icon {
+  width: 14px;
+  height: 14px;
+  padding-left: 2px;
+  padding-right: 2px;
+}
+
+.breakdown {
+  display: grid;
+  grid-template-columns: min-content min-content 1fr min-content;
+  grid-auto-rows: 1fr;
+}
+
+.breakdownValue {
+  justify-self: end;
+}

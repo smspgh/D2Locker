@@ -1,0 +1,52 @@
+@use '../variables.scss' as *;
+
+.icon {
+  width: 30px;
+  height: 30px;
+}
+
+.location {
+  text-transform: none;
+  letter-spacing: normal;
+  font-size: 12px;
+  flex: 1;
+  opacity: 0.6;
+  text-align: left;
+}
+
+.title {
+  :global(.collapse-handle) span {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
+}
+
+.countdown {
+  font-size: 12px;
+  text-align: right;
+  margin-left: 8px;
+  white-space: nowrap;
+}
+
+.titleDetails {
+  display: flex;
+  flex-flow: row wrap;
+  align-items: center;
+  gap: 0 6px;
+
+  @include phone-portrait {
+    flex-direction: column;
+    align-items: flex-start;
+    margin: 4px 0;
+  }
+}
+
+@keyframes glow {
+  from {
+    box-shadow: 0 0 6px -10px rgb(174, 244, 175, 0.6);
+  }
+  to {
+    box-shadow: 0 0 6px 6px rgb(174, 244, 175, 0.6);
+  }
+}

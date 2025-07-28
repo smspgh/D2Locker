@@ -1,0 +1,24 @@
+// Classic DIM theme
+.theme-classic {
+  // App
+  --theme-app-bg: #313233;
+  // Background color for (currently only) Settings page sections. Distinguishes them from theme-app-bg.
+  --theme-section-bg: #222;
+
+  // App background gradient pattern
+  --theme-app-bg-gradient: var(--theme-app-bg);
+
+  // The color of PWA elements like the title bar. This cannot be a gradient.
+  --theme-pwa-background: #000;
+
+  // Header
+  --theme-header-nav-bg: #000;
+  --theme-header-characters-bg: var(--theme-app-bg);
+
+  // Organizer
+  --theme-organizer-row-odd-bg: var(--theme-app-bg);
+  --theme-organizer-row-even-bg: #252627;
+
+  // Background color for the search bar. Distinguishes it from theme-header-nav-bg.
+  --theme-search-bg: var(--theme-app-bg);
+}

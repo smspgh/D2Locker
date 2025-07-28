@@ -1,0 +1,40 @@
+@use '../variables.scss' as *;
+
+.entry {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 6px 8px;
+
+  > img,
+  > :global(.app-icon) {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 24px;
+    width: 24px;
+    font-size: 16px;
+    text-align: center;
+  }
+}
+
+.actionButton {
+  composes: resetButton from 'app/dim-ui/common.m.scss';
+  composes: entry;
+
+  @media (min-width: 541px) {
+    @include interactive($hover: true, $focus: true) {
+      outline: none;
+      background: var(--theme-accent-primary);
+      color: var(--theme-text-invert);
+      :global(.app-icon) {
+        color: var(--theme-text-invert);
+      }
+    }
+  }
+
+  &:disabled {
+    filter: contrast(0.5) brightness(0.5);
+    cursor: not-allowed;
+  }
+}

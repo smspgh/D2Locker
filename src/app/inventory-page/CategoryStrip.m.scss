@@ -1,0 +1,37 @@
+@use '../variables' as *;
+
+.options {
+  $vpadding: 15px;
+  display: flex;
+  background-color: var(--theme-mobile-background);
+  position: fixed;
+  align-items: center;
+  bottom: 0;
+  top: inherit;
+  left: 0;
+  right: 0;
+  justify-content: space-around;
+  // https://css-tricks.com/when-sass-and-new-css-features-collide/
+  padding-bottom: Max(#{($vpadding - 1)}, env(safe-area-inset-bottom));
+  z-index: 7;
+
+  > div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-transform: uppercase;
+    font-size: 12px;
+    letter-spacing: 1.2px;
+    border-bottom: 2px solid transparent;
+    padding: $vpadding 0 5px;
+  }
+}
+
+.selected {
+  color: var(--theme-accent-primary);
+  border-bottom: 2px solid var(--theme-accent-primary);
+}
+
+.hidden {
+  display: none;
+}

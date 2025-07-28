@@ -1,0 +1,35 @@
+@use '../variables.scss' as *;
+
+@mixin selected-highlight {
+  &::after {
+    content: '';
+    display: block;
+    position: absolute;
+    inset: -4px;
+    border: 1px solid white;
+    pointer-events: none;
+  }
+}
+
+.character {
+  composes: resetButton from '../dim-ui/common.m.scss';
+  composes: flexRow from '../dim-ui/common.m.scss';
+  align-items: stretch;
+  width: 100%;
+  position: relative;
+  box-sizing: border-box;
+  max-width: $emblem-width;
+
+  // Display an outline when hovering characters
+  @media (hover: hover) {
+    @include interactive($hover: true, $active: true) {
+      @include selected-highlight;
+    }
+  }
+
+  &:focus-visible {
+    outline: none;
+
+    @include selected-highlight;
+  }
+}

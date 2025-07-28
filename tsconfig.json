@@ -1,0 +1,30 @@
+{
+  "compilerOptions": {
+    "lib": ["DOM", "ESNext", "WebWorker"], // <-- Add this line
+    "strict": true,
+    "esModuleInterop": true,
+    "outDir": "./dist/",
+    "sourceMap": true,
+    "module": "ESNext",
+    "target": "ESNext",
+    "jsx": "preserve",
+    "moduleResolution": "bundler",
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "baseUrl": ".",
+    "allowJs": true,
+    "paths": {
+      "app/*": ["src/app/*"],
+      "data/*": ["src/data/*"],
+      "images/*": ["src/images/*"],
+      "destiny-icons/*": ["destiny-icons/*"],
+      "locale/*": ["src/locale/*"],
+      "testing/*": ["src/testing/*"],
+      "docs/*": ["docs/*"]
+    }
+  },
+  "include": ["./src/**/*", "./backend/**/*", "./config/**/*", "babel.config.cjs"]
+}

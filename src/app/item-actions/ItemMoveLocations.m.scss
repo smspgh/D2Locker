@@ -1,0 +1,105 @@
+@use '../variables.scss' as *;
+
+.moveLocations {
+  flex-direction: column;
+  align-items: inherit;
+  justify-self: flex-end;
+  &:last-child {
+    padding-bottom: 8px;
+  }
+}
+
+.moveLocationPadding {
+  padding: 6px 8px 0 8px;
+}
+
+.moveLocationIcons {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  margin: 4px 0 0 0;
+  gap: 8px;
+
+  @include phone-portrait {
+    gap: 5px;
+  }
+}
+
+.move {
+  composes: resetButton from 'app/dim-ui/common.m.scss';
+  cursor: pointer;
+  position: relative;
+  display: flex;
+  place-content: center;
+  align-items: center;
+  height: 36px;
+  width: 36px;
+
+  @include phone-portrait {
+    width: calc((100vw - 40px - 5 * 5px) / 7);
+    height: calc((100vw - 40px - 5 * 5px) / 7);
+    max-width: 55px;
+    max-height: 55px;
+  }
+
+  @include interactive($hover: true, $focus: true) {
+    outline: none;
+    &::after {
+      content: '';
+      display: block;
+      position: absolute;
+      inset: -2px -2px -2px -2px;
+      border: 1px solid white;
+    }
+  }
+
+  img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+  }
+
+  :global(.app-icon) {
+    position: absolute;
+    height: 60%;
+    width: 60%;
+    top: 7px;
+    left: 7px;
+    filter: drop-shadow(1px 1px 2px black);
+
+    @include phone-portrait {
+      position: relative;
+      top: 0;
+      left: 0;
+      margin: 0;
+    }
+  }
+
+  &:disabled {
+    filter: contrast(0.5) brightness(0.5);
+    cursor: not-allowed;
+  }
+}
+
+.vaultLabel {
+  margin-left: 8px;
+}
+
+.moveWithVault {
+  display: flex;
+  > * {
+    display: flex;
+  }
+}
+
+.vaultButton {
+  align-self: flex-end;
+  margin-left: 8px;
+
+  @include phone-portrait {
+    margin-left: 5px;
+  }
+}

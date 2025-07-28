@@ -1,0 +1,84 @@
+@use '../variables.scss' as *;
+
+.sockets {
+  display: flex;
+  flex-direction: column;
+}
+
+.socket {
+  composes: flexRow from '../dim-ui/common.m.scss';
+  align-items: flex-start;
+  border-bottom: 1px solid #333;
+  padding: 4px 8px;
+  flex-wrap: wrap;
+
+  @include interactive($hover: true) {
+    background-color: rgb(255, 255, 255, 0.05);
+  }
+
+  &:first-child {
+    padding-right: 50px;
+  }
+
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.plug {
+  composes: flexRow from '../dim-ui/common.m.scss';
+  align-items: center;
+  margin-right: 0.7em;
+  cursor: pointer;
+
+  &:last-child {
+    margin-right: 0;
+  }
+
+  h2 {
+    font-size: 12px;
+    line-height: 12px;
+    margin: 0;
+  }
+}
+
+.perkIconWrapper {
+  // Change the size of the perk icons
+  --item-size-adjusted: calc(30 / 50 * var(--item-size));
+  grid-area: icon;
+  align-self: flex-start;
+  position: relative; // to position the thumbs-up correctly
+
+  display: block;
+  padding: 1px;
+  flex-shrink: 0;
+  > * {
+    --item-size: var(--item-size-adjusted);
+  }
+}
+
+.perkInfo {
+  composes: flexColumn from '../dim-ui/common.m.scss';
+  align-items: flex-start;
+  margin-left: 6px;
+  white-space: pre-wrap;
+
+  > div {
+    color: var(--theme-text-secondary);
+  }
+  h3 {
+    color: var(--theme-text);
+  }
+}
+
+.selected {
+  flex: 1;
+}
+
+.disabled {
+  opacity: 0.5;
+}
+
+.plugLabel {
+  margin-left: 1em;
+}

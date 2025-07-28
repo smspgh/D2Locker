@@ -1,0 +1,51 @@
+.comboIndicator {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 4px 8px;
+  border-radius: 4px;
+  margin: 2px;
+  min-width: 60px;
+  text-align: center;
+  font-size: 10px;
+  color: white;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
+}
+
+.rank {
+  font-weight: bold;
+  font-size: 11px;
+  line-height: 1;
+  margin-bottom: 1px;
+}
+
+.count {
+  font-size: 9px;
+  opacity: 0.9;
+  line-height: 1;
+}
+
+.rank1 {
+  background: linear-gradient(135deg, #FFD700, #FFA500);
+  border: 1px solid #B8860B;
+}
+
+.rank2 {
+  background: linear-gradient(135deg, #C0C0C0, #808080);
+  border: 1px solid #696969;
+}
+
+.rank3 {
+  background: linear-gradient(135deg, #CD7F32, #8B4513);
+  border: 1px solid #654321;
+}
+
+.rank4 {
+  background: linear-gradient(135deg, #708090, #2F4F4F);
+  border: 1px solid #1C1C1C;
+}
+
+.rank5 {
+  background: linear-gradient(135deg, #DC143C, #8B0000);
+  border: 1px solid #4B0000;
+}

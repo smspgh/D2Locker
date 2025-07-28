@@ -1,0 +1,26 @@
+@use '../variables.scss' as *;
+
+.badge {
+  border-radius: 50%;
+  border-radius: 10px;
+  background: var(--theme-accent-primary);
+  padding: 0 4px;
+  color: var(--theme-text-invert);
+  font-size: 9px;
+  transition: all 150ms ease-out;
+}
+
+.button {
+  composes: dim-button from global;
+  align-self: center;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+
+  @include interactive($hover: true) {
+    .badge {
+      background-color: black;
+      color: var(--theme-accent-primary);
+    }
+  }
+}

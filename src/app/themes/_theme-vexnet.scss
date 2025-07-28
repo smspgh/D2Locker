@@ -1,0 +1,100 @@
+// Void Forged Theme
+.theme-voidforged {
+  // Core Colors from the image
+  --core-void-black: #080a0f;
+  --core-metallic-gray: #1a1e26;
+  --core-electric-orange: #f29c29;
+  --core-planet-blue: #325088;
+  --core-light-gray: #c9d2de;
+
+  // Base colours
+  --theme-accent-primary: var(--core-electric-orange); // Main interaction color
+  --theme-accent-secondary: var(--core-planet-blue); // Secondary interaction color
+
+  // Generic fills for modal backgrounds
+  --theme-fill-modal: #101218; // A shade lighter than the main background for contrast
+  --theme-fill-modal-actions: var(--core-metallic-gray);
+
+  // Text
+  --theme-text: var(--core-light-gray);
+  --theme-text-invert: var(--core-void-black);
+  --theme-text-secondary: #8e949c; // A slightly darker gray for secondary text
+
+  // Buttons
+  --theme-button-bg: var(--core-electric-orange); // Main button is the glowing orange
+  --theme-button-text: var(--core-void-black); // Dark text on the bright button
+
+  // Input field (text boxes and text areas)
+  --theme-input-bg: #1c212a; // Dark, metallic gray for input fields
+  --theme-input-border: var(--core-planet-blue); // A subtle blue border
+  --theme-input-placeholder: #5c626d; // A muted gray for placeholder text
+
+  // Shadows
+  --theme-drop-shadow: 0 0 18px 0 rgba(0, 0, 0, 0.6);
+
+  // Tooltips
+  --theme-tooltip-underline: var(--core-electric-orange);
+  --theme-tooltip-header-bg: #101218;
+  --theme-tooltip-body-bg: #1a1e26;
+  --theme-tooltip-border: var(--core-electric-orange);
+  --theme-tooltip-minimal-bg: #2d333e;
+
+  // App background gradient pattern
+  --theme-app-bg-gradient-start: var(--core-void-black);
+  --theme-app-bg-gradient-end: #101218;
+  --theme-app-bg-gradient: radial-gradient(
+    circle at 50% 70px,
+    var(--theme-app-bg-gradient-start) 0%,
+    var(--theme-app-bg-gradient-end) 100%
+  );
+
+  // App
+  --theme-app-bg: var(--theme-app-bg-gradient);
+  --theme-section-bg: #12151b;
+  --theme-pwa-background: var(--core-void-black);
+
+  // Header
+  --theme-header-nav-bg: var(--theme-app-bg-gradient);
+  --theme-header-nav-slideout-menu-bg: var(--theme-fill-modal);
+  --theme-header-characters-bg: var(--theme-app-bg-gradient);
+  --theme-header-characters-txt: var(--core-light-gray);
+
+  // Dropdown menu
+  --theme-dropdown-menu-bg: var(--theme-fill-modal);
+
+  // Search
+  --theme-search-bg: rgba(255, 255, 255, 0.08); // A translucent search bar
+  --theme-search-dropdown-bg: #101218;
+
+  // Items
+  --theme-item-polaroid: #1e2430;
+  --theme-item-polaroid-txt: var(--core-light-gray);
+  --theme-item-polaroid-hover-border: var(--core-electric-orange);
+  --theme-item-polaroid-masterwork: var(--core-electric-orange);
+  --theme-item-polaroid-masterwork-txt: var(--core-void-black);
+  --theme-item-polaroid-capped: #6481bd; // Using a muted blue for capped items
+  --theme-item-polaroid-capped-txt: var(--core-light-gray);
+  --theme-item-polaroid-godroll: var(--core-electric-orange);
+  --theme-item-polaroid-trashroll: #4a4d52;
+  --theme-item-polaroid-element-adjust-brightness: 180%; // Brighter icons
+
+  // Item popup
+  --theme-item-popup-border: var(--core-electric-orange);
+  --theme-item-popup-arrow: var(--theme-fill-modal-actions);
+  --theme-item-popup-actions-bg: var(--theme-fill-modal-actions);
+  --theme-item-popup-panel-bg: #222a36;
+  --theme-item-popup-progress-bar-bg: #333a46;
+
+  // Item feed
+  --theme-item-feed-bg: var(--theme-fill-modal);
+
+  // Item sheet (compare, armory)
+  --theme-item-sheet-bg: var(--theme-fill-modal);
+
+  // Organizer
+  --theme-organizer-row-odd-bg: #0c0e12;
+  --theme-organizer-row-even-bg: #14171d;
+
+  // Records
+  --theme-record-redeemed: var(--core-electric-orange);
+}

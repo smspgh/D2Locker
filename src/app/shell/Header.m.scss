@@ -1,0 +1,267 @@
+@use '../variables.scss' as *;
+
+body {
+  padding-top: var(--header-height);
+  box-sizing: border-box;
+  min-height: var(--viewport-height);
+}
+
+// The height of the black header bar
+$header-height: 44px;
+
+.container {
+  position: fixed;
+  // Above the tempContainer. This is pretty much entirely so the search
+  // autocomplete menu displays above the search results sheet on mobile.
+  z-index: $tempContainerZindex + 2;
+  top: 0;
+  left: 0;
+  right: 0;
+}
+
+// The actual header contents - the header element is just a container
+.header {
+  width: 100%;
+  box-sizing: border-box;
+  padding-left: env(titlebar-area-x, env(safe-area-inset-left, 2px));
+  padding-right: calc(
+    100% - env(titlebar-area-width, 100%) - env(titlebar-area-x, 0) + env(safe-area-inset-right)
+  );
+  padding-top: env(titlebar-area-y, env(safe-area-inset-top));
+  height: calc(env(titlebar-area-height, #{$header-height}) + env(safe-area-inset-top));
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  background: var(--theme-header-nav-bg);
+  background-position: center top;
+  background-repeat: no-repeat;
+  background-size: 100vw 100vh;
+  -webkit-app-region: drag;
+
+  // Use the size of this element for the container query in .headerLinks. This
+  // is needed for the PWA mode where the header is narrower than the page.
+  container-type: inline-size;
+
+  @include phone-portrait {
+    background: var(--theme-mobile-background);
+  }
+
+  button,
+  a {
+    -webkit-app-region: no-drag;
+    > :global(.app-icon) {
+      font-size: 1.33em;
+
+      @include phone-portrait {
+        font-size: 24px;
+      }
+
+      @include interactive($hover: true) {
+        color: var(--theme-accent-primary);
+        cursor: pointer;
+        transition: color 0.2s linear;
+      }
+    }
+  }
+}
+
+.logoLink {
+  height: 24px;
+
+  @include phone-portrait {
+    height: 44px;
+    margin: 0 4px !important;
+    display: flex;
+    align-items: center;
+  }
+}
+
+.menuItem {
+  margin: 0 8px;
+  text-decoration: none;
+  font-size: 13px;
+  -webkit-touch-callout: none;
+  user-select: none;
+  white-space: nowrap;
+
+  color: var(--theme-text);
+  cursor: pointer;
+
+  @include phone-portrait {
+    margin: 0 12px;
+  }
+
+  @include interactive($hover: true) {
+    color: var(--theme-accent-primary);
+    transition: color 0.2s linear;
+  }
+
+  &.active {
+    color: var(--theme-accent-primary);
+    transition: color 0.2s linear;
+  }
+}
+
+.headerRight {
+  -webkit-app-region: no-drag;
+  cursor: default;
+  display: flex;
+  flex: 1;
+  margin: 0 6px 0 8px;
+  align-items: center;
+  justify-content: flex-end;
+  flex-direction: row;
+  height: 100%;
+}
+
+.menu {
+  composes: resetButton from '../dim-ui/common.m.scss';
+  position: relative;
+  margin-left: 16px !important;
+}
+
+.logo {
+  height: 24px;
+  width: 68px;
+  color: var(--theme-accent-primary) !important;
+  font-size: 16px !important;
+  font-weight: bold;
+  font-weight: 400;
+
+  @include phone-portrait {
+    height: 24px * 1.2;
+    width: 68px * 1.2;
+  }
+  &.dev {
+    filter: grayscale(100%) brightness(150%);
+  }
+  &.beta {
+    filter: hue-rotate(160deg) brightness(107%);
+  }
+  &.pr {
+    filter: hue-rotate(280deg) brightness(107%);
+  }
+}
+
+.headerLinks {
+  display: flex;
+  flex-flow: row wrap;
+  height: $header-height;
+  align-items: center;
+  overflow: hidden;
+  justify-content: flex-end;
+
+  @include phone-portrait {
+    display: none;
+  }
+
+  // Hide the links if the page is too small
+  @media (max-width: 1200px) {
+    display: none;
+  }
+
+  // Only the newest browsers support container queries
+  @container (max-width: 1200px) {
+    display: none;
+  }
+
+  .menuItem {
+    height: 26px;
+    display: flex;
+    align-items: center;
+    border-bottom: 2px solid transparent;
+    box-sizing: border-box;
+
+    &.active {
+      border-bottom: 2px solid var(--theme-accent-primary);
+    }
+  }
+}
+
+.dropdown {
+  box-sizing: border-box;
+  position: absolute;
+  display: flex;
+  overflow: auto;
+  height: calc(var(--viewport-height) - var(--header-height));
+  left: 0;
+  margin: 0;
+  padding: 0;
+  min-width: 150px;
+  background-color: var(--theme-header-nav-slideout-menu-bg);
+  padding-left: env(safe-area-inset-left);
+  padding-bottom: Max(4px, env(safe-area-inset-bottom));
+  flex-direction: column;
+
+  @include below-header;
+
+  hr {
+    margin: 8px 0 6px 0;
+    border: none;
+    border-top: 1px solid #333;
+  }
+
+  h3 {
+    margin: 8px 2rem 0 1rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    max-width: 13em;
+  }
+
+  .menuItem {
+    display: block;
+    padding: 4px 2rem 4px 1rem;
+    font-size: 16px;
+    margin: 0;
+    transition: none;
+
+    @include phone-portrait {
+      font-size: 18px;
+      padding-top: 6px;
+      padding-bottom: 6px;
+    }
+
+    @include interactive($hover: true, $focus: true) {
+      background-color: var(--theme-accent-primary);
+      color: var(--theme-text-invert);
+    }
+
+    &.active {
+      color: var(--theme-text);
+      border-left: 4px solid var(--theme-accent-primary);
+      padding-left: calc(1rem - 4px);
+    }
+
+    .launchSeparateIcon {
+      font-size: 1em;
+      color: #888;
+    }
+  }
+}
+
+.pwaPrompt {
+  margin: 1em 10px;
+  font-size: 14px;
+}
+
+.searchLink {
+  flex: 1;
+  margin: 0 8px;
+
+  @include phone-portrait {
+    margin: 0 12px;
+  }
+
+  :global(.search-filter) {
+    background: var(--theme-search-bg);
+  }
+}
+
+.searchButton {
+  composes: resetButton from '../dim-ui/common.m.scss';
+  display: none;
+
+  @include phone-portrait {
+    display: inline-block;
+  }
+}

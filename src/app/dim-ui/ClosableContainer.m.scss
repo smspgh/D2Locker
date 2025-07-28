@@ -1,0 +1,29 @@
+@use '../variables' as *;
+
+.container {
+  position: relative;
+}
+
+.close {
+  z-index: 1;
+  width: calc(var(--item-size) / 3);
+  height: calc(var(--item-size) / 3);
+  background-size: calc(var(--item-size) / 3);
+  display: none;
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  background-image: url('images/close.png');
+  background-color: rgb(100, 100, 100, 0.8);
+
+  @include interactive($hover: true, $focus: true) {
+    background-color: var(--theme-accent-primary);
+    outline: none;
+  }
+
+  // This intentionally doesn't use the interactive mixin because it relies on
+  // hover emulation to show the button on mobile.
+  .container:hover & {
+    display: inline-block;
+  }
+}

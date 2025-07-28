@@ -1,0 +1,145 @@
+@use '../variables' as *;
+@use 'sass:string';
+@use '../dim-ui/tooltip-mixins' as *;
+
+.objectives {
+  margin: 4px 0;
+  padding: 8px;
+  background-color: #0b0b11;
+  border-radius: 4px;
+}
+.perkName {
+  font-weight: bold;
+}
+.requirement {
+  font-style: italic;
+}
+.clarityDescription {
+  margin-top: 2px;
+  border-left: 2px solid $communityBlue;
+  padding-left: 6px;
+  margin-left: -8px;
+}
+.source {
+  font-style: italic;
+  opacity: 0.7;
+}
+.tooltip {
+  .subheader {
+    display: flex;
+    justify-content: space-between;
+  }
+  .energyCost {
+    font-weight: bold;
+    color: #eee;
+
+    .elementIcon {
+      height: 12px;
+      width: 20px;
+      background-size: contain;
+      background-position: right 0;
+      margin: 0 2px -1px 0;
+    }
+  }
+  .clarityDescription {
+    margin: 0;
+    padding: 0;
+    border-left: none;
+  }
+  .communityInsightSection {
+    @include tooltip-section-color($communityBlue);
+
+    @include phone-portrait {
+      max-height: 25vh;
+      overflow: hidden;
+    }
+    h3 {
+      opacity: 0.6;
+    }
+  }
+  .craftingRequirementsSection {
+    @include tooltip-section-color($deepsight-border-color);
+  }
+  .cannotRollSection {
+    @include tooltip-section-color($red);
+    p::before {
+      content: '';
+      display: inline-block;
+      padding: 6px;
+      margin-bottom: -3px;
+      margin-right: 3px;
+      border: 1px dashed white;
+      border-radius: 50%;
+    }
+  }
+  .automaticallyPickedSection {
+    border-radius: 0 0 $theme-tooltip-corner-radius $theme-tooltip-corner-radius;
+
+    @include tooltip-section-color($dim-brand);
+
+    // Re-define colors using accent if browser supports color-mix
+    @supports (background: color-mix(in srgb, black 50%, white)) {
+      &:not(:empty) {
+        color: color-mix(in srgb, var(--theme-accent-primary) 100%, white 100%);
+        background-color: color-mix(in srgb, var(--theme-accent-primary) 20%, black);
+      }
+    }
+  }
+}
+.tooltipExotic {
+  @include tooltip-ribbon-color($exotic);
+}
+.tooltipEnhanced {
+  @include tooltip-ribbon-color($enhancedYellow);
+
+  .subheader > span {
+    color: $enhancedYellow;
+
+    &::before {
+      content: '';
+      display: inline-block;
+      width: 9px;
+      height: 16px;
+      vertical-align: text-bottom;
+      mask-image: url('images/enhancedArrow.svg');
+      background-color: $enhancedYellow;
+      margin-right: 3px;
+    }
+  }
+}
+.tooltipElementArc {
+  @include tooltip-ribbon-color($arc);
+}
+.tooltipElementSolar {
+  @include tooltip-ribbon-color($solar);
+}
+.tooltipElementVoid {
+  @include tooltip-ribbon-color($void);
+}
+.tooltipElementStasis {
+  @include tooltip-ribbon-color($stasis);
+}
+.tooltipElementStrand {
+  @include tooltip-ribbon-color($strand);
+}
+
+.plugStats {
+  display: grid;
+  grid-template: auto / auto 1fr;
+  column-gap: 4px;
+  margin-top: 4px;
+  > div {
+    &:nth-child(2n + 1) {
+      font-weight: bold;
+      justify-self: end;
+    }
+  }
+  img {
+    vertical-align: bottom;
+    margin-right: 2px;
+  }
+}
+
+.stackable {
+  margin-top: 4px;
+}

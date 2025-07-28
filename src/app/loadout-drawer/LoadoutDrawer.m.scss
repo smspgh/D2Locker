@@ -1,0 +1,52 @@
+@use '../variables.scss' as *;
+
+.body {
+  padding: 10px;
+  max-height: 50vh;
+
+  @include phone-portrait {
+    max-height: unset;
+  }
+}
+
+.notes {
+  font-size: 14px;
+  margin-top: 4px;
+
+  summary {
+    font-weight: bold;
+    cursor: pointer;
+  }
+  &[open] summary {
+    margin-bottom: 4px;
+  }
+}
+
+// Group together buttons so they don't wrap onto different lines
+.inputGroup {
+  display: flex;
+  flex-flow: row wrap;
+  align-items: center;
+  gap: 4px;
+}
+
+.header {
+  composes: flexRow from '../dim-ui/common.m.scss';
+  gap: 0 12px;
+}
+
+.headerDetails {
+  composes: flexColumn from '../dim-ui/common.m.scss';
+  flex: 1;
+  gap: 4px;
+}
+
+.classType {
+  composes: flexRow from '../dim-ui/common.m.scss';
+  align-items: center;
+  gap: 0.25em;
+
+  svg {
+    height: 16px;
+  }
+}

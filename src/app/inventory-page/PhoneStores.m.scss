@@ -1,0 +1,35 @@
+@use '../variables.scss' as *;
+
+.content {
+  width: 100%;
+  // Give room for the category selector strip (height 53px)
+  padding-bottom: calc(#{53px + 10px} + env(safe-area-inset-bottom));
+}
+
+.engramsAndPostmaster {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  padding: 8px;
+
+  .engramsSection,
+  .postmasterSection {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    h3 {
+      font-size: 16px;
+      margin-top: 0;
+      margin-bottom: 8px;
+    }
+  }
+
+  .engramsSection {
+    margin-right: 4px;
+  }
+
+  .postmasterSection {
+    margin-left: 4px;
+  }
+}

@@ -1,0 +1,109 @@
+@use '../../variables.scss' as *;
+@use '../tooltip-mixins' as *;
+
+.symbolsWindow {
+  width: 300px;
+  height: 350px;
+  background-color: var(--theme-dropdown-menu-bg);
+  display: flex;
+  flex-flow: column;
+  box-shadow: var(--theme-drop-shadow);
+  pointer-events: auto;
+}
+
+.symbolsButton {
+  composes: resetButton from '../common.m.scss';
+  font-family: unset;
+  margin: 0 2px;
+
+  @include interactive($hover: true) {
+    color: black;
+    background-color: var(--theme-accent-primary);
+  }
+  span {
+    font-size: 18px;
+  }
+}
+
+.wrapperDiv {
+  position: relative;
+}
+
+.buttonDiv {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+.symbolsSearch {
+  padding: 10px 10px;
+  flex: 0;
+  > div {
+    min-width: 0;
+  }
+}
+
+.symbolsBody {
+  overflow: hidden auto;
+
+  flex: 1;
+}
+
+.symbolsContainer {
+  padding: 4px 10px;
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+// Ensure the last row is left-aligned
+.symbolsContainer::after {
+  content: '';
+  flex: auto;
+}
+
+.emojiButton {
+  composes: resetButton from '../common.m.scss';
+  font-family: unset;
+  text-align: center;
+  font-size: 18px;
+  color: var(--theme-text);
+
+  padding: 2px;
+
+  @include interactive($hover: true) {
+    color: var(--theme-text-invert);
+    background-color: var(--theme-accent-primary);
+  }
+}
+
+.symbolsFooter {
+  padding: 10px 10px;
+  font-size: 20px;
+  min-height: 40px;
+  flex: 0;
+  border-top: 1px grey solid;
+
+  display: flex;
+  flex-direction: row;
+
+  > span {
+    flex: 0;
+    align-self: center;
+  }
+
+  > div {
+    padding-left: 10px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+
+    > span {
+      font-size: 12px;
+      &:first-child {
+        font-size: 16px;
+      }
+    }
+  }
+}

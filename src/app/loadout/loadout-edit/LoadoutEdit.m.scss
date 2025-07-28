@@ -1,0 +1,36 @@
+@use '../../variables.scss' as *;
+
+.contents {
+  display: flex;
+  flex-flow: row wrap;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.mods {
+  flex: 1;
+}
+
+.buttons {
+  display: flex;
+  flex-flow: row wrap;
+  margin: 10px auto 0 auto;
+  gap: 4px;
+}
+
+.section {
+  composes: flexColumn from '../../dim-ui/common.m.scss';
+  position: relative;
+  padding: 8px 12px;
+  background-color: rgb(255, 255, 255, 0.1);
+
+  @include phone-portrait {
+    --item-margin: 4px;
+    flex: 1;
+  }
+}
+
+// Align the "clear space" buttons on the bottom of the cell
+.clearButton {
+  margin-top: auto;
+}

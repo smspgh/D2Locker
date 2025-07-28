@@ -1,0 +1,14 @@
+@use '../variables.scss' as *;
+
+.description {
+  margin: 5px 10px 5px;
+  white-space: pre-wrap;
+}
+
+.label {
+  font-weight: bold;
+}
+
+.secondaryText {
+  font-style: italic;
+}

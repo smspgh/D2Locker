@@ -1,0 +1,194 @@
+@use '../../variables.scss' as *;
+
+.list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.note {
+  color: var(--theme-text-secondary);
+}
+
+.menuItem {
+  display: flex;
+  flex-direction: row;
+  padding-left: 0;
+  cursor: pointer;
+
+  @include phone-portrait {
+    font-size: 14px;
+    padding: 2px 0;
+  }
+
+  @include interactive($hover: true) {
+    background-color: var(--theme-accent-primary);
+    color: var(--theme-text-invert) !important;
+    > span:first-child > :global(.app-icon) {
+      color: var(--theme-text-invert) !important;
+    }
+    > span:first-child > img:first-child,
+    .modificationIcon {
+      filter: none;
+    }
+    .fashionIcon {
+      filter: invert(1);
+    }
+
+    .note {
+      color: var(--theme-text-invert);
+    }
+  }
+
+  &:last-of-type {
+    border: 0;
+  }
+
+  a {
+    text-decoration: none;
+
+    @include interactive($hover: true) {
+      background-color: var(--theme-accent-primary);
+      color: var(--theme-text-invert) !important;
+      > span:first-child > :global(.app-icon) {
+        color: var(--theme-text-invert) !important;
+      }
+      > span:first-child > img:first-child,
+      .modificationIcon {
+        filter: none;
+      }
+      .fashionIcon {
+        filter: invert(1);
+      }
+
+      .note {
+        color: var(--theme-text-invert);
+      }
+    }
+  }
+
+  form {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    height: 35px;
+  }
+
+  > span,
+  > a,
+  > form {
+    &:first-child {
+      flex: 1;
+      padding: 0 10px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap !important;
+      line-height: 35px;
+      display: inline-flex;
+      align-items: center;
+      > :global(.app-icon),
+      > img {
+        width: 12px;
+        height: auto;
+        margin-right: 5px;
+        text-align: center;
+
+        @include phone-portrait {
+          width: 14px;
+          margin-right: 8px;
+        }
+      }
+      > img {
+        filter: invert(1);
+      }
+    }
+
+    .fashionIcon {
+      height: 20px !important;
+      width: 20px !important;
+      margin-right: 5px;
+    }
+    .modificationIcon {
+      height: 18px !important;
+      width: 18px !important;
+    }
+  }
+
+  > span:not(:first-child) {
+    margin: 6px 4px 6px 4px;
+    padding: 0 6px;
+    display: flex;
+    align-items: center;
+    text-align: center;
+
+    @include phone-portrait {
+      margin: 4px 4px 4px 2px;
+    }
+  }
+}
+
+.altButton {
+  border-radius: 4px;
+  color: #888;
+  background-color: #222;
+
+  @include interactive($hover: true) {
+    background-color: var(--theme-accent-secondary);
+    color: #222;
+  }
+  /* stylelint-disable-next-line no-descending-specificity */
+  :global(.app-icon) {
+    font-size: 13px;
+
+    @include phone-portrait {
+      font-size: 15px;
+    }
+  }
+}
+
+.loadoutTypeIcon {
+  color: var(--theme-text);
+}
+
+.warningIcon {
+  font-size: 10px;
+}
+
+.content {
+  color: var(--theme-text);
+
+  // This is nested so its specificity is high enough to override the defaults
+  .filterPills {
+    margin-left: 8px;
+    margin-right: 8px;
+  }
+}
+
+.filterInput {
+  composes: search-filter from global;
+  min-width: unset;
+  margin: 8px;
+}
+
+.inGameLoadouts {
+  list-style: none;
+  margin: 0 8px;
+  padding: 4px 0;
+
+  display: grid;
+  gap: 4px;
+  grid-template-columns: repeat(6, 1fr);
+  place-items: flex-start;
+  &.moreLoadouts {
+    grid-template-columns: repeat(5, 1fr);
+  }
+}
+
+.inGameLoadoutButton {
+  composes: resetButton from '../../dim-ui/common.m.scss';
+  display: block;
+
+  @include interactive($hover: true, $focus: true) {
+    outline: 2px solid var(--theme-accent-primary);
+  }
+}
