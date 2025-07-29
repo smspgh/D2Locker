@@ -11,6 +11,7 @@ import styles from './MainSearchBarActions.m.scss';
 import { searchButtonAnimateVariants } from './SearchBar';
 import SearchResults from './SearchResults';
 import { filteredItemsSelector, queryValidSelector } from './items/item-search-filter';
+import { useArmorySearch } from 'app/armory/ArmorySearchContext';
 
 /**
  * The extra buttons that appear in the main search bar when there are matched items.
@@ -18,10 +19,11 @@ import { filteredItemsSelector, queryValidSelector } from './items/item-search-f
 export default function MainSearchBarActions() {
   const searchQuery = useSelector(querySelector);
   const queryValid = useSelector(queryValidSelector);
-  const filteredItems = useSelector(filteredItemsSelector);
+  const inventoryFilteredItems = useSelector(filteredItemsSelector);
   const searchResultsOpen = useSelector(searchResultsOpenSelector);
   const dispatch = useDispatch();
   const isPhonePortrait = useIsPhonePortrait();
+  const armorySearchContext = useArmorySearch();
 
   const location = useLocation();
   const onInventory = location.pathname.endsWith('inventory');
@@ -29,12 +31,17 @@ export default function MainSearchBarActions() {
   const onRecords = location.pathname.endsWith('records');
   const onVendors = location.pathname.endsWith('vendors');
   const onArmorySearch = location.pathname.endsWith('armory-search');
+  
+  // Use armory filtered items when on armory search page, otherwise use inventory items
+  const filteredItems = onArmorySearch && armorySearchContext 
+    ? armorySearchContext.filteredWeapons 
+    : inventoryFilteredItems;
 
   // We don't have access to the selected store so we'd match multiple characters' worth.
   // Just suppress the count for now
   const showSearchResults = onInventory && !isPhonePortrait;
   const showSearchCount = Boolean(
-    queryValid && searchQuery && !onProgress && !onRecords && !onVendors,
+    queryValid && searchQuery && !onProgress && !onRecords && !onVendors && !onArmorySearch,
   );
   const handleCloseSearchResults = useCallback(
     () => dispatch(toggleSearchResults(false)),

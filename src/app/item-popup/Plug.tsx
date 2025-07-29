@@ -141,6 +141,35 @@ export function PerkCircleWithTooltip({
   const perkRank = utils && item.destinyVersion === 2 && item.bucket.inWeapons && socketInfo.isPerk
     ? utils.getPerkRank(item.hash.toString(), plug.plugDef.hash.toString())
     : null;
+    
+  // Debug logging for armory items
+  if (utils && item.destinyVersion === 2 && item.bucket.inWeapons && socketInfo.isPerk) {
+    const hasDataForWeapon = utils.hasDataForWeapon(item.hash.toString());
+    const isArmoryItem = !item.owner; // Fake items don't have owners
+    
+    if (isArmoryItem && hasDataForWeapon) {
+      console.log('Armory item perk lookup:', {
+        itemName: item.name,
+        itemHash: item.hash,
+        perkName: plug.plugDef.displayProperties.name,
+        perkHash: plug.plugDef.hash,
+        hasDataForWeapon,
+        isArmoryItem,
+        foundRank: perkRank ? perkRank.rank : 'NO RANK',
+        socketIndex: socketInfo.socketIndex,
+      });
+    } else if (!perkRank && hasDataForWeapon) {
+      console.log('No perk rank found:', {
+        itemName: item.name,
+        itemHash: item.hash,
+        perkName: plug.plugDef.displayProperties.name,
+        perkHash: plug.plugDef.hash,
+        hasDataForWeapon,
+        socketIsPerk: socketInfo.isPerk,
+        isArmoryItem,
+      });
+    }
+  }
 
   return (
     <div style={{ position: 'relative', display: 'inline-block' }}>

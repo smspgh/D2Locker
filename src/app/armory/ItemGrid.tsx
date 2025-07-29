@@ -4,6 +4,8 @@
 
 import ItemPopup from 'app/item-popup/ItemPopup';
 import React, { JSX, useCallback, useRef, useState } from 'react';
+import { useNavigate } from 'react-router';
+import ArmorySheet from './ArmorySheet';
 import '../inventory-page/StoreBucket.scss';
 import ConnectedInventoryItem from '../inventory/ConnectedInventoryItem';
 import { DimItem } from '../inventory/item-types';
@@ -16,17 +18,31 @@ export interface PopupState {
 export default function ItemGrid({
   items,
   noLink,
+  directToArmory,
 }: {
   items: DimItem[];
   /** Don't allow opening Armory from the header link */
   noLink?: boolean;
+  /** Go directly to Armory view instead of showing popup */
+  directToArmory?: boolean;
 }) {
   const [popup, setPopup] = useState<PopupState | undefined>();
+  const [armoryItem, setArmoryItem] = useState<DimItem | undefined>();
+  const navigate = useNavigate();
+
+  const handleDirectClick = useCallback((item: DimItem) => {
+    setArmoryItem(item);
+  }, []);
 
   return (
     <div className="sub-bucket">
       {items.map((i) => (
-        <BasicItemTrigger item={i} key={i.index} onShowPopup={setPopup}>
+        <BasicItemTrigger 
+          item={i} 
+          key={i.index} 
+          onShowPopup={directToArmory ? undefined : setPopup}
+          onDirectClick={directToArmory ? handleDirectClick : undefined}
+        >
           {(ref, showPopup) => <ConnectedInventoryItem ref={ref} onClick={showPopup} item={i} />}
         </BasicItemTrigger>
       ))}
@@ -38,6 +54,12 @@ export default function ItemGrid({
           noLink={noLink}
         />
       )}
+      {armoryItem && (
+        <ArmorySheet
+          item={armoryItem}
+          onClose={() => setArmoryItem(undefined)}
+        />
+      )}
     </div>
   );
 }
@@ -45,10 +67,12 @@ export default function ItemGrid({
 export function BasicItemTrigger({
   item,
   onShowPopup,
+  onDirectClick,
   children,
 }: {
   item: DimItem;
-  onShowPopup: (state: PopupState) => void;
+  onShowPopup?: (state: PopupState) => void;
+  onDirectClick?: (item: DimItem) => void;
   children: (
     ref: React.Ref<HTMLDivElement>,
     showPopup: (e: React.MouseEvent) => void,
@@ -59,9 +83,13 @@ export function BasicItemTrigger({
   const clicked = useCallback(
     (e: React.MouseEvent) => {
       e.stopPropagation();
-      onShowPopup({ item, element: ref.current! });
+      if (onDirectClick) {
+        onDirectClick(item);
+      } else if (onShowPopup) {
+        onShowPopup({ item, element: ref.current! });
+      }
     },
-    [item, onShowPopup],
+    [item, onShowPopup, onDirectClick],
   );
 
   return children(ref, clicked) as JSX.Element;

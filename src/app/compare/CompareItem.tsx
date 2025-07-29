@@ -37,6 +37,7 @@ export default memo(function CompareItem({
   itemClick,
   remove,
   setHighlight,
+  isBest = false,
 }: {
   item: DimItem;
   row: Row;
@@ -46,6 +47,7 @@ export default memo(function CompareItem({
   remove: (item: DimItem) => void;
   setHighlight: (value?: string | number) => void;
   onPlugClicked: (value: { item: DimItem; socket: DimSocket; plugHash: number }) => void;
+  isBest?: boolean;
 }) {
   const headerRef = useRef<HTMLDivElement>(null);
   useSetCSSVarToHeight(headerRef, '--compare-item-height');
@@ -60,7 +62,7 @@ export default memo(function CompareItem({
 
   const itemHeader = useMemo(
     () => (
-      <div ref={headerRef} className={styles.headerContainer}>
+      <div ref={headerRef} className={clsx(styles.headerContainer, { [styles.bestItem]: isBest })}>
         <div className={styles.itemActions}>
           {item.vendor ? (
             <VendorItemWarning item={item} />
@@ -83,12 +85,17 @@ export default memo(function CompareItem({
           {(ref, onClick) => (
             <div className={styles.itemAside} ref={ref} onClick={onClick}>
               <ConnectedInventoryItem item={item} />
+              {isBest && (
+                <div className={styles.bestBadge} title={t('Compare.BestItem')}>
+                  BEST
+                </div>
+              )}
             </div>
           )}
         </ItemPopupTrigger>
       </div>
     ),
-    [item, pullItem, remove],
+    [item, pullItem, remove, isBest],
   );
 
   const handleRowClick = (row: Row, column: ColumnDefinition) => {

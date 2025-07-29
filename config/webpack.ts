@@ -184,7 +184,7 @@ export default (env: Env) => {
           terserOptions: {
             ecma: 2020,
             module: true,
-            compress: {
+            compress: env.dev ? false : {
               passes: 1,
               toplevel: true,
               unsafe: true,
@@ -203,14 +203,16 @@ export default (env: Env) => {
                 'BigInt',
               ],
             },
-            mangle: { toplevel: true },
+            mangle: env.dev ? false : { toplevel: true },
           },
+          extractComments: false,
         }),
       ],
     },
 
     module: {
       strictExportPresence: true,
+      unsafeCache: env.dev,
 
       rules: [
         {
@@ -360,6 +362,10 @@ export default (env: Env) => {
 
     resolve: {
       extensions: ['.js', '.json', '.ts', '.tsx', '.jsx'],
+      
+      // Speed up module resolution
+      symlinks: false,
+      cacheWithContext: false,
 
       plugins: [new TsconfigPathsPlugin()],
 
@@ -375,6 +381,13 @@ export default (env: Env) => {
     },
 
     plugins: [],
+
+    cache: env.dev ? {
+      type: 'filesystem',
+      buildDependencies: {
+        config: [__filename],
+      },
+    } : false,
   };
 
   const plugins: any[] = [
@@ -386,6 +399,7 @@ export default (env: Env) => {
       filename: cssFilenamePattern,
       chunkFilename: cssFilenamePattern,
       ignoreOrder: true, // Suppress CSS module ordering warnings
+      experimentalUseImportModule: true, // Enable parallel CSS processing
     }),
 
     // Compress CSS after bundling so we can optimize across rules

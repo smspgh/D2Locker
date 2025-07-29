@@ -24,9 +24,15 @@ import { ItemFilterDefinition } from '../item-filter-types';
 const validateStat: ItemFilterDefinition['validateStat'] = (filterContext) => {
   const customStatLabels = filterContext?.customStats?.map((c) => c.shortLabel) ?? [];
   const possibleStatNames = [...allAtomicStats, ...customStatLabels];
-  return (stat) =>
-    possibleStatNames.includes(stat) ||
-    stat.split(/&|\+/).every((s) => s !== 'any' && possibleStatNames.includes(s));
+  return (stat) => {
+    // Handle ":best" pattern for custom stats
+    if (stat.endsWith(':best')) {
+      const customStatName = stat.replace(':best', '');
+      return customStatLabels.includes(customStatName);
+    }
+    return possibleStatNames.includes(stat) ||
+      stat.split(/&|\+/).every((s) => s !== 'any' && possibleStatNames.includes(s));
+  };
 };
 
 // filters that operate on stats, several of which calculate values from all items beforehand
@@ -41,13 +47,17 @@ const statFilters: ItemFilterDefinition[] = [
         {
           keywords: 'stat',
           format: 'stat',
-          suggestions: [...allAtomicStats, ...(customStats?.map((c) => c.shortLabel) ?? [])],
+          suggestions: [
+            ...allAtomicStats, 
+            ...(customStats?.map((c) => c.shortLabel) ?? []),
+            ...(customStats?.map((c) => `${c.shortLabel}:best`) ?? [])
+          ],
         },
         {},
       ),
     validateStat,
-    filter: ({ filterValue, compare, customStats }) =>
-      statFilterFromString(filterValue, compare!, customStats),
+    filter: ({ filterValue, compare, customStats, allItems }) =>
+      statFilterFromString(filterValue, compare, customStats, allItems, false),
   },
   {
     keywords: 'basestat',
@@ -66,13 +76,14 @@ const statFilters: ItemFilterDefinition[] = [
             ...searchableArmorStatNames,
             ...estStatNames,
             ...(customStats?.map((c) => c.shortLabel) ?? []),
+            ...(customStats?.map((c) => `${c.shortLabel}:best`) ?? [])
           ],
         },
         {},
       ),
     validateStat,
-    filter: ({ filterValue, compare, customStats }) =>
-      statFilterFromString(filterValue, compare!, customStats, true),
+    filter: ({ filterValue, compare, customStats, allItems }) =>
+      statFilterFromString(filterValue, compare, customStats, allItems, true),
   },
   {
     // looks for a loadout (simultaneously equippable) maximized for this stat
@@ -117,6 +128,54 @@ const statFilters: ItemFilterDefinition[] = [
     },
   },
   {
+    keywords: 'maxcustomstatvalue',
+    description: tl('Filter.StatsMax'),
+    format: 'query',
+    suggestionsGenerator: ({ customStats }) =>
+      generateGroupedSuggestionsForFilter(
+        {
+          keywords: 'maxcustomstatvalue',
+          format: 'query',
+          suggestions: customStats?.map((c) => c.shortLabel) ?? [],
+        },
+        {},
+      ),
+    validateStat: (filterContext) => {
+      const customStatLabels = filterContext?.customStats?.map((c) => c.shortLabel) ?? [];
+      return (stat) => customStatLabels.includes(stat);
+    },
+    destinyVersion: 2,
+    filter: ({ filterValue, allItems, customStats }) => {
+      const highestCustomStatsPerSlotPerTier = gatherHighestCustomStats(allItems, customStats);
+      return (item: DimItem) =>
+        checkIfCustomStatMatchesMaxValue(highestCustomStatsPerSlotPerTier, item, filterValue, customStats, false);
+    },
+  },
+  {
+    keywords: 'maxbasecustomstatvalue',
+    description: tl('Filter.StatsMax'),
+    format: 'query',
+    suggestionsGenerator: ({ customStats }) =>
+      generateGroupedSuggestionsForFilter(
+        {
+          keywords: 'maxbasecustomstatvalue',
+          format: 'query',
+          suggestions: customStats?.map((c) => c.shortLabel) ?? [],
+        },
+        {},
+      ),
+    validateStat: (filterContext) => {
+      const customStatLabels = filterContext?.customStats?.map((c) => c.shortLabel) ?? [];
+      return (stat) => customStatLabels.includes(stat);
+    },
+    destinyVersion: 2,
+    filter: ({ filterValue, allItems, customStats }) => {
+      const highestCustomStatsPerSlotPerTier = gatherHighestCustomStats(allItems, customStats);
+      return (item: DimItem) =>
+        checkIfCustomStatMatchesMaxValue(highestCustomStatsPerSlotPerTier, item, filterValue, customStats, true);
+    },
+  },
+  {
     keywords: 'maxpowerloadout',
     description: tl('Filter.MaxPowerLoadout'),
     destinyVersion: 2,
@@ -147,12 +206,57 @@ export default statFilters;
  */
 function statFilterFromString(
   statNames: string,
-  compare: (value: number) => boolean,
+  compare: ((value: number) => boolean) | undefined,
   customStats: CustomStatDef[],
+  allItems: DimItem[],
   byBaseValue = false,
 ): (item: DimItem) => boolean {
+  // Handle special case for ":best" searches like "wsc:best"
+  if (statNames.endsWith(':best')) {
+    const customStatName = statNames.replace(':best', '');
+    
+    // Find the custom stat definition
+    const customStat = customStats.find(c => c.shortLabel === customStatName);
+    if (!customStat) {
+      return () => false; // No matching custom stat found
+    }
+
+    // Gather highest custom stats for comparison
+    const highestCustomStatsPerSlotPerTier = gatherHighestCustomStats(allItems, customStats);
+    
+    return (item: DimItem) => {
+      // this must be armor with stats
+      if (!item.bucket.inArmor || !item.stats) {
+        return false;
+      }
+
+      // Check if this item's class is compatible with the custom stat
+      if (!isClassCompatible(customStat.class, item.classType)) {
+        return false;
+      }
+
+      // Find the stat on this item
+      const stat = item.stats.find(s => s.statHash === customStat.statHash);
+      if (!stat) {
+        return false;
+      }
+
+      const useWhichMaxes = item.isExotic ? 'all' : 'nonexotic';
+      const itemSlot = `${item.bucket.hash}|${item.classType}`;
+      const maxStatsForSlot = highestCustomStatsPerSlotPerTier[useWhichMaxes][itemSlot];
+      const maxStatForCustomStat = maxStatsForSlot?.[customStatName];
+
+      return maxStatForCustomStat && stat[byBaseValue ? 'base' : 'value'] === maxStatForCustomStat[byBaseValue ? 'base' : 'value'];
+    };
+  }
+
   // this will be used to index into the right property of a DimStat
   const byWhichValue = byBaseValue ? 'base' : 'value';
+
+  // Return empty filter if no compare function for non-:best searches
+  if (!compare) {
+    return () => false;
+  }
 
   // a special case filter where we check for any single (natural) stat matching the comparator
   if (statNames === 'any') {
@@ -346,4 +450,76 @@ function calculateMaxPowerPerBucket(allItems: DimItem[], classMatters: boolean) 
   return mapValues(allItemsByBucketClass, (items) =>
     items.length ? maxOf(items, (i) => i.power) : 0,
   );
+}
+
+type MaxCustomStatValuesDict = Record<
+  'all' | 'nonexotic',
+  { [slotName: string]: { [customStatLabel: string]: { value: number; base: number } } }
+>;
+
+export function gatherHighestCustomStats(allItems: DimItem[], customStats: CustomStatDef[]) {
+  const maxStatValues: MaxCustomStatValuesDict = { all: {}, nonexotic: {} };
+
+  for (const i of allItems) {
+    // we only want armor with stats
+    if (!i.bucket.inArmor || !i.stats) {
+      continue;
+    }
+
+    const itemSlot = `${i.bucket.hash}|${i.classType}`;
+    // if this is an exotic item, update overall maxes, but don't ruin the curve for the nonexotic maxes
+    const itemTiers: ('all' | 'nonexotic')[] = i.isExotic ? ['all'] : ['all', 'nonexotic'];
+    const thisSlotMaxGroups = itemTiers.map((t) => (maxStatValues[t][itemSlot] ??= {}));
+
+    // Check each custom stat for this item
+    for (const customStat of customStats) {
+      if (isClassCompatible(customStat.class, i.classType)) {
+        const stat = i.stats.find(s => s.statHash === customStat.statHash);
+        if (stat) {
+          for (const thisSlotMaxes of thisSlotMaxGroups) {
+            const thisSlotThisStatMaxes = (thisSlotMaxes[customStat.shortLabel] ??= {
+              value: 0,
+              base: 0,
+            });
+            thisSlotThisStatMaxes.value = Math.max(thisSlotThisStatMaxes.value, stat.value);
+            thisSlotThisStatMaxes.base = Math.max(thisSlotThisStatMaxes.base, stat.base);
+          }
+        }
+      }
+    }
+  }
+  return maxStatValues;
+}
+
+function checkIfCustomStatMatchesMaxValue(
+  maxStatValues: MaxCustomStatValuesDict,
+  item: DimItem,
+  customStatLabel: string,
+  customStats: CustomStatDef[],
+  byBaseValue = false,
+) {
+  // this must be armor with stats
+  if (!item.bucket.inArmor || !item.stats) {
+    return false;
+  }
+
+  // Find the custom stat definition
+  const customStat = customStats.find(c => c.shortLabel === customStatLabel && isClassCompatible(c.class, item.classType));
+  if (!customStat) {
+    return false;
+  }
+
+  // Find the stat on this item
+  const stat = item.stats.find(s => s.statHash === customStat.statHash);
+  if (!stat) {
+    return false;
+  }
+
+  const byWhichValue = byBaseValue ? 'base' : 'value';
+  const useWhichMaxes = item.isExotic ? 'all' : 'nonexotic';
+  const itemSlot = `${item.bucket.hash}|${item.classType}`;
+  const maxStatsForSlot = maxStatValues[useWhichMaxes][itemSlot];
+  const maxStatForCustomStat = maxStatsForSlot?.[customStatLabel];
+
+  return maxStatForCustomStat && stat[byWhichValue] === maxStatForCustomStat[byWhichValue];
 }

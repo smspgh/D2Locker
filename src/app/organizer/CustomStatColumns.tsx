@@ -36,7 +36,7 @@ export function createCustomStatColumns(
             max={ctx?.max ?? 0}
             stat={stat}
             item={item}
-            value={stat.base}
+            value={stat.value}
           />
         );
       },

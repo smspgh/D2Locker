@@ -62,6 +62,7 @@ export class RollAppraiserUtils {
 
   /**
    * Get individual perk ranking for a specific weapon and perk
+   * Handles enhanced/standard perk mapping by checking both variants
    */
   getPerkRank(itemHash: string, perkHash: string | number): PerkRankData | null {
     const weaponPerks = this.data.PerkStats[itemHash];
@@ -69,6 +70,7 @@ export class RollAppraiserUtils {
 
     const targetHash = typeof perkHash === 'string' ? parseInt(perkHash) : perkHash;
 
+    // First, try direct hash match
     for (const perkArray of weaponPerks) {
       for (const perkData of perkArray) {
         if (perkData.PerkHash === targetHash) {
@@ -83,6 +85,34 @@ export class RollAppraiserUtils {
         }
       }
     }
+
+    // If no direct match, check if this is an enhanced perk and look for its standard version
+    // Import the trait mapping here to avoid circular imports
+    const perkToEnhanced = require('data/d2/trait-to-enhanced-trait.json');
+    const enhancedToPerk: Record<number, number> = {};
+    for (const [standard, enhanced] of Object.entries(perkToEnhanced)) {
+      enhancedToPerk[enhanced as number] = parseInt(standard);
+    }
+
+    const standardHash = enhancedToPerk[targetHash];
+    if (standardHash) {
+      // Look for the standard version in the data
+      for (const perkArray of weaponPerks) {
+        for (const perkData of perkArray) {
+          if (perkData.PerkHash === standardHash) {
+            return {
+              rank: perkData.Rank,
+              count: perkData.Count,
+              perkHash: perkData.PerkHash,
+              perkEnhancedHash: perkData.PerkEnhancedHash,
+              show: perkData.Show,
+              perkIndex: perkData.PerkIDX,
+            };
+          }
+        }
+      }
+    }
+
     return null;
   }
 

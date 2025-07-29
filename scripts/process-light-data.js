@@ -3,6 +3,7 @@
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import TraitEnhancedMappingGenerator from './generate-trait-enhanced-mapping.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -33,6 +34,11 @@ class RollAppraiserProcessor {
       console.log('Reading and parsing JSON...');
       const rawData = fs.readFileSync(this.inputPath, 'utf8');
       const data = JSON.parse(rawData);
+
+      // Generate trait-to-enhanced mapping first
+      console.log('\n=== Generating trait-to-enhanced mapping ===');
+      const mappingGenerator = new TraitEnhancedMappingGenerator();
+      await mappingGenerator.generateMapping();
 
       // Extract only required keys
       const lightData = this.extractRequiredKeys(data);

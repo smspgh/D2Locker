@@ -38,8 +38,10 @@ import { getItemYear, itemTypeName } from 'app/utils/item-utils';
 import { wishListsByHashSelector } from 'app/wishlists/selectors';
 import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
+import { emptyPlugHashes } from 'data/d2/empty-plug-hashes';
 import { D2EventInfo } from 'data/d2/d2-event-info-v2';
 import { ItemCategoryHashes } from 'data/d2/generated-enums';
+import perkToEnhanced from 'data/d2/trait-to-enhanced-trait.json';
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import AllWishlistRolls from './AllWishlistRolls';
@@ -47,6 +49,84 @@ import styles from './Armory.m.scss';
 import ArmorySheet from './ArmorySheet';
 import Links from './Links';
 import WishListEntry from './WishListEntry';
+
+/**
+ * Filters item sockets for Armory display by removing:
+ * - Empty socket plugs
+ * - Standard perks when enhanced versions exist
+ * - Duplicate perks with same names but different hashes
+ */
+function filterItemSocketsForArmory(item: DimItem): DimItem {
+  if (!item.sockets) {
+    return item;
+  }
+
+  // Deep clone the item to avoid modifying the original
+  const filteredItem = {
+    ...item,
+    sockets: {
+      ...item.sockets,
+      allSockets: item.sockets.allSockets.map(socket => {
+        if (!socket.isPerk || socket.plugOptions.length === 0) {
+          return socket;
+        }
+
+        // Clone the socket and filter its plugOptions
+        const filteredPlugOptions = [...socket.plugOptions];
+        
+        // Filter out empty plugs
+        for (let i = filteredPlugOptions.length - 1; i >= 0; i--) {
+          const plug = filteredPlugOptions[i];
+          if (emptyPlugHashes.has(plug.plugDef.hash)) {
+            filteredPlugOptions.splice(i, 1);
+          }
+        }
+
+        // Create a set of enhanced perk hashes that exist in plugOptions
+        const enhancedPerksPresent = new Set<number>();
+        for (const plug of filteredPlugOptions) {
+          const enhancedVersion = perkToEnhanced[plug.plugDef.hash];
+          if (enhancedVersion) {
+            // This is a standard perk, check if its enhanced version exists
+            if (filteredPlugOptions.some(p => p.plugDef.hash === enhancedVersion)) {
+              enhancedPerksPresent.add(enhancedVersion);
+            }
+          }
+        }
+
+        // Remove standard perks where enhanced versions exist
+        for (let i = filteredPlugOptions.length - 1; i >= 0; i--) {
+          const plug = filteredPlugOptions[i];
+          const enhancedVersion = perkToEnhanced[plug.plugDef.hash];
+          if (enhancedVersion && enhancedPerksPresent.has(enhancedVersion)) {
+            // This is a standard perk and its enhanced version exists, remove it
+            filteredPlugOptions.splice(i, 1);
+          }
+        }
+
+        // Filter out duplicate perks with the same name but different hashes
+        const seenPerkNames = new Set<string>();
+        for (let i = filteredPlugOptions.length - 1; i >= 0; i--) {
+          const plug = filteredPlugOptions[i];
+          const perkName = plug.plugDef.displayProperties.name;
+          if (seenPerkNames.has(perkName)) {
+            // This perk name already exists, remove this duplicate
+            filteredPlugOptions.splice(i, 1);
+          } else {
+            seenPerkNames.add(perkName);
+          }
+        }
+
+        return {
+          ...socket,
+          plugOptions: filteredPlugOptions
+        };
+      })
+    }
+  };
+
+  return filteredItem;
+}
 
 export default function Armory({
   itemHash,
@@ -82,12 +162,15 @@ export default function Armory({
     );
   }
 
-  const item = applySocketOverrides(itemCreationContext, itemWithoutSockets, {
+  const itemWithOverrides = applySocketOverrides(itemCreationContext, itemWithoutSockets, {
     // Start with the item's current sockets
     ...realItemSockets,
     // Then apply whatever the user chose in the Armory UI
     ...socketOverrides,
   });
+  
+  // Apply Armory-specific filtering to remove unwanted plugs
+  const item = filterItemSocketsForArmory(itemWithOverrides);
 
   const storeItems = allItems.filter((i) => i.hash === itemHash);
 

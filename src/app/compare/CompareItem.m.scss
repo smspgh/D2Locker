@@ -120,3 +120,24 @@
   top: calc(32px + 4px + 1lh);
   cursor: pointer;
 }
+
+// Styling for the best item
+.bestItem {
+  background: linear-gradient(90deg, rgb(76, 175, 80, 0.1) 0%, transparent 20%);
+  border-left: 3px solid #4caf50;
+}
+
+.bestBadge {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background: #4caf50;
+  color: white;
+  font-size: 10px;
+  font-weight: bold;
+  padding: 2px 6px;
+  border-radius: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  box-shadow: 0 2px 4px rgb(0, 0, 0, 0.3);
+}

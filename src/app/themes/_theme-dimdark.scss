@@ -29,10 +29,10 @@
   --theme-text-secondary: #7e879a;
 
   // Buttons
-  --theme-button-bg: rgba(var(--theme-accent-primary), 0.2); // Translucent button
+  --theme-button-bg: rgb(var(--theme-accent-primary), 0.2); // Translucent button
   --theme-button-text: var(--theme-text);
   --theme-button-border: 1px solid var(--theme-accent-primary);
-  --theme-button-hover-bg: rgba(var(--theme-accent-primary), 0.4);
+  --theme-button-hover-bg: rgb(var(--theme-accent-primary), 0.4);
 
   // Input field (text boxes and text areas)
   --theme-input-bg: var(--guardian-mid-gray);
@@ -40,7 +40,7 @@
   --theme-input-placeholder: var(--theme-text-secondary);
 
   // Shadows
-  --theme-drop-shadow: 0 0 10px rgba(0, 0, 0, 0.7);
+  --theme-drop-shadow: 0 0 10px rgb(0, 0, 0, 0.7);
 
   // Tooltips
   --theme-tooltip-underline: var(--theme-accent-primary);
@@ -71,7 +71,7 @@
   --theme-dropdown-menu-bg: var(--theme-fill-modal);
 
   // Search
-  --theme-search-bg: rgba(255, 255, 255, 0.05);
+  --theme-search-bg: rgb(255, 255, 255, 0.05);
   --theme-search-dropdown-bg: var(--theme-fill-modal);
 
   // Items (example colors for item rolls/rarities)

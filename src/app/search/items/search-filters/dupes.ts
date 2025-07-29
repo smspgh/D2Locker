@@ -2,9 +2,11 @@ import { stripAdept } from 'app/compare/compare-utils';
 import { tl } from 'app/i18next-t';
 import { TagValue } from 'app/inventory/dim-item-info';
 import { DimItem } from 'app/inventory/item-types';
+import { getRollAppraiserUtilsSync } from 'app/roll-appraiser/rollAppraiserService';
 import { DEFAULT_SHADER, armorStats } from 'app/search/d2-known-values';
 import { chainComparator, compareBy, reverseComparator } from 'app/utils/comparators';
 import { isArtifice } from 'app/utils/item-utils';
+import { getSocketsByType } from 'app/utils/socket-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { BucketHashes } from 'data/d2/generated-enums';
 import { ItemFilterDefinition } from '../item-filter-types';
@@ -30,26 +32,90 @@ export const makeDupeID = (item: DimItem) =>
     item.bucket.hash
   }`;
 
-const sortDupes = (
+export const sortDupes = (
   dupes: {
     [dupeID: string]: DimItem[];
   },
   getTag: (item: DimItem) => TagValue | undefined,
+  sortType: 'power' | 'combo' | 'dupebest' = 'power',
 ) => {
   // The comparator for sorting dupes - the first item will be the "best" and all others are "dupelower".
-  const dupeComparator = reverseComparator(
-    chainComparator<DimItem>(
-      // primary stat
-      compareBy((item) => item.power),
-      compareBy((item) => {
-        const tag = getTag(item);
-        return Boolean(tag && notableTags.includes(tag));
-      }),
-      compareBy((item) => item.masterwork),
-      compareBy((item) => item.locked),
-      compareBy((i) => i.id), // tiebreak by ID
-    ),
-  );
+  const dupeComparator = sortType === 'dupebest' 
+    ? chainComparator<DimItem>(
+        // 1. Best Combo Rank (for weapons) - lower rank numbers are better
+        compareBy((item) => {
+          if (item.bucket.inWeapons && item.sockets) {
+            const utils = getRollAppraiserUtilsSync();
+            if (!utils) return Number.MAX_SAFE_INTEGER; // No data = worst
+            
+            const traitPerks = getSocketsByType(item, 'trait');
+            if (traitPerks.length >= 2) {
+              const perk4Hash = traitPerks[0]?.plugged?.plugDef.hash;
+              const perk5Hash = traitPerks[1]?.plugged?.plugDef.hash;
+              
+              if (perk4Hash && perk5Hash) {
+                const comboRank = utils.getTraitComboRank(item.hash.toString(), perk4Hash, perk5Hash);
+                if (comboRank) {
+                  // Return the rank directly - lower numbers are better
+                  return comboRank.rank;
+                }
+              }
+            }
+          }
+          return Number.MAX_SAFE_INTEGER; // Non-weapons or items without combo data go last
+        }),
+        // 2. Highest Power - higher is better, so negate to sort descending
+        compareBy((item) => -item.power),
+        // 3. Tag priority - true (has tag) is better, so negate
+        compareBy((item) => {
+          const tag = getTag(item);
+          return !Boolean(tag && notableTags.includes(tag));
+        }),
+        // 4. Masterwork status - true is better, so negate
+        compareBy((item) => !item.masterwork),
+        // 5. Lock status - true is better, so negate
+        compareBy((item) => !item.locked),
+        // 6. Item ID tiebreaker
+        compareBy((i) => i.id),
+      )
+    : reverseComparator(
+        chainComparator<DimItem>(
+          // primary comparison based on sort type
+          sortType === 'combo' 
+            ? compareBy((item) => {
+                // For weapons, use combo rank (lower rank number = better, so higher rank numbers should be "dupelower")
+                if (item.bucket.inWeapons && item.sockets) {
+                  const utils = getRollAppraiserUtilsSync();
+                  if (!utils) return -item.power; // Fallback to power if no roll appraiser data
+                  
+                  const traitPerks = getSocketsByType(item, 'traits');
+                  if (traitPerks.length >= 2) {
+                    const perk4Hash = traitPerks[0]?.plugged?.plugDef.hash;
+                    const perk5Hash = traitPerks[1]?.plugged?.plugDef.hash;
+                    
+                    if (perk4Hash && perk5Hash) {
+                      const comboRank = utils.getTraitComboRank(item.hash.toString(), perk4Hash, perk5Hash);
+                      if (comboRank) {
+                        // Return negative rank so lower rank numbers (better combos) sort first
+                        // This means higher rank numbers (worse combos) will be considered "dupelower"
+                        return -comboRank.rank;
+                      }
+                    }
+                  }
+                }
+                // Fallback to power for non-weapons or items without combo data
+                return -item.power;
+              })
+            : compareBy((item) => item.power),
+          compareBy((item) => {
+            const tag = getTag(item);
+            return Boolean(tag && notableTags.includes(tag));
+          }),
+          compareBy((item) => item.masterwork),
+          compareBy((item) => item.locked),
+          compareBy((i) => i.id), // tiebreak by ID
+        ),
+      );
 
   for (const dupeList of Object.values(dupes)) {
     if (dupeList.length > 1) {
@@ -98,8 +164,13 @@ const dupeFilters: ItemFilterDefinition[] = [
   {
     keywords: 'dupelower',
     description: tl('Filter.DupeLower'),
-    filter: ({ allItems, getTag }) => {
-      const duplicates = sortDupes(computeDupes(allItems), getTag);
+    format: ['simple', 'query'],
+    suggestions: ['power', 'combo'],
+    filter: ({ filterValue, allItems, getTag }) => {
+      // Default to 'power' if no specific value is provided
+      const sortType = filterValue === 'combo' ? 'combo' : 'power';
+      const duplicates = sortDupes(computeDupes(allItems), getTag, sortType);
+      
       return (item) => {
         if (
           !(
@@ -225,6 +296,22 @@ const dupeFilters: ItemFilterDefinition[] = [
       return (item) =>
         item.sockets?.allSockets.some((s) => s.isPerk && s.socketDefinition.defaultVisible) &&
         Boolean(duplicates.get(getDupeId(item))?.hasPerkDupes(item));
+    },
+  },
+  {
+    keywords: 'dupebest',
+    description: tl('Filter.DupeBest'),
+    filter: ({ allItems, getTag }) => {
+      const duplicates = sortDupes(computeDupes(allItems), getTag, 'dupebest');
+      return (item) => {
+        const dupeId = makeDupeID(item);
+        const dupes = duplicates[dupeId];
+        if (dupes?.length > 1) {
+          const bestDupe = dupes[0];
+          return item === bestDupe;
+        }
+        return false;
+      };
     },
   },
 ];

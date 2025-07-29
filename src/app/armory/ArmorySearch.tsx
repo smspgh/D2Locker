@@ -10,6 +10,7 @@ import { BucketHashes } from 'data/d2/generated-enums';
 import React, { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import styles from './ArmorySearch.m.scss';
+import { ArmorySearchProvider } from './ArmorySearchContext';
 import ItemGrid from './ItemGrid';
 
 export default function ArmorySearch() {
@@ -95,7 +96,8 @@ export default function ArmorySearch() {
   }, [filteredWeapons]);
 
   return (
-    <PageWithMenu>
+    <ArmorySearchProvider filteredWeapons={filteredWeapons} allWeapons={allManifestWeapons}>
+      <PageWithMenu>
       <PageWithMenu.Menu>
         <div className={styles.armorySearchControls}>
           <h1>Weapon Database</h1>
@@ -116,7 +118,7 @@ export default function ArmorySearch() {
                 defaultCollapsed={false}
                 sectionId={`weapon-type-${typeName.toLowerCase().replace(/\s+/g, '-')}`}
               >
-                <ItemGrid items={weapons} />
+                <ItemGrid items={weapons} directToArmory />
               </CollapsibleTitle>
             </div>
           ))}
@@ -129,6 +131,7 @@ export default function ArmorySearch() {
         </div>
       </PageWithMenu.Contents>
     </PageWithMenu>
+    </ArmorySearchProvider>
   );
 }
 

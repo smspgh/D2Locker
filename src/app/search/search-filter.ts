@@ -152,13 +152,15 @@ function matchFilter<I, FilterCtx, SuggestionsCtx>(
       case 'stat': {
         const [stat, rangeString] = filterValue.split(':', 2);
         try {
-          const compare = rangeStringToComparator(rangeString, filterDef.overload);
+          // Handle special case for ":best" searches
+          const compare = rangeString === 'best' ? undefined : rangeStringToComparator(rangeString, filterDef.overload);
           const validator = filterDef.validateStat?.(currentFilterContext);
-          if (!validator || validator(stat)) {
+          const statToValidate = rangeString === 'best' ? `${stat}:best` : stat;
+          if (!validator || validator(statToValidate)) {
             return (filterContext) =>
               filterDef.filter({
                 lhs,
-                filterValue: stat,
+                filterValue: rangeString === 'best' ? `${stat}:best` : stat,
                 compare,
                 ...filterContext,
               });

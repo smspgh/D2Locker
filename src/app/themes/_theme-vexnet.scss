@@ -30,7 +30,7 @@
   --theme-input-placeholder: #5c626d; // A muted gray for placeholder text
 
   // Shadows
-  --theme-drop-shadow: 0 0 18px 0 rgba(0, 0, 0, 0.6);
+  --theme-drop-shadow: 0 0 18px 0 rgb(0, 0, 0, 0.6);
 
   // Tooltips
   --theme-tooltip-underline: var(--core-electric-orange);
@@ -63,7 +63,7 @@
   --theme-dropdown-menu-bg: var(--theme-fill-modal);
 
   // Search
-  --theme-search-bg: rgba(255, 255, 255, 0.08); // A translucent search bar
+  --theme-search-bg: rgb(255, 255, 255, 0.08); // A translucent search bar
   --theme-search-dropdown-bg: #101218;
 
   // Items

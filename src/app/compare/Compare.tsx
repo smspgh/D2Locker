@@ -29,11 +29,14 @@ import { Link } from 'react-router';
 import Sheet from '../dim-ui/Sheet';
 import { DimItem, DimSocket } from '../inventory/item-types';
 import { chainComparator, compareBy } from '../utils/comparators';
+import { getRollAppraiserUtilsSync } from 'app/roll-appraiser/rollAppraiserService';
+import { getSocketsByType } from 'app/utils/socket-utils';
 import styles from './Compare.m.scss';
 import { getColumns } from './CompareColumns';
 import CompareItem, { CompareHeaders } from './CompareItem';
 import CompareSuggestions from './CompareSuggestions';
 import { endCompareSession, removeCompareItem, updateCompareQuery } from './actions';
+import { sortDupes } from '../search/items/search-filters/dupes';
 import { CompareSession } from './reducer';
 import { compareItemsSelector, compareOrganizerLinkSelector } from './selectors';
 
@@ -192,6 +195,79 @@ export default function Compare({ session }: { session: CompareSession }) {
 
   /* End ItemTable incursion */
 
+  // Identify the best item based on dupebest criteria
+  const bestItem = useMemo(() => {
+    if (rows.length <= 1) return undefined;
+    
+    // Sort a copy of the items using dupebest criteria
+    const itemsCopy = [...rows.map(r => r.item)];
+    
+    // Sort directly using the dupebest comparator
+    const getTag = (item: DimItem) => {
+      const tag = rawCompareItems.find(i => i.id === item.id)?.dimInfo?.tag;
+      return tag;
+    };
+    
+    // Create the comparator for dupebest
+    const dupebestComparator = chainComparator<DimItem>(
+      // 1. For armor: prioritize highest custom stat total if custom stats exist
+      compareBy((item) => {
+        if (comparingArmor && customStats.length > 0) {
+          // Find the highest custom stat value for this item
+          let highestCustomStatValue = 0;
+          for (const customStat of customStats) {
+            const stat = item.stats?.find(s => s.statHash === customStat.statHash);
+            if (stat && stat.value > highestCustomStatValue) {
+              highestCustomStatValue = stat.value;
+            }
+          }
+          // Return negative value so higher custom stat values are sorted first
+          return -highestCustomStatValue;
+        }
+        return 0; // No priority for non-armor or when no custom stats exist
+      }),
+      // 2. Best Combo Rank (for weapons) - lower rank numbers are better
+      compareBy((item) => {
+        if (item.bucket.inWeapons && item.sockets) {
+          const utils = getRollAppraiserUtilsSync();
+          if (!utils) return Number.MAX_SAFE_INTEGER;
+          
+          const traitPerks = getSocketsByType(item, 'traits');
+          if (traitPerks.length >= 2) {
+            const perk4Hash = traitPerks[0]?.plugged?.plugDef.hash;
+            const perk5Hash = traitPerks[1]?.plugged?.plugDef.hash;
+            
+            if (perk4Hash && perk5Hash) {
+              const comboRank = utils.getTraitComboRank(item.hash.toString(), perk4Hash, perk5Hash);
+              if (comboRank) {
+                return comboRank.rank;
+              }
+            }
+          }
+        }
+        return Number.MAX_SAFE_INTEGER;
+      }),
+      // 3. Highest Power
+      compareBy((item) => -item.power),
+      // 4. Tag priority
+      compareBy((item) => {
+        const tag = getTag(item);
+        return !Boolean(tag && ['favorite', 'keep'].includes(tag));
+      }),
+      // 5. Masterwork status
+      compareBy((item) => !item.masterwork),
+      // 6. Lock status
+      compareBy((item) => !item.locked),
+      // 7. Item ID tiebreaker
+      compareBy((i) => i.id),
+    );
+    
+    itemsCopy.sort(dupebestComparator);
+    
+    // The first item after sorting is the best
+    return itemsCopy[0];
+  }, [rows, rawCompareItems, comparingArmor, customStats]);
+
   const firstCompareItem = rows[0]?.item;
   // The example item is the one we'll use for generating suggestion buttons
   const exampleItem = initialItem || firstCompareItem;
@@ -205,9 +281,10 @@ export default function Compare({ session }: { session: CompareSession }) {
         remove={remove}
         setHighlight={setHighlight}
         onPlugClicked={onPlugClicked}
+        bestItem={bestItem}
       />
     ),
-    [rows, tableCtx, filteredColumns, remove, onPlugClicked],
+    [rows, tableCtx, filteredColumns, remove, onPlugClicked, bestItem],
   );
 
   const header = (
@@ -220,21 +297,7 @@ export default function Compare({ session }: { session: CompareSession }) {
           onChange={setCompareBaseStats}
         />
       )}
-      {comparingWeapons && defs && destinyVersion === 2 && (
-        <Checkbox
-          label={t('Compare.AssumeMasterworked')}
-          name="compareWeaponMasterwork"
-          value={assumeWeaponMasterwork}
-          onChange={setAssumeWeaponMasterwork}
-        />
-      )}
-      {exampleItem && <CompareSuggestions exampleItem={exampleItem} onQueryChanged={updateQuery} />}
-      {organizerLink && (
-        <Link className={styles.organizerLink} to={organizerLink}>
-          <AppIcon icon={faList} />
-          <span>{t('Organizer.OpenIn')}</span>
-        </Link>
-      )}
+      {/* Hiding Assume Masterworked toggle, CompareSuggestions (type buttons), and organizer link per user request */}
     </div>
   );
 
@@ -270,6 +333,7 @@ function CompareItems({
   remove,
   setHighlight,
   onPlugClicked,
+  bestItem,
 }: {
   rows: Row[];
   tableCtx: TableContext;
@@ -277,6 +341,7 @@ function CompareItems({
   remove: (item: DimItem) => void;
   setHighlight: React.Dispatch<React.SetStateAction<string | number | undefined>>;
   onPlugClicked: (value: { item: DimItem; socket: DimSocket; plugHash: number }) => void;
+  bestItem?: DimItem;
 }) {
   return rows.map((row) => (
     <CompareItem
@@ -289,6 +354,7 @@ function CompareItems({
       remove={remove}
       setHighlight={setHighlight}
       onPlugClicked={onPlugClicked}
+      isBest={bestItem?.id === row.item.id}
     />
   ));
 }

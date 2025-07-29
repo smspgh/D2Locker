@@ -1,11 +1,46 @@
 console.log('TOP OF ROLL APPRAISER MODULE');
 
 import { DimItem } from 'app/inventory/item-types';
+import { quoteFilterString } from 'app/search/query-parser';
 import { getRollAppraiserUtilsSync } from 'app/roll-appraiser/rollAppraiserService';
 import { getWeaponSockets, getSocketsByIndexes } from 'app/utils/socket-utils';
 import { ItemFilterDefinition } from '../item-filter-types';
 
 console.log('Roll appraiser filters module loaded');
+
+/**
+ * Generate perk name suggestions for a specific perk column
+ */
+function generatePerkNameSuggestions(columnIndex: number, keyword: string) {
+  return ({ d2Definitions, allItems }) => {
+    if (!d2Definitions || !allItems) {
+      return [];
+    }
+
+    const perkNames = new Set<string>();
+    
+    // Get perk names from weapons that have perks in the specified column
+    for (const item of allItems) {
+      if (item.bucket.inWeapons && item.sockets) {
+        const weaponSockets = getWeaponSockets(item, { excludeEmptySockets: false });
+        if (weaponSockets?.perks) {
+          const perkSockets = getSocketsByIndexes(item.sockets, weaponSockets.perks.socketIndexes);
+          const targetPerk = perkSockets[columnIndex];
+          
+          if (targetPerk) {
+            for (const plug of targetPerk.plugOptions) {
+              if (plug.plugDef.displayProperties.name) {
+                perkNames.add(plug.plugDef.displayProperties.name.toLowerCase());
+              }
+            }
+          }
+        }
+      }
+    }
+
+    return Array.from(perkNames, (s) => `${keyword}:${quoteFilterString(s)}`);
+  };
+}
 
 /**
  * Helper function to get weapon ranking data for search filters
@@ -176,6 +211,7 @@ const rollAppraiserFilters: ItemFilterDefinition[] = [
     description: undefined as any,
     format: 'freeform',
     destinyVersion: 2,
+    suggestionsGenerator: generatePerkNameSuggestions(0, 'perk1name'),
     filter: ({ filterValue }) => (item) => {
       const info = getWeaponRankingInfo(item);
       if (!info || !item.sockets) {return false;}
@@ -186,10 +222,13 @@ const rollAppraiserFilters: ItemFilterDefinition[] = [
       const perkSockets = getSocketsByIndexes(item.sockets, weaponSockets.perks.socketIndexes);
       const firstPerk = perkSockets[0];
       
-      if (!firstPerk?.plugged) {return false;}
+      if (!firstPerk) {return false;}
       
-      const perkName = firstPerk.plugged.plugDef.displayProperties.name.toLowerCase();
-      return perkName.includes(filterValue.toLowerCase());
+      // Check all plug options in this socket, not just the plugged one (for armory compatibility)
+      return firstPerk.plugOptions.some(plug => {
+        const perkName = plug.plugDef.displayProperties.name.toLowerCase();
+        return perkName.includes(filterValue.toLowerCase());
+      });
     },
   },
 
@@ -198,6 +237,7 @@ const rollAppraiserFilters: ItemFilterDefinition[] = [
     description: undefined as any,
     format: 'freeform',
     destinyVersion: 2,
+    suggestionsGenerator: generatePerkNameSuggestions(1, 'perk2name'),
     filter: ({ filterValue }) => (item) => {
       const info = getWeaponRankingInfo(item);
       if (!info || !item.sockets) {return false;}
@@ -208,10 +248,13 @@ const rollAppraiserFilters: ItemFilterDefinition[] = [
       const perkSockets = getSocketsByIndexes(item.sockets, weaponSockets.perks.socketIndexes);
       const secondPerk = perkSockets[1];
       
-      if (!secondPerk?.plugged) {return false;}
+      if (!secondPerk) {return false;}
       
-      const perkName = secondPerk.plugged.plugDef.displayProperties.name.toLowerCase();
-      return perkName.includes(filterValue.toLowerCase());
+      // Check all plug options in this socket, not just the plugged one (for armory compatibility)
+      return secondPerk.plugOptions.some(plug => {
+        const perkName = plug.plugDef.displayProperties.name.toLowerCase();
+        return perkName.includes(filterValue.toLowerCase());
+      });
     },
   },
 
@@ -220,6 +263,7 @@ const rollAppraiserFilters: ItemFilterDefinition[] = [
     description: undefined as any,
     format: 'freeform',
     destinyVersion: 2,
+    suggestionsGenerator: generatePerkNameSuggestions(2, 'perk3name'),
     filter: ({ filterValue }) => (item) => {
       const info = getWeaponRankingInfo(item);
       if (!info || !item.sockets) {return false;}
@@ -230,10 +274,13 @@ const rollAppraiserFilters: ItemFilterDefinition[] = [
       const perkSockets = getSocketsByIndexes(item.sockets, weaponSockets.perks.socketIndexes);
       const thirdPerk = perkSockets[2];
       
-      if (!thirdPerk?.plugged) {return false;}
+      if (!thirdPerk) {return false;}
       
-      const perkName = thirdPerk.plugged.plugDef.displayProperties.name.toLowerCase();
-      return perkName.includes(filterValue.toLowerCase());
+      // Check all plug options in this socket, not just the plugged one (for armory compatibility)
+      return thirdPerk.plugOptions.some(plug => {
+        const perkName = plug.plugDef.displayProperties.name.toLowerCase();
+        return perkName.includes(filterValue.toLowerCase());
+      });
     },
   },
 
@@ -242,6 +289,7 @@ const rollAppraiserFilters: ItemFilterDefinition[] = [
     description: undefined as any,
     format: 'freeform',
     destinyVersion: 2,
+    suggestionsGenerator: generatePerkNameSuggestions(3, 'perk4name'),
     filter: ({ filterValue }) => (item) => {
       const info = getWeaponRankingInfo(item);
       if (!info || !item.sockets) {return false;}
@@ -252,10 +300,13 @@ const rollAppraiserFilters: ItemFilterDefinition[] = [
       const perkSockets = getSocketsByIndexes(item.sockets, weaponSockets.perks.socketIndexes);
       const fourthPerk = perkSockets[3];
       
-      if (!fourthPerk?.plugged) {return false;}
+      if (!fourthPerk) {return false;}
       
-      const perkName = fourthPerk.plugged.plugDef.displayProperties.name.toLowerCase();
-      return perkName.includes(filterValue.toLowerCase());
+      // Check all plug options in this socket, not just the plugged one (for armory compatibility)
+      return fourthPerk.plugOptions.some(plug => {
+        const perkName = plug.plugDef.displayProperties.name.toLowerCase();
+        return perkName.includes(filterValue.toLowerCase());
+      });
     },
   },
 
