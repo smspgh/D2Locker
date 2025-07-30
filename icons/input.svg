@@ -1,0 +1,41 @@
+<svg viewBox="0 520 520 " xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="mainGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#ff6b35;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#f7931e;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="exoticGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#cdad36;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#f4d03f;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="legendaryGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#4f3663;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#6a4c93;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <g transform="translate(-75, 50)">
+    
+    <!-- Unified L shape as single path -->
+    <g>
+      <path d="M 235 80 L 245 80 L 245 120 L 275 120 L 275 130 L 235 130 Z" 
+            fill="url(#exoticGrad)"/>
+    </g>
+    
+    <!-- Large D shape -->
+    <g>
+      <!-- D outline -->
+      <path d="M 220 40 L 220 160 L 260 160 C 295 160 320 130 320 100 C 320 70 295 40 260 40 Z" 
+            fill="none" stroke="url(#mainGrad)" stroke-width="10"/>
+      
+      <!-- Roman numeral II inside the D with Legendary color -->
+      <g transform="translate(250, 55)">
+        <!-- First I -->
+        <rect x="5" y="5" width="7" height="50" fill="url(#legendaryGrad)"/>
+        <!-- Second I -->
+        <rect x="25" y="5" width="7" height="50" fill="url(#legendaryGrad)"/>
+      </g>
+    </g>
+    
+  </g>
+</svg>

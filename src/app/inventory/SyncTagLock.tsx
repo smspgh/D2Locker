@@ -29,7 +29,6 @@ function getNextItemToChangeLockState(
   for (const item of allItems) {
     if (canSyncLockState(item)) {
       switch (getTag(item)) {
-        case 'hotperk':
         case 'keep': {
           if (!item.locked) {
             return [item, true];

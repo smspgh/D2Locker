@@ -5,7 +5,7 @@ import { showInfuse } from 'app/infuse/infuse';
 import { canSyncLockState } from 'app/inventory/SyncTagLock';
 import { DimItem } from 'app/inventory/item-types';
 import { consolidate, distribute } from 'app/inventory/move-item';
-import { sortedStoresSelector, tagSelector } from 'app/inventory/selectors';
+import { allItemsSelector, sortedStoresSelector, tagSelector } from 'app/inventory/selectors';
 import { getStore } from 'app/inventory/stores-helpers';
 import ActionButton from 'app/item-actions/ActionButton';
 import LockButton from 'app/item-actions/LockButton';
@@ -13,10 +13,12 @@ import ItemTagSelector from 'app/item-popup/ItemTagSelector';
 import { hideItemPopup } from 'app/item-popup/item-popup';
 import { ItemActionsModel } from 'app/item-popup/item-popup-actions';
 import { addItemToLoadout } from 'app/loadout-drawer/loadout-events';
+import { makeDupeID } from 'app/search/items/search-filters/dupes';
 import { AppIcon, addIcon, compareIcon } from 'app/shell/icons';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import clsx from 'clsx';
 import { useDispatch, useSelector } from 'react-redux';
+import { useMemo } from 'react';
 import arrowsIn from '../../images/arrows-in.png';
 import arrowsOut from '../../images/arrows-out.png';
 import d2Infuse from '../../images/d2infuse.png';
@@ -29,6 +31,23 @@ interface ActionButtonProps {
 
 export function CompareActionButton({ item, label }: ActionButtonProps) {
   const dispatch = useDispatch();
+  const allItems = useSelector(allItemsSelector);
+
+  // Calculate duplicate count
+  const dupeCount = useMemo(() => {
+    if (!item.comparable) return 1;
+    
+    const dupeID = makeDupeID(item);
+    let count = 0;
+    
+    for (const i of allItems) {
+      if (i.comparable && makeDupeID(i) === dupeID) {
+        count++;
+      }
+    }
+    
+    return count;
+  }, [allItems, item]);
 
   const openCompare = () => {
     hideItemPopup();
@@ -41,6 +60,7 @@ export function CompareActionButton({ item, label }: ActionButtonProps) {
 
   return (
     <ActionButton onClick={openCompare} hotkey="c" hotkeyDescription={t('Compare.ButtonHelp')}>
+      <span className={styles.dupeCount}>{dupeCount}</span>
       <AppIcon icon={compareIcon} />
       {label && <span className={styles.label}>{t('Compare.Button')}</span>}
     </ActionButton>

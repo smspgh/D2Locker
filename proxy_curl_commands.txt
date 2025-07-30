@@ -1,0 +1,19 @@
+# DIM API Curl Commands via Proxy (https://shirezaks.com:443)
+
+# 1. Platform Info (No auth required)
+curl -k https://shirezaks.com:443/api/platform_info
+
+# 2. Auth Token
+curl -k -X POST https://shirezaks.com:443/api/auth/token -H "Content-Type: application/json" -H "X-API-Key: 788600d2-9320-484e-86dd-5f5c9c458b66"
+
+# 3. Get Profile - All data
+curl -k https://shirezaks.com:443/api/profile -H "X-API-Key: 788600d2-9320-484e-86dd-5f5c9c458b66" -G --data-urlencode "platformMembershipId=123456789" --data-urlencode "destinyVersion=2"
+
+# 4. Get Profile - Specific components
+curl -k https://shirezaks.com:443/api/profile -H "X-API-Key: 788600d2-9320-484e-86dd-5f5c9c458b66" -G --data-urlencode "platformMembershipId=123456789" --data-urlencode "destinyVersion=2" --data-urlencode "components=settings,loadouts"
+
+# 5. Update Profile
+curl -k -X POST https://shirezaks.com:443/api/profile -H "Content-Type: application/json" -H "X-API-Key: 788600d2-9320-484e-86dd-5f5c9c458b66" -d '{"platformMembershipId": "123456789", "destinyVersion": 1, "updates": [{"action": "setting", "payload": {"theme": "dark", "language": "en"}}]}'
+
+# 6. Delete All Data
+curl -k -X POST https://shirezaks.com:443/api/delete_all_data -H "Content-Type: application/json" -H "X-API-Key: 788600d2-9320-484e-86dd-5f5c9c458b66" -d '{"platformMembershipId": "123456789", "destinyVersion": 1}'

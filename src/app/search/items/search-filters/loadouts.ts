@@ -63,9 +63,9 @@ const loadoutFilters: ItemFilterDefinition[] = [
         Boolean(loadoutsByItem[item.id]?.some((l) => isInGameLoadout(l.loadout))),
   },
   {
-    keywords: 'indimloadout',
+    keywords: 'InD2lLoadout',
     format: 'simple',
-    description: tl('Filter.InDimLoadout'),
+    description: tl('Filter.InD2lLoadout'),
     filter:
       ({ loadoutsByItem }) =>
       (item) =>

@@ -17,22 +17,15 @@ export const tagConfig = {
     type: 'keep' as const,
     label: tl('Tags.Keep'),
     sortOrder: 1,
-    hotkey: 'shift+2',
+    hotkey: 'shift+1',
     icon: tagIcon,
   },
   junk: {
     type: 'junk' as const,
     label: tl('Tags.Junk'),
     sortOrder: 2,
-    hotkey: 'shift+3',
+    hotkey: 'shift+2',
     icon: banIcon,
-  },
-  hotperk: {
-    type: 'hotperk' as const,
-    label: tl('Tags.HotPerk' as any),
-    sortOrder: 0,
-    hotkey: 'shift+1',
-    icon: tagIcon,
   },
 };
 
@@ -54,9 +47,11 @@ export function fromApiTagValue(tag: ApiTagValue | undefined): TagValue | undefi
     return tag as TagValue;
   }
   // Map API tags to our supported tags
-  if (tag === 'favorite') {return 'hotperk';}
+  if (tag === 'favorite') {return 'keep';} // Map favorite -> keep
   if (tag === 'archive') {return 'junk';}
   if (tag === 'infuse') {return 'junk';}
+  // Handle any remaining old hotperk tags by converting to keep
+  if (tag === 'hotperk') {return 'keep';}
   // Default for unknown tags
   return undefined;
 }
@@ -71,7 +66,6 @@ export const characterDisplacePriority: (TagValue | 'none')[] = [
   'junk',
   'none',
   'keep',
-  'hotperk',
 ];
 
 /**
@@ -84,7 +78,6 @@ export const vaultDisplacePriority: (TagValue | 'none')[] = [
   'junk',
   'none',
   'keep',
-  'hotperk',
 ];
 
 /**
@@ -92,7 +85,6 @@ export const vaultDisplacePriority: (TagValue | 'none')[] = [
  * Tag values earlier in this list are more likely to be chosen.
  */
 export const equipReplacePriority: (TagValue | 'none')[] = [
-  'hotperk',
   'keep',
   'none',
   'junk',

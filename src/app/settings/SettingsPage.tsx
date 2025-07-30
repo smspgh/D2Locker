@@ -336,7 +336,7 @@ export default function SettingsPage() {
                 <InventoryItem
                   item={exampleWeaponMasterworked}
                   isNew={settings.showNewItems}
-                  tag="hotperk"
+                  tag="keep"
                   wishlistRoll={godRoll}
                   autoLockTagged={settings.autoLockTagged}
                 />

@@ -1,3 +1,4 @@
+import { CustomStatDef } from '@destinyitemmanager/dim-api-types';
 import { stripAdept } from 'app/compare/compare-utils';
 import { tl } from 'app/i18next-t';
 import { TagValue } from 'app/inventory/dim-item-info';
@@ -5,7 +6,7 @@ import { DimItem } from 'app/inventory/item-types';
 import { getRollAppraiserUtilsSync } from 'app/roll-appraiser/rollAppraiserService';
 import { DEFAULT_SHADER, armorStats } from 'app/search/d2-known-values';
 import { chainComparator, compareBy, reverseComparator } from 'app/utils/comparators';
-import { isArtifice } from 'app/utils/item-utils';
+import { isArtifice, isClassCompatible } from 'app/utils/item-utils';
 import { getSocketsByType } from 'app/utils/socket-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { BucketHashes } from 'data/d2/generated-enums';
@@ -13,7 +14,7 @@ import { ItemFilterDefinition } from '../item-filter-types';
 import { PerksSet } from './perks-set';
 import { StatsSet } from './stats-set';
 
-const notableTags = ['favorite', 'keep'];
+const notableTags = ['keep'];
 
 /** outputs a string combination of the identifying features of an item, or the hash if classified */
 export const makeDupeID = (item: DimItem) =>
@@ -116,6 +117,82 @@ export const sortDupes = (
           compareBy((i) => i.id), // tiebreak by ID
         ),
       );
+
+  for (const dupeList of Object.values(dupes)) {
+    if (dupeList.length > 1) {
+      dupeList.sort(dupeComparator);
+    }
+  }
+
+  return dupes;
+};
+
+/**
+ * Sort duplicates for "dupebest" search - best item first.
+ * For weapons: Use combo rank (lower rank number = better)
+ * For armor: Use custom stat value (higher value = better) when available, otherwise use power
+ */
+export const sortDupesBest = (
+  dupes: {
+    [dupeID: string]: DimItem[];
+  },
+  getTag: (item: DimItem) => TagValue | undefined,
+  customStats: CustomStatDef[],
+) => {
+  const dupeComparator = chainComparator<DimItem>(
+    // 1. For armor: prioritize highest custom stat value if custom stats exist
+    compareBy((item) => {
+      if (item.bucket.inArmor && customStats.length > 0) {
+        // Find the highest custom stat value for this item
+        let highestCustomStatValue = 0;
+        for (const customStat of customStats) {
+          if (isClassCompatible(customStat.class, item.classType)) {
+            const stat = item.stats?.find(s => s.statHash === customStat.statHash);
+            if (stat && stat.value > highestCustomStatValue) {
+              highestCustomStatValue = stat.value;
+            }
+          }
+        }
+        // Return negative value so higher custom stat values are sorted first
+        return -highestCustomStatValue;
+      }
+      return 0; // No priority for non-armor or when no custom stats exist
+    }),
+    // 2. Best Combo Rank (for weapons) - lower rank numbers are better
+    compareBy((item) => {
+      if (item.bucket.inWeapons && item.sockets) {
+        const utils = getRollAppraiserUtilsSync();
+        if (!utils) return Number.MAX_SAFE_INTEGER;
+        
+        const traitPerks = getSocketsByType(item, 'traits');
+        if (traitPerks.length >= 2) {
+          const perk4Hash = traitPerks[0]?.plugged?.plugDef.hash;
+          const perk5Hash = traitPerks[1]?.plugged?.plugDef.hash;
+          
+          if (perk4Hash && perk5Hash) {
+            const comboRank = utils.getTraitComboRank(item.hash.toString(), perk4Hash, perk5Hash);
+            if (comboRank) {
+              return comboRank.rank;
+            }
+          }
+        }
+      }
+      return Number.MAX_SAFE_INTEGER;
+    }),
+    // 3. Highest Power
+    compareBy((item) => -item.power),
+    // 4. Tag priority
+    compareBy((item) => {
+      const tag = getTag(item);
+      return !Boolean(tag && notableTags.includes(tag));
+    }),
+    // 5. Masterwork status
+    compareBy((item) => !item.masterwork),
+    // 6. Lock status
+    compareBy((item) => !item.locked),
+    // 7. Item ID tiebreaker
+    compareBy((i) => i.id),
+  );
 
   for (const dupeList of Object.values(dupes)) {
     if (dupeList.length > 1) {
@@ -301,8 +378,8 @@ const dupeFilters: ItemFilterDefinition[] = [
   {
     keywords: 'dupebest',
     description: tl('Filter.DupeBest'),
-    filter: ({ allItems, getTag }) => {
-      const duplicates = sortDupes(computeDupes(allItems), getTag, 'dupebest');
+    filter: ({ allItems, getTag, customStats }) => {
+      const duplicates = sortDupesBest(computeDupes(allItems), getTag, customStats);
       return (item) => {
         const dupeId = makeDupeID(item);
         const dupes = duplicates[dupeId];

@@ -66,7 +66,7 @@ export default function Select<T>({
     selectedItem,
   } = useSelect({
     items,
-    selectedItem: items.find((o) => o.value === value),
+    selectedItem: items.find((o) => o.value === value) || null,
     itemToString: (i) => i?.key || 'none',
     onSelectedItemChange: ({ selectedItem }) => onChange(selectedItem?.value),
     isItemDisabled: (item) => Boolean(item.disabled),
@@ -89,7 +89,8 @@ export default function Select<T>({
     [isOpen, items],
   );
 
-  if (!selectedItem) {
+  // Only throw error if value is defined but doesn't match any option
+  if (value !== undefined && !selectedItem) {
     throw new Error('value must correspond to one of the provided options');
   }
 
@@ -133,7 +134,7 @@ export default function Select<T>({
       >
         {children ?? (
           <>
-            {selectedItem.content}{' '}
+            {selectedItem?.content}{' '}
             <AppIcon icon={isOpen ? expandUpIcon : expandDownIcon} className={styles.arrow} />
           </>
         )}

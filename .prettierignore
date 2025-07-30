@@ -1,0 +1,9 @@
+Gruntfile.js
+tools/
+dist/
+extension/
+*.md
+*.yml
+*.m.scss.d.ts
+src/data/**
+/// <reference lib="webworker" />

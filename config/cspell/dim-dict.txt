@@ -16,7 +16,7 @@ equippable
 elgato
 favorited
 ICHs
-indimloadout
+InD2lLoadout
 iningameloadout
 inleftchar
 inloadout

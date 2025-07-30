@@ -170,8 +170,8 @@ const groupComparator = (getTag?: (item: DimItem) => TagValue | undefined) =>
     compareBy(({ dimItem }: MappedItem) => -(dimItem.energy?.energyCapacity || 0)),
     // Prefer owned items over vendor items
     compareBy(({ dimItem }: MappedItem) => Boolean(dimItem.vendor)),
-    // Prefer hotperk items
-    compareBy(({ dimItem }: MappedItem) => getTag?.(dimItem) !== 'hotperk'),
+    // Prefer keep items
+    compareBy(({ dimItem }: MappedItem) => getTag?.(dimItem) !== 'keep'),
     // Prefer items with higher power
     compareBy(({ dimItem }: MappedItem) => -dimItem.power),
     // Prefer items that are equipped
