@@ -1,6 +1,6 @@
-import { trackTriumph } from 'app/dim-api/basic-actions';
-import { trackedTriumphsSelector } from 'app/dim-api/selectors';
-import RichDestinyText from 'app/dim-ui/destiny-symbols/RichDestinyText';
+import { trackTriumph } from 'app/d2l-api/basic-actions';
+import { trackedTriumphsSelector } from 'app/d2l-api/selectors';
+import RichDestinyText from 'app/d2l-ui/destiny-symbols/RichDestinyText';
 import { t } from 'app/i18next-t';
 import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
 import { createItemContextSelector } from 'app/inventory/selectors';
@@ -20,13 +20,13 @@ import {
 } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import catalystIcons from 'data/d2/catalyst-triumph-icons.json';
-import dimTrackedIcon from 'images/dimTrackedIcon.svg';
+import d2lTrackedIcon from 'images/d2lTrackedIcon.svg';
 import trackedIcon from 'images/trackedIcon.svg';
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import ishtarIcon from '../../images/ishtar-collective.svg';
-import BungieImage from '../dim-ui/BungieImage';
-import ExternalLink from '../dim-ui/ExternalLink';
+import BungieImage from '../d2l-ui/BungieImage';
+import ExternalLink from '../d2l-ui/ExternalLink';
 import Objective from '../progress/Objective';
 import styles from './Record.m.scss';
 import { makeItemForCatalystRecord } from './catalysts';
@@ -221,8 +221,8 @@ function Record({
         {trackedInGame && <img className={styles.trackedIcon} src={trackedIcon} />}
       </div>
       {(!acquired || trackedInDim) && (
-        <div role="button" onClick={toggleTracked} className={styles.dimTrackedIcon}>
-          <img src={dimTrackedIcon} />
+        <div role="button" onClick={toggleTracked} className={styles.d2lTrackedIcon}>
+          <img src={d2lTrackedIcon} />
         </div>
       )}
       {intervalProgressBar}

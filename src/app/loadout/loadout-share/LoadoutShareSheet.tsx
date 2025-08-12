@@ -1,7 +1,7 @@
 import { DestinyAccount } from 'app/accounts/destiny-account';
-import { createLoadoutShare } from 'app/dim-api/dim-api';
-import Sheet from 'app/dim-ui/Sheet';
-import UserGuideLink from 'app/dim-ui/UserGuideLink';
+import { createLoadoutShare } from 'app/d2l-api/d2l-api';
+import Sheet from 'app/d2l-ui/Sheet';
+import UserGuideLink from 'app/d2l-ui/UserGuideLink';
 import { t } from 'app/i18next-t';
 import { convertDimLoadoutToApiLoadout } from 'app/loadout/loadout-type-converters';
 import { Loadout } from 'app/loadout/loadout-types';
@@ -123,7 +123,7 @@ export default function LoadoutShareSheet({
                 {canShare ? (
                   <button
                     type="button"
-                    className="dim-button"
+                    className="d2l-button"
                     onClick={() => handleShare(onClose)}
                     disabled={!shareUrl}
                   >
@@ -132,7 +132,7 @@ export default function LoadoutShareSheet({
                 ) : (
                   <button
                     type="button"
-                    className="dim-button"
+                    className="d2l-button"
                     onClick={handleCopy}
                     disabled={!shareUrl}
                   >

@@ -1,10 +1,10 @@
 import { LoadoutParameters, StatConstraint } from '@destinyitemmanager/dim-api-types';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
-import { savedLoStatConstraintsByClassSelector } from 'app/dim-api/selectors';
-import CharacterSelect from 'app/dim-ui/CharacterSelect';
-import CollapsibleTitle from 'app/dim-ui/CollapsibleTitle';
-import PageWithMenu from 'app/dim-ui/PageWithMenu';
-import UserGuideLink from 'app/dim-ui/UserGuideLink';
+import { savedLoStatConstraintsByClassSelector } from 'app/d2l-api/selectors';
+import CharacterSelect from 'app/d2l-ui/CharacterSelect';
+import CollapsibleTitle from 'app/d2l-ui/CollapsibleTitle';
+import PageWithMenu from 'app/d2l-ui/PageWithMenu';
+import UserGuideLink from 'app/d2l-ui/UserGuideLink';
 import { t } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
 import { DimStore } from 'app/inventory/store-types';
@@ -664,7 +664,7 @@ function UndoRedoControls({
   return (
     <div className={styles.undoRedo}>
       <button
-        className="dim-button"
+        className="d2l-button"
         onClick={() => lbDispatch({ type: 'undo' })}
         type="button"
         disabled={!canUndo}
@@ -672,7 +672,7 @@ function UndoRedoControls({
         <AppIcon icon={undoIcon} /> {t('Loadouts.Undo')}
       </button>
       <button
-        className="dim-button"
+        className="d2l-button"
         onClick={() => lbDispatch({ type: 'redo' })}
         type="button"
         disabled={!canRedo}

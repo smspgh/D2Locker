@@ -1,4 +1,4 @@
-import useBulkNote from 'app/dim-ui/useBulkNote';
+import useBulkNote from 'app/d2l-ui/useBulkNote';
 import ItemActionsDropdown from 'app/item-actions/ItemActionsDropdown';
 import { querySelector } from 'app/shell/selectors';
 import { motion } from 'motion/react';

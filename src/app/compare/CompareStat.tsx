@@ -1,4 +1,4 @@
-import AnimatedNumber from 'app/dim-ui/AnimatedNumber';
+import AnimatedNumber from 'app/d2l-ui/AnimatedNumber';
 import RecoilStat, { recoilValue } from 'app/item-popup/RecoilStat';
 import { getCompareColor, percent } from 'app/shell/formatters';
 import clsx from 'clsx';

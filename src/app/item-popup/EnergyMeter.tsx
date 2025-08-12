@@ -1,4 +1,4 @@
-import { EnergyMeterIncrements } from 'app/dim-ui/EnergyIncrements';
+import { EnergyMeterIncrements } from 'app/d2l-ui/EnergyIncrements';
 import { t } from 'app/i18next-t';
 import { insertPlug } from 'app/inventory/advanced-write-actions';
 import { DimItem } from 'app/inventory/item-types';

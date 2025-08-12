@@ -23,7 +23,7 @@ function processAction(defs: D2ManifestDefinitions, originalItem: DimItem, actio
       (socket) => socket.socketIndex === action.socketIndex,
     )!;
 
-    // DIM internally ensures no-ops don't make it to Bungie.net,
+    // D2L internally ensures no-ops don't make it to Bungie.net,
     // but they're required for UI progress reporting.
     if (targetedSocket.plugged!.plugDef.hash === action.mod.hash) {
       return;
@@ -211,6 +211,6 @@ describe('mod-assignment-utils plugging strategy', () => {
   });
 
   // There's some situations we currently can't test -- e.g. the circular dependency in
-  // https://github.com/DestinyItemManager/DIM/issues/7465#issuecomment-1379112834 because
+  // https://github.com/DestinyItemManager/D2L/issues/7465#issuecomment-1379112834 because
   // currently all mutex mods have the same energy cost -- 1.
 });

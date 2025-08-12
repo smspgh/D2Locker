@@ -7,7 +7,7 @@ import {
   allAtomicStats,
   armorAnyStatHashes,
   armorStatHashes,
-  dimArmorStatHashByName,
+  d2lArmorStatHashByName,
   est,
   estStatNames,
   searchableArmorStatNames,
@@ -48,7 +48,7 @@ const statFilters: ItemFilterDefinition[] = [
           keywords: 'stat',
           format: 'stat',
           suggestions: [
-            ...allAtomicStats, 
+            ...allAtomicStats,
             ...(customStats?.map((c) => c.shortLabel) ?? []),
             ...(customStats?.map((c) => `${c.shortLabel}:best`) ?? [])
           ],
@@ -90,7 +90,7 @@ const statFilters: ItemFilterDefinition[] = [
     keywords: 'maxstatloadout',
     description: tl('Filter.StatsLoadout'),
     format: 'query',
-    suggestions: Object.keys(dimArmorStatHashByName),
+    suggestions: Object.keys(d2lArmorStatHashByName),
     destinyVersion: 2,
     filter: ({ filterValue, stores, allItems }) => {
       const maxStatLoadout = findMaxStatLoadout(stores, allItems, filterValue);
@@ -197,6 +197,141 @@ const statFilters: ItemFilterDefinition[] = [
         Boolean(item.power) && maxPowerPerBucket[maxPowerKey(item, classMatters)] <= item.power;
     },
   },
+  {
+    keywords: ['maxpower', 'accountmaxpower'],
+    description: tl('Filter.MaxPower'),
+    format: 'range',
+    destinyVersion: 2,
+    filter: ({ allItems, lhs, compare }) => {
+      if (!compare) {
+        return () => false;
+      }
+
+      const classMatters = lhs === 'maxpower';
+
+      // Get all items grouped by bucket
+      const allItemsByBucketClass: Record<string, DimItem[]> = {};
+
+      for (const item of allItems) {
+        if (item.classType !== DestinyClass.Classified && Boolean(item.power)) {
+          const key = maxPowerKey(item, classMatters);
+          if (!allItemsByBucketClass[key]) {
+            allItemsByBucketClass[key] = [];
+          }
+          allItemsByBucketClass[key].push(item);
+        }
+      }
+
+      // Pre-sort all buckets
+      const sortedBuckets: Record<string, DimItem[]> = {};
+      for (const [key, items] of Object.entries(allItemsByBucketClass)) {
+        sortedBuckets[key] = items.sort((a, b) => b.power - a.power);
+      }
+
+      return (item: DimItem) => {
+        if (!Boolean(item.power)) {
+          return false;
+        }
+
+        const bucketKey = maxPowerKey(item, classMatters);
+        const sortedItems = sortedBuckets[bucketKey];
+        if (!sortedItems || sortedItems.length === 0) {
+          return false;
+        }
+
+        // Find the rank of this item (1-based)
+        const rank = sortedItems.findIndex((i) => i.id === item.id) + 1;
+
+        // Return true if this item's rank passes the comparison
+        return rank > 0 && compare(rank);
+      };
+    },
+  },
+  {
+    keywords: 'maxpowertier',
+    description: tl('Filter.MaxPowerTier'),
+    format: 'query',
+    destinyVersion: 2,
+    suggestions: [
+      // Legendary ✨
+      'legendary:1', 'legendary:2', 'legendary:3', 'legendary:4', 'legendary:5',
+      'legendary:6', 'legendary:7', 'legendary:8', 'legendary:9', 'legendary:10',
+      'exotic:1', 'exotic:2', 'exotic:3', 'exotic:4', 'exotic:5',
+      'exotic:6', 'exotic:7', 'exotic:8', 'exotic:9', 'exotic:10',
+      'rare:1', 'rare:2', 'rare:3', 'rare:4', 'rare:5',
+      'rare:6', 'rare:7', 'rare:8', 'rare:9', 'rare:10',
+      'uncommon:1', 'uncommon:2', 'uncommon:3', 'uncommon:4', 'uncommon:5',
+      'uncommon:6', 'uncommon:7', 'uncommon:8', 'uncommon:9', 'uncommon:10',
+      'common:1', 'common:2', 'common:3', 'common:4', 'common:5',
+      'common:6', 'common:7', 'common:8', 'common:9', 'common:10'
+    ],
+    filter: ({ allItems, filterValue }) => {
+      // Parse the filter value like "legendary:3" or "exotic:2"
+      const parts = filterValue.split(':');
+      if (parts.length !== 2) {
+        return () => false;
+      }
+
+      const [tierName, countStr] = parts;
+      const count = parseInt(countStr, 10);
+      if (isNaN(count) || count < 1) {
+        return () => false;
+      }
+
+      // Map tier names to rarity values
+      const tierToRarity: Record<string, string> = {
+        'common': 'Common',
+        'uncommon': 'Uncommon',
+        'rare': 'Rare',
+        'legendary': 'Legendary',
+        'exotic': 'Exotic'
+      };
+
+      const rarity = tierToRarity[tierName.toLowerCase()];
+      if (rarity === undefined) {
+        return () => false;
+      }
+
+      // Group items by bucket and class, but only include items of the specified tier
+      const tierItemsByBucketClass: Record<string, DimItem[]> = {};
+
+      for (const item of allItems) {
+        if (item.classType !== DestinyClass.Classified &&
+            Boolean(item.power) &&
+            item.rarity === rarity) {
+          const key = maxPowerKey(item, true); // Always consider class for tier-specific
+          if (!tierItemsByBucketClass[key]) {
+            tierItemsByBucketClass[key] = [];
+          }
+          tierItemsByBucketClass[key].push(item);
+        }
+      }
+
+      // Pre-sort all buckets by power
+      const sortedBuckets: Record<string, DimItem[]> = {};
+      for (const [key, items] of Object.entries(tierItemsByBucketClass)) {
+        sortedBuckets[key] = items.sort((a, b) => b.power - a.power);
+      }
+
+      return (item: DimItem) => {
+        if (!Boolean(item.power) || item.rarity !== rarity) {
+          return false;
+        }
+
+        const bucketKey = maxPowerKey(item, true);
+        const sortedItems = sortedBuckets[bucketKey];
+        if (!sortedItems || sortedItems.length === 0) {
+          return false;
+        }
+
+        // Find the rank of this item within its tier (1-based)
+        const rank = sortedItems.findIndex((i) => i.id === item.id) + 1;
+
+        // Return true if this item is within the top N for its tier
+        return rank > 0 && rank <= count;
+      };
+    },
+  },
 ];
 
 export default statFilters;
@@ -214,7 +349,7 @@ function statFilterFromString(
   // Handle special case for ":best" searches like "wsc:best"
   if (statNames.endsWith(':best')) {
     const customStatName = statNames.replace(':best', '');
-    
+
     // Find the custom stat definition
     const customStat = customStats.find(c => c.shortLabel === customStatName);
     if (!customStat) {
@@ -223,7 +358,7 @@ function statFilterFromString(
 
     // Gather highest custom stats for comparison
     const highestCustomStatsPerSlotPerTier = gatherHighestCustomStats(allItems, customStats);
-    
+
     return (item: DimItem) => {
       // this must be armor with stats
       if (!item.bucket.inArmor || !item.stats) {
@@ -384,7 +519,7 @@ type MaxValuesDict = Record<
 >;
 
 /** given our known max stat dict, see if this item and stat are among the max stat havers */
-function checkIfStatMatchesMaxValue(
+export function checkIfStatMatchesMaxValue(
   maxStatValues: MaxValuesDict,
   item: DimItem,
   statName: string,
@@ -407,7 +542,7 @@ function checkIfStatMatchesMaxValue(
   return matchingStats && Boolean(matchingStats.length);
 }
 
-function gatherHighestStats(allItems: DimItem[]) {
+export function gatherHighestStats(allItems: DimItem[]) {
   const maxStatValues: MaxValuesDict = { all: {}, nonexotic: {} };
 
   for (const i of allItems) {
@@ -446,11 +581,21 @@ function maxPowerKey(item: DimItem, classMatters: boolean) {
 function calculateMaxPowerPerBucket(allItems: DimItem[], classMatters: boolean) {
   // disregard no-class armor
   const validItems = allItems.filter((i) => i.classType !== DestinyClass.Classified);
-  const allItemsByBucketClass = Object.groupBy(validItems, (i) => maxPowerKey(i, classMatters));
+  const allItemsByBucketClass: Record<string, DimItem[]> = {};
+
+  for (const item of validItems) {
+    const key = maxPowerKey(item, classMatters);
+    if (!allItemsByBucketClass[key]) {
+      allItemsByBucketClass[key] = [];
+    }
+    allItemsByBucketClass[key].push(item);
+  }
+
   return mapValues(allItemsByBucketClass, (items) =>
-    items.length ? maxOf(items, (i) => i.power) : 0,
+    items && items.length ? maxOf(items, (i) => i.power) : 0,
   );
 }
+
 
 type MaxCustomStatValuesDict = Record<
   'all' | 'nonexotic',

@@ -7,7 +7,7 @@ const SELF = "'self'";
  * Generate a Content Security Policy directive for a particular D2 Locker environment (beta, release)
  */
 export default function csp(
-  env: 'release' | 'beta' | 'dev' | 'pr',
+  env: 'release' | 'beta' | 'dev' | 'pr' | 'production-hmr',
   featureFlags: FeatureFlags,
   version: string | undefined,
 ) {
@@ -41,7 +41,7 @@ export default function csp(
       // Wishlists
       featureFlags.wishLists && '',
       featureFlags.wishLists && '',
-      // DIM Sync
+      // d2l sync
       'https://shirezaks.com',
       // Clarity
       featureFlags.clarityDescriptions && '',

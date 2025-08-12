@@ -6,7 +6,7 @@ import {
   currentAccountMembershipIdSelector,
   destinyVersionSelector,
 } from 'app/accounts/selectors';
-import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
+import ShowPageLoading from 'app/d2l-ui/ShowPageLoading';
 import { t } from 'app/i18next-t';
 import { accountRoute } from 'app/routes';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
@@ -74,7 +74,7 @@ export default function DefaultAccount() {
   // to choose from, instead of selecting one based on play time or something.
   if (accounts.length > 0) {
     return (
-      <div className="dim-page">
+      <div className="d2l-page">
         <SelectAccount path={resultPath} />
       </div>
     );
@@ -83,7 +83,7 @@ export default function DefaultAccount() {
   // Finally, just show an error about there being no characters. We don't have anything else
   // to go on,
   return (
-    <div className="dim-page">
+    <div className="d2l-page">
       <ErrorPanel
         error={accountsError}
         fallbackMessage={t('Accounts.NoCharacters')}

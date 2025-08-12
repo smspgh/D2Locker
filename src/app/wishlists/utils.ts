@@ -4,11 +4,11 @@ import { filterMap } from 'app/utils/collections';
 export const builtInWishlists: { name: I18nKey; url: string }[] = [
   {
     name: tl('WishListRoll.Voltron'),
-    url: 'https://raw.githubusercontent.com/48klocs/dim-wish-list-sources/master/voltron.txt',
+    url: 'https://raw.githubusercontent.com/48klocs/d2l-wish-list-sources/master/voltron.txt',
   },
   {
     name: tl('WishListRoll.JustAnotherTeam'),
-    url: 'https://raw.githubusercontent.com/dsf000z/JAT-wishlists-bundler/main/bundles/DIM-strict/just-another-team-mnk.txt',
+    url: 'https://raw.githubusercontent.com/dsf000z/JAT-wishlists-bundler/main/bundles/D2L-strict/just-another-team-mnk.txt',
   },
 ];
 
@@ -27,7 +27,7 @@ export function validateWishListURLs(url: string): string[] {
       } else if (!wishListAllowedHosts.includes(parsedUrl.host)) {
         // If folks paste the github link, change it to the raw link
         if (parsedUrl.host === 'github.com') {
-          // e.g. github.com/48klocs/dim-wish-list-sources/blob/master/voltron.txt => https://raw.githubusercontent.com/48klocs/dim-wish-list-sources/refs/heads/master/voltron.txt
+          // e.g. github.com/48klocs/d2l-wish-list-sources/blob/master/voltron.txt => https://raw.githubusercontent.com/48klocs/d2l-wish-list-sources/refs/heads/master/voltron.txt
           const match = parsedUrl.pathname.match(/^\/([^/]+)\/([^/]+)\/blob\/(.*)/);
           if (match) {
             return `https://raw.githubusercontent.com/${match[1]}/${match[2]}/refs/heads/${match[3]}`;

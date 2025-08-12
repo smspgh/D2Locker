@@ -1,6 +1,6 @@
-import { settingSelector } from 'app/dim-api/selectors';
-import BungieImage from 'app/dim-ui/BungieImage';
-import { useTooltipCustomization } from 'app/dim-ui/PressTip';
+import { settingSelector } from 'app/d2l-api/selectors';
+import BungieImage from 'app/d2l-ui/BungieImage';
+import { useTooltipCustomization } from 'app/d2l-ui/PressTip';
 import { DimCharacterStat } from 'app/inventory/store-types';
 import { statTier } from 'app/loadout-builder/utils';
 import { edgeOfFateReleased, EFFECTIVE_MAX_STAT } from 'app/loadout/known-values';

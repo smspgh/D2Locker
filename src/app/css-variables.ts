@@ -1,4 +1,4 @@
-import { settingsSelector } from 'app/dim-api/selectors';
+import { settingsSelector } from 'app/d2l-api/selectors';
 import { deepEqual } from 'fast-equals';
 import { isPhonePortraitSelector } from './shell/selectors';
 import { StoreObserver } from './store/observerMiddleware';

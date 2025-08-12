@@ -1,4 +1,4 @@
-import Sheet from 'app/dim-ui/Sheet';
+import Sheet from 'app/d2l-ui/Sheet';
 import { t } from 'app/i18next-t';
 import { resolveInGameLoadoutIdentifiers } from 'app/loadout/loadout-type-converters';
 import { InGameLoadout } from 'app/loadout/loadout-types';
@@ -120,7 +120,7 @@ export default function EditInGameLoadout({
 
   const footer = (
     <form onSubmit={handleSave}>
-      <button type="submit" className="dim-button">
+      <button type="submit" className="d2l-button">
         {creating
           ? wouldOverwrite
             ? t('InGameLoadout.Replace', { index: slot + 1 })

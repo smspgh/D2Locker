@@ -1,4 +1,4 @@
-import BucketIcon from 'app/dim-ui/svgs/BucketIcon';
+import BucketIcon from 'app/d2l-ui/svgs/BucketIcon';
 import { bucketsSelector } from 'app/inventory/selectors';
 import clsx from 'clsx';
 import { BucketHashes } from 'data/d2/generated-enums';

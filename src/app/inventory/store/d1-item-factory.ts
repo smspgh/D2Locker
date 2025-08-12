@@ -46,7 +46,7 @@ import { createItemIndex } from './item-index';
 const TAG = 'd1-stores';
 
 /**
- * Process an entire list of items into DIM items.
+ * Process an entire list of items into D2L items.
  * @param owner the ID of the owning store.
  * @param items a list of "raw" items from the Destiny API
  * @return a promise for the list of items
@@ -174,7 +174,7 @@ export function makeFakeItem(
 }
 
 /**
- * Process a single raw item into a DIM item.
+ * Process a single raw item into a D2L item.
  * @param defs the manifest definitions
  * @param buckets the bucket definitions
  * @param previousItems a set of item IDs representing the previous store's items
@@ -582,7 +582,7 @@ function buildTalentGrid(
     const xpRequired = xpToReachLevel(activatedAtGridLevel) - startProgressionBarAtProgress;
     const xp = clamp(totalXP - startProgressionBarAtProgress, 0, xpRequired);
 
-    // Build a perk string for the DTR link. See https://github.com/DestinyItemManager/DIM/issues/934
+    // Build a perk string for the DTR link. See https://github.com/DestinyItemManager/D2L/issues/934
     let dtrHash: string | null = null;
     if (node.isActivated || talentNodeGroup.isRandom) {
       dtrHash = node.nodeHash.toString(16);

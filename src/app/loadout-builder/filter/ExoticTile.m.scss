@@ -1,7 +1,7 @@
 @use '../../variables' as *;
 
 .perkOrModNameAndImage {
-  composes: flexRow from '../../dim-ui/common.m.scss';
+  composes: flexRow from '../../d2l-ui/common.m.scss';
   align-items: center;
   gap: 4px;
 }

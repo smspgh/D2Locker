@@ -19,7 +19,7 @@
 }
 
 .actionButton {
-  composes: resetButton from 'app/dim-ui/common.m.scss';
+  composes: resetButton from 'app/d2l-ui/common.m.scss';
   composes: entry;
 
   @media (min-width: 541px) {

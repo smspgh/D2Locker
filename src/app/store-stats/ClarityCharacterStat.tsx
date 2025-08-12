@@ -1,7 +1,7 @@
 import { ClarityCharacterStats } from 'app/clarity/descriptions/character-stats';
 import { clarityCharacterStatsSelector } from 'app/clarity/selectors';
-import BungieImage from 'app/dim-ui/BungieImage';
-import { Tooltip } from 'app/dim-ui/PressTip';
+import BungieImage from 'app/d2l-ui/BungieImage';
+import { Tooltip } from 'app/d2l-ui/PressTip';
 import { t } from 'app/i18next-t';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { timerDurationFromMsWithDecimal } from 'app/utils/time';

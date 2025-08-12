@@ -1,11 +1,11 @@
 import { handleErrors } from 'app/bungie-api/bungie-service-helper';
 import { HttpStatusError, toHttpStatusError } from 'app/bungie-api/http-client';
-import { settingsSelector } from 'app/dim-api/selectors';
+import { settingsSelector } from 'app/d2l-api/selectors';
 import { t } from 'app/i18next-t';
 import { loadingEnd, loadingStart } from 'app/shell/actions';
 import { del, get, keys, set } from 'app/storage/idb-keyval';
 import { ThunkResult } from 'app/store/types';
-import { DimError } from 'app/utils/dim-error';
+import { DimError } from 'app/utils/d2l-error';
 import { emptyArray, emptyObject } from 'app/utils/empty';
 import { convertToError } from 'app/utils/errors';
 import { errorLog, infoLog, timer } from 'app/utils/log';
@@ -247,14 +247,14 @@ export async function downloadManifestComponents(
   },
   tableAllowList: TableShortName[],
 ) {
-  // Adding a cache buster to work around bad cached CloudFlare data: https://github.com/DestinyItemManager/DIM/issues/5101
+  // Adding a cache buster to work around bad cached CloudFlare data: https://github.com/DestinyItemManager/D2L/issues/5101
   // try canonical component URL which should likely be already cached,
-  // then fall back to appending "?dim" then "?dim-[random numbers]",
+  // then fall back to appending "?d2l" then "?d2l-[random numbers]",
   // in case cloudflare has inappropriately cached another domain's CORS headers or a 404 that's no longer a 404
   const cacheBusterStrings = [
     '',
-    '?dim',
-    `?dim-${Math.random().toString().split('.')[1] ?? 'dimCacheBust'}`,
+    '?d2l',
+    `?d2l-${Math.random().toString().split('.')[1] ?? 'd2lCacheBust'}`,
   ];
 
   const manifest: Partial<AllDestinyManifestComponents> = {};

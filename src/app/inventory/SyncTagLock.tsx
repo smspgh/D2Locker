@@ -3,7 +3,7 @@ import { errorLog, infoLog } from 'app/utils/log';
 import { memo, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { createSelector } from 'reselect';
-import { TagValue } from './dim-item-info';
+import { TagValue } from './d2l-item-info';
 import { setItemLockState } from './item-move-service';
 import { DimItem } from './item-types';
 import { allItemsSelector, getTagSelector, profileErrorSelector } from './selectors';
@@ -13,7 +13,7 @@ export function canSyncLockState(item: DimItem) {
   return (
     item.lockable &&
     item.taggable &&
-    // don't auto-lock crafted items because they must be unlocked to reshape and DIM shouldn't re-lock an item while the user is choosing new perks
+    // don't auto-lock crafted items because they must be unlocked to reshape and D2L shouldn't re-lock an item while the user is choosing new perks
     item.crafted !== 'crafted'
   );
 }
@@ -29,7 +29,6 @@ function getNextItemToChangeLockState(
   for (const item of allItems) {
     if (canSyncLockState(item)) {
       switch (getTag(item)) {
-        case 'hotperk':
         case 'keep': {
           if (!item.locked) {
             return [item, true];

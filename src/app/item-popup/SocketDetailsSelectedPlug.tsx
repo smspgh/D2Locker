@@ -1,6 +1,6 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
-import BungieImage from 'app/dim-ui/BungieImage';
-import RichDestinyText from 'app/dim-ui/destiny-symbols/RichDestinyText';
+import BungieImage from 'app/d2l-ui/BungieImage';
+import RichDestinyText from 'app/d2l-ui/destiny-symbols/RichDestinyText';
 import { t } from 'app/i18next-t';
 import { canInsertPlug, insertPlug } from 'app/inventory/advanced-write-actions';
 import {
@@ -166,7 +166,7 @@ export default function SocketDetailsSelectedPlug({
 
     return {
       modValue,
-      dimStat: {
+      d2lStat: {
         ...itemStat,
         value: itemStatValue,
       } as DimStat,
@@ -229,7 +229,7 @@ export default function SocketDetailsSelectedPlug({
 
   const plugDescriptions = usePlugDescriptions(
     plug,
-    stats.map((stat) => ({ value: stat.modValue, statHash: stat.dimStat.statHash })),
+    stats.map((stat) => ({ value: stat.modValue, statHash: stat.d2lStat.statHash })),
   );
 
   // Only show Exotic catalyst requirements if the catalyst is incomplete. We assume
@@ -290,13 +290,13 @@ export default function SocketDetailsSelectedPlug({
         {stats.length > 0 && (
           <PlugStats
             stats={stats.map((stat) => ({
-              statHash: stat.dimStat.statHash,
+              statHash: stat.d2lStat.statHash,
               value: stat.modValue,
             }))}
           />
         )}
         {stats.length > 0 && (
-          <ItemStats stats={stats.map((s) => s.dimStat)} className={styles.itemStats} />
+          <ItemStats stats={stats.map((s) => s.d2lStat)} className={styles.itemStats} />
         )}
       </div>
 

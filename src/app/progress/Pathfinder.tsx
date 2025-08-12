@@ -1,5 +1,5 @@
-import { trackedTriumphsSelector } from 'app/dim-api/selectors';
-import CollapsibleTitle from 'app/dim-ui/CollapsibleTitle';
+import { trackedTriumphsSelector } from 'app/d2l-api/selectors';
+import CollapsibleTitle from 'app/d2l-ui/CollapsibleTitle';
 import { DimItem } from 'app/inventory/item-types';
 import { createItemContextSelector } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';

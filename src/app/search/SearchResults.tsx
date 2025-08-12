@@ -1,4 +1,4 @@
-import ClickOutsideRoot from 'app/dim-ui/ClickOutsideRoot';
+import ClickOutsideRoot from 'app/d2l-ui/ClickOutsideRoot';
 import { t } from 'app/i18next-t';
 import ConnectedInventoryItem from 'app/inventory/ConnectedInventoryItem';
 import DraggableInventoryItem from 'app/inventory/DraggableInventoryItem';
@@ -8,7 +8,7 @@ import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import clsx from 'clsx';
 import { memo, useCallback } from 'react';
 import { useSelector } from 'react-redux';
-import Sheet from '../dim-ui/Sheet';
+import Sheet from '../d2l-ui/Sheet';
 import '../inventory-page/StoreBucket.scss';
 import { DimItem } from '../inventory/item-types';
 import { itemSorterSelector } from '../settings/item-sort';

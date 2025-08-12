@@ -775,7 +775,7 @@ export function randomizeLoadoutItems(
           ...loadoutItem,
           socketOverrides: randomSubclassConfiguration(
             defs,
-            allItems.find((dimItem) => dimItem.hash === item.hash)!,
+            allItems.find((d2lItem) => d2lItem.hash === item.hash)!,
           ),
         };
       }

@@ -1,4 +1,4 @@
-import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
+import ShowPageLoading from 'app/d2l-ui/ShowPageLoading';
 import { t } from 'app/i18next-t';
 import { useSetting } from 'app/settings/hooks';
 import { AppIcon, collapseIcon, faCaretUp } from 'app/shell/icons';

@@ -14,7 +14,7 @@
     letter-spacing: normal !important;
     text-transform: none !important;
   }
-  :global(.dim-button) {
+  :global(.d2l-button) {
     color: var(--theme-text);
     font-size: 12px;
   }
@@ -25,7 +25,7 @@
 }
 
 .links {
-  composes: flexRow from '../dim-ui/common.m.scss';
+  composes: flexRow from '../d2l-ui/common.m.scss';
   flex-wrap: wrap;
   gap: 8px;
 }

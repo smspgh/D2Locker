@@ -1,7 +1,7 @@
 import { DestinyAccount } from 'app/accounts/destiny-account';
-import Countdown from 'app/dim-ui/Countdown';
-import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
-import { useDynamicStringReplacer } from 'app/dim-ui/destiny-symbols/RichDestinyText';
+import Countdown from 'app/d2l-ui/Countdown';
+import ShowPageLoading from 'app/d2l-ui/ShowPageLoading';
+import { useDynamicStringReplacer } from 'app/d2l-ui/destiny-symbols/RichDestinyText';
 import { t } from 'app/i18next-t';
 import {
   bucketsSelector,

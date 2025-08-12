@@ -1,5 +1,5 @@
-import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
-import Switch from 'app/dim-ui/Switch';
+import ShowPageLoading from 'app/d2l-ui/ShowPageLoading';
+import Switch from 'app/d2l-ui/Switch';
 import { t } from 'app/i18next-t';
 import { useLoadStores } from 'app/inventory/store/hooks';
 import { useD1Definitions } from 'app/manifest/selectors';
@@ -11,8 +11,8 @@ import clsx from 'clsx';
 import { keyBy } from 'es-toolkit';
 import { useSelector } from 'react-redux';
 import { DestinyAccount } from '../../accounts/destiny-account';
-import BungieImage, { bungieBackgroundStyle } from '../../dim-ui/BungieImage';
-import CollapsibleTitle from '../../dim-ui/CollapsibleTitle';
+import BungieImage, { bungieBackgroundStyle } from '../../d2l-ui/BungieImage';
+import CollapsibleTitle from '../../d2l-ui/CollapsibleTitle';
 import { storesSelector } from '../../inventory/selectors';
 import { D1Store } from '../../inventory/store-types';
 import Objective from '../../progress/Objective';

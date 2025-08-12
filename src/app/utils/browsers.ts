@@ -1,8 +1,8 @@
 // Utilities for browser detection. In general we avoid browser detection but
 // some bugs are not directly detectable. Keep user-agent detection here.
 
-const appStoreVersion = navigator.userAgent.includes('DIM AppStore');
-/** Is this the App Store wrapper version of DIM? */
+const appStoreVersion = navigator.userAgent.includes('D2L AppStore');
+/** Is this the App Store wrapper version of D2L? */
 export function isAppStoreVersion() {
   return appStoreVersion;
 }

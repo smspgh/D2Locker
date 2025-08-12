@@ -5,7 +5,7 @@ import { t } from 'app/i18next-t';
 import { epicIcon, faPlayStation, faSteam, faXbox } from 'app/shell/icons';
 import { ThunkResult } from 'app/store/types';
 import { compact } from 'app/utils/collections';
-import { DimError } from 'app/utils/dim-error';
+import { DimError } from 'app/utils/d2l-error';
 import { errorLog } from 'app/utils/log';
 import { LookupTable } from 'app/utils/util-types';
 import {

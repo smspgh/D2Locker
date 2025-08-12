@@ -1,5 +1,5 @@
 import { DestinyAccount } from 'app/accounts/destiny-account';
-import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
+import ShowPageLoading from 'app/d2l-ui/ShowPageLoading';
 import { t } from 'app/i18next-t';
 import { useLoadStores } from 'app/inventory/store/hooks';
 import { usePageTitle } from 'app/utils/hooks';

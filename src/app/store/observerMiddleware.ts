@@ -31,7 +31,7 @@ export interface StoreObserver<T> {
 /**
  * This is needed as the typesafe actions library throws a validation error for the observe action
  * when created with `createCustomAction`.
- * See https://github.com/DestinyItemManager/DIM/pull/10195/files#r1438195519
+ * See https://github.com/DestinyItemManager/D2L/pull/10195/files#r1438195519
  */
 function isObserveAction(action: unknown): action is ReturnType<typeof observe> {
   return (

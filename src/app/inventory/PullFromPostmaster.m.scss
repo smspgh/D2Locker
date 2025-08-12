@@ -11,7 +11,7 @@
 }
 
 .button {
-  composes: dim-button from global;
+  composes: d2l-button from global;
   align-self: center;
   display: inline-flex;
   align-items: center;

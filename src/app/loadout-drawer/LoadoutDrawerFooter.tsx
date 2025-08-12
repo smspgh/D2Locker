@@ -1,6 +1,6 @@
-import { ConfirmButton } from 'app/dim-ui/ConfirmButton';
-import { PressTip } from 'app/dim-ui/PressTip';
-import UserGuideLink from 'app/dim-ui/UserGuideLink';
+import { ConfirmButton } from 'app/d2l-ui/ConfirmButton';
+import { PressTip } from 'app/d2l-ui/PressTip';
+import UserGuideLink from 'app/d2l-ui/UserGuideLink';
 import { t } from 'app/i18next-t';
 import { loadoutSavedSelector } from 'app/loadout/selectors';
 import { AppIcon, deleteIcon, redoIcon, undoIcon } from 'app/shell/icons';
@@ -92,7 +92,7 @@ export default function LoadoutDrawerFooter({
               : undefined
           }
         >
-          <button className="dim-button" type="submit" disabled={saveDisabled}>
+          <button className="d2l-button" type="submit" disabled={saveDisabled}>
             {isSaved ? t('Loadouts.Update') : t('Loadouts.Save')}
           </button>
         </PressTip>
@@ -107,7 +107,7 @@ export default function LoadoutDrawerFooter({
             }
           >
             <button
-              className="dim-button"
+              className="d2l-button"
               onClick={(e) => onSaveLoadout(e, true)}
               type="button"
               disabled={saveAsNewDisabled}
@@ -124,7 +124,7 @@ export default function LoadoutDrawerFooter({
         )}
         {undo && (
           <button
-            className="dim-button"
+            className="d2l-button"
             onClick={undo}
             type="button"
             title={t('Loadouts.Undo')}
@@ -135,7 +135,7 @@ export default function LoadoutDrawerFooter({
         )}
         {redo && (
           <button
-            className="dim-button"
+            className="d2l-button"
             onClick={redo}
             type="button"
             title={t('Loadouts.Redo')}

@@ -1,5 +1,5 @@
-import ClassIcon from 'app/dim-ui/ClassIcon';
-import ClosableContainer from 'app/dim-ui/ClosableContainer';
+import ClassIcon from 'app/d2l-ui/ClassIcon';
+import ClosableContainer from 'app/d2l-ui/ClosableContainer';
 import ConnectedInventoryItem from 'app/inventory/ConnectedInventoryItem';
 import { ResolvedLoadoutItem } from 'app/loadout/loadout-types';
 import { BucketHashes } from 'data/d2/generated-enums';

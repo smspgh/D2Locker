@@ -18,7 +18,7 @@ import { showNotification } from '../notifications/notifications';
 import { loadingTracker } from '../shell/loading-tracker';
 import { reportException } from '../utils/sentry';
 import { error, loadNewItems, update } from './actions';
-import { cleanInfos } from './dim-item-info';
+import { cleanInfos } from './d2l-item-info';
 import { InventoryBuckets } from './inventory-buckets';
 import { d1BucketsSelector, storesLoadedSelector } from './selectors';
 import { D1Store } from './store-types';
@@ -122,7 +122,7 @@ function processCurrencies(profileInventory: D1Inventory, defs: D1ManifestDefini
 }
 
 /**
- * Process a single store from its raw form to a DIM store, with all the items.
+ * Process a single store from its raw form to a D2L store, with all the items.
  */
 function processCharacter(
   characterData: D1CharacterData,
@@ -148,7 +148,7 @@ function processCharacter(
 }
 
 /**
- * Process a single store from its raw form to a DIM store, with all the items.
+ * Process a single store from its raw form to a D2L store, with all the items.
  */
 function processVault(
   vaultInventory: D1VaultInventory,

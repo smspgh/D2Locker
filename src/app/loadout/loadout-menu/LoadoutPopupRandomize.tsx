@@ -1,5 +1,5 @@
-import HelpLink from 'app/dim-ui/HelpLink';
-import useDialog, { Body, Buttons, Title } from 'app/dim-ui/useDialog';
+import HelpLink from 'app/d2l-ui/HelpLink';
+import useDialog, { Body, Buttons, Title } from 'app/d2l-ui/useDialog';
 import { t } from 'app/i18next-t';
 import { userGuideUrl } from 'app/shell/links';
 import { isWindows } from 'app/utils/browsers';
@@ -14,7 +14,7 @@ export interface RandomLoadoutOptions {
   mods: boolean;
 }
 
-/** Persist these in a browser session. Maybe store in DIM Sync instead? */
+/** Persist these in a browser session. Maybe store in d2l sync instead? */
 let lastOptions: RandomLoadoutOptions = {
   weapons: true,
   armor: false,
@@ -65,7 +65,7 @@ function RandomizeLoadoutDialog({
 
   const okButton = (
     <button
-      className="dim-button dim-button-primary"
+      className="d2l-button d2l-button-primary"
       type="button"
       onClick={ok}
       disabled={!checkBoxes.some(({ prop }) => options[prop])}
@@ -75,7 +75,7 @@ function RandomizeLoadoutDialog({
   );
 
   const cancelButton = (
-    <button className="dim-button" type="button" onClick={cancel}>
+    <button className="d2l-button" type="button" onClick={cancel}>
       {t('Dialog.Cancel')}
     </button>
   );

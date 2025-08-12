@@ -204,10 +204,10 @@ export function socketContainsIntrinsicPlug(
 export function plugFitsIntoSocket(socket: DimSocket, plugHash: number) {
   return (
     socket.emptyPlugItemHash === plugHash ||
-    socket.plugSet?.plugs.some((dimPlug) => dimPlug.plugDef.hash === plugHash) ||
+    socket.plugSet?.plugs.some((d2lPlug) => d2lPlug.plugDef.hash === plugHash) ||
     // TODO(#7793): This should use reusablePlugItems on the socket def
     // because the check should operate on static definitions. This is still
-    // incorrect for quite a few blue-quality items because DIM throws away the data.
+    // incorrect for quite a few blue-quality items because D2L throws away the data.
     socket.reusablePlugItems?.some((p) => p.plugItemHash === plugHash)
   );
 }

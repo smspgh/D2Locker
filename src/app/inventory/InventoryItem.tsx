@@ -1,14 +1,14 @@
-import { AlertIcon } from 'app/dim-ui/AlertIcon';
+import { AlertIcon } from 'app/d2l-ui/AlertIcon';
 import { percent } from 'app/shell/formatters';
 import { nonPullablePostmasterItem } from 'app/utils/item-utils';
 import clsx from 'clsx';
 import { BucketHashes } from 'data/d2/generated-enums';
 import React, { useMemo } from 'react';
-import BungieImage from '../dim-ui/BungieImage';
+import BungieImage from '../d2l-ui/BungieImage';
 import { AppIcon, lockIcon, stickyNoteIcon } from '../shell/icons';
 import { InventoryWishListRoll } from '../wishlists/wishlists';
 import BadgeInfo, { shouldShowBadge } from './BadgeInfo';
-import { TagValue } from './dim-item-info';
+import { TagValue } from './d2l-item-info';
 import styles from './InventoryItem.m.scss';
 import { DimItem } from './item-types';
 import ItemIcon from './ItemIcon';
@@ -17,6 +17,8 @@ import NewItemIndicator from './NewItemIndicator';
 import { getSubclassIconInfo } from './subclass';
 import { canSyncLockState } from './SyncTagLock';
 import TagIcon from './TagIcon';
+import { getRollAppraiserUtilsSync } from 'app/roll-appraiser/rollAppraiserService';
+import { getSocketsByType } from 'app/utils/socket-utils';
 
 export default function InventoryItem({
   item,
@@ -109,6 +111,7 @@ export default function InventoryItem({
         )}
         <ItemIcon item={item} />
         <BadgeInfo item={item} isCapped={isCapped} wishlistRoll={wishlistRoll} />
+        {item.bucket?.inWeapons && item.sockets && <ComboRankDisplay item={item} />}
         {(tag || item.locked || hasNotes) && (
           <div className={styles.icons}>
             {item.locked && (!autoLockTagged || !tag || !canSyncLockState(item)) && (
@@ -137,6 +140,46 @@ export default function InventoryItem({
       <ItemIconPlaceholder item={item} hasBadge={hasBadge}>
         {contents}
       </ItemIconPlaceholder>
+    </div>
+  );
+}
+
+/**
+ * Display combo rank badge for weapons
+ */
+function ComboRankDisplay({ item }: { item: DimItem }) {
+  const utils = getRollAppraiserUtilsSync();
+  if (!utils) return null;
+
+  const traitPerks = getSocketsByType(item, 'traits');
+  if (traitPerks.length < 2) return null;
+  
+  const perk4Hash = traitPerks[0]?.plugged?.plugDef.hash;
+  const perk5Hash = traitPerks[1]?.plugged?.plugDef.hash;
+  
+  if (!perk4Hash || !perk5Hash) return null;
+
+  const comboRankData = utils.getTraitComboRank(item.hash.toString(), perk4Hash, perk5Hash);
+  if (!comboRankData) return null;
+
+  const getRankColor = (rank: number) => {
+    switch (rank) {
+      case 1: return styles.comboRank1;
+      case 2: return styles.comboRank2;
+      case 3: return styles.comboRank3;
+      case 4: return styles.comboRank4;
+      default: return styles.comboRank5;
+    }
+  };
+
+  return (
+    <div className={styles.comboRankBadge}>
+      <div 
+        className={clsx(styles.comboRankNumber, getRankColor(comboRankData.rank))}
+        title={`Rank ${comboRankData.rank} combo (${comboRankData.count.toLocaleString()} users)`}
+      >
+        {comboRankData.rank}
+      </div>
     </div>
   );
 }

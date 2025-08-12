@@ -1,4 +1,4 @@
-import { settingSelector } from 'app/dim-api/selectors';
+import { settingSelector } from 'app/d2l-api/selectors';
 import { DimItem } from 'app/inventory/item-types';
 import {
   createItemContextSelector,

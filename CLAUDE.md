@@ -2,25 +2,58 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-## D2Locker Project Overview
+## Project Overview
 
-D2Locker is a fork of DIM (Destiny Item Manager) - a web application for managing Destiny game inventory. It consists of a React/TypeScript frontend and a Node.js/Express backend.
+D2Locker is a fork of D2L (Destiny Item Manager) - a web application for managing Destiny 2 game inventory. It's built with React, Redux, TypeScript, and uses Webpack for bundling.
 
-## Essential Commands
+## Key Commands
 
 ### Development
 ```bash
-# Install dependencies (uses pnpm package manager)
-pnpm install
-
-# Start development server with hot reload
+# Start development server with hot reloading (uses .dev.env for environment variables)
+# Includes light data processing before starting servers
 pnpm start
 
-# Run backend API server (in separate terminal)
-cd backend && pnpm run api
+# Install dependencies (uses pnpm)
+pnpm install
 
-# Run both frontend and backend together
-pnpm serve:production
+# Run development server components separately
+pnpm serve:frontend  # Frontend proxy server
+pnpm serve:api      # Backend API server
+```
+
+### Production with Live Reload
+```bash
+# Run production server with live reload (auto-refresh on file changes)
+pnpm prod
+
+# This runs:
+# - Light data processing (rollAppraiserData optimization)
+# - Backend API server
+# - Frontend server with live reload via WebSocket
+# - Webpack in watch mode to rebuild on changes
+
+# You can also run components separately:
+pnpm serve:hmr         # Frontend with live reload
+pnpm serve:api         # Backend API server
+pnpm build:prod --watch # Watch mode build
+```
+
+### Building
+```bash
+# Build for production (release)
+pnpm build:production
+# or
+pnpm build:release
+
+# Build beta version
+pnpm build:beta
+
+# Build with light data processing
+pnpm build:light
+
+# Process light data only
+pnpm process-light-data
 ```
 
 ### Testing & Quality
@@ -28,133 +61,149 @@ pnpm serve:production
 # Run all tests
 pnpm test
 
-# Run specific test file
-pnpm test -- path/to/test.test.ts
-
-# Lint all code (ESLint, Prettier, Stylelint)
+# Linting (runs all linters: ESLint, Prettier, Stylelint)
 pnpm lint
 
-# Auto-fix linting issues
+# Run individual linters
+pnpm lint:eslint     # ESLint only
+pnpm lint:prettier   # Prettier only
+pnpm lint:stylelint  # Stylelint only
+
+# Cached linting (faster for development)
+pnpm lintcached
+
+# Fix linting issues
 pnpm fix
 
-# Check for unused exports
-pnpm dead-code
+# Fix individual tools
+pnpm fix:eslint      # Fix ESLint issues
+pnpm fix:prettier    # Fix Prettier formatting
+pnpm fix:stylelint   # Fix Stylelint issues
+
+# Type checking occurs during build - no separate typecheck command
 ```
 
-### Building
+### Backend API
 ```bash
-# Development build
-pnpm build:dev
+# Start backend API server (inserts API key and starts server)
+cd backend && pnpm run api
 
-# Production build
-pnpm build:production
-
-# Beta build
-pnpm build:beta
-
-# Build with light data processing
-pnpm build:light
+# Or run from root
+pnpm serve:api
 ```
 
-## Architecture Overview
 
-### State Management
-The application uses Redux with TypeScript for state management. The root state is defined in `src/app/store/types.ts`:
+## Architecture
 
-```typescript
-interface RootState {
-  accounts: AccountsState;      // User accounts and authentication
-  inventory: InventoryState;    // Items and character inventory
-  loadouts: LoadoutsState;      // Equipment loadout configurations
-  manifest: ManifestState;      // Destiny game data definitions
-  dimApi: DimApiState;         // DIM API synchronization
-  vendors: VendorsState;       // In-game vendor data
-  // ... other slices
-}
-```
+### Directory Structure
+- `/src` - Main application source code
+  - `/app` - Core application modules (feature-based organization)
+    - `/inventory` - Item management, drag/drop, move operations
+    - `/loadout` - Loadout creation, management, and application
+    - `/loadout-builder` - Automated loadout optimization with stat constraints
+    - `/loadout-drawer` - UI for applying and managing loadouts
+    - `/armor-analysis` - Armor stat analysis and visualization
+    - `/item-popup` - Detailed item view with sockets, perks, stats
+    - `/item-actions` - Move, lock, tag, and other item operations
+    - `/bungie-api` - Bungie API integration with rate limiting
+    - `/d2l-api` - D2L backend sync API integration
+    - `/shell` - Application shell (header, routing, error handling)
+    - `/search` - Item search with filters and autocomplete
+    - `/settings` - User preferences and configuration
+    - `/compare` - Side-by-side item comparison
+    - `/progress` - Milestones, pursuits, and character progression
+    - `/vendors` - Vendor items and purchasing
+    - `/records` - Triumphs, collections, and metrics
+  - `/data` - Static game data files
+  - `/images` - Image assets
+  - `/locale` - Internationalization files
+- `/backend` - Express.js backend server
+  - Uses SQLite database (`d2l.db`) for user data sync
+  - HTTPS server with SSL certificates
+  - CORS configured for allowed origins
+- `/config` - Webpack configurations for different environments
+- `/destiny-icons` - Destiny game icons and assets
+- `/icons` - Application icons and favicons
 
-### Key Application Flows
+### Tech Stack
+- **Frontend**: React 19, Redux 5, TypeScript 5
+- **Styling**: SCSS with CSS Modules (`.m.scss` files)
+- **Build**: Webpack 5, Babel, with environment-specific configs
+- **Backend**: Express.js 5, SQLite (better-sqlite3), JWT auth
+- **Testing**: Jest, React Testing Library, jsdom environment
+- **Package Manager**: pnpm 8.8.0 (required)
 
-1. **Authentication Flow**
-   - Entry: `src/app/App.tsx` checks `needsLogin` state
-   - Auth handled via Bungie OAuth in `src/app/bungie-api/oauth.ts`
-   - Tokens stored and managed in `src/app/bungie-api/oauth-tokens.ts`
+### Key Architectural Patterns
 
-2. **Data Loading Pipeline**
-   - Manifest data loaded via `src/app/manifest/manifest-service-json.ts`
-   - Character/inventory data via `src/app/inventory/d2-stores.ts`
-   - API calls through `src/app/bungie-api/destiny2-api.ts`
+1. **Redux Store Structure**:
+   - Uses Redux with redux-thunk for async operations
+   - Store observers in `/src/app/store/observerMiddleware.ts` handle cross-cutting concerns
+   - Feature-based reducers combined in `/src/app/store/reducers.ts`
 
-3. **Loadout System**
-   - Types defined in `src/app/loadout/loadout-types.ts`
-   - Application logic in `src/app/loadout-drawer/loadout-apply.ts`
-   - Mod assignment in `src/app/loadout/mod-assignment-utils.ts`
+2. **Routing**:
+   - React Router v7 with lazy-loaded route components for code splitting
+   - Routes defined in `/src/app/routes.ts`
 
-4. **Item Management**
-   - Item definitions in `src/app/inventory/item-types.ts`
-   - Move service in `src/app/inventory/item-move-service.ts`
-   - Drag/drop handled by `@hello-pangea/dnd` library
+3. **API Integration**:
+   - Bungie API wrapper in `/src/app/bungie-api` with rate limiting and authentication
+   - d2l sync API in `/src/app/d2l-api` for user data persistence
+   - HTTP client with retry logic and error handling
 
-### API Integration
+4. **Component Organization**:
+   - Feature-based folder structure with co-located components and styles
+   - CSS Modules for styling (`.m.scss` files with `.m.scss.d.ts` type definitions)
+   - TypeScript interfaces and types alongside components
 
-**DIM API** (`src/app/dim-api/`)
-- Profile sync, loadout sharing, user settings
-- Updates batched and synced via `postUpdates()`
+5. **Data Flow**:
+   - User authentication via Bungie OAuth stored in Redux
+   - Game data fetched from Bungie API and cached in Redux store
+   - User preferences/loadouts synced via D2L API to backend SQLite database
+   - IndexedDB for offline capability and caching
 
-**Bungie API** (`src/app/bungie-api/`)
-- Game data, inventory, character info
-- Rate limiting in `src/app/bungie-api/rate-limiter.ts`
-- Error handling in `src/app/bungie-api/bungie-service-helper.ts`
+6. **Path Aliases**: Configured in `tsconfig.json`:
+   - `app/*` → `src/app/*`
+   - `data/*` → `src/data/*`
+   - `images/*` → `src/images/*`
+   - `destiny-icons/*` → `destiny-icons/*`
+   - `locale/*` → `src/locale/*`
 
-### Routing Structure
-- `/:membershipId/:destinyVersion/*` - Character-specific routes
-- `/armory/*` - Armory/collections views
-- `/settings`, `/about`, `/whats-new` - Static pages
-- Routing handled by React Router v7
+### Development Environment
 
-### CSS Architecture
-- CSS Modules with `.m.scss` extension
-- TypeScript definitions auto-generated
-- Global styles in `src/app/main.scss`
-- Component styles colocated with components
+- HTTPS development server with auto-generated SSL certificates (via mkcert)
+- Webpack dev server runs on port 443 by default
+- Hot module replacement enabled for React components
+- TypeScript path aliases resolved by webpack
 
-### Backend Architecture
-The backend (`/backend`) provides:
-- SQLite database for local data storage
-- JWT authentication for API requests
-- CORS-enabled Express server
-- SSL support for local development
+### Build System
 
-## Development Guidelines
+- Webpack 5 with environment-specific configurations
+- Build targets: `dev`, `beta`, `release`, `pr`
+- Code splitting with dynamic imports for route-based chunking
+- CSS extraction and minification for production builds
+- Bundle analysis available via webpack-bundle-analyzer
 
-### File Conventions
-- React components: PascalCase `.tsx` files
-- Styles: `ComponentName.m.scss`
-- Tests: `*.test.ts` or `*.test.tsx`
-- Type definitions often in separate `*-types.ts` files
+### Testing
 
-### Import Paths
-Use configured aliases instead of relative paths:
-- `app/*` → `src/app/*`
-- `data/*` → `src/data/*`
-- `testing/*` → `src/testing/*`
+- Jest test runner with jsdom environment
+- React Testing Library for component testing
+- Test files co-located with source files (`.test.ts/.tsx`)
+- Global test setup in `/src/testing/jest-setup.cjs`
 
-### Common Patterns
-- Redux actions use `typesafe-actions` library
-- Selectors use `reselect` for memoization
-- API calls return promises and handle errors consistently
-- Components use hooks over class components
+### Environment Variables
 
-### Windows Development Notes
-- Use backslashes for Windows paths
-- `where` command instead of `which`
-- `dir` instead of `ls`
-- `type` instead of `cat`
+The project uses different environment files for different build targets:
+- **Development**: `.dev.env` - Used when running `pnpm start` (dev environment)
+- **Production**: `.env` - Used for production builds (release, beta, pr, production-hmr)
+- **Template**: `.env.example` - Template showing available environment variables
 
-## Task Completion Checklist
-Before completing any coding task:
-1. Run `pnpm lint` - must pass all checks
-2. Run `pnpm fix` if there are auto-fixable issues
-3. Verify TypeScript compilation (shown by linter)
-4. Test the feature manually if UI-related
-5. Run `pnpm build:dev` to ensure build succeeds
+Environment variables are loaded automatically by webpack based on the build target.
+
+### Important Notes
+- **Always use `pnpm`** (not npm or yarn) - enforced by `engines` in package.json
+- CSS class names use camelCase due to CSS Modules
+- SSL certificates are required and must be placed in `/certs` directory:
+  - `shirezaks_com.key` - Private key file
+  - `shirezaks_com.pem` - Certificate file
+  - Used by both frontend (webpack dev server, HMR servers) and backend API
+- Build artifacts output to `/dist` directory
+- Feature flags in `/config/feature-flags.ts` control experimental features

@@ -12,7 +12,7 @@ import type { ItemRarityName } from 'app/search/d2-known-values';
 import { ThunkResult } from 'app/store/types';
 import { CancelToken, CanceledError, withCancel } from 'app/utils/cancel';
 import { compareBy } from 'app/utils/comparators';
-import { DimError } from 'app/utils/dim-error';
+import { DimError } from 'app/utils/d2l-error';
 import { convertToError, errorMessage } from 'app/utils/errors';
 import { errorLog } from 'app/utils/log';
 import { BucketHashes } from 'data/d2/generated-enums';

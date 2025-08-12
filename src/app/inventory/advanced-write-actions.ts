@@ -6,7 +6,7 @@ import { unlockedItemsForCharacterOrProfilePlugSet } from 'app/records/plugset-h
 import { DEFAULT_ORNAMENTS, DEFAULT_SHADER } from 'app/search/d2-known-values';
 import { get, set } from 'app/storage/idb-keyval';
 import { ThunkResult } from 'app/store/types';
-import { DimError } from 'app/utils/dim-error';
+import { DimError } from 'app/utils/d2l-error';
 import { Destiny2CoreSettings } from 'bungie-api-ts/core';
 import {
   AwaAuthorizationResult,
@@ -184,7 +184,7 @@ export function insertPlug(item: DimItem, socket: DimSocket, plugItemHash: numbe
   };
 }
 
-/** basically just the DIM version of api-ts' `insertSocketPlugFree` */
+/** basically just the D2L version of api-ts' `insertSocketPlugFree` */
 async function awaInsertSocketPlugFree(
   account: DestinyAccount,
   storeId: string,
@@ -205,7 +205,7 @@ async function awaInsertSocketPlugFree(
 }
 
 /**
- * DIM's wrapper around insertSocketPlug, the actual paid
+ * D2L's wrapper around insertSocketPlug, the actual paid
  * insertion endpoint that gets user push approval
  */
 async function awaInsertSocketPlug(

@@ -1,9 +1,9 @@
 import { CustomStatDef, DestinyVersion } from '@destinyitemmanager/dim-api-types';
 import { destinyVersionSelector } from 'app/accounts/selectors';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
-import { customStatsSelector, languageSelector } from 'app/dim-api/selectors';
+import { customStatsSelector, languageSelector, settingsSelector } from 'app/d2l-api/selectors';
 import { DimLanguage } from 'app/i18n';
-import { TagValue } from 'app/inventory/dim-item-info';
+import { TagValue } from 'app/inventory/d2l-item-info';
 import { DimItem } from 'app/inventory/item-types';
 import {
   allItemsSelector,
@@ -142,6 +142,7 @@ const filterContextSelector = createSelector(
   languageSelector,
   customStatsSelector,
   d2ManifestSelector,
+  settingsSelector,
   makeFilterContext,
 );
 
@@ -158,6 +159,7 @@ function makeFilterContext(
   language: DimLanguage,
   customStats: Settings['customStats'],
   d2Definitions: D2ManifestDefinitions | undefined,
+  settings: Settings,
 ): FilterContext {
   return {
     stores,
@@ -172,6 +174,7 @@ function makeFilterContext(
     customStats,
     wishListsByHash,
     d2Definitions,
+    settings,
   };
 }
 

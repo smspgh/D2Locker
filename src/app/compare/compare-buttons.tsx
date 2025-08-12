@@ -1,8 +1,8 @@
-import BungieImage from 'app/dim-ui/BungieImage';
-import ElementIcon from 'app/dim-ui/ElementIcon';
-import { ArmorSlotIcon, WeaponSlotIcon, WeaponTypeIcon } from 'app/dim-ui/ItemCategoryIcon';
-import { PressTip } from 'app/dim-ui/PressTip';
-import { SpecialtyModSlotIcon } from 'app/dim-ui/SpecialtyModSlotIcon';
+import BungieImage from 'app/d2l-ui/BungieImage';
+import ElementIcon from 'app/d2l-ui/ElementIcon';
+import { ArmorSlotIcon, WeaponSlotIcon, WeaponTypeIcon } from 'app/d2l-ui/ItemCategoryIcon';
+import { PressTip } from 'app/d2l-ui/PressTip';
+import { SpecialtyModSlotIcon } from 'app/d2l-ui/SpecialtyModSlotIcon';
 import { t } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
 import { quoteFilterString } from 'app/search/query-parser';

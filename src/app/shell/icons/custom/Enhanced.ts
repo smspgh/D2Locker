@@ -1,6 +1,6 @@
 import { makeCustomIcon } from './utils';
 
-export const dimEnhancedIcon = makeCustomIcon(
+export const d2lEnhancedIcon = makeCustomIcon(
   'Enhanced',
   32,
   32,

@@ -1,12 +1,12 @@
 @use '../../variables.scss' as *;
 
 .addTypes {
-  composes: flexWrap from '../../dim-ui/common.m.scss';
+  composes: flexWrap from '../../d2l-ui/common.m.scss';
   gap: 4px;
 }
 
 .addedItems {
-  composes: flexWrap from '../../dim-ui/common.m.scss';
+  composes: flexWrap from '../../d2l-ui/common.m.scss';
   min-height: calc(var(--item-size) + 4px);
   margin-top: 4px;
   margin-bottom: 1em;

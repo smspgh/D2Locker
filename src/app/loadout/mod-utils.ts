@@ -145,7 +145,7 @@ export function mapToOtherModCostVariant(plugHash: number): number | undefined {
 
 /**
  * Some mods form a group of which only one mod can be equipped,
- * which is enforced by game servers. DIM must respect this when building
+ * which is enforced by game servers. D2L must respect this when building
  * loadouts or applying mods.
  */
 export function getModExclusionGroup(mod: PluggableInventoryItemDefinition): string | undefined {

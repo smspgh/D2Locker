@@ -1,4 +1,4 @@
-import BungieImage from 'app/dim-ui/BungieImage';
+import BungieImage from 'app/d2l-ui/BungieImage';
 import NewItemIndicator from 'app/inventory/NewItemIndicator';
 import { DimItem } from 'app/inventory/item-types';
 import {
@@ -11,7 +11,7 @@ import { percent } from 'app/shell/formatters';
 import { count } from 'app/utils/collections';
 import { DestinyObjectiveProgress } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
-import dimTrackedIcon from 'images/dimTrackedIcon.svg';
+import d2lTrackedIcon from 'images/d2lTrackedIcon.svg';
 import pursuitComplete from 'images/pursuitComplete.svg';
 import pursuitExpired from 'images/pursuitExpired.svg';
 import trackedIcon from 'images/trackedIcon.svg';
@@ -76,7 +76,7 @@ export default function PursuitItem({
       {isNew && <NewItemIndicator />}
       {expired && <img className={styles.expired} src={pursuitExpired} />}
       {trackedInGame && <img className={styles.trackedIcon} src={trackedIcon} />}
-      {trackedInDim && <img className={styles.trackedIcon} src={dimTrackedIcon} />}
+      {trackedInDim && <img className={styles.trackedIcon} src={d2lTrackedIcon} />}
       {item.complete && <img className={styles.complete} src={pursuitComplete} />}
     </div>
   );

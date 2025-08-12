@@ -69,12 +69,12 @@ export default function LoadoutDrawerContents({
   const stores = useSelector(storesSelector);
 
   // The store to use for "fill from equipped/unequipped"
-  const dimStore = getStore(stores, storeId)!;
+  const d2lStore = getStore(stores, storeId)!;
 
   const doFillLoadoutFromEquipped = () =>
-    setLoadout(fillLoadoutFromEquipped(defs, dimStore, undefined));
+    setLoadout(fillLoadoutFromEquipped(defs, d2lStore, undefined));
 
-  const doFillLoadOutFromUnequipped = () => setLoadout(fillLoadoutFromUnequipped(defs, dimStore));
+  const doFillLoadOutFromUnequipped = () => setLoadout(fillLoadoutFromUnequipped(defs, d2lStore));
 
   const availableTypes = filterMap(loadoutTypes, (h) => buckets.byHash[h]);
   const itemsByBucket = Object.groupBy(items, (li) => li.item.bucket.hash);
@@ -90,11 +90,11 @@ export default function LoadoutDrawerContents({
     <>
       <div className={styles.addTypes}>
         {showFillFromEquipped && (
-          <button type="button" className="dim-button" onClick={doFillLoadoutFromEquipped}>
+          <button type="button" className="d2l-button" onClick={doFillLoadoutFromEquipped}>
             <AppIcon icon={addIcon} /> {t('Loadouts.AddEquippedItems')}
           </button>
         )}
-        <button type="button" className="dim-button" onClick={doFillLoadOutFromUnequipped}>
+        <button type="button" className="d2l-button" onClick={doFillLoadOutFromUnequipped}>
           <AppIcon icon={addIcon} /> {t('Loadouts.AddUnequippedItems')}
         </button>
         {typesWithoutItems.length > 0 &&
@@ -102,7 +102,7 @@ export default function LoadoutDrawerContents({
             <a
               key={bucket.hash}
               onClick={() => pickLoadoutItem(defs, loadout, bucket, add, showItemPicker)}
-              className="dim-button"
+              className="d2l-button"
             >
               <AppIcon icon={addIcon} /> {bucket.name}
             </a>

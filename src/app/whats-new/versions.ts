@@ -1,7 +1,7 @@
-/** Information about the user's relationship with DIM versions */
+/** Information about the user's relationship with D2L versions */
 class Versions {
-  readonly currentVersion = cleanVersion($DIM_VERSION)!;
-  previousVersion = cleanVersion(localStorage.getItem('dim-changelog-viewed-version'));
+  readonly currentVersion = cleanVersion($D2L_VERSION)!;
+  previousVersion = cleanVersion(localStorage.getItem('d2l-changelog-viewed-version'));
 
   versionIsNew(version: string) {
     if (version === 'Next') {

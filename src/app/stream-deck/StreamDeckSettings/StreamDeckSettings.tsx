@@ -2,7 +2,7 @@ import { t } from 'app/i18next-t';
 import { AppIcon, faArrowCircleDown, faExternalLinkAlt } from 'app/shell/icons';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 
-import ExternalLink from 'app/dim-ui/ExternalLink';
+import ExternalLink from 'app/d2l-ui/ExternalLink';
 
 import Checkbox from 'app/settings/Checkbox';
 import { fineprintClass, settingClass } from 'app/settings/SettingsPage';
@@ -51,16 +51,16 @@ export default function StreamDeckSettings() {
           {!enabled ? (
             <ExternalLink
               className={styles.link}
-              href="https://marketplace.elgato.com/product/dim-stream-deck-11883ba5-c8db-4e3a-915f-612c5ba1b2e4"
+              href="https://marketplace.elgato.com/product/d2l-stream-deck-11883ba5-c8db-4e3a-915f-612c5ba1b2e4"
             >
-              <button type="button" className={clsx('dim-button', styles.button)}>
+              <button type="button" className={clsx('d2l-button', styles.button)}>
                 <AppIcon icon={faArrowCircleDown} ariaHidden /> {t('StreamDeck.Install')}
               </button>
             </ExternalLink>
           ) : (
             <button
               type="button"
-              className={clsx('dim-button', styles.button)}
+              className={clsx('d2l-button', styles.button)}
               onClick={() => dispatch(streamDeckAuthorizationInit())}
             >
               <i className={faExternalLinkAlt} />

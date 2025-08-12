@@ -1,4 +1,4 @@
-import ExternalLink from 'app/dim-ui/ExternalLink';
+import ExternalLink from 'app/d2l-ui/ExternalLink';
 import { percent } from 'app/shell/formatters';
 
 import styles from './Game2Give.m.scss';
@@ -21,20 +21,20 @@ export default function Game2Give() {
             <div className={styles.buttons}>
               <ExternalLink
                 href="https://bungiefoundation.donordrive.com/index.cfm?fuseaction=donate.participant&participantID=22881"
-                className="dim-button"
+                className="d2l-button"
               >
                 Donate
               </ExternalLink>
               <ExternalLink
                 href="https://bungiefoundation.donordrive.com/index.cfm?fuseaction=donorDrive.participant&participantID=22881"
-                className="dim-button"
+                className="d2l-button"
               >
                 Learn More
               </ExternalLink>
               {game2GiveState.streamIsLive && game2GiveState.streamIsEnabled && (
                 <ExternalLink
                   href="https://www.twitch.tv/DestinyItemManager"
-                  className="dim-button"
+                  className="d2l-button"
                 >
                   🔴 Live Stream
                 </ExternalLink>

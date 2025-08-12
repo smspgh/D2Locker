@@ -1,6 +1,6 @@
-import BungieImage from 'app/dim-ui/BungieImage';
-import FractionalPowerLevel from 'app/dim-ui/FractionalPowerLevel';
-import { PressTip } from 'app/dim-ui/PressTip';
+import BungieImage from 'app/d2l-ui/BungieImage';
+import FractionalPowerLevel from 'app/d2l-ui/FractionalPowerLevel';
+import { PressTip } from 'app/d2l-ui/PressTip';
 import { showGearPower } from 'app/gear-power/gear-power';
 import { t } from 'app/i18next-t';
 import { ArtifactXP } from 'app/inventory/ArtifactXP';
@@ -16,7 +16,7 @@ import { useD2Definitions } from 'app/manifest/selectors';
 import { getCharacterProgressions } from 'app/progress/selectors';
 import { armorStats } from 'app/search/d2-known-values';
 import AppIcon from 'app/shell/icons/AppIcon';
-import { dimPowerIcon } from 'app/shell/icons/custom/Power';
+import { d2lPowerIcon } from 'app/shell/icons/custom/Power';
 import { RootState } from 'app/store/types';
 import { filterMap, sumBy } from 'app/utils/collections';
 import clsx from 'clsx';
@@ -89,7 +89,7 @@ export function PowerFormula({ storeId }: { storeId: string }) {
 
   const maxTotalPower: PowerStat = {
     value: powerLevel.maxTotalPower,
-    icon: <AppIcon icon={dimPowerIcon} />,
+    icon: <AppIcon icon={d2lPowerIcon} />,
     name: t('Stats.MaxTotalPower'),
     problems: { ...powerLevel.problems, notOnStore: false },
   };
@@ -221,7 +221,7 @@ export function StoreCharacterStats({ store }: { store: DimStore }) {
 }
 
 /**
- * Show the stats for a DIM Loadout. This is only used for D2.
+ * Show the stats for a D2L Loadout. This is only used for D2.
  */
 // TODO: just take a FullyResolvedLoadout?
 export function LoadoutCharacterStats({

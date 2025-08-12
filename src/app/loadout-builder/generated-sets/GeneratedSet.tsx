@@ -101,7 +101,7 @@ export default memo(function GeneratedSet({
     });
 
     // Set rendering is a great place to verify that the worker process
-    // and DIM's regular mod assignment algorithm agree with each other,
+    // and D2L's regular mod assignment algorithm agree with each other,
     // so do that here.
     if (unassignedMods.length || invalidMods.length) {
       errorLog(

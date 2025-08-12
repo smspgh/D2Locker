@@ -1,5 +1,5 @@
-import { TileGridTile } from 'app/dim-ui/TileGrid';
-import RichDestinyText from 'app/dim-ui/destiny-symbols/RichDestinyText';
+import { TileGridTile } from 'app/d2l-ui/TileGrid';
+import RichDestinyText from 'app/d2l-ui/destiny-symbols/RichDestinyText';
 import { t } from 'app/i18next-t';
 import { DefItemIcon } from 'app/inventory/ItemIcon';
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
@@ -78,7 +78,7 @@ export default function SelectablePlug({
           <div className={styles.volumeRocker}>
             <button
               type="button"
-              className="dim-button"
+              className="d2l-button"
               onClick={handleIncrease}
               disabled={!handleIncrease}
               title={t('LB.AddStack')}
@@ -87,7 +87,7 @@ export default function SelectablePlug({
             </button>
             <button
               type="button"
-              className="dim-button"
+              className="d2l-button"
               onClick={handleDecrease}
               disabled={!handleDecrease}
               title={t('LB.RemoveStack')}

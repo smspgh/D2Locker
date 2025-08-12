@@ -1,4 +1,4 @@
-import { settingSelector } from 'app/dim-api/selectors';
+import { settingSelector } from 'app/d2l-api/selectors';
 import { DestinyProfileResponse } from 'bungie-api-ts/destiny2';
 import { useSelector } from 'react-redux';
 import PresentationNodeLeaf from './PresentationNodeLeaf';

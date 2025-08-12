@@ -1,9 +1,9 @@
-import { apiPermissionGrantedSelector } from 'app/dim-api/selectors';
-import { AlertIcon } from 'app/dim-ui/AlertIcon';
-import CheckButton from 'app/dim-ui/CheckButton';
-import ClassIcon from 'app/dim-ui/ClassIcon';
-import { WithSymbolsPicker } from 'app/dim-ui/destiny-symbols/SymbolsPicker';
-import { useAutocomplete } from 'app/dim-ui/text-complete/text-complete';
+import { apiPermissionGrantedSelector } from 'app/d2l-api/selectors';
+import { AlertIcon } from 'app/d2l-ui/AlertIcon';
+import CheckButton from 'app/d2l-ui/CheckButton';
+import ClassIcon from 'app/d2l-ui/ClassIcon';
+import { WithSymbolsPicker } from 'app/d2l-ui/destiny-symbols/SymbolsPicker';
+import { useAutocomplete } from 'app/d2l-ui/text-complete/text-complete';
 import { t } from 'app/i18next-t';
 import { getStore } from 'app/inventory/stores-helpers';
 import InGameLoadoutIdentifiersSelectButton from 'app/loadout/ingame/InGameLoadoutIdentifiersSelectButton';
@@ -19,7 +19,7 @@ import { DestinyClass } from 'bungie-api-ts/destiny2';
 import React, { useCallback, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import TextareaAutosize from 'react-textarea-autosize';
-import Sheet from '../dim-ui/Sheet';
+import Sheet from '../d2l-ui/Sheet';
 import { DimItem } from '../inventory/item-types';
 import {
   allItemsSelector,
@@ -237,13 +237,13 @@ export default function LoadoutDrawer({
         )}
         <LoadoutEdit store={store} loadout={loadout} setLoadout={setLoadout} />
         <div className={styles.inputGroup}>
-          <button type="button" className="dim-button" onClick={handleFillLoadoutFromEquipped}>
+          <button type="button" className="d2l-button" onClick={handleFillLoadoutFromEquipped}>
             <AppIcon icon={addIcon} /> {t('Loadouts.FillFromEquipped')}
           </button>
-          <button type="button" className="dim-button" onClick={handleFillLoadoutFromUnequipped}>
+          <button type="button" className="d2l-button" onClick={handleFillLoadoutFromUnequipped}>
             <AppIcon icon={addIcon} /> {t('Loadouts.FillFromInventory')}
           </button>
-          <button type="button" className="dim-button" onClick={handleRandomizeLoadout}>
+          <button type="button" className="d2l-button" onClick={handleRandomizeLoadout}>
             <AppIcon icon={faRandom} />{' '}
             {searchFilter === stubTrue
               ? t('Loadouts.RandomizeButton')

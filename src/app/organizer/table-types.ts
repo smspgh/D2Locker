@@ -1,10 +1,10 @@
-import { SortDirection } from 'app/dim-ui/table-columns';
+import { SortDirection } from 'app/d2l-ui/table-columns';
 import { DimItem } from 'app/inventory/item-types';
 import { CsvValue } from 'app/utils/csv';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import React from 'react';
 
-export { SortDirection, type ColumnSort } from 'app/dim-ui/table-columns';
+export { SortDirection, type ColumnSort } from 'app/d2l-ui/table-columns';
 
 export type Value = string | number | boolean | undefined;
 

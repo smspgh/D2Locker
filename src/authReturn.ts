@@ -11,9 +11,9 @@ async function handleAuthReturn() {
   const state = queryParams.get('state');
 
   // Detect when we're in the iOS app's auth popup (but not in the app itself)
-  const iOSApp = state?.startsWith('dimauth-') && !navigator.userAgent.includes('DIM AppStore');
+  const iOSApp = state?.startsWith('d2lauth-') && !navigator.userAgent.includes('D2L AppStore');
   if (iOSApp) {
-    window.location.href = window.location.href.replace('https', 'dimauth');
+    window.location.href = window.location.href.replace('https', 'd2lauth');
     return;
   }
 
@@ -42,7 +42,7 @@ async function handleAuthReturn() {
   } catch (error) {
     if (error instanceof TypeError || (error instanceof HttpStatusError && error.status === -1)) {
       setError(
-        'A content blocker is interfering with either DIM or Bungie.net, or you are not connected to the internet.',
+        'A content blocker is interfering with either D2L or Bungie.net, or you are not connected to the internet.',
       );
       return;
     }

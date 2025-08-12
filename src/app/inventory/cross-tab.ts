@@ -3,7 +3,7 @@ import { BucketHashes } from 'data/d2/generated-enums';
 import { useCallback, useEffect } from 'react';
 
 export const crossTabChannel =
-  'BroadcastChannel' in globalThis ? new BroadcastChannel('dim') : undefined;
+  'BroadcastChannel' in globalThis ? new BroadcastChannel('d2l') : undefined;
 
 export interface StoreUpdatedMessage {
   type: 'stores-updated';
@@ -20,7 +20,7 @@ export interface ItemMovedMessage {
   amount: number;
 }
 
-// TODO: other inventory changes, dim api changes, etc.
+// TODO: other inventory changes, d2l api changes, etc.
 
 export type CrossTabMessage = StoreUpdatedMessage | ItemMovedMessage;
 

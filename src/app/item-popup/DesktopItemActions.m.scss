@@ -12,7 +12,7 @@
 }
 
 .collapseButton {
-  composes: resetButton from 'app/dim-ui/common.m.scss';
+  composes: resetButton from 'app/d2l-ui/common.m.scss';
   display: flex;
   justify-content: flex-end;
   cursor: pointer;

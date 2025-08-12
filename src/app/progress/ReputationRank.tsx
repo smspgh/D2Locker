@@ -1,11 +1,11 @@
-import { useDynamicStringReplacer } from 'app/dim-ui/destiny-symbols/RichDestinyText';
+import { useDynamicStringReplacer } from 'app/d2l-ui/destiny-symbols/RichDestinyText';
 import { t, tl } from 'app/i18next-t';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { unadvertisedResettableVendors } from 'app/search/d2-known-values';
 import { sumBy } from 'app/utils/collections';
 import { DestinyProgression } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
-import BungieImage, { bungieNetPath } from '../dim-ui/BungieImage';
+import BungieImage, { bungieNetPath } from '../d2l-ui/BungieImage';
 import { ObjectiveCheckbox, ObjectiveRow } from './Objective';
 import styles from './ReputationRank.m.scss';
 

@@ -1,7 +1,7 @@
-import BungieImage from 'app/dim-ui/BungieImage';
-import { EnergyCostIcon } from 'app/dim-ui/ElementIcon';
-import { Tooltip, useTooltipCustomization } from 'app/dim-ui/PressTip';
-import RichDestinyText from 'app/dim-ui/destiny-symbols/RichDestinyText';
+import BungieImage from 'app/d2l-ui/BungieImage';
+import { EnergyCostIcon } from 'app/d2l-ui/ElementIcon';
+import { Tooltip, useTooltipCustomization } from 'app/d2l-ui/PressTip';
+import RichDestinyText from 'app/d2l-ui/destiny-symbols/RichDestinyText';
 import { t } from 'app/i18next-t';
 import { getValueStyle } from 'app/inventory/store/objectives';
 import { isPluggableItem } from 'app/inventory/store/sockets';

@@ -1,5 +1,5 @@
 import { CustomStatDef, DestinyVersion } from '@destinyitemmanager/dim-api-types';
-import { EnergyCostIcon } from 'app/dim-ui/ElementIcon';
+import { EnergyCostIcon } from 'app/d2l-ui/ElementIcon';
 import { t } from 'app/i18next-t';
 import { DimStat } from 'app/inventory/item-types';
 import { PlugClickedHandler } from 'app/inventory/store/override-sockets';
@@ -181,8 +181,8 @@ export function getColumns(
           const intrinsics = getIntrinsicSockets(item);
           return (
             // Sort by PCI first so that similar intrinsics land near each other before sub-alphabetizing
-            `${intrinsics[0]?.plugged?.plugDef.plug.plugCategoryIdentifier ?? '' 
-            },${ 
+            `${intrinsics[0]?.plugged?.plugDef.plug.plugCategoryIdentifier ?? ''
+            },${
             perkString(intrinsics)}`
           );
         },

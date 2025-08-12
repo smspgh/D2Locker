@@ -1,4 +1,4 @@
-import { settingSelector } from 'app/dim-api/selectors';
+import { settingSelector } from 'app/d2l-api/selectors';
 import { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { setSettingAction } from './actions';
@@ -14,7 +14,7 @@ export function useSetSetting() {
 }
 
 /**
- * Used like useState, but loads and saves a value from DIM's Settings.
+ * Used like useState, but loads and saves a value from D2L's Settings.
  *
  * @example
  *

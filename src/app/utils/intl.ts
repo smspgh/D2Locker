@@ -8,11 +8,11 @@ import { Comparator } from './comparators';
 import { stubTrue } from './functions';
 
 // Our locale names don't line up with the BCP 47 tags for Chinese
-const dimLangToBrowserLang = invert(browserLangToDimLang);
+const d2lLangToBrowserLang = invert(browserLangToDimLang);
 
-/** Map DIM's locale values to a [BCP 47 language tag](http://tools.ietf.org/html/rfc5646) */
+/** Map D2L's locale values to a [BCP 47 language tag](http://tools.ietf.org/html/rfc5646) */
 function mapLocale(language: DimLanguage): Intl.UnicodeBCP47LocaleIdentifier {
-  return dimLangToBrowserLang[language] ?? language;
+  return d2lLangToBrowserLang[language] ?? language;
 }
 
 const cachedSortCollator = memoizeOne(

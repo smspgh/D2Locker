@@ -1,4 +1,4 @@
-import Countdown from 'app/dim-ui/Countdown';
+import Countdown from 'app/d2l-ui/Countdown';
 import { t } from 'app/i18next-t';
 import { DimStore } from 'app/inventory/store-types';
 import { useD2Definitions } from 'app/manifest/selectors';
@@ -12,7 +12,7 @@ import {
   DestinySeasonPassDefinition,
 } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
-import BungieImage from '../dim-ui/BungieImage';
+import BungieImage from '../d2l-ui/BungieImage';
 import { ProgressBar, StackAmount } from './PursuitItem';
 import styles from './SeasonalRank.m.scss';
 

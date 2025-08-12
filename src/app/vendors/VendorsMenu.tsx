@@ -1,6 +1,6 @@
-import BungieImage from 'app/dim-ui/BungieImage';
-import RichDestinyText from 'app/dim-ui/destiny-symbols/RichDestinyText';
-import PageWithMenu from 'app/dim-ui/PageWithMenu';
+import BungieImage from 'app/d2l-ui/BungieImage';
+import RichDestinyText from 'app/d2l-ui/destiny-symbols/RichDestinyText';
+import PageWithMenu from 'app/d2l-ui/PageWithMenu';
 import React from 'react';
 import { D2VendorGroup } from './d2-vendors';
 import styles from './VendorsMenu.m.scss';

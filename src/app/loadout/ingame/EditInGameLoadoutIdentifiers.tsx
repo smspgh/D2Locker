@@ -1,5 +1,5 @@
 import { InGameLoadoutIdentifiers } from '@destinyitemmanager/dim-api-types';
-import Sheet, { SheetContent } from 'app/dim-ui/Sheet';
+import Sheet, { SheetContent } from 'app/d2l-ui/Sheet';
 import { t } from 'app/i18next-t';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { useState } from 'react';
@@ -37,7 +37,7 @@ export default function EditInGameLoadoutIdentifiers({
 
   const footer: SheetContent = ({ onClose }) => (
     <form onSubmit={handleSave(onClose)}>
-      <button type="submit" className="dim-button">
+      <button type="submit" className="d2l-button">
         {t('InGameLoadout.SaveIdentifiers')}
       </button>
     </form>

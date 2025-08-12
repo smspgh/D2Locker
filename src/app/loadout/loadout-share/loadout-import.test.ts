@@ -1,29 +1,29 @@
 import { decodeShareUrl } from './loadout-import';
 
-describe('dim.gg loadout share links parsing', () => {
+describe('d2l.gg loadout share links parsing', () => {
   test.each([
     ['4j5nz4q'],
     ['4j5nz4q/Heart-of-Inmost-Light-Arc'],
-    ['dim.gg/4j5nz4q'],
-    ['https://dim.gg/4j5nz4q'],
-    ['https://dim.gg/4j5nz4q/'],
-    ['http://dim.gg/4j5nz4q/'],
-    ['https://dim.gg/4j5nz4q/Heart-of-Inmost-Light-Arc'],
-  ])('valid dim.gg loadout link %s', (arg) => {
+    ['d2l.gg/4j5nz4q'],
+    ['https://d2l.gg/4j5nz4q'],
+    ['https://d2l.gg/4j5nz4q/'],
+    ['http://d2l.gg/4j5nz4q/'],
+    ['https://d2l.gg/4j5nz4q/Heart-of-Inmost-Light-Arc'],
+  ])('valid d2l.gg loadout link %s', (arg) => {
     const decoded = decodeShareUrl(arg);
-    if (!decoded || decoded.tag !== 'dimGGShare') {
+    if (!decoded || decoded.tag !== 'd2lGGShare') {
       throw new Error();
     }
     expect(decoded.shareId).toBe('4j5nz4q');
   });
 
   // Maybe we will have to increase the number of bits in an ID in the future, but we certainly won't decrease them
-  expect(decodeShareUrl('dim.gg/4j5nz4qd9asdl')?.tag).toBe('dimGGShare');
-  expect(decodeShareUrl('dim.gg/4j5')).toBe(undefined);
+  expect(decodeShareUrl('d2l.gg/4j5nz4qd9asdl')?.tag).toBe('d2lGGShare');
+  expect(decodeShareUrl('d2l.gg/4j5')).toBe(undefined);
 
   test.each([
     [
-      // Generated from DIM
+      // Generated from D2L
       'https://shirezaks.com/loadouts?loadout=%7B%22id%22%3A%22jf7w53i%22%2C%22name%22%3A%22Simple+Loadout%22%2C%22classType%22%3A3%2C%22clearSpace%22%3Afalse%2C%22equipped%22%3A%5B%5D%2C%22unequipped%22%3A%5B%5D%2C%22createdAt%22%3A1668353218495%2C%22parameters%22%3A%7B%22mods%22%3A%5B2623485440%5D%2C%22lockArmorEnergyType%22%3A1%2C%22assumeArmorMasterwork%22%3A1%7D%7D',
     ],
     [

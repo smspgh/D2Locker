@@ -35,7 +35,7 @@ export function showItemPopup(
     hideItemPopup();
   } else {
     // Log the item so it's easy to inspect item structure by clicking on an item
-    if ($DIM_FLAVOR !== 'release') {
+    if ($D2L_FLAVOR !== 'release') {
       infoLog('clicked item', item);
     }
     showItemPopup$.next({ item, element, extraInfo });

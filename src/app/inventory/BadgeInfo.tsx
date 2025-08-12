@@ -8,7 +8,7 @@ import { DamageType } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { BucketHashes } from 'data/d2/generated-enums';
 import { useSelector } from 'react-redux';
-import ElementIcon from '../dim-ui/ElementIcon';
+import ElementIcon from '../d2l-ui/ElementIcon';
 import styles from './BadgeInfo.m.scss';
 import RatingIcon from './RatingIcon';
 import { DimItem } from './item-types';

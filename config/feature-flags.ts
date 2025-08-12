@@ -33,7 +33,7 @@ export function makeFeatureFlags(env: {
     clarityDescriptions: false,
     // Elgato Stream Deck integration
     elgatoStreamDeck: false,
-    // Warn when DIM Sync is off and you save some DIM-specific data
+    // Warn when d2l sync is off and you save some D2L-specific data
     warnNoSync: true,
     // Expose the "Automatically add stat mods" Loadout Optimizer toggle
     loAutoStatMods: true,
@@ -53,8 +53,8 @@ export function makeFeatureFlags(env: {
     runLoInBackground: true,
     // Whether to allow setting in-game loadout identifiers on D2L Loadouts.
     editInGameLoadoutIdentifiers: false,
-    // Whether to sync DIM API data instead of loading everything
-    dimApiSync: true,
+    // Whether to sync D2L API data instead of loading everything
+    d2lApiSync: true,
   };
 }
 

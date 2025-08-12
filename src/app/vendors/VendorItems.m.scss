@@ -21,7 +21,7 @@
 }
 
 .itemCategories {
-  composes: flexWrap from '../dim-ui/common.m.scss';
+  composes: flexWrap from '../d2l-ui/common.m.scss';
   margin-bottom: 1.5em;
   gap: 4px 32px;
   float: left;
@@ -46,7 +46,7 @@
 }
 
 .vendorItems {
-  composes: flexWrap from '../dim-ui/common.m.scss';
+  composes: flexWrap from '../d2l-ui/common.m.scss';
   gap: var(--item-margin);
 }
 

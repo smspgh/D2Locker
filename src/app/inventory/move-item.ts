@@ -1,12 +1,12 @@
 import { startSpan } from '../utils/sentry';
-import { settingSelector } from 'app/dim-api/selectors';
+import { settingSelector } from 'app/d2l-api/selectors';
 import { t } from 'app/i18next-t';
 import { ShowItemPickerFn } from 'app/item-picker/item-picker';
 import { hideItemPopup } from 'app/item-popup/item-popup';
 import { ThunkResult } from 'app/store/types';
 import { CanceledError, neverCanceled, withCancel } from 'app/utils/cancel';
 import { compareBy } from 'app/utils/comparators';
-import { DimError } from 'app/utils/dim-error';
+import { DimError } from 'app/utils/d2l-error';
 import { errorMessage } from 'app/utils/errors';
 import { noop } from 'app/utils/functions';
 import { itemCanBeEquippedBy } from 'app/utils/item-utils';

@@ -1,7 +1,7 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
-import { languageSelector } from 'app/dim-api/selectors';
-import Sheet from 'app/dim-ui/Sheet';
-import { TileGrid } from 'app/dim-ui/TileGrid';
+import { languageSelector } from 'app/d2l-api/selectors';
+import Sheet from 'app/d2l-ui/Sheet';
+import { TileGrid } from 'app/d2l-ui/TileGrid';
 import { DimLanguage } from 'app/i18n';
 import { t } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
@@ -86,7 +86,7 @@ export function resolveExoticInfo(item: DimItem) {
       .find((socket) =>
         socketContainsPlugWithCategory(socket, PlugCategoryHashes.EnhancementsExoticAeonCult),
       )
-      ?.plugSet?.plugs.map((dimPlug) => dimPlug.plugDef) || [];
+      ?.plugSet?.plugs.map((d2lPlug) => d2lPlug.plugDef) || [];
   return { exoticPerk, exoticMods } as const;
 }
 

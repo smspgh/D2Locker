@@ -1,5 +1,5 @@
 import { DestinyAccount } from 'app/accounts/destiny-account';
-import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
+import ShowPageLoading from 'app/d2l-ui/ShowPageLoading';
 import GearPower from 'app/gear-power/GearPower';
 import { t } from 'app/i18next-t';
 import DragPerformanceFix from 'app/inventory/DragPerformanceFix';

@@ -2,7 +2,7 @@
 
 .subclassContainer {
   --item-icon-size: calc(0.8 * var(--item-size));
-  composes: flexRow from '../../dim-ui/common.m.scss';
+  composes: flexRow from '../../d2l-ui/common.m.scss';
   flex-wrap: wrap;
   max-width: calc(
     var(--item-size) + var(--item-margin) + var(--loadout-edit-subclass-columns, 3) *
@@ -57,7 +57,7 @@
 .classButton {
   // Smaller items to try and make it clearer that these aren't selected.
   --item-size: 32px;
-  composes: resetButton from '../../dim-ui/common.m.scss';
+  composes: resetButton from '../../d2l-ui/common.m.scss';
   display: flex;
   align-items: center;
   justify-content: center;

@@ -3,12 +3,12 @@ import React from 'react';
 const createAppUrl = 'https://www.bungie.net/en/Application/Create';
 
 export default function Developer(this: never) {
-  // Hardcode API keys and client info as per user's request for private setup
-  const apiKey = '5661f030fee44a7b9f3a7beac0423012';
-  const clientId = '49737';
-  const clientSecret = '6pMn9Tafgvj6.wfe0lpx7lZnbY45gnHTDckhwVJiB0Q';
-  const dimApiKey = 'hardcoded-for-private-use'; // This will be sent as X-API-Key
-  const dimAppName = 'yourname-dev'; // This can be anything for private use
+  // Use environment variables injected by webpack
+  const apiKey = $D2L_WEB_API_KEY;
+  const clientId = $D2L_WEB_CLIENT_ID;
+  const clientSecret = $D2L_WEB_CLIENT_SECRET;
+  const d2lApiKey = $D2L_API_KEY;
+  const d2lAppName = 'D2Locker-dev'; // App name for D2L API
 
   const URL = window.location.origin;
   const URLRet = `${URL}/return.html`;
@@ -20,7 +20,7 @@ export default function Developer(this: never) {
 
   // Prefill link is no longer strictly necessary with hardcoded values,
   // but keeping it for completeness if needed for other purposes.
-  const prefillLink = `${URL}/developer?apiKey=${apiKey}&oauthClientId=${clientId}&oauthClientSecret=${clientSecret}&dimApiKey=${dimApiKey}&dimAppName=${dimAppName}`;
+  const prefillLink = `${URL}/developer?apiKey=${apiKey}&oauthClientId=${clientId}&oauthClientSecret=${clientSecret}&d2lApiKey=${d2lApiKey}&d2lAppName=${d2lAppName}`;
 
   const save = (e: React.FormEvent) => {
     e.preventDefault();
@@ -28,24 +28,24 @@ export default function Developer(this: never) {
     localStorage.setItem('apiKey', apiKey);
     localStorage.setItem('oauthClientId', clientId);
     localStorage.setItem('oauthClientSecret', clientSecret);
-    localStorage.setItem('dimAppName', dimAppName);
-    localStorage.setItem('dimApiKey', dimApiKey);
-    localStorage.removeItem('dimApiToken');
+    localStorage.setItem('d2lAppName', d2lAppName);
+    localStorage.setItem('d2lApiKey', d2lApiKey);
+    localStorage.removeItem('d2lApiToken');
     localStorage.removeItem('authorization');
     window.location.href = window.location.origin;
   };
 
   return (
-    <div className="dim-page">
+    <div className="d2l-page">
       <h1>Developer Settings</h1>
       <p>
-        To run DIM locally, you need to create and register your own personal app with both the
-        Bungie.net and DIM APIs.
+        To run D2L locally, you need to create and register your own personal app with both the
+        Bungie.net and D2L APIs.
       </p>
       {/* Show prefill link only if all values are present (which they now are by default) */}
-      {apiKey && clientId && clientSecret && dimAppName && dimApiKey && (
+      {apiKey && clientId && clientSecret && d2lAppName && d2lApiKey && (
         <a href={prefillLink}>
-          Open this link in another browser to clone these settings to DIM there
+          Open this link in another browser to clone these settings to D2L there
         </a>
       )}
       {warning ? (
@@ -55,66 +55,67 @@ export default function Developer(this: never) {
         </div>
       ) : (
         <form onSubmit={save}>
-          <h3>Bungie.net API Key</h3>
+          <h3>API Configuration</h3>
+          <p><strong>Note:</strong> API keys are loaded from environment variables (.dev.env for development).</p>
           <ol>
             <li>
-              Visit{' '}
-              <a href={createAppUrl} target="_blank" rel="noreferrer noopener">
-                {createAppUrl}
-              </a>
-            </li>
-            <li>
-              Paste <input name="redirectUrl" type="text" value={URLRet} readOnly size={30} /> into
-              the "Redirect URL" section under "App Authentication".
-            </li>
-            <li>
-              Paste <input name="originHeader" type="text" value={URL} readOnly size={20} /> into
-              the "Origin Header" section under "Browser Based Apps".
-            </li>
-            <li>Select "Confidential" OAuth type.</li>
-            <li>
-              Select all scopes <i>except</i> for Administrate Groups/Clans
-            </li>
-            <li>
-              After saving, copy the "API Key" here:
+              Bungie.net API Key (from .dev.env):
               <br />
               <input
                 name="apiKey"
                 type="text"
                 value={apiKey}
                 size={40}
-                readOnly // Make it read-only
+                readOnly
               />
             </li>
             <li>
-              Copy the "OAuth client_id" here:
+              OAuth client_id (from .dev.env):
               <br />
               <input
                 name="clientId"
                 type="text"
                 value={clientId}
                 size={5}
-                readOnly // Make it read-only
+                readOnly
               />
             </li>
             <li>
-              Copy the "OAuth client_secret" here:
+              OAuth client_secret (from .dev.env):
               <br />
               <input
                 name="clientSecret"
                 type="text"
                 value={clientSecret}
                 size={50}
-                readOnly // Make it read-only
+                readOnly
+              />
+            </li>
+            <li>
+              D2L API Key (from .dev.env):
+              <br />
+              <input
+                name="d2lApiKey"
+                type="text"
+                value={d2lApiKey}
+                size={40}
+                readOnly
               />
             </li>
           </ol>
 
-          {/* Removed DIM API Key section as it's hardcoded and no longer needs user input */}
+          <p>
+            <strong>Setup Instructions:</strong><br />
+            1. Visit <a href={createAppUrl} target="_blank" rel="noreferrer noopener">{createAppUrl}</a><br />
+            2. Use <code>{URLRet}</code> as "Redirect URL"<br />
+            3. Use <code>{URL}</code> as "Origin Header"<br />
+            4. Select "Confidential" OAuth type and all scopes except "Administrate Groups/Clans"<br />
+            5. Update your .dev.env file with the generated keys
+          </p>
           <button
             type="submit"
-            className="dim-button"
-            disabled={!(apiKey && clientId && clientSecret && dimAppName && dimApiKey)}
+            className="d2l-button"
+            disabled={!(apiKey && clientId && clientSecret && d2lAppName && d2lApiKey)}
           >
             Save API Keys
           </button>

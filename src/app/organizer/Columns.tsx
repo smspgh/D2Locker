@@ -1,15 +1,15 @@
 import { CustomStatDef, DestinyVersion } from '@destinyitemmanager/dim-api-types';
 import { StoreIcon } from 'app/character-tile/StoreIcon';
-import BungieImage from 'app/dim-ui/BungieImage';
-import ElementIcon from 'app/dim-ui/ElementIcon';
-import { PressTip, Tooltip } from 'app/dim-ui/PressTip';
-import { SpecialtyModSlotIcon } from 'app/dim-ui/SpecialtyModSlotIcon';
+import BungieImage from 'app/d2l-ui/BungieImage';
+import ElementIcon from 'app/d2l-ui/ElementIcon';
+import { PressTip, Tooltip } from 'app/d2l-ui/PressTip';
+import { SpecialtyModSlotIcon } from 'app/d2l-ui/SpecialtyModSlotIcon';
 import { I18nKey, t, tl } from 'app/i18next-t';
 import ItemIcon, { DefItemIcon } from 'app/inventory/ItemIcon';
 import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
 import NewItemIndicator from 'app/inventory/NewItemIndicator';
 import TagIcon from 'app/inventory/TagIcon';
-import { TagValue, tagConfig } from 'app/inventory/dim-item-info';
+import { TagValue, tagConfig } from 'app/inventory/d2l-item-info';
 import { D1Item, DimItem, DimSocket, DimStat } from 'app/inventory/item-types';
 import { storesSelector } from 'app/inventory/selectors';
 import { isHarmonizable } from 'app/inventory/store/deepsight';
@@ -871,7 +871,7 @@ export function getColumns(
       header: t('Organizer.Columns.Notes'),
       // It's important for the value to always be a string, because users
       // expect to be able to sort empty notes along with items that have notes.
-      // See https://github.com/DestinyItemManager/DIM/issues/10694
+      // See https://github.com/DestinyItemManager/D2L/issues/10694
       value: (item) => getNotes(item) ?? '',
       cell: (_val, item) => <NotesArea item={item} minimal={true} />,
       gridWidth: 'minmax(200px, 1fr)',

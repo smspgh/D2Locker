@@ -7,7 +7,7 @@ import { ItemRarityMap } from 'app/search/d2-known-values';
 import { RootState, ThunkResult } from 'app/store/types';
 import { CancelToken } from 'app/utils/cancel';
 import { count, filterMap } from 'app/utils/collections';
-import { DimError } from 'app/utils/dim-error';
+import { DimError } from 'app/utils/d2l-error';
 import { errorMessage } from 'app/utils/errors';
 import { itemCanBeEquippedBy } from 'app/utils/item-utils';
 import { errorLog, infoLog, timer, warnLog } from 'app/utils/log';
@@ -44,7 +44,7 @@ import {
   characterDisplacePriority,
   equipReplacePriority,
   vaultDisplacePriority,
-} from './dim-item-info';
+} from './d2l-item-info';
 import { DimItem } from './item-types';
 import { getLastManuallyMoved } from './manual-moves';
 import { currentStoreSelector, getTagSelector, storesSelector } from './selectors';
@@ -428,7 +428,7 @@ function moveToStore(
     }
 
     // Work around https://github.com/Bungie-net/api/issues/764#issuecomment-437614294 by recording lock state for items before moving.
-    // Note that this can result in the wrong lock state if DIM is out of date (they've locked/unlocked in game but we haven't refreshed).
+    // Note that this can result in the wrong lock state if D2L is out of date (they've locked/unlocked in game but we haven't refreshed).
     // Only apply this hack if the source bucket contains duplicates of the same item hash.
     const overrideLockState =
       item.lockable &&
@@ -545,7 +545,7 @@ interface MoveContext {
  * make room for "item". We already know when this function is
  * called that store has no room for item.
  *
- * The concept is that DIM is able to make "smart moves" by moving other items
+ * The concept is that D2L is able to make "smart moves" by moving other items
  * out of the way, but it should do so in the least disruptive way possible, and
  * should generally cause your inventory to move towards a state of organization.
  * Especially important is that we avoid moving items back onto the active character
@@ -578,7 +578,7 @@ function chooseMoveAsideItem(
   const otherStores = stores.filter((s) => s.id !== target.id);
 
   // Start with candidates of the same type (or vault bucket if it's vault)
-  // TODO: This try/catch is to help debug https://sentry.io/destiny-item-manager/dim/issues/484361056/
+  // TODO: This try/catch is to help debug https://sentry.io/destiny-item-manager/d2l/issues/484361056/
   let allItems: DimItem[];
   try {
     allItems = target.isVault
@@ -1166,7 +1166,7 @@ export function sortMoveAsideCandidatesForStore(
 
       // TRYING TO ESTIMATE USER INTENTION AND ITEM VALUE
 
-      // Tagged items sort by orders defined in dim-item-info
+      // Tagged items sort by orders defined in d2l-item-info
       reverseComparator(
         compareByIndex(
           fromStore.isVault ? vaultDisplacePriority : characterDisplacePriority,

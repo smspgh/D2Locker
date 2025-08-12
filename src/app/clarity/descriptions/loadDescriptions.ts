@@ -9,7 +9,7 @@ import { ClarityDescription, ClarityVersions } from './descriptionInterface';
 
 const CLARITY_BASE = 'https://database-clarity.github.io/';
 const urls = {
-  descriptions: `${CLARITY_BASE}Live-Clarity-Database/descriptions/dim.json`,
+  descriptions: `${CLARITY_BASE}Live-Clarity-Database/descriptions/d2l.json`,
   characterStats: (version: string) =>
     `${CLARITY_BASE}Character-Stats/versions/${version}/CharacterStatInfo-NI.json`,
   version: `${CLARITY_BASE}Live-Clarity-Database/versions.json`,

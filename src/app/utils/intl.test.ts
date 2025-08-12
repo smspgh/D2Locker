@@ -1,4 +1,4 @@
-import { DIM_LANGS, DimLanguage } from 'app/i18n';
+import { D2L_LANGS, DimLanguage } from 'app/i18n';
 import { localizedIncludes, localizedSorter } from './intl';
 
 const sortCases: [language: DimLanguage, input: string[], output: string[]][] = [
@@ -37,8 +37,8 @@ const sortCases: [language: DimLanguage, input: string[], output: string[]][] = 
   ['zh-cht', ['foo1', 'foo10', 'foo9'], ['foo1', 'foo9', 'foo10']],
 ];
 
-it('should include a sorting test case for every supported DIM language', () => {
-  expect(new Set(sortCases.map(([language]) => language))).toStrictEqual(new Set(DIM_LANGS));
+it('should include a sorting test case for every supported D2L language', () => {
+  expect(new Set(sortCases.map(([language]) => language))).toStrictEqual(new Set(D2L_LANGS));
 });
 
 // Test that we can construct this for every supported language
@@ -84,8 +84,8 @@ const includeCases: [language: DimLanguage, input: string, query: string, matche
   ['zh-cht', 'bar', 'foobar', true],
 ];
 
-it('should include an include test case for every supported DIM language', () => {
-  expect(new Set(includeCases.map(([language]) => language))).toStrictEqual(new Set(DIM_LANGS));
+it('should include an include test case for every supported D2L language', () => {
+  expect(new Set(includeCases.map(([language]) => language))).toStrictEqual(new Set(D2L_LANGS));
 });
 
 test.each(includeCases)(

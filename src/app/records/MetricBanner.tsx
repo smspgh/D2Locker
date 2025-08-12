@@ -3,7 +3,7 @@ import { METRICS_ACCOUNT_NODE } from 'app/search/d2-known-values';
 import { DestinyObjectiveProgress } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import masterworkOverlay from 'images/masterwork-metric.png';
-import BungieImage from '../dim-ui/BungieImage';
+import BungieImage from '../d2l-ui/BungieImage';
 import styles from './MetricBanner.m.scss';
 import { getMetricTimeScope } from './presentation-nodes';
 

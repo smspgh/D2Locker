@@ -69,7 +69,7 @@ export default function useGame2GiveData() {
     }
   }, []);
 
-  // Refresh data whenever DIM would refresh the Bungie.net profile
+  // Refresh data whenever D2L would refresh the Bungie.net profile
   useEventBusListener(refresh$, getData);
 
   useEffect(() => {

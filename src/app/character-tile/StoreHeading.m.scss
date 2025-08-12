@@ -9,7 +9,7 @@
 }
 
 .loadoutMenu {
-  composes: visibleScrollbars from '../dim-ui/common.m.scss';
+  composes: visibleScrollbars from '../d2l-ui/common.m.scss';
   position: fixed;
   inset: 0 auto auto 0;
   margin: 0;

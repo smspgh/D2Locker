@@ -1,7 +1,7 @@
-import CheckButton from 'app/dim-ui/CheckButton';
-import CollapsibleTitle from 'app/dim-ui/CollapsibleTitle';
-import PageWithMenu from 'app/dim-ui/PageWithMenu';
-import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
+import CheckButton from 'app/d2l-ui/CheckButton';
+import CollapsibleTitle from 'app/d2l-ui/CollapsibleTitle';
+import PageWithMenu from 'app/d2l-ui/PageWithMenu';
+import ShowPageLoading from 'app/d2l-ui/ShowPageLoading';
 import { t } from 'app/i18next-t';
 import { useLoadStores } from 'app/inventory/store/hooks';
 import { destiny2CoreSettingsSelector, useD2Definitions } from 'app/manifest/selectors';
@@ -14,7 +14,7 @@ import { usePageTitle } from 'app/utils/hooks';
 import { useSelector } from 'react-redux';
 import { useSearchParams } from 'react-router';
 import { DestinyAccount } from '../accounts/destiny-account';
-import ErrorBoundary from '../dim-ui/ErrorBoundary';
+import ErrorBoundary from '../d2l-ui/ErrorBoundary';
 import {
   bucketsSelector,
   ownedItemsSelector,

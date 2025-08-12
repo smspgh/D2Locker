@@ -65,7 +65,7 @@ export interface ClarityDescription {
 export interface ClarityVersions {
   /**
    ** Version format x.y
-   ** x - major version requiring update to DIM
+   ** x - major version requiring update to D2L
    ** y - minor version just simple update to description
    */
   descriptions: number;

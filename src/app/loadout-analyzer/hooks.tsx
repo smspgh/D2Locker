@@ -1,5 +1,5 @@
 import { currentAccountSelector } from 'app/accounts/selectors';
-import { savedLoStatConstraintsByClassSelector } from 'app/dim-api/selectors';
+import { savedLoStatConstraintsByClassSelector } from 'app/d2l-api/selectors';
 import {
   allItemsSelector,
   createItemContextSelector,

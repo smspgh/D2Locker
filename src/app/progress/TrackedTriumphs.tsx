@@ -1,4 +1,4 @@
-import { trackedTriumphsSelector } from 'app/dim-api/selectors';
+import { trackedTriumphsSelector } from 'app/d2l-api/selectors';
 import { t } from 'app/i18next-t';
 import { profileResponseSelector } from 'app/inventory/selectors';
 import { useD2Definitions } from 'app/manifest/selectors';

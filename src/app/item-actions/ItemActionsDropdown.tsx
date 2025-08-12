@@ -1,9 +1,9 @@
 import { SearchType } from '@destinyitemmanager/dim-api-types';
 import { destinyVersionSelector } from 'app/accounts/selectors';
 import { compareFilteredItems } from 'app/compare/actions';
-import { saveSearch } from 'app/dim-api/basic-actions';
-import { recentSearchesSelector } from 'app/dim-api/selectors';
-import Dropdown, { Option } from 'app/dim-ui/Dropdown';
+import { saveSearch } from 'app/d2l-api/basic-actions';
+import { recentSearchesSelector } from 'app/d2l-api/selectors';
+import Dropdown, { Option } from 'app/d2l-ui/Dropdown';
 import { t } from 'app/i18next-t';
 import { bulkLockItems, bulkTagItems } from 'app/inventory/bulk-actions';
 import { storesSortedByImportanceSelector } from 'app/inventory/selectors';
@@ -21,7 +21,7 @@ import { compact } from 'app/utils/collections';
 import { memo } from 'react';
 import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router';
-import { TagCommand, itemTagSelectorList } from '../inventory/dim-item-info';
+import { TagCommand, itemTagSelectorList } from '../inventory/d2l-item-info';
 import { DimItem } from '../inventory/item-types';
 import {
   AppIcon,

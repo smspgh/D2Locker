@@ -8,7 +8,7 @@ import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import {
   savedLoStatConstraintsByClassSelector,
   savedLoadoutParametersSelector,
-} from 'app/dim-api/selectors';
+} from 'app/d2l-api/selectors';
 import { t } from 'app/i18next-t';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { allItemsSelector } from 'app/inventory/selectors';

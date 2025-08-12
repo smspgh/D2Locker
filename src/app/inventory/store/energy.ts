@@ -28,22 +28,22 @@ export function getEnergyUpgradePlugs(item: DimItem) {
   const oldEnergyType = item.energy.energyType;
 
   const energyMods: PluggableInventoryItemDefinition[] = [];
-  for (const dimPlug of tierSocket.plugSet.plugs) {
-    const capacity = dimPlug.plugDef.plug.energyCapacity;
+  for (const d2lPlug of tierSocket.plugSet.plugs) {
+    const capacity = d2lPlug.plugDef.plug.energyCapacity;
     if (!capacity) {
       continue;
     }
 
-    const plugAvailability = dimPlug.plugDef.plug.plugAvailability;
+    const plugAvailability = d2lPlug.plugDef.plug.plugAvailability;
     // We're looking for all the upgrade mods between here and there
     if (
-      (dimPlug.plugDef.plug.plugCategoryHash ===
+      (d2lPlug.plugDef.plug.plugCategoryHash ===
         PlugCategoryHashes.V460PlugsArmorMasterworksStatResistance2 ||
-        dimPlug.plugDef.plug.plugCategoryHash === PlugCategoryHashes.PlugsGhostsMasterworks) &&
+        d2lPlug.plugDef.plug.plugCategoryHash === PlugCategoryHashes.PlugsGhostsMasterworks) &&
       capacity.energyType === oldEnergyType &&
       plugAvailability === PlugAvailabilityMode.AvailableIfSocketContainsMatchingPlugCategory
     ) {
-      energyMods.push(dimPlug.plugDef);
+      energyMods.push(d2lPlug.plugDef);
     }
   }
 

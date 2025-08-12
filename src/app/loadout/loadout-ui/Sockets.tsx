@@ -1,5 +1,5 @@
-import { PressTip } from 'app/dim-ui/PressTip';
-import { useDynamicStringReplacer } from 'app/dim-ui/destiny-symbols/RichDestinyText';
+import { PressTip } from 'app/d2l-ui/PressTip';
+import { useDynamicStringReplacer } from 'app/d2l-ui/destiny-symbols/RichDestinyText';
 import { t } from 'app/i18next-t';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { isPluggableItem } from 'app/inventory/store/sockets';

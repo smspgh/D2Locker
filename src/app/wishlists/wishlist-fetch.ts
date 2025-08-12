@@ -1,5 +1,5 @@
 import { toHttpStatusError } from 'app/bungie-api/http-client';
-import { settingsSelector } from 'app/dim-api/selectors';
+import { settingsSelector } from 'app/d2l-api/selectors';
 import { t } from 'app/i18next-t';
 import { showNotification } from 'app/notifications/notifications';
 import { setSettingAction } from 'app/settings/actions';

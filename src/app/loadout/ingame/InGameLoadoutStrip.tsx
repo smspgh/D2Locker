@@ -1,6 +1,6 @@
-import Dropdown, { Option } from 'app/dim-ui/Dropdown';
-import { PressTip, Tooltip } from 'app/dim-ui/PressTip';
-import ColorDestinySymbols from 'app/dim-ui/destiny-symbols/ColorDestinySymbols';
+import Dropdown, { Option } from 'app/d2l-ui/Dropdown';
+import { PressTip, Tooltip } from 'app/d2l-ui/PressTip';
+import ColorDestinySymbols from 'app/d2l-ui/destiny-symbols/ColorDestinySymbols';
 import { t } from 'app/i18next-t';
 import { allItemsSelector } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
@@ -84,13 +84,13 @@ function InGameLoadoutTile({
   const dispatch = useThunkDispatch();
   const allItems = useSelector(allItemsSelector);
 
-  const handleSaveAsDIM = () => {
-    const dimLoadout = convertInGameLoadoutToDimLoadout(gameLoadout, store.classType, allItems);
-    editLoadout(dimLoadout, store.id);
+  const handleSaveAsD2L = () => {
+    const d2lLoadout = convertInGameLoadoutToDimLoadout(gameLoadout, store.classType, allItems);
+    editLoadout(d2lLoadout, store.id);
   };
   const handleShare = () => {
-    const dimLoadout = convertInGameLoadoutToDimLoadout(gameLoadout, store.classType, allItems);
-    onShare(dimLoadout);
+    const d2lLoadout = convertInGameLoadoutToDimLoadout(gameLoadout, store.classType, allItems);
+    onShare(d2lLoadout);
   };
 
   const streamDeckDeepLink = $featureFlags.elgatoStreamDeck
@@ -127,8 +127,8 @@ function InGameLoadoutTile({
     },
     {
       key: 'saveAs',
-      content: t('Loadouts.SaveAsDIM'),
-      onSelected: handleSaveAsDIM,
+      content: t('Loadouts.SaveAsD2L'),
+      onSelected: handleSaveAsD2L,
     },
     {
       key: 'share',

@@ -4,7 +4,7 @@ import {
   currentProfileSelector,
   customStatsSelector,
   settingsSelector,
-} from 'app/dim-api/selectors';
+} from 'app/d2l-api/selectors';
 import { d2ManifestSelector } from 'app/manifest/selectors';
 import { createCollectibleFinder } from 'app/records/collectible-matching';
 import { filterUnlockedPlugs } from 'app/records/plugset-helpers';
@@ -18,7 +18,7 @@ import { createSelector } from 'reselect';
 import { getBuckets as getBucketsD1 } from '../destiny1/d1-buckets';
 import { getBuckets as getBucketsD2 } from '../destiny2/d2-buckets';
 import { characterSortImportanceSelector, characterSortSelector } from '../settings/character-sort';
-import { ItemInfos, getNotes, getTag } from './dim-item-info';
+import { ItemInfos, getNotes, getTag } from './d2l-item-info';
 import { DimItem } from './item-types';
 import { collectHashtagsFromInfos } from './note-hashtags';
 import { AccountCurrency } from './store-types';
@@ -175,9 +175,9 @@ export const profileErrorSelector = (state: RootState) => state.inventory.profil
 export const blockingProfileErrorSelector = (state: RootState) =>
   currentStoreSelector(state) ? undefined : state.inventory.profileError;
 
-/** Whether DIM will automatically refresh on a schedule */
+/** Whether D2L will automatically refresh on a schedule */
 export const autoRefreshEnabledSelector = (state: RootState) =>
-  userIsPlayingSelector(state) && state.dimApi.globalSettings.autoRefresh;
+  userIsPlayingSelector(state) && state.d2lApi.globalSettings.autoRefresh;
 
 /**
  * All the dependencies for item creation. Don't use this before profile is loaded...
@@ -382,10 +382,10 @@ export const itemInfosSelector = (state: RootState): ItemInfos =>
   currentProfileSelector(state)?.tags || emptyObject();
 
 /**
- * DIM tags which should be applied to matching item hashes (instead of per-instance)
+ * D2L tags which should be applied to matching item hashes (instead of per-instance)
  */
 const itemHashTagsSelector = (state: RootState): { [itemHash: string]: ItemHashTag } =>
-  state.dimApi.itemHashTags;
+  state.d2lApi.itemHashTags;
 
 /* Returns a function that can be used to get the tag for a particular item. */
 export const getTagSelector = createSelector(

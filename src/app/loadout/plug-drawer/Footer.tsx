@@ -1,4 +1,4 @@
-import { SheetHorizontalScrollContainer } from 'app/dim-ui/SheetHorizontalScrollContainer';
+import { SheetHorizontalScrollContainer } from 'app/d2l-ui/SheetHorizontalScrollContainer';
 import { useHotkey } from 'app/hotkeys/useHotkey';
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { DestinyClass } from 'bungie-api-ts/destiny2';

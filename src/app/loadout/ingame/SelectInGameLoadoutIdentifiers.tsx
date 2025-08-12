@@ -1,5 +1,5 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
-import BungieImage, { bungieBackgroundStyle } from 'app/dim-ui/BungieImage';
+import BungieImage, { bungieBackgroundStyle } from 'app/d2l-ui/BungieImage';
 import { resolveInGameLoadoutIdentifiers } from 'app/loadout/loadout-type-converters';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { compareBy } from 'app/utils/comparators';

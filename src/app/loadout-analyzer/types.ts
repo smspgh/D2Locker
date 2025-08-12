@@ -7,7 +7,7 @@ import { ItemFilter } from 'app/search/filter-types';
 /** The analysis results for a single loadout. */
 export interface LoadoutAnalysisResult {
   findings: LoadoutFinding[];
-  /** A caveat to the "better stats available" note because it might be caused by DIM unintentionally considering font mods active */
+  /** A caveat to the "better stats available" note because it might be caused by D2L unintentionally considering font mods active */
   betterStatsAvailableFontNote: boolean;
   /** We took a closer look at the armor in this loadout and determined these results. */
   armorResults: ArmorAnalysisResult | undefined;

@@ -60,17 +60,17 @@ export default function GeneratedSet({ setType, store, activesets, excludeItem }
           <>
             <button
               type="button"
-              className="dim-button"
+              className="d2l-button"
               onClick={() => makeNewLoadout(setType.set)}
             >
               {t('Loadouts.Create')}
             </button>
-            <button type="button" className="dim-button" onClick={() => equipItems(setType.set)}>
+            <button type="button" className="d2l-button" onClick={() => equipItems(setType.set)}>
               {t('LB.Equip', { character: store.name })}
             </button>
           </>
         )}
-        <div className={styles.dimStats}>
+        <div className={styles.d2lStats}>
           <D1CharacterStats stats={setType.tiers[activesets].stats} subclassHash={subclass?.hash} />
         </div>
       </div>

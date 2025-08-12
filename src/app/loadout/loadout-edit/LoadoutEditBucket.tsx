@@ -1,5 +1,5 @@
 import { LoadoutParameters } from '@destinyitemmanager/dim-api-types';
-import ClosableContainer from 'app/dim-ui/ClosableContainer';
+import ClosableContainer from 'app/d2l-ui/ClosableContainer';
 import { t } from 'app/i18next-t';
 import ConnectedInventoryItem from 'app/inventory/ConnectedInventoryItem';
 import DraggableInventoryItem from 'app/inventory/DraggableInventoryItem';
@@ -328,7 +328,7 @@ function FashionButton({
 
   return (
     <>
-      <button type="button" onClick={() => setShowFashionDrawer(true)} className="dim-button">
+      <button type="button" onClick={() => setShowFashionDrawer(true)} className="d2l-button">
         <AppIcon icon={faTshirt} /> {t('Loadouts.Fashion')}
       </button>
       {showFashionDrawer && (

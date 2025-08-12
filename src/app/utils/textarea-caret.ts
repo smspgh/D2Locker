@@ -1,5 +1,5 @@
 /* eslint-disable */
-// The @textcomplete library uses this, but DIM wants to override it (via an
+// The @textcomplete library uses this, but D2L wants to override it (via an
 // alias in Webpack) to have it append its test element to our tempContainer to
 // avoid expensive layout recalculation.
 
@@ -135,7 +135,7 @@ export default function getCaretCoordinates(
   span.textContent = element.value.substring(position) || '.'; // || because a completely empty faux span doesn't render at all
   div.appendChild(span);
 
-  // DIM: append to this element instead of body to avoid expensive recalcs
+  // D2L: append to this element instead of body to avoid expensive recalcs
   const parent = tempContainer;
 
   parent.appendChild(div);

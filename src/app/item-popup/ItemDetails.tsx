@@ -1,4 +1,4 @@
-import { DestinyTooltipText } from 'app/dim-ui/DestinyTooltipText';
+import { DestinyTooltipText } from 'app/d2l-ui/DestinyTooltipText';
 import { t, tl } from 'app/i18next-t';
 import { createItemContextSelector, storesSelector } from 'app/inventory/selectors';
 import { isTrialsPassage } from 'app/inventory/store/objectives';
@@ -19,7 +19,7 @@ import modificationIcon from 'destiny-icons/general/modifications.svg';
 import handCannonIcon from 'destiny-icons/weapons/hand_cannon.svg';
 import { use } from 'react';
 import { useSelector } from 'react-redux';
-import BungieImage from '../dim-ui/BungieImage';
+import BungieImage from '../d2l-ui/BungieImage';
 import { DimItem } from '../inventory/item-types';
 import { AppIcon, faCheck } from '../shell/icons';
 import ApplyPerkSelection from './ApplyPerkSelection';

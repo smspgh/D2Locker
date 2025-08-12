@@ -9,7 +9,7 @@ import {
 } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import React from 'react';
-import BungieImage from '../dim-ui/BungieImage';
+import BungieImage from '../d2l-ui/BungieImage';
 import { ActivityModifier } from './ActivityModifier';
 import {
   ObjectiveCheckbox,

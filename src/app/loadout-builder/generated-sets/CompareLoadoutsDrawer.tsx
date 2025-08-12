@@ -1,6 +1,6 @@
-import Select from 'app/dim-ui/Select';
-import Sheet from 'app/dim-ui/Sheet';
-import useConfirm from 'app/dim-ui/useConfirm';
+import Select from 'app/d2l-ui/Select';
+import Sheet from 'app/d2l-ui/Sheet';
+import useConfirm from 'app/d2l-ui/useConfirm';
 import { t } from 'app/i18next-t';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { DimStore } from 'app/inventory/store-types';
@@ -124,7 +124,7 @@ export default function CompareLoadoutsDrawer({
             store={selectedStore}
             hideOptimizeArmor={true}
             actionButtons={[
-              <button key="save" className="dim-button" type="button" onClick={onSaveLoadout}>
+              <button key="save" className="d2l-button" type="button" onClick={onSaveLoadout}>
                 {t('LoadoutBuilder.SaveAs')}{' '}
                 <span className={styles.loadoutName}>{selectedLoadout.name}</span>
               </button>,

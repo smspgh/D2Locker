@@ -12,8 +12,8 @@
 }
 
 .character {
-  composes: resetButton from '../dim-ui/common.m.scss';
-  composes: flexRow from '../dim-ui/common.m.scss';
+  composes: resetButton from '../d2l-ui/common.m.scss';
+  composes: flexRow from '../d2l-ui/common.m.scss';
   align-items: stretch;
   width: 100%;
   position: relative;

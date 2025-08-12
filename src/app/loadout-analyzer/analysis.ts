@@ -110,7 +110,7 @@ export async function analyzeLoadout(
   }
 
   // FIXME Run a trimmed down mod assignment algorithm here to find errors in mod-only loadouts?
-  // Reuse code from https://github.com/DestinyItemManager/DIM/pull/10017?
+  // Reuse code from https://github.com/DestinyItemManager/D2L/pull/10017?
   if (
     modMap.artificeMods.length > 5 ||
     modMap.activityMods.length > 5 ||

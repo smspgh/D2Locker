@@ -3,14 +3,14 @@ import { accountsSelector, currentAccountSelector } from 'app/accounts/selectors
 import { BungieError, HttpStatusError } from 'app/bungie-api/http-client';
 import { Token, getToken } from 'app/bungie-api/oauth-tokens';
 import { clarityCharacterStatsSelector, clarityDescriptionsSelector } from 'app/clarity/selectors';
-import { DimAuthToken, getToken as getDimApiToken } from 'app/dim-api/dim-api-helper';
+import { DimAuthToken, getToken as getDimApiToken } from 'app/d2l-api/d2l-api-helper';
 import {
   apiPermissionGrantedSelector,
   currentProfileSelector,
   D2LSyncErrorSelector,
   settingSelector,
   updateQueueLengthSelector,
-} from 'app/dim-api/selectors';
+} from 'app/d2l-api/selectors';
 import { t } from 'app/i18next-t';
 import { profileErrorSelector, profileResponseSelector } from 'app/inventory/selectors';
 import { useLoadStores } from 'app/inventory/store/hooks';
@@ -19,7 +19,7 @@ import LocalStorageInfo from 'app/storage/LocalStorageInfo';
 import { set } from 'app/storage/idb-keyval';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { streamDeckSelector } from 'app/stream-deck/selectors';
-import { DimError } from 'app/utils/dim-error';
+import { DimError } from 'app/utils/d2l-error';
 import { convertToError } from 'app/utils/errors';
 import { usePageTitle } from 'app/utils/hooks';
 import { systemInfo } from 'app/utils/system-info';
@@ -30,16 +30,16 @@ import { useSelector } from 'react-redux';
 import styles from './Debug.m.scss';
 
 /**
- * A user-facing debug page that displays information about the DIM environment,
+ * A user-facing debug page that displays information about the D2L environment,
  * browser, and various states and capabilities to help us figure things out.
  *
- * The text on this page is for DIM developers and does not need to be translated.
+ * The text on this page is for D2L developers and does not need to be translated.
  */
 export default function Debug() {
   usePageTitle('Debug');
   const dispatch = useThunkDispatch();
   const bungieToken = getToken();
-  const dimApiToken = getDimApiToken();
+  const d2lApiToken = getDimApiToken();
 
   const accounts = useSelector(accountsSelector);
   const currentAccount = useSelector(currentAccountSelector);
@@ -115,9 +115,9 @@ export default function Debug() {
           <h3>Browser</h3>
           <p>
             {t('Views.About.Version', {
-              version: $DIM_VERSION,
-              flavor: $DIM_FLAVOR,
-              date: new Date($DIM_BUILD_DATE).toLocaleString(),
+              version: $D2L_VERSION,
+              flavor: $D2L_FLAVOR,
+              date: new Date($D2L_BUILD_DATE).toLocaleString(),
             })}
           </p>
           <p>{systemInfo}</p>
@@ -146,9 +146,9 @@ export default function Debug() {
         </section>
 
         <section>
-          <h3>DIM Sync Auth Tokens</h3>
+          <h3>d2l sync Auth Tokens</h3>
           {now}
-          {dimApiToken ? <DIMTokenState token={dimApiToken} /> : <p>No auth token</p>}
+          {d2lApiToken ? <D2LTokenState token={d2lApiToken} /> : <p>No auth token</p>}
         </section>
 
         <section>
@@ -198,7 +198,7 @@ export default function Debug() {
         </section>
 
         <section>
-          <h3>DIM Sync</h3>
+          <h3>d2l sync</h3>
           <p>
             <b>API Permission Granted:</b> {JSON.stringify(apiPermissionGranted)}
           </p>
@@ -286,7 +286,7 @@ export default function Debug() {
           </section>
         )}
 
-        {$DIM_FLAVOR !== 'release' && currentAccount?.destinyVersion === 2 && (
+        {$D2L_FLAVOR !== 'release' && currentAccount?.destinyVersion === 2 && (
           <TroubleshootingSettings />
         )}
       </div>
@@ -316,7 +316,7 @@ function BungieTokenState({ token }: { token: Token }) {
   );
 }
 
-function DIMTokenState({ token }: { token: DimAuthToken }) {
+function D2LTokenState({ token }: { token: DimAuthToken }) {
   const tokenInception = new Date(token.inception);
   const expires = new Date(token.inception + token.expiresInSeconds * 1000);
   const expired = expires.getTime() < Date.now();

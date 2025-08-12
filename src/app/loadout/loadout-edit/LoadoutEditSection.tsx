@@ -1,5 +1,5 @@
-import Dropdown, { Option } from 'app/dim-ui/Dropdown';
-import { PressTip } from 'app/dim-ui/PressTip';
+import Dropdown, { Option } from 'app/d2l-ui/Dropdown';
+import { PressTip } from 'app/d2l-ui/PressTip';
 import { t } from 'app/i18next-t';
 import {
   AppIcon,

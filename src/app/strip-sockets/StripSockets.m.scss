@@ -1,7 +1,7 @@
 @use '../variables' as *;
 
 .insertButton {
-  composes: dim-button from global;
+  composes: d2l-button from global;
   display: flex;
   flex-direction: row;
   align-items: center;

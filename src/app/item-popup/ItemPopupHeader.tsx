@@ -1,7 +1,7 @@
 import ArmorySheet from 'app/armory/ArmorySheet';
-import { bungieBackgroundStyle } from 'app/dim-ui/BungieImage';
-import ElementIcon from 'app/dim-ui/ElementIcon';
-import RichDestinyText from 'app/dim-ui/destiny-symbols/RichDestinyText';
+import { bungieBackgroundStyle } from 'app/d2l-ui/BungieImage';
+import ElementIcon from 'app/d2l-ui/ElementIcon';
+import RichDestinyText from 'app/d2l-ui/destiny-symbols/RichDestinyText';
 import { useHotkey } from 'app/hotkeys/useHotkey';
 import { t } from 'app/i18next-t';
 import type { ItemRarityName } from 'app/search/d2-known-values';

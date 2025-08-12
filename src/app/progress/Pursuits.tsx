@@ -1,5 +1,5 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
-import CollapsibleTitle from 'app/dim-ui/CollapsibleTitle';
+import CollapsibleTitle from 'app/d2l-ui/CollapsibleTitle';
 import { t } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
 import { DimStore } from 'app/inventory/store-types';

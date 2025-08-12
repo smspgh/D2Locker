@@ -21,7 +21,7 @@ export class VersionCacheManager {
   async checkAndClearIfNeeded(): Promise<boolean> {
     try {
       const storedVersion = localStorage.getItem(VERSION_KEY);
-      
+
       if (!storedVersion) {
         // First time or no version stored - just save current version
         localStorage.setItem(VERSION_KEY, this.currentVersion);
@@ -71,7 +71,7 @@ export class VersionCacheManager {
         errorLog(TAG, 'Failed to clear sessionStorage:', e);
       }
 
-      // 4. Clear IndexedDB (DIM's offline data)
+      // 4. Clear IndexedDB (D2L's offline data)
       await this.clearIndexedDB();
 
       infoLog(TAG, 'All caches cleared successfully');
@@ -91,13 +91,13 @@ export class VersionCacheManager {
         VERSION_KEY,
         LAST_CACHE_CLEAR_KEY,
         'authorizationState', // OAuth state
-        'dim-api-enabled', // D2LSync setting
+        'd2l-api-enabled', // D2LSync setting
         'settings', // User preferences
         'language' // Language preference
       ];
 
       const keysToRemove: string[] = [];
-      
+
       // Collect keys to remove
       for (let i = 0; i < localStorage.length; i++) {
         const key = localStorage.key(i);
@@ -123,9 +123,9 @@ export class VersionCacheManager {
   private async clearIndexedDB(): Promise<void> {
     try {
       if ('indexedDB' in window) {
-        // DIM typically uses 'keyval-store' and potentially others
-        const dbsToDelete = ['keyval-store', 'DIM', 'dim-data'];
-        
+        // D2L typically uses 'keyval-store' and potentially others
+        const dbsToDelete = ['keyval-store', 'D2L', 'd2l-data'];
+
         await Promise.all(
           dbsToDelete.map(async (dbName) => {
             try {
@@ -168,4 +168,4 @@ export class VersionCacheManager {
 }
 
 // Export singleton instance
-export const versionCacheManager = new VersionCacheManager($DIM_VERSION);
+export const versionCacheManager = new VersionCacheManager($D2L_VERSION);

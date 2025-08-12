@@ -35,8 +35,8 @@ export function initGoogleAnalytics() {
     allow_google_signals: false,
     send_page_view: false,
     user_id: token?.bungieMembershipId,
-    dim_version: $DIM_VERSION,
-    dim_flavor: $DIM_FLAVOR,
+    d2l_version: $D2L_VERSION,
+    d2l_flavor: $D2L_FLAVOR,
     browser_name: browserName,
     browser_version: browserVersion,
   });

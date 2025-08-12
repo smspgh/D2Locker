@@ -1,6 +1,6 @@
 import { t } from 'app/i18next-t';
 import { showNotification } from 'app/notifications/notifications';
-import { DimError } from 'app/utils/dim-error';
+import { DimError } from 'app/utils/d2l-error';
 import { errorLog, infoLog } from 'app/utils/log';
 import { PlatformErrorCodes } from 'bungie-api-ts/destiny2';
 import { HttpClient, HttpClientConfig } from 'bungie-api-ts/http';
@@ -48,7 +48,7 @@ const logThrottle = (timesThrottled: number, waitTime: number, url: string) =>
 
 // it would be really great if they implemented the pipeline operator soon
 /** used for most Bungie API requests */
-export const authenticatedHttpClient = dimErrorHandledHttpClient(
+export const authenticatedHttpClient = d2lErrorHandledHttpClient(
   responsivelyThrottleHttpClient(
     createHttpClient(
       rateLimitedFetch(
@@ -61,7 +61,7 @@ export const authenticatedHttpClient = dimErrorHandledHttpClient(
 );
 
 /** used to get manifest and global alerts */
-export const unauthenticatedHttpClient = dimErrorHandledHttpClient(
+export const unauthenticatedHttpClient = d2lErrorHandledHttpClient(
   responsivelyThrottleHttpClient(
     createHttpClient(createFetchWithNonStoppingTimeout(fetch, TIMEOUT, notifyTimeout), API_KEY),
     logThrottle,
@@ -69,9 +69,9 @@ export const unauthenticatedHttpClient = dimErrorHandledHttpClient(
 );
 
 /**
- * wrap HttpClient in handling specific to DIM, using i18n strings, bounce to login, etc
+ * wrap HttpClient in handling specific to D2L, using i18n strings, bounce to login, etc
  */
-function dimErrorHandledHttpClient(httpClient: HttpClient): HttpClient {
+function d2lErrorHandledHttpClient(httpClient: HttpClient): HttpClient {
   return async (config: HttpClientConfig) => {
     try {
       return await httpClient(config);
@@ -82,7 +82,7 @@ function dimErrorHandledHttpClient(httpClient: HttpClient): HttpClient {
 }
 
 /**
- * if HttpClient throws an error (js, Bungie, http) this enriches it with DIM concepts and then re-throws it
+ * if HttpClient throws an error (js, Bungie, http) this enriches it with D2L concepts and then re-throws it
  */
 export function handleErrors(error: unknown): never {
   if (error instanceof DOMException && error.name === 'AbortError') {
@@ -185,7 +185,7 @@ export function handleErrors(error: unknown): never {
       case PlatformErrorCodes.ApiInvalidOrExpiredKey:
       case PlatformErrorCodes.ApiKeyMissingFromRequest:
       case PlatformErrorCodes.OriginHeaderDoesNotMatchKey:
-        if ($DIM_FLAVOR === 'dev') {
+        if ($D2L_FLAVOR === 'dev') {
           throw new DimError('BungieService.DevVersion').withError(error);
         } else {
           throw new DimError('BungieService.Difficulties').withError(error);

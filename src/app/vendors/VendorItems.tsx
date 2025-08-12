@@ -1,12 +1,12 @@
-import { PressTip } from 'app/dim-ui/PressTip';
-import RichDestinyText from 'app/dim-ui/destiny-symbols/RichDestinyText';
+import { PressTip } from 'app/d2l-ui/PressTip';
+import RichDestinyText from 'app/d2l-ui/destiny-symbols/RichDestinyText';
 import { t } from 'app/i18next-t';
 import { useD2Definitions } from 'app/manifest/selectors';
 import FactionIcon from 'app/progress/FactionIcon';
 import { ReputationRank } from 'app/progress/ReputationRank';
 import { DestinyVendorProgressionType } from 'bungie-api-ts/destiny2';
 import focusingItemOutputs from 'data/d2/focusing-item-outputs.json';
-import BungieImage from '../dim-ui/BungieImage';
+import BungieImage from '../d2l-ui/BungieImage';
 import VendorItemComponent from './VendorItemComponent';
 import styles from './VendorItems.m.scss';
 import { D2Vendor } from './d2-vendors';

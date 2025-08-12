@@ -11,7 +11,7 @@
 }
 
 .new {
-  composes: flexColumn from '../dim-ui/common.m.scss';
+  composes: flexColumn from '../d2l-ui/common.m.scss';
   align-items: center;
   > div {
     position: static !important;
@@ -105,7 +105,7 @@
 }
 
 .modPerks {
-  composes: flexColumn from '../dim-ui/common.m.scss';
+  composes: flexColumn from '../d2l-ui/common.m.scss';
   break-inside: avoid;
   gap: 4px;
   padding-left: 5px;
@@ -136,7 +136,7 @@
 
 // Perks in the perk/mod columns
 .modPerk {
-  composes: flexRow from '../dim-ui/common.m.scss';
+  composes: flexRow from '../d2l-ui/common.m.scss';
   composes: noWrap;
   align-items: flex-start;
   gap: 3px;
@@ -194,7 +194,7 @@
 }
 
 .locationCell {
-  composes: flexRow from '../dim-ui/common.m.scss';
+  composes: flexRow from '../d2l-ui/common.m.scss';
   composes: noWrap;
   align-items: flex-start;
   img {

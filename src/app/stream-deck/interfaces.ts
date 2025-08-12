@@ -27,12 +27,12 @@ export interface CollectPostmasterAction {
   action: 'collectPostmaster';
 }
 
-// trigger refresh DIM
+// trigger refresh D2L
 export interface RefreshAction {
   action: 'refresh';
 }
 
-// trigger refresh DIM
+// trigger refresh D2L
 export interface RequestPickerItemsAction {
   action: 'requestPickerItems';
   device: string;

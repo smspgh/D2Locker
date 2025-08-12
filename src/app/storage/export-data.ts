@@ -1,16 +1,16 @@
 import { DestinyVersion, ExportResponse } from '@destinyitemmanager/dim-api-types';
-import { parseProfileKey } from 'app/dim-api/reducer';
+import { parseProfileKey } from 'app/d2l-api/reducer';
 import { ThunkResult } from 'app/store/types';
 import { download } from 'app/utils/download';
 
 /**
- * Export the local IDB data to a format the DIM API could import.
+ * Export the local IDB data to a format the D2L API could import.
  */
 export function exportLocalData(): ThunkResult<ExportResponse> {
   return async (_dispatch, getState) => {
-    const dimApiState = getState().dimApi;
+    const d2lApiState = getState().d2lApi;
     const exportResponse: ExportResponse = {
-      settings: dimApiState.settings,
+      settings: d2lApiState.settings,
       loadouts: [],
       tags: [],
       triumphs: [],
@@ -18,18 +18,18 @@ export function exportLocalData(): ThunkResult<ExportResponse> {
       searches: [],
     };
 
-    for (const profileKey in dimApiState.profiles) {
-      if (Object.prototype.hasOwnProperty.call(dimApiState.profiles, profileKey)) {
+    for (const profileKey in d2lApiState.profiles) {
+      if (Object.prototype.hasOwnProperty.call(d2lApiState.profiles, profileKey)) {
         const [platformMembershipId, destinyVersion] = parseProfileKey(profileKey);
 
-        for (const loadout of Object.values(dimApiState.profiles[profileKey].loadouts)) {
+        for (const loadout of Object.values(d2lApiState.profiles[profileKey].loadouts)) {
           exportResponse.loadouts.push({
             loadout,
             platformMembershipId,
             destinyVersion,
           });
         }
-        for (const annotation of Object.values(dimApiState.profiles[profileKey].tags)) {
+        for (const annotation of Object.values(d2lApiState.profiles[profileKey].tags)) {
           exportResponse.tags.push({
             annotation,
             platformMembershipId,
@@ -39,16 +39,16 @@ export function exportLocalData(): ThunkResult<ExportResponse> {
 
         exportResponse.triumphs.push({
           platformMembershipId,
-          triumphs: dimApiState.profiles[profileKey].triumphs,
+          triumphs: d2lApiState.profiles[profileKey].triumphs,
         });
       }
     }
 
-    exportResponse.itemHashTags = Object.values(dimApiState.itemHashTags);
+    exportResponse.itemHashTags = Object.values(d2lApiState.itemHashTags);
 
-    for (const destinyVersionStr in dimApiState.searches) {
+    for (const destinyVersionStr in d2lApiState.searches) {
       const destinyVersion = parseInt(destinyVersionStr, 10) as DestinyVersion;
-      for (const search of dimApiState.searches[destinyVersion]) {
+      for (const search of d2lApiState.searches[destinyVersion]) {
         exportResponse.searches.push({
           destinyVersion,
           search,
@@ -64,5 +64,5 @@ export function exportLocalData(): ThunkResult<ExportResponse> {
  * Export the data backup as a file
  */
 export function exportBackupData(data: ExportResponse) {
-  download(JSON.stringify(data), 'dim-data.json', 'application/json');
+  download(JSON.stringify(data), 'd2l-data.json', 'application/json');
 }

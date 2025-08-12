@@ -14,7 +14,7 @@ export const enum SearchItemType {
   Recent,
   /** Explicitly saved searches */
   Saved,
-  /** Searches suggested by DIM Sync but not part of your history */
+  /** Searches suggested by d2l sync but not part of your history */
   Suggested,
   /** Generated autocomplete searches */
   Autocomplete,

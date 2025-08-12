@@ -124,31 +124,31 @@ describe('process-utils mod assignment', () => {
       for (const storeItem of store.items) {
         if (!helmet && isArmor2Helmet(storeItem)) {
           helmet = mapDimItemToProcessItem({
-            dimItem: storeItem,
+            d2lItem: storeItem,
             armorEnergyRules,
           });
         }
         if (!arms && isArmor2Arms(storeItem)) {
           arms = mapDimItemToProcessItem({
-            dimItem: storeItem,
+            d2lItem: storeItem,
             armorEnergyRules,
           });
         }
         if (!chest && isArmor2Chest(storeItem)) {
           chest = mapDimItemToProcessItem({
-            dimItem: storeItem,
+            d2lItem: storeItem,
             armorEnergyRules,
           });
         }
         if (!legs && isArmor2Legs(storeItem)) {
           legs = mapDimItemToProcessItem({
-            dimItem: storeItem,
+            d2lItem: storeItem,
             armorEnergyRules,
           });
         }
         if (!classItem && isArmor2ClassItem(storeItem)) {
           classItem = mapDimItemToProcessItem({
-            dimItem: storeItem,
+            d2lItem: storeItem,
             armorEnergyRules,
           });
         }

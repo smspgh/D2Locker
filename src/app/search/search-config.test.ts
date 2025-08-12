@@ -148,7 +148,7 @@ describe('validateQuery', () => {
     ['season:>2.5', true],
 
     ['is:season', false],
-    // DIM used to parse this as `season:11` because `redwar` is `1`...
+    // D2L used to parse this as `season:11` because `redwar` is `1`...
     ['season:1redwar', false],
     ['season:season', false],
     ['season:arrivals', false],

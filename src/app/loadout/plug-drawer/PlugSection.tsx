@@ -1,4 +1,4 @@
-import { TileGrid } from 'app/dim-ui/TileGrid';
+import { TileGrid } from 'app/d2l-ui/TileGrid';
 import { t, tl } from 'app/i18next-t';
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { count } from 'app/utils/collections';

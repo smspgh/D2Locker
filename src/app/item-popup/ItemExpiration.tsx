@@ -1,4 +1,4 @@
-import Countdown from 'app/dim-ui/Countdown';
+import Countdown from 'app/d2l-ui/Countdown';
 import { t } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
 import { AppIcon, faClock } from 'app/shell/icons';

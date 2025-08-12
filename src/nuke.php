@@ -13,7 +13,7 @@
     header('Clear-Site-Data: "*"');
 
     // Set the success message
-    $message = 'Requested that your browser delete all DIM data.';
+    $message = 'Requested that your browser delete all D2L data.';
   } else {
     $message = 'CSRF token validation failed! token:' . $token . " posted:" . $_POST['token'];
   }
@@ -30,7 +30,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>DIM NUKE</title>
+  <title>D2L NUKE</title>
   <style>
     body {
       font-family: sans-serif;
@@ -40,13 +40,13 @@
   </style>
 </head>
 <body>
-  <h1>Nuke DIM Data</h1>
+  <h1>Nuke D2L Data</h1>
   <?php if ($message) { ?>
     <p><b><?php echo $message; ?></b></p>
   <?php } ?>
   <form method="post" action="">
     <input type="hidden" name="token" value="<?php echo $token; ?>" />
-    <p>This will delete all saved DIM data from this browser. If you did not have DIM Sync set up, you could lose settings, loadouts, and tags. If you do have DIM Sync set up, and it has been running successfully, you won't lose anything.</p>
+    <p>This will delete all saved D2L data from this browser. If you did not have d2l sync set up, you could lose settings, loadouts, and tags. If you do have d2l sync set up, and it has been running successfully, you won't lose anything.</p>
     <p><b>This does not do anything in Safari or any iOS browser. It may not do as much as you hope in Firefox.</b></p>
     <button type="submit">NUKE IT</button>
   </form>

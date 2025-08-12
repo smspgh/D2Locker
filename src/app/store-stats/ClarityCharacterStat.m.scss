@@ -1,5 +1,5 @@
 @use '../variables' as *;
-@use '../dim-ui/tooltip-mixins' as *;
+@use '../d2l-ui/tooltip-mixins' as *;
 
 .communityInsightSection {
   @include tooltip-section-color($communityBlue);

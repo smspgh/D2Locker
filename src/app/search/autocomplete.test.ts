@@ -176,7 +176,7 @@ describe('filterSortRecentSearches', () => {
       type: SearchType.Item,
     },
     {
-      query: 'dim api autosuggest',
+      query: 'd2l api autosuggest',
       usageCount: 0,
       saved: false,
       lastUsage: 0,

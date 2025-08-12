@@ -1,6 +1,6 @@
 import { currentAccountSelector } from 'app/accounts/selectors';
-import { PressTipRoot } from 'app/dim-ui/PressTip';
-import Sheet from 'app/dim-ui/Sheet';
+import { PressTipRoot } from 'app/d2l-ui/PressTip';
+import Sheet from 'app/d2l-ui/Sheet';
 import { showCheatSheet$ } from 'app/hotkeys/HotkeysCheatSheet';
 import { Hotkey } from 'app/hotkeys/hotkeys';
 import { useHotkeys } from 'app/hotkeys/useHotkey';
@@ -21,7 +21,7 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useSelector } from 'react-redux';
 import { NavLink, useLocation } from 'react-router';
 import { useSubscription } from 'use-subscription';
-import ClickOutside from '../dim-ui/ClickOutside';
+import ClickOutside from '../d2l-ui/ClickOutside';
 import SearchFilter from '../search/SearchFilter';
 import styles from './Header.m.scss';
 import MenuBadge from './MenuBadge';
@@ -67,7 +67,7 @@ export default function Header() {
     }
   }, [showSearch]);
 
-  // Install DIM as a PWA
+  // Install D2L as a PWA
   const [promptIosPwa, setPromptIosPwa] = useState(false);
   const installPromptEvent = useSubscription(installPrompt$);
 
@@ -124,7 +124,7 @@ export default function Header() {
   const navLinkClassName = ({ isActive }: { isActive: boolean }) =>
     clsx(styles.menuItem, { [styles.active]: isActive });
 
-  // Generic links about DIM
+  // Generic links about D2L
 
   let links: {
     to: string;
@@ -150,9 +150,14 @@ export default function Header() {
         to: `${path}/armory-search`,
         text: 'Weapon Database',
       },
+      account.destinyVersion === 2 && {
+        to: `${path}/armor-analysis`,
+        text: 'Armor Analysis',
+      },
     ]);
   }
 
+  
   const linkNodes = links.map((link) => (
     <NavLink className={navLinkClassName} key={link.to} to={link.to}>
       {link.badge}
@@ -307,7 +312,7 @@ export default function Header() {
         <PostmasterWarningBanner />
         {$featureFlags.warnNoSync && <DimApiWarningBanner />}
         {promptIosPwa && (
-          <Sheet header={<h1>{t('Header.InstallDIM')}</h1>} onClose={() => setPromptIosPwa(false)}>
+          <Sheet header={<h1>{t('Header.InstallD2L')}</h1>} onClose={() => setPromptIosPwa(false)}>
             <p className={styles.pwaPrompt}>{t('Header.IosPwaPrompt')}</p>
           </Sheet>
         )}

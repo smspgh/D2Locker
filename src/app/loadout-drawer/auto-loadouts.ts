@@ -242,7 +242,7 @@ function limitToBucketSize(items: DimItem[], store: DimStore) {
 }
 
 // Add up stackable items so we don't have duplicates. This helps us actually move them, see
-// https://github.com/DestinyItemManager/DIM/issues/2691#issuecomment-373970255
+// https://github.com/DestinyItemManager/D2L/issues/2691#issuecomment-373970255
 function addUpStackables(items: DimItem[]) {
   return Object.values(Object.groupBy(items, (t) => t.hash)).flatMap((itemsInGroup) => {
     if (!itemsInGroup || itemsInGroup.length === 0) {

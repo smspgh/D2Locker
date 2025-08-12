@@ -1,6 +1,6 @@
 import { DestinyAccount } from 'app/accounts/destiny-account';
 import { currentAccountSelector } from 'app/accounts/selectors';
-import { apiPermissionGrantedSelector } from 'app/dim-api/selectors';
+import { apiPermissionGrantedSelector } from 'app/d2l-api/selectors';
 import { t } from 'app/i18next-t';
 import { showNotification } from 'app/notifications/notifications';
 import { get } from 'app/storage/idb-keyval';
@@ -13,7 +13,7 @@ import {
 } from 'bungie-api-ts/destiny2';
 import { BucketHashes } from 'data/d2/generated-enums';
 import { createAction } from 'typesafe-actions';
-import { TagCommand, TagValue } from './dim-item-info';
+import { TagCommand, TagValue } from './d2l-item-info';
 import { DimItem } from './item-types';
 import { appendedToNote, removedFromNote } from './note-hashtags';
 import { notesSelector } from './selectors';
@@ -241,7 +241,7 @@ export function removeFromNote(item: DimItem, note: string | undefined): ThunkRe
 }
 
 /**
- * Warn the first time someone saves a tag or note and they haven't enabled DIM Sync.
+ * Warn the first time someone saves a tag or note and they haven't enabled d2l sync.
  */
 function warnNoSync(): ThunkResult {
   return async (_dispatch, getState) => {

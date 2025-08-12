@@ -1,12 +1,12 @@
 import { handleErrors } from 'app/bungie-api/bungie-service-helper';
 import { HttpStatusError, toHttpStatusError } from 'app/bungie-api/http-client';
 import { AllD1DestinyManifestComponents } from 'app/destiny1/d1-manifest-types';
-import { settingsSelector } from 'app/dim-api/selectors';
+import { settingsSelector } from 'app/d2l-api/selectors';
 import { t } from 'app/i18next-t';
 import { loadingEnd, loadingStart } from 'app/shell/actions';
 import { del, get, set } from 'app/storage/idb-keyval';
 import { ThunkResult } from 'app/store/types';
-import { DimError } from 'app/utils/dim-error';
+import { DimError } from 'app/utils/d2l-error';
 import { convertToError } from 'app/utils/errors';
 import { errorLog, infoLog } from 'app/utils/log';
 import { dedupePromise } from 'app/utils/promises';

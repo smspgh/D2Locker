@@ -1,6 +1,6 @@
 import { CustomStatDef } from '@destinyitemmanager/dim-api-types';
-import { languageSelector } from 'app/dim-api/selectors';
-import { useTableColumnSorts } from 'app/dim-ui/table-columns';
+import { languageSelector } from 'app/d2l-api/selectors';
+import { useTableColumnSorts } from 'app/d2l-ui/table-columns';
 import { t } from 'app/i18next-t';
 import { locateItem } from 'app/inventory/locate-item';
 import { createItemContextSelector } from 'app/inventory/selectors';
@@ -17,7 +17,7 @@ import { ColumnDefinition, Row, TableContext } from 'app/organizer/table-types';
 import { weaponMasterworkY2SocketTypeHash } from 'app/search/d2-known-values';
 import Checkbox from 'app/settings/Checkbox';
 import { useSetting } from 'app/settings/hooks';
-import { AppIcon, faList } from 'app/shell/icons';
+// import { AppIcon, faList } from 'app/shell/icons';
 import { acquisitionRecencyComparator } from 'app/shell/item-comparators';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { compact } from 'app/utils/collections';
@@ -25,20 +25,20 @@ import { emptyArray } from 'app/utils/empty';
 import { maxBy } from 'es-toolkit';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { Link } from 'react-router';
-import Sheet from '../dim-ui/Sheet';
+// import { Link } from 'react-router';
+import Sheet from '../d2l-ui/Sheet';
 import { DimItem, DimSocket } from '../inventory/item-types';
 import { chainComparator, compareBy } from '../utils/comparators';
 import { getRollAppraiserUtilsSync } from 'app/roll-appraiser/rollAppraiserService';
-import { getSocketsByType } from 'app/utils/socket-utils';
+import { getSocketsByType, getWeaponSockets } from 'app/utils/socket-utils';
 import styles from './Compare.m.scss';
 import { getColumns } from './CompareColumns';
 import CompareItem, { CompareHeaders } from './CompareItem';
-import CompareSuggestions from './CompareSuggestions';
-import { endCompareSession, removeCompareItem, updateCompareQuery } from './actions';
-import { sortDupes } from '../search/items/search-filters/dupes';
+// import CompareSuggestions from './CompareSuggestions';
+import { endCompareSession, removeCompareItem } from './actions';
+// import { sortDupes } from '../search/items/search-filters/dupes';
 import { CompareSession } from './reducer';
-import { compareItemsSelector, compareOrganizerLinkSelector } from './selectors';
+import { compareItemsSelector } from './selectors';
 
 // TODO: CSS grid-with-sticky layout
 // TODO: dropdowns for query buttons
@@ -48,10 +48,11 @@ export default function Compare({ session }: { session: CompareSession }) {
   const dispatch = useThunkDispatch();
   const defs = useD2Definitions()!;
   const [compareBaseStats, setCompareBaseStats] = useSetting('compareBaseStats');
-  const [assumeWeaponMasterwork, setAssumeWeaponMasterwork] = useSetting('compareWeaponMasterwork');
+  const [assumeWeaponMasterwork] = useSetting('compareWeaponMasterwork');
+  const [showAllArmorType, setShowAllArmorType] = useState(true); // Toggle for showing all armor of same class/type vs same itemHash
   const itemCreationContext = useSelector(createItemContextSelector);
   const rawCompareItems = useSelector(compareItemsSelector(session.vendorCharacterId));
-  const organizerLink = useSelector(compareOrganizerLinkSelector);
+  // const organizerLink = useSelector(compareOrganizerLinkSelector);
 
   /** The stat row to highlight */
   const [highlight, setHighlight] = useState<string | number>();
@@ -63,9 +64,49 @@ export default function Compare({ session }: { session: CompareSession }) {
   const doCompareBaseStats = Boolean(compareBaseStats && comparingArmor);
   const doAssumeWeaponMasterworks = Boolean(defs && assumeWeaponMasterwork && comparingWeapons);
 
+  // Filter items based on the toggle for armor
+  const filteredCompareItems = useMemo(() => {
+    if (comparingArmor && !showAllArmorType && session.initialItemId) {
+      // When toggle is OFF for armor, show only items with same itemHash as the initial item
+      // For exotic armor, also consider perks since they determine uniqueness
+      const initialItem = rawCompareItems.find(item => item.id === session.initialItemId);
+      if (initialItem) {
+        if (initialItem.isExotic && initialItem.sockets?.allSockets) {
+          // For exotic armor, match by both hash and perk combination
+          const initialPerkHashes = initialItem.sockets.allSockets
+            .filter(socket => socket.isPerk && socket.plugged?.plugDef.hash)
+            .map(socket => socket.plugged!.plugDef.hash)
+            .sort((a, b) => a - b);
+
+          return rawCompareItems.filter(item => {
+            if (item.hash !== initialItem.hash) return false;
+
+            if (item.isExotic && item.sockets?.allSockets) {
+              const itemPerkHashes = item.sockets.allSockets
+                .filter(socket => socket.isPerk && socket.plugged?.plugDef.hash)
+                .map(socket => socket.plugged!.plugDef.hash)
+                .sort((a, b) => a - b);
+
+              // Check if perk arrays are equal
+              return initialPerkHashes.length === itemPerkHashes.length &&
+                     initialPerkHashes.every((hash, index) => hash === itemPerkHashes[index]);
+            }
+
+            return true; // Non-exotic armor just needs same hash
+          });
+        } else {
+          // Non-exotic armor: just match by hash
+          return rawCompareItems.filter(item => item.hash === initialItem.hash);
+        }
+      }
+    }
+    // Default behavior: show all items (current behavior)
+    return rawCompareItems;
+  }, [rawCompareItems, comparingArmor, showAllArmorType, session.initialItemId]);
+
   // Produce new items which have had their sockets changed
   const compareItems = useMemo(() => {
-    let items = rawCompareItems;
+    let items = filteredCompareItems;
     if (doAssumeWeaponMasterworks && comparingWeapons) {
       // Fully masterwork weapons
       items = items.map((i) => masterworkItem(i, itemCreationContext));
@@ -75,7 +116,7 @@ export default function Compare({ session }: { session: CompareSession }) {
   }, [
     itemCreationContext,
     doAssumeWeaponMasterworks,
-    rawCompareItems,
+    filteredCompareItems,
     socketOverrides,
     comparingWeapons,
   ]);
@@ -100,12 +141,12 @@ export default function Compare({ session }: { session: CompareSession }) {
   // Memoize computing the list of stats
   const allStats = useMemo(() => buildStatInfo(compareItems), [compareItems]);
 
-  const updateQuery = useCallback(
-    (newQuery: string) => {
-      dispatch(updateCompareQuery(newQuery));
-    },
-    [dispatch],
-  );
+  // const updateQuery = useCallback(
+  //   (newQuery: string) => {
+  //     dispatch(updateCompareQuery(newQuery));
+  //   },
+  //   [dispatch],
+  // );
 
   const remove = useCallback(
     (item: DimItem) => {
@@ -198,16 +239,18 @@ export default function Compare({ session }: { session: CompareSession }) {
   // Identify the best item based on dupebest criteria
   const bestItem = useMemo(() => {
     if (rows.length <= 1) return undefined;
-    
+
     // Sort a copy of the items using dupebest criteria
     const itemsCopy = [...rows.map(r => r.item)];
-    
+
     // Sort directly using the dupebest comparator
     const getTag = (item: DimItem) => {
-      const tag = rawCompareItems.find(i => i.id === item.id)?.dimInfo?.tag;
-      return tag;
+      // Use the tag selector to get the item's tag
+      return (item.taggable && typeof item.taggable === 'object' && 'tag' in item.taggable)
+        ? (item.taggable as any).tag
+        : undefined;
     };
-    
+
     // Create the comparator for dupebest
     const dupebestComparator = chainComparator<DimItem>(
       // 1. For armor: prioritize highest custom stat total if custom stats exist
@@ -231,12 +274,12 @@ export default function Compare({ session }: { session: CompareSession }) {
         if (item.bucket.inWeapons && item.sockets) {
           const utils = getRollAppraiserUtilsSync();
           if (!utils) return Number.MAX_SAFE_INTEGER;
-          
+
           const traitPerks = getSocketsByType(item, 'traits');
           if (traitPerks.length >= 2) {
             const perk4Hash = traitPerks[0]?.plugged?.plugDef.hash;
             const perk5Hash = traitPerks[1]?.plugged?.plugDef.hash;
-            
+
             if (perk4Hash && perk5Hash) {
               const comboRank = utils.getTraitComboRank(item.hash.toString(), perk4Hash, perk5Hash);
               if (comboRank) {
@@ -247,30 +290,99 @@ export default function Compare({ session }: { session: CompareSession }) {
         }
         return Number.MAX_SAFE_INTEGER;
       }),
-      // 3. Highest Power
+      // 3. Weighted average of perk ranks in first two columns (tie-breaker for combo rank)
+      compareBy((item) => {
+        if (item.bucket.inWeapons && item.sockets) {
+          const utils = getRollAppraiserUtilsSync();
+          if (!utils) return Number.MAX_SAFE_INTEGER;
+
+          // Get weapon sockets properly categorized
+          const weaponSockets = getWeaponSockets(item, { excludeEmptySockets: false });
+          if (!weaponSockets) return 0;
+
+          // Get the first two perk sockets with multiple options (like dupes.ts does)
+          const allPerkSockets = item.sockets.allSockets
+            .filter((s) => {
+              // Must be a perk socket with multiple options
+              if (!s.isPerk || s.plugOptions.length <= 1) return false;
+
+              // Exclude intrinsic socket
+              if (weaponSockets.intrinsicSocket && s.socketIndex === weaponSockets.intrinsicSocket.socketIndex) {
+                return false;
+              }
+
+              return true;
+            })
+            .sort((a, b) => a.socketIndex - b.socketIndex);
+
+          // Use the first two perk sockets (which should be columns 1 & 2)
+          if (allPerkSockets.length >= 2) {
+            // Find the best rank among all available perks in each column
+            let bestRank1 = Number.MAX_SAFE_INTEGER;
+            let bestRank2 = Number.MAX_SAFE_INTEGER;
+
+            // Check all plug options in first column
+            for (const plug of allPerkSockets[0].plugOptions) {
+              const perkRank = utils.getPerkRank(item.hash.toString(), plug.plugDef.hash);
+              if (perkRank && perkRank.rank < bestRank1) {
+                bestRank1 = perkRank.rank;
+              }
+            }
+
+            // Check all plug options in second column
+            for (const plug of allPerkSockets[1].plugOptions) {
+              const perkRank = utils.getPerkRank(item.hash.toString(), plug.plugDef.hash);
+              if (perkRank && perkRank.rank < bestRank2) {
+                bestRank2 = perkRank.rank;
+              }
+            }
+
+            if (bestRank1 !== Number.MAX_SAFE_INTEGER && bestRank2 !== Number.MAX_SAFE_INTEGER) {
+              // Weight calculation: 1=2.5, 2=2.0, 3=1.5, 4+=1.0
+              const getWeight = (rank: number) => {
+                switch (rank) {
+                  case 1: return 2.5;
+                  case 2: return 2.0;
+                  case 3: return 1.5;
+                  default: return 1.0;
+                }
+              };
+
+              const weight1 = getWeight(bestRank1);
+              const weight2 = getWeight(bestRank2);
+              const weightedAverage = (weight1 + weight2) / 2;
+
+              // Return negative so higher averages (better) sort first
+              return -weightedAverage;
+            }
+          }
+        }
+        return 0; // No penalty for non-weapons or items without perk data
+      }),
+      // 4. Highest Power
       compareBy((item) => -item.power),
-      // 4. Tag priority
+      // 5. Tag priority
       compareBy((item) => {
         const tag = getTag(item);
         return !Boolean(tag && ['favorite', 'keep'].includes(tag));
       }),
-      // 5. Masterwork status
+      // 6. Masterwork status
       compareBy((item) => !item.masterwork),
-      // 6. Lock status
+      // 7. Lock status
       compareBy((item) => !item.locked),
-      // 7. Item ID tiebreaker
+      // 8. Item ID tiebreaker
       compareBy((i) => i.id),
     );
-    
+
     itemsCopy.sort(dupebestComparator);
-    
+
     // The first item after sorting is the best
     return itemsCopy[0];
-  }, [rows, rawCompareItems, comparingArmor, customStats]);
+  }, [rows, filteredCompareItems, comparingArmor, customStats]);
 
   const firstCompareItem = rows[0]?.item;
   // The example item is the one we'll use for generating suggestion buttons
-  const exampleItem = initialItem || firstCompareItem;
+  // const exampleItem = initialItem || firstCompareItem;
 
   const items = useMemo(
     () => (
@@ -289,6 +401,17 @@ export default function Compare({ session }: { session: CompareSession }) {
 
   const header = (
     <div className={styles.options}>
+      {comparingArmor && (
+        <Checkbox
+          label={showAllArmorType
+            ? `Show All ${firstCompareItem?.classType === 0 ? 'Titan' : firstCompareItem?.classType === 1 ? 'Hunter' : 'Warlock'} ${firstCompareItem?.typeName}s (${rawCompareItems.length})`
+            : `Show Same ItemHash Only (${filteredCompareItems.length})`
+          }
+          name="showAllArmorType"
+          value={showAllArmorType}
+          onChange={setShowAllArmorType}
+        />
+      )}
       {comparingArmor && (
         <Checkbox
           label={t('Compare.CompareBaseStats')}

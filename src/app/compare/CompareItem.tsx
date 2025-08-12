@@ -1,6 +1,6 @@
-import { PressTip } from 'app/dim-ui/PressTip';
-import { useDynamicStringReplacer } from 'app/dim-ui/destiny-symbols/RichDestinyText';
-import { ColumnSort, SortDirection } from 'app/dim-ui/table-columns';
+import { PressTip } from 'app/d2l-ui/PressTip';
+import { useDynamicStringReplacer } from 'app/d2l-ui/destiny-symbols/RichDestinyText';
+import { ColumnSort, SortDirection } from 'app/d2l-ui/table-columns';
 import { t } from 'app/i18next-t';
 import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
 import { moveItemTo } from 'app/inventory/move-item';

@@ -15,7 +15,7 @@ import { bungieAlertsSelector } from './selectors';
  * Using inheritance to keep better in sync with WhatsNewLink.
  */
 export default function MenuBadge() {
-  // TODO: Incorporate settings/storage (e.g. DIM Sync disabled/busted)
+  // TODO: Incorporate settings/storage (e.g. d2l sync disabled/busted)
   const alerts = useSelector(bungieAlertsSelector);
   const dispatch = useThunkDispatch();
 

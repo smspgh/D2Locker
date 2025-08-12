@@ -1,4 +1,4 @@
-import { PressTip } from 'app/dim-ui/PressTip';
+import { PressTip } from 'app/d2l-ui/PressTip';
 import { t } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
 import { DimStore } from 'app/inventory/store-types';
@@ -14,20 +14,20 @@ import styles from './MaxlightButton.m.scss';
 
 interface Props {
   allItems: DimItem[];
-  dimStore: DimStore;
+  d2lStore: DimStore;
   hasClassified: boolean;
 }
 
-export default function MaxlightButton({ allItems, dimStore, hasClassified }: Props) {
+export default function MaxlightButton({ allItems, d2lStore, hasClassified }: Props) {
   const dispatch = useThunkDispatch();
 
-  const maxLight = getLight(dimStore, maxLightItemSet(allItems, dimStore).equippable);
-  const artifactLight = getArtifactBonus(dimStore);
+  const maxLight = getLight(d2lStore, maxLightItemSet(allItems, d2lStore).equippable);
+  const artifactLight = getArtifactBonus(d2lStore);
 
   // Apply a loadout that's dynamically calculated to maximize Light level (preferring not to change currently-equipped items)
   const makeMaxLightLoadout = () => {
-    const loadout = maxLightLoadout(allItems, dimStore);
-    dispatch(applyLoadout(dimStore, loadout, { allowUndo: true }));
+    const loadout = maxLightLoadout(allItems, d2lStore);
+    dispatch(applyLoadout(d2lStore, loadout, { allowUndo: true }));
   };
 
   return (
@@ -35,7 +35,7 @@ export default function MaxlightButton({ allItems, dimStore, hasClassified }: Pr
       <span onClick={makeMaxLightLoadout}>
         <AppIcon icon={powerActionIcon} />
         <span>
-          {dimStore.destinyVersion === 2
+          {d2lStore.destinyVersion === 2
             ? t('Loadouts.MaximizePower')
             : t('Loadouts.MaximizeLight')}
         </span>
@@ -44,7 +44,7 @@ export default function MaxlightButton({ allItems, dimStore, hasClassified }: Pr
           elementType="span"
           className={styles.light}
         >
-          {dimStore.destinyVersion === 1 ? (
+          {d2lStore.destinyVersion === 1 ? (
             <>
               <AppIcon icon={powerIndicatorIcon} />
               {Math.floor(maxLight * 10) / 10}

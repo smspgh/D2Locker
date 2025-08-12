@@ -1,4 +1,4 @@
-import KeyHelp from 'app/dim-ui/KeyHelp';
+import KeyHelp from 'app/d2l-ui/KeyHelp';
 import { t } from 'app/i18next-t';
 import { compareBy } from 'app/utils/comparators';
 import { Observable } from 'app/utils/observable';

@@ -1,5 +1,5 @@
 import { SearchType } from '@destinyitemmanager/dim-api-types';
-import StaticPage from 'app/dim-ui/StaticPage';
+import StaticPage from 'app/d2l-ui/StaticPage';
 import { t } from 'app/i18next-t';
 import { toggleSearchQueryComponent } from 'app/shell/actions';
 import { RootState } from 'app/store/types';

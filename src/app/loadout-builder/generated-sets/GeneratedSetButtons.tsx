@@ -51,19 +51,19 @@ export default function GeneratedSetButtons({
 
   return (
     <div className={styles.buttons}>
-      <button type="button" className="dim-button" onClick={openLoadout}>
+      <button type="button" className="d2l-button" onClick={openLoadout}>
         {isSaved ? t('Loadouts.UpdateLoadout') : t('Loadouts.SaveLoadout')}
       </button>
       {canCompareLoadouts && (
         <button
           type="button"
-          className="dim-button"
+          className="d2l-button"
           onClick={() => lbDispatch({ type: 'openCompareDrawer', set, items })}
         >
           {t('LoadoutBuilder.CompareLoadout')}
         </button>
       )}
-      <button type="button" className="dim-button" onClick={equipItems}>
+      <button type="button" className="d2l-button" onClick={equipItems}>
         {t('LoadoutBuilder.EquipItems', { name: store.name })}
       </button>
     </div>

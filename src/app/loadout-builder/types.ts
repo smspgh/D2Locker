@@ -153,7 +153,7 @@ export const loDefaultArmorEnergyRules: ArmorEnergyRules = {
   minItemEnergy: MIN_LO_ITEM_ENERGY,
 };
 /**
- * The armor energy rules that describe the changes DIM can
+ * The armor energy rules that describe the changes D2L can
  * make in-game -- none as of now.
  */
 export const inGameArmorEnergyRules: ArmorEnergyRules = {

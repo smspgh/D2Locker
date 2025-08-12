@@ -1,15 +1,17 @@
 import { LoadoutSort, VaultWeaponGroupingStyle } from '@destinyitemmanager/dim-api-types';
 import { currentAccountSelector, hasD1AccountSelector } from 'app/accounts/selectors';
-import { settingsSelector } from 'app/dim-api/selectors';
-import PageWithMenu from 'app/dim-ui/PageWithMenu';
+import { settingsSelector } from 'app/d2l-api/selectors';
+import PageWithMenu from 'app/d2l-ui/PageWithMenu';
 import { t } from 'app/i18next-t';
 import NewItemIndicator from 'app/inventory/NewItemIndicator';
 import TagIcon from 'app/inventory/TagIcon';
 import { clearAllNewItems } from 'app/inventory/actions';
-import { itemTagList } from 'app/inventory/dim-item-info';
+import { itemTagList } from 'app/inventory/d2l-item-info';
 import { allItemsSelector } from 'app/inventory/selectors';
 import { useLoadStores } from 'app/inventory/store/hooks';
+import { accountRoute } from 'app/routes';
 import WishListSettings from 'app/settings/WishListSettings';
+import SearchSettings from 'app/settings/SearchSettings';
 import { useIsPhonePortrait } from 'app/shell/selectors';
 import DimApiSettings from 'app/storage/DimApiSettings';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
@@ -22,7 +24,8 @@ import { errorLog } from 'app/utils/log';
 import { range } from 'es-toolkit';
 import React from 'react';
 import { useSelector } from 'react-redux';
-import ErrorBoundary from '../dim-ui/ErrorBoundary';
+import { NavLink } from 'react-router';
+import ErrorBoundary from '../d2l-ui/ErrorBoundary';
 import '../inventory-page/StoreBucket.scss';
 import InventoryItem from '../inventory/InventoryItem';
 import { AppIcon, faGrid, faList, lockIcon, unlockedIcon } from '../shell/icons';
@@ -87,7 +90,7 @@ const SETTINGS_VISIBILITY = {
   hideCollectPostmaster: false, // Hide "Hide the 'Collect Postmaster' button" section
   badgePostmaster: false, // Hide postmaster badge on app icon
   farmingModeSpaces: false, // Hide farming mode empty spaces
-  D2LSync: false, // Hide Enable DIM Sync section
+  D2LSync: false, // Hide Enable d2l sync section
   storageInfo: false, // Hide storage usage info
   importBackup: false, // Hide Import Data Backup button
   importCSV: false, // Hide Import CSV option
@@ -96,8 +99,8 @@ const SETTINGS_VISIBILITY = {
 
 const themeOptions = mapToOptions({
   default: 'Default (Beyond Light)',
-  classic: 'DIM Classic',
-  dimdark: 'DIM Dark Mode',
+  classic: 'D2L Classic',
+  d2ldark: 'D2L Dark Mode',
   europa: 'Europa',
   neomuna: 'Neomuna',
   pyramid: 'Pyramid Fleet',
@@ -273,12 +276,14 @@ export default function SettingsPage() {
     { id: 'theme', title: t('Settings.Theme') },
     { id: 'items', title: t('Settings.Items') },
     { id: 'inventory', title: t('Settings.Inventory') },
+    { id: 'search-settings', title: t('Settings.SearchSettings') },
     $featureFlags.wishLists ? { id: 'wishlist', title: t('WishListRoll.Header') } : undefined,
     // Hide storage menu if no storage settings are visible
     (SETTINGS_VISIBILITY.D2LSync || SETTINGS_VISIBILITY.storageInfo || SETTINGS_VISIBILITY.importBackup || SETTINGS_VISIBILITY.exportAPIProfile)
       ? { id: 'storage', title: t('Storage.MenuTitle') }
       : undefined,
     { id: 'spreadsheets', title: t('Settings.Data') },
+    { id: 'armor-analysis', title: 'Armor Analysis' },
     $featureFlags.elgatoStreamDeck && !isPhonePortrait
       ? { id: 'stream-deck', title: 'Elgato Stream Deck' }
       : undefined,
@@ -336,7 +341,7 @@ export default function SettingsPage() {
                 <InventoryItem
                   item={exampleWeaponMasterworked}
                   isNew={settings.showNewItems}
-                  tag="hotperk"
+                  tag="keep"
                   wishlistRoll={godRoll}
                   autoLockTagged={settings.autoLockTagged}
                 />
@@ -372,7 +377,7 @@ export default function SettingsPage() {
                     onChange={onChangeNumeric}
                   />
                   {Math.max(48, settings.itemSize)}px
-                  <button type="button" className="dim-button" onClick={resetItemSize}>
+                  <button type="button" className="d2l-button" onClick={resetItemSize}>
                     {t('Settings.ResetToDefault')}
                   </button>
                 </div>
@@ -388,7 +393,7 @@ export default function SettingsPage() {
               />
               <button
                 type="button"
-                className="dim-button"
+                className="d2l-button"
                 onClick={() => dispatch(clearAllNewItems())}
               >
                 <NewItemIndicator className={styles.newItem} />{' '}
@@ -693,6 +698,8 @@ export default function SettingsPage() {
             </div>
           </section>
 
+          <SearchSettings settings={settings} />
+
           {$featureFlags.wishLists && <WishListSettings />}
 
           <ErrorBoundary name="StorageSettings">
@@ -701,9 +708,23 @@ export default function SettingsPage() {
 
           <Spreadsheets />
 
+          <section id="armor-analysis">
+            <h2>Armor Analysis</h2>
+            <div className={styles.setting}>
+              <p>Analyze armor synergy tier benefits and progression patterns.</p>
+              <NavLink
+                to={currentAccount ? `${accountRoute(currentAccount)}/armor-analysis` : '/armor-analysis'}
+                className="d2l-button"
+                style={{ textDecoration: 'none' }}
+              >
+                Open Armor Analysis Tool
+              </NavLink>
+            </div>
+          </section>
+
           {$featureFlags.elgatoStreamDeck && !isPhonePortrait && <StreamDeckSettings />}
 
-          {$DIM_FLAVOR !== 'release' && currentAccount?.destinyVersion === 2 && (
+          {$D2L_FLAVOR !== 'release' && currentAccount?.destinyVersion === 2 && (
             <div className={styles.setting}>
               <TroubleshootingSettings />
             </div>

@@ -166,7 +166,7 @@
 
 // The "track triumph" icon that appears when you hover over a record. You can
 // click it to track the triumph.
-.dimTrackedIcon {
+.d2lTrackedIcon {
   position: absolute;
   display: none;
   right: calc(50px + var(--item-size) / 3.1);
@@ -212,7 +212,7 @@
 }
 
 .item {
-  composes: resetButton from '../dim-ui/common.m.scss';
+  composes: resetButton from '../d2l-ui/common.m.scss';
 }
 
 .info {

@@ -1,0 +1,79 @@
+{
+  "version": "0.2",
+  "language": "en",
+  "dictionaries": [
+    "workspace",
+    "workspace-bungie-names",
+    "workspace-usernames",
+    "workspace-programming"
+  ],
+  "dictionaryDefinitions": [
+    {
+      "name": "workspace",
+      "path": "./config/cspell/d2l-dict.txt",
+      "description": "D2L Workspace Dictionary",
+      "addWords": true,
+      "scope": "workspace"
+    },
+    {
+      "name": "workspace-bungie-names",
+      "path": "./config/cspell/bungie-dict.txt",
+      "description": "D2L Workspace Dictionary - Bungie",
+      "addWords": true,
+      "scope": "workspace"
+    },
+    {
+      "name": "workspace-usernames",
+      "path": "./config/cspell/d2l-username-dict.txt",
+      "description": "D2L Workspace Dictionary - Usernames",
+      "addWords": true,
+      "scope": "workspace"
+    },
+    {
+      "name": "workspace-programming",
+      "path": "./config/cspell/programming-dict.txt",
+      "description": "D2L Workspace Dictionary - Programming Syntax",
+      "addWords": true,
+      "scope": "workspace"
+    }
+  ],
+  "allowCompoundWords": true,
+  "flagWords": ["langauge"],
+  "ignorePaths": [
+    ".vscode/extensions.json",
+    ".github/workflows/**",
+    "node_modules/",
+    "dist/",
+    "icons/",
+    "manifest-cache/",
+    "destiny-icons/**",
+    "icons/build_icons.js",
+    "config/content-security-policy.js",
+    "src/browsercheck-utils.js",
+    "src/data/",
+    "src/images/",
+    "src/locale/de.json",
+    "src/locale/es.json",
+    "src/locale/esMX.json",
+    "src/locale/fr.json",
+    "src/locale/it.json",
+    "src/locale/ja.json",
+    "src/locale/ko.json",
+    "src/locale/pl.json",
+    "src/locale/ptBR.json",
+    "src/locale/ru.json",
+    "src/locale/zhCHS.json",
+    "src/locale/zhCHT.json",
+    "src/htaccess",
+    ".eslintrc",
+    "babel.config.js",
+    "cspell.json",
+    "jest.config.js",
+    "package.json",
+    "tsconfig.json",
+    "pnpm-lock.yaml",
+    ".gitignore",
+    "webpack-stats.json",
+    ".stylelintrc"
+  ]
+}

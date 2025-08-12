@@ -12,10 +12,10 @@ describe('vaultWeaponGroupingSettingSelector', () => {
     expect(
       vaultWeaponGroupingSettingSelector({
         ...rootState,
-        dimApi: {
-          ...rootState.dimApi,
+        d2lApi: {
+          ...rootState.d2lApi,
           settings: {
-            ...rootState.dimApi.settings,
+            ...rootState.d2lApi.settings,
             vaultWeaponGrouping: 'typeName',
           },
         },
@@ -75,10 +75,10 @@ describe('vaultWeaponGroupingSelector', () => {
   it('groups items by the currently selected weapon grouping', async () => {
     const result = vaultWeaponGroupingSelector({
       ...rootState,
-      dimApi: {
-        ...rootState.dimApi,
+      d2lApi: {
+        ...rootState.d2lApi,
         settings: {
-          ...rootState.dimApi.settings,
+          ...rootState.d2lApi.settings,
           vaultWeaponGrouping: 'typeName',
         },
       },

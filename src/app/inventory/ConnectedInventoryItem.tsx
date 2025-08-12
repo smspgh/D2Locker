@@ -1,4 +1,4 @@
-import { settingSelector } from 'app/dim-api/selectors';
+import { settingSelector } from 'app/d2l-api/selectors';
 import { queryValidSelector, searchFilterSelector } from 'app/search/items/item-search-filter';
 import { stubTrue } from 'app/utils/functions';
 import React, { useMemo } from 'react';
@@ -20,7 +20,7 @@ export default function ConnectedInventoryItem({
   onShiftClick,
   onDoubleClick,
   hideSelectedSuper,
-  dimArchived,
+  d2lArchived,
   allowFilter,
   ref,
 }: {
@@ -31,7 +31,7 @@ export default function ConnectedInventoryItem({
   onClick?: (e: React.MouseEvent) => void;
   onShiftClick?: (e: React.MouseEvent) => void;
   onDoubleClick?: (e: React.MouseEvent) => void;
-  dimArchived?: boolean;
+  d2lArchived?: boolean;
 }) {
   // TODO: maybe send these down via Context?
   const tag = useSelector(tagSelector(item));
@@ -44,8 +44,8 @@ export default function ConnectedInventoryItem({
   const notes = useSelector(notesSelector(item));
   const wishlistRoll = useSelector(wishListSelector(item));
   const searchHidden =
-    // dim this item if there's no search filter and it's archived
-    (dimArchived && defaultFilterActive && tag === 'junk') ||
+    // d2l this item if there's no search filter and it's archived
+    (d2lArchived && defaultFilterActive && tag === 'junk') ||
     // or if there is a valid filter and it doesn't meet the condition
     (allowFilter && validQuery && !currentFilter(item));
 

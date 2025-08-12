@@ -64,17 +64,17 @@ export const gameLoadoutCompatibleBuckets = [
 ];
 
 /**
- * Does this in-game loadout, meet the requirements of this DIM loadout:
+ * Does this in-game loadout, meet the requirements of this D2L loadout:
  *
- * Does it include the items the DIM loadout would equip,
- * and represent a full application of the DIM loadout's required mods?
+ * Does it include the items the D2L loadout would equip,
+ * and represent a full application of the D2L loadout's required mods?
  */
 export function implementsDimLoadout(
   inGameLoadout: InGameLoadout,
-  dimResolvedLoadoutItems: ResolvedLoadoutItem[],
+  d2lResolvedLoadoutItems: ResolvedLoadoutItem[],
   resolvedMods: ResolvedLoadoutMod[],
 ) {
-  const equippedDimItems = dimResolvedLoadoutItems
+  const equippedDimItems = d2lResolvedLoadoutItems
     .filter((rli) => {
       if (!rli.loadoutItem.equip) {
         return false;
@@ -98,8 +98,8 @@ export function implementsDimLoadout(
     .flatMap((i) => i.plugItemHashes)
     .filter(isValidGameLoadoutPlug);
 
-  const dimLoadoutMods = resolvedMods.map((m) => m.resolvedMod.hash);
-  for (const requiredModHash of dimLoadoutMods) {
+  const d2lLoadoutMods = resolvedMods.map((m) => m.resolvedMod.hash);
+  for (const requiredModHash of d2lLoadoutMods) {
     const pos = gameLoadoutMods.indexOf(requiredModHash);
     if (pos === -1) {
       return false;
@@ -107,20 +107,20 @@ export function implementsDimLoadout(
     gameLoadoutMods.splice(pos, 1);
   }
 
-  // Ensure that the dimsubclass abilities, aspect and fragments are accounted for
+  // Ensure that the d2lsubclass abilities, aspect and fragments are accounted for
   // so that builds using the same subclass but different setups are identified.
-  const dimSubclass = dimResolvedLoadoutItems.find(
+  const d2lSubclass = d2lResolvedLoadoutItems.find(
     (rli) => rli.item.bucket.hash === BucketHashes.Subclass,
   );
-  if (dimSubclass?.loadoutItem?.socketOverrides) {
+  if (d2lSubclass?.loadoutItem?.socketOverrides) {
     // This was checked as part of item matching.
     const inGameSubclass = inGameLoadout.items.find(
-      (item) => item.itemInstanceId === dimSubclass.item.id,
+      (item) => item.itemInstanceId === d2lSubclass.item.id,
     )!;
 
-    const dimSubclassPlugs = getSubclassPlugHashes(dimSubclass);
-    for (const { plugHash } of dimSubclassPlugs) {
-      // We only check one direction as DIM subclasses can be partially complete by
+    const d2lSubclassPlugs = getSubclassPlugHashes(d2lSubclass);
+    for (const { plugHash } of d2lSubclassPlugs) {
+      // We only check one direction as D2L subclasses can be partially complete by
       // design.
       if (!inGameSubclass.plugItemHashes.includes(plugHash)) {
         return false;

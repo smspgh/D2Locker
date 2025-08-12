@@ -1,5 +1,5 @@
-import { PressTip } from 'app/dim-ui/PressTip';
-import Sheet from 'app/dim-ui/Sheet';
+import { PressTip } from 'app/d2l-ui/PressTip';
+import Sheet from 'app/d2l-ui/Sheet';
 import { t } from 'app/i18next-t';
 import { locateItem } from 'app/inventory/locate-item';
 import { destiny2CoreSettingsSelector, useD2Definitions } from 'app/manifest/selectors';

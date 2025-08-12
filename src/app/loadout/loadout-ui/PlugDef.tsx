@@ -1,5 +1,5 @@
-import ClosableContainer from 'app/dim-ui/ClosableContainer';
-import { PressTip } from 'app/dim-ui/PressTip';
+import ClosableContainer from 'app/d2l-ui/ClosableContainer';
+import { PressTip } from 'app/d2l-ui/PressTip';
 import { DefItemIcon } from 'app/inventory/ItemIcon';
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { PlugDefTooltip } from 'app/item-popup/PlugTooltip';

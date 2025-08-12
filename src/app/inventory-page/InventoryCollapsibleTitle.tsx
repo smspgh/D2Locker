@@ -1,5 +1,5 @@
-import { collapsedSelector } from 'app/dim-api/selectors';
-import { CollapseIcon, CollapsedSection } from 'app/dim-ui/CollapsibleTitle';
+import { collapsedSelector } from 'app/d2l-api/selectors';
+import { CollapseIcon, CollapsedSection } from 'app/d2l-ui/CollapsibleTitle';
 import { t } from 'app/i18next-t';
 import { DimStore } from 'app/inventory/store-types';
 import {

@@ -1,4 +1,4 @@
-import { currentProfileSelector } from 'app/dim-api/selectors';
+import { currentProfileSelector } from 'app/d2l-api/selectors';
 import { RootState } from 'app/store/types';
 import { emptyArray } from 'app/utils/empty';
 import { isClassCompatible } from 'app/utils/item-utils';

@@ -1,5 +1,5 @@
-import BungieImage from 'app/dim-ui/BungieImage';
-import CollapsibleTitle from 'app/dim-ui/CollapsibleTitle';
+import BungieImage from 'app/d2l-ui/BungieImage';
+import CollapsibleTitle from 'app/d2l-ui/CollapsibleTitle';
 import { DimItem } from 'app/inventory/item-types';
 import { createItemContextSelector } from 'app/inventory/selectors';
 import { useD2Definitions } from 'app/manifest/selectors';

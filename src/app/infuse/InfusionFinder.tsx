@@ -14,7 +14,7 @@ import clsx from 'clsx';
 import { useCallback, useDeferredValue, useEffect, useReducer } from 'react';
 import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router';
-import Sheet from '../dim-ui/Sheet';
+import Sheet from '../d2l-ui/Sheet';
 import '../inventory-page/StoreBucket.scss';
 import ConnectedInventoryItem from '../inventory/ConnectedInventoryItem';
 import { DimItem } from '../inventory/item-types';
@@ -249,13 +249,13 @@ export default function InfusionFinder() {
             {result ? <ConnectedInventoryItem item={result} /> : missingItem}
           </div>
           <div className={styles.infuseActions}>
-            <button type="button" className="dim-button" onClick={switchDirection}>
+            <button type="button" className="d2l-button" onClick={switchDirection}>
               <AppIcon icon={faRandom} /> {t('Infusion.SwitchDirection')}
             </button>
             {result && effectiveSource && effectiveTarget && (
               <button
                 type="button"
-                className="dim-button"
+                className="d2l-button"
                 onClick={() =>
                   transferItems(dispatch, currentStore, onClose, effectiveSource, effectiveTarget)
                 }

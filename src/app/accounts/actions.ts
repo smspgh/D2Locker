@@ -1,6 +1,6 @@
 import { FatalTokenError } from 'app/bungie-api/authenticated-fetch';
 import { ThunkResult } from 'app/store/types';
-import { DimError } from 'app/utils/dim-error';
+import { DimError } from 'app/utils/d2l-error';
 import { createAction } from 'typesafe-actions';
 import { DestinyAccount } from './destiny-account';
 
@@ -21,7 +21,7 @@ export const needsDeveloper = createAction('accounts/DEV_INFO_NEEDED')();
 export function handleAuthErrors(e: unknown): ThunkResult {
   return async (dispatch) => {
     // This means we don't have an API key or the API key is wrong
-    if ($DIM_FLAVOR === 'dev' && e instanceof DimError && e.code === 'BungieService.DevVersion') {
+    if ($D2L_FLAVOR === 'dev' && e instanceof DimError && e.code === 'BungieService.DevVersion') {
       dispatch(needsDeveloper());
     } else if (
       e instanceof Error &&

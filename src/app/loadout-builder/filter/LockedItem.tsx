@@ -1,4 +1,4 @@
-import ClosableContainer from 'app/dim-ui/ClosableContainer';
+import ClosableContainer from 'app/d2l-ui/ClosableContainer';
 import ConnectedInventoryItem from 'app/inventory/ConnectedInventoryItem';
 import DraggableInventoryItem from 'app/inventory/DraggableInventoryItem';
 import { DimItem } from 'app/inventory/item-types';

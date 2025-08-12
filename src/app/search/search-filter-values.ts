@@ -33,28 +33,28 @@ export const damageTypeNames = Object.values(damageNamesByEnum).filter(
 ) as string[];
 
 /**
- * these stats exist on DIM armor. the 6 real API ones, supplemented by a synthetic Total stat.
+ * these stats exist on D2L armor. the 6 real API ones, supplemented by a synthetic Total stat.
  * these are the armor stats that can be looked up by name
  */
-export const dimArmorStatHashByName: StringLookup<number> = {
+export const d2lArmorStatHashByName: StringLookup<number> = {
   ...D2ArmorStatHashByName,
   total: TOTAL_STAT_HASH,
 };
 
 /** stats names used to create armor-specific filters, real ones plus an "any" keyword */
-export const searchableArmorStatNames = [...Object.keys(dimArmorStatHashByName), 'any'];
+export const searchableArmorStatNames = [...Object.keys(d2lArmorStatHashByName), 'any'];
 
 /** armor stat hashes to check for the "any" keyword */
 export const armorAnyStatHashes = armorStats;
 
 /** stat hashes to calculate max values for */
-export const armorStatHashes = Object.values(dimArmorStatHashByName) as number[];
+export const armorStatHashes = Object.values(d2lArmorStatHashByName) as number[];
 
 /** all-stat table, for looking up stat hashes given a queried stat name */
 export const statHashByName: Record<string, number> = {
   ...D2WeaponStatHashByName,
   ...swordStatsByName,
-  ...dimArmorStatHashByName,
+  ...d2lArmorStatHashByName,
 };
 export const weaponStatNames = [
   ...Object.keys(D2WeaponStatHashByName),

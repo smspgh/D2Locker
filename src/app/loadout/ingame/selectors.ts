@@ -29,7 +29,7 @@ import { emptyArray } from 'app/utils/empty';
 import { createSelector } from 'reselect';
 import { implementsDimLoadout, itemCouldBeEquipped } from './ingame-loadout-utils';
 
-/** A DIM loadout with all of its parameters resolved to real inventory. */
+/** A D2L loadout with all of its parameters resolved to real inventory. */
 export interface FullyResolvedLoadout {
   loadout: Loadout;
   resolvedMods: ResolvedLoadoutMod[];
@@ -151,11 +151,11 @@ export const inGameLoadoutsWithMetadataSelector = createSelector(
             currentLoadout.resolvedMods,
           );
 
-          const matchingLoadouts = savedLoadouts.filter((dimLoadout) =>
+          const matchingLoadouts = savedLoadouts.filter((d2lLoadout) =>
             implementsDimLoadout(
               gameLoadout,
-              dimLoadout.resolvedLoadoutItems,
-              dimLoadout.resolvedMods,
+              d2lLoadout.resolvedLoadoutItems,
+              d2lLoadout.resolvedMods,
             ),
           );
           return { gameLoadout, isEquippable, isEquipped, matchingLoadouts };

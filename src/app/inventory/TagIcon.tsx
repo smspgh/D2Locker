@@ -1,7 +1,7 @@
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import { t } from 'app/i18next-t';
 import { AppIcon } from 'app/shell/icons';
-import { itemTagList, tagConfig, TagValue } from './dim-item-info';
+import { itemTagList, tagConfig, TagValue } from './d2l-item-info';
 
 const tagIcons: { [tag: string]: string | IconDefinition | undefined } = {};
 for (const tag of itemTagList) {

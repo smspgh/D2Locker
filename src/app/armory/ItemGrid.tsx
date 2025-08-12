@@ -4,7 +4,7 @@
 
 import ItemPopup from 'app/item-popup/ItemPopup';
 import React, { JSX, useCallback, useRef, useState } from 'react';
-import { useNavigate } from 'react-router';
+// import { useNavigate } from 'react-router';
 import ArmorySheet from './ArmorySheet';
 import '../inventory-page/StoreBucket.scss';
 import ConnectedInventoryItem from '../inventory/ConnectedInventoryItem';
@@ -28,7 +28,7 @@ export default function ItemGrid({
 }) {
   const [popup, setPopup] = useState<PopupState | undefined>();
   const [armoryItem, setArmoryItem] = useState<DimItem | undefined>();
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   const handleDirectClick = useCallback((item: DimItem) => {
     setArmoryItem(item);

@@ -1,5 +1,5 @@
-import CollapsibleTitle from 'app/dim-ui/CollapsibleTitle';
-import PageWithMenu from 'app/dim-ui/PageWithMenu';
+import CollapsibleTitle from 'app/d2l-ui/CollapsibleTitle';
+import PageWithMenu from 'app/d2l-ui/PageWithMenu';
 import { DimItem } from 'app/inventory/item-types';
 import { createItemContextSelector } from 'app/inventory/selectors';
 import { makeFakeItem } from 'app/inventory/store/d2-item-factory';

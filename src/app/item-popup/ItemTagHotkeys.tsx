@@ -7,7 +7,7 @@ import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { Hotkey } from '../hotkeys/hotkeys';
 import { setTag } from '../inventory/actions';
-import { itemTagList } from '../inventory/dim-item-info';
+import { itemTagList } from '../inventory/d2l-item-info';
 import { DimItem } from '../inventory/item-types';
 
 interface Props {

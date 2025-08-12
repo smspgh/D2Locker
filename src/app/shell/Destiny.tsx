@@ -9,9 +9,9 @@ import {
 import ArmoryPage from 'app/armory/ArmoryPage';
 import ArmorySearchPage from 'app/armory/ArmorySearchPage';
 import CompareContainer from 'app/compare/CompareContainer';
-import { settingSelector } from 'app/dim-api/selectors';
-import ErrorBoundary from 'app/dim-ui/ErrorBoundary';
-import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
+import { settingSelector } from 'app/d2l-api/selectors';
+import ErrorBoundary from 'app/d2l-ui/ErrorBoundary';
+import ShowPageLoading from 'app/d2l-ui/ShowPageLoading';
 import Farming from 'app/farming/Farming';
 import { useHotkey, useHotkeys } from 'app/hotkeys/useHotkey';
 import { t } from 'app/i18next-t';
@@ -29,11 +29,11 @@ import { setAppBadge } from 'app/utils/app-badge';
 import { noop } from 'app/utils/functions';
 import SingleVendorSheetContainer from 'app/vendors/single-vendor/SingleVendorSheetContainer';
 import { fetchWishList } from 'app/wishlists/wishlist-fetch';
-import { lazy, useEffect, useMemo } from 'react';
+import { lazy, useEffect, useMemo, Suspense } from 'react';
 import { useSelector } from 'react-redux';
 import { Navigate, Route, Routes, useLocation, useParams } from 'react-router';
 import { Hotkey } from '../hotkeys/hotkeys';
-import { itemTagList } from '../inventory/dim-item-info';
+import { itemTagList } from '../inventory/d2l-item-info';
 import ItemPickerContainer from '../item-picker/ItemPickerContainer';
 import ItemPopupContainer from '../item-popup/ItemPopupContainer';
 import styles from './Destiny.m.scss';
@@ -56,6 +56,9 @@ const LoadoutBuilderContainer = lazy(() => import(/* webpackChunkName: "loadout-
 
 const SearchHistory = lazy(
   () => import(/* webpackChunkName: "searchHistory" */ '../search/SearchHistory'),
+);
+const ArmorAnalysis = lazy(
+  () => import(/* webpackChunkName: "armorAnalysis" */ '../armor-analysis/ArmorAnalysis'),
 );
 
 /**
@@ -142,7 +145,7 @@ export default function Destiny() {
       return <Navigate to={pathname.replace(/\/\d+\/d2/, '') + search} replace />;
     } else {
       return (
-        <div className="dim-page">
+        <div className="d2l-page">
           <ErrorPanel
             title={t('Accounts.MissingTitle')}
             fallbackMessage={t('Accounts.MissingDescription')}
@@ -156,7 +159,7 @@ export default function Destiny() {
   if (profileError) {
     const isManifestError = profileError.name === 'ManifestError';
     return (
-      <div className="dim-page">
+      <div className="d2l-page">
         <ErrorPanel
           title={
             isManifestError
@@ -179,7 +182,7 @@ export default function Destiny() {
             <Route
               path="inventory"
               element={
-                <ErrorBoundary name="inventory" key="inventory">
+                <ErrorBoundary name="inventory">
                   <Inventory account={account} />
                 </ErrorBoundary>
               }
@@ -187,7 +190,7 @@ export default function Destiny() {
             <Route
               path="loadouts"
               element={
-                <ErrorBoundary name="loadouts" key="loadouts">
+                <ErrorBoundary name="loadouts">
                   <Loadouts account={account} />
                 </ErrorBoundary>
               }
@@ -195,7 +198,7 @@ export default function Destiny() {
             <Route
               path="optimizer"
               element={
-                <ErrorBoundary name="optimizer" key="optimizer">
+                <ErrorBoundary name="optimizer">
                   <LoadoutBuilderContainer account={account} />
                 </ErrorBoundary>
               }
@@ -203,7 +206,7 @@ export default function Destiny() {
             <Route
               path="vendors/:vendorHash"
               element={
-                <ErrorBoundary name="singleVendor" key="singleVendor">
+                <ErrorBoundary name="singleVendor">
                   <SingleVendorPage account={account} />
                 </ErrorBoundary>
               }
@@ -211,7 +214,7 @@ export default function Destiny() {
             <Route
               path="vendors"
               element={
-                <ErrorBoundary name="vendors" key="vendors">
+                <ErrorBoundary name="vendors">
                   {account.destinyVersion === 2 ? (
                     <Vendors account={account} />
                   ) : (
@@ -223,7 +226,7 @@ export default function Destiny() {
             <Route
               path="armory/:itemHash"
               element={
-                <ErrorBoundary name="armory" key="armory">
+                <ErrorBoundary name="armory">
                   <ArmoryPage account={account} />
                 </ErrorBoundary>
               }
@@ -231,7 +234,7 @@ export default function Destiny() {
             <Route
               path="armory-search"
               element={
-                <ErrorBoundary name="armorySearch" key="armorySearch">
+                <ErrorBoundary name="armorySearch">
                   <ArmorySearchPage account={account} />
                 </ErrorBoundary>
               }
@@ -240,8 +243,16 @@ export default function Destiny() {
             <Route
               path="search-history"
               element={
-                <ErrorBoundary name="searchHistory" key="searchHistory">
+                <ErrorBoundary name="searchHistory">
                   <SearchHistory />
+                </ErrorBoundary>
+              }
+            />
+            <Route
+              path="armor-analysis"
+              element={
+                <ErrorBoundary name="armorAnalysis">
+                  <ArmorAnalysis />
                 </ErrorBoundary>
               }
             />

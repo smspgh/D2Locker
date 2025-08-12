@@ -1,9 +1,9 @@
-import { AlertIcon } from 'app/dim-ui/AlertIcon';
-import ClickOutside from 'app/dim-ui/ClickOutside';
-import { PressTipRoot } from 'app/dim-ui/PressTip';
-import Sheet from 'app/dim-ui/Sheet';
-import RichDestinyText from 'app/dim-ui/destiny-symbols/RichDestinyText';
-import { usePopper } from 'app/dim-ui/usePopper';
+import { AlertIcon } from 'app/d2l-ui/AlertIcon';
+import ClickOutside from 'app/d2l-ui/ClickOutside';
+import { PressTipRoot } from 'app/d2l-ui/PressTip';
+import Sheet from 'app/d2l-ui/Sheet';
+import RichDestinyText from 'app/d2l-ui/destiny-symbols/RichDestinyText';
+import { usePopper } from 'app/d2l-ui/usePopper';
 import { t } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
 import { sortedStoresSelector } from 'app/inventory/selectors';

@@ -1,11 +1,11 @@
 import { CustomStatDef, CustomStatWeights } from '@destinyitemmanager/dim-api-types';
-import { customStatsSelector } from 'app/dim-api/selectors';
-import BungieImage from 'app/dim-ui/BungieImage';
-import ClassIcon from 'app/dim-ui/ClassIcon';
-import { CustomStatWeightsDisplay } from 'app/dim-ui/CustomStatWeights';
-import Select from 'app/dim-ui/Select';
-import Switch from 'app/dim-ui/Switch';
-import useConfirm from 'app/dim-ui/useConfirm';
+import { customStatsSelector } from 'app/d2l-api/selectors';
+import BungieImage from 'app/d2l-ui/BungieImage';
+import ClassIcon from 'app/d2l-ui/ClassIcon';
+import { CustomStatWeightsDisplay } from 'app/d2l-ui/CustomStatWeights';
+import Select from 'app/d2l-ui/Select';
+import Switch from 'app/d2l-ui/Switch';
+import useConfirm from 'app/d2l-ui/useConfirm';
 import { t } from 'app/i18next-t';
 import { getClassTypeNameLocalized } from 'app/inventory/store/d2-item-factory';
 import { useD2Definitions } from 'app/manifest/selectors';
@@ -80,7 +80,7 @@ export function CustomStatsSettings() {
         )}
         <button
           type="button"
-          className="dim-button"
+          className="d2l-button"
           onClick={onAddNew}
           disabled={Boolean(editing)}
           title={t('Settings.CustomStatCreate')}
@@ -217,7 +217,7 @@ function CustomStatEditor({
         {(isNewStat || somethingChanged) && (
           <button
             type="button"
-            className="dim-button"
+            className="d2l-button"
             onClick={() => {
               // try saving the proposed new custom stat, with newly set label, class, and weights
               saveStat({ ...statDef, class: classType, label, shortLabel, weights }) &&
@@ -232,7 +232,7 @@ function CustomStatEditor({
 
         <button
           type="button"
-          className="dim-button"
+          className="d2l-button"
           onClick={onDoneEditing}
           title={t('Loadouts.CancelEditing')}
         >
@@ -242,7 +242,7 @@ function CustomStatEditor({
         {!isNewStat && (
           <button
             type="button"
-            className="dim-button danger"
+            className="d2l-button danger"
             onClick={async () => (await removeStat(statDef)) && onDoneEditing()}
             title={t('Settings.CustomStatDelete')}
           >
@@ -281,7 +281,7 @@ function CustomStatView({
     <div className={styles.customStatView}>
       <button
         type="button"
-        className="dim-button"
+        className="d2l-button"
         onClick={() => setEditing(statDef.statHash)}
         title={t('Loadouts.EditBrief')}
       >

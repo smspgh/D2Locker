@@ -1,5 +1,5 @@
-import BungieImage from 'app/dim-ui/BungieImage';
-import { PressTip } from 'app/dim-ui/PressTip';
+import BungieImage from 'app/d2l-ui/BungieImage';
+import { PressTip } from 'app/d2l-ui/PressTip';
 import { DefItemIcon } from 'app/inventory/ItemIcon';
 import { DimItem, DimStat } from 'app/inventory/item-types';
 import { DimPlugTooltip } from 'app/item-popup/PlugTooltip';

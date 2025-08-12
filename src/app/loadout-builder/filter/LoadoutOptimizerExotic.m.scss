@@ -2,7 +2,7 @@
 
 // TODO: really need a common version of this
 .infoCard {
-  composes: flexRow from '../../dim-ui/common.m.scss';
+  composes: flexRow from '../../d2l-ui/common.m.scss';
   gap: 8px;
   margin-bottom: 8px;
   cursor: pointer;
@@ -13,7 +13,7 @@
 }
 
 .details {
-  composes: flexColumn from '../../dim-ui/common.m.scss';
+  composes: flexColumn from '../../d2l-ui/common.m.scss';
   gap: 4px;
 }
 

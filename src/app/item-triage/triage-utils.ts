@@ -1,4 +1,4 @@
-import { StatHashListsKeyedByDestinyClass } from 'app/dim-ui/CustomStatTotal';
+import { StatHashListsKeyedByDestinyClass } from 'app/d2l-ui/CustomStatTotal';
 import { DimItem } from 'app/inventory/item-types';
 import { keyByStatHash, StatLookup } from 'app/inventory/store/stats';
 import { armorStats, CUSTOM_TOTAL_STAT_HASH, TOTAL_STAT_HASH } from 'app/search/d2-known-values';
@@ -10,7 +10,7 @@ import { getIntrinsicArmorPerkSocket } from 'app/utils/socket-utils';
 import { partition } from 'es-toolkit';
 import { Factor, factorComboCategories, FactorComboCategory, factorCombos } from './triage-factors';
 
-/** returns [dimmed, bright] variations along a 1->100  red->yellow->green line */
+/** returns [d2lmed, bright] variations along a 1->100  red->yellow->green line */
 export function getValueColors(value: number): [string, string] {
   value = Math.min(value, 100);
   const hue = value * 1.25;

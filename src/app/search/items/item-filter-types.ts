@@ -1,7 +1,7 @@
 import { CustomStatDef } from '@destinyitemmanager/dim-api-types';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { DimLanguage } from 'app/i18n';
-import { TagValue } from 'app/inventory/dim-item-info';
+import { TagValue } from 'app/inventory/d2l-item-info';
 import { DimItem } from 'app/inventory/item-types';
 import { DimStore } from 'app/inventory/store-types';
 import { Loadout } from 'app/loadout/loadout-types';
@@ -31,6 +31,7 @@ export interface FilterContext {
   language: DimLanguage;
   customStats: Settings['customStats'];
   d2Definitions: D2ManifestDefinitions | undefined;
+  settings: Settings;
 }
 
 /**

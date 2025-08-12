@@ -1,5 +1,5 @@
-import ErrorBoundary from 'app/dim-ui/ErrorBoundary';
-import { WindowVirtualList } from 'app/dim-ui/VirtualList';
+import ErrorBoundary from 'app/d2l-ui/ErrorBoundary';
+import { WindowVirtualList } from 'app/d2l-ui/VirtualList';
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { DimStore } from 'app/inventory/store-types';
 import { Loadout } from 'app/loadout/loadout-types';

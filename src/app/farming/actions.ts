@@ -1,4 +1,4 @@
-import { settingSelector, settingsSelector } from 'app/dim-api/selectors';
+import { settingSelector, settingsSelector } from 'app/d2l-api/selectors';
 import { bucketsSelector, getTagSelector, storesSelector } from 'app/inventory/selectors';
 import {
   capacityForItem,

@@ -1,4 +1,4 @@
-import { EnergyCostIcon } from 'app/dim-ui/ElementIcon';
+import { EnergyCostIcon } from 'app/d2l-ui/ElementIcon';
 import { t } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
 import Objective from 'app/progress/Objective';

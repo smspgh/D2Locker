@@ -5,7 +5,7 @@
 }
 
 .stat {
-  composes: flexRow from '../dim-ui/common.m.scss';
+  composes: flexRow from '../d2l-ui/common.m.scss';
   align-items: center;
   height: 16px;
   position: relative;
@@ -14,7 +14,7 @@
 }
 
 .statValue {
-  composes: flexRow from '../dim-ui/common.m.scss';
+  composes: flexRow from '../d2l-ui/common.m.scss';
   align-items: center;
   gap: 3px;
   min-width: 2ch; // Try to right-align 2-digit numbers

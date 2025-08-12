@@ -1,6 +1,6 @@
-import { settingSelector } from 'app/dim-api/selectors';
-import { CollapsedSection, Title } from 'app/dim-ui/CollapsibleTitle';
-import { scrollToPosition } from 'app/dim-ui/scroll';
+import { settingSelector } from 'app/d2l-api/selectors';
+import { CollapsedSection, Title } from 'app/d2l-ui/CollapsibleTitle';
+import { scrollToPosition } from 'app/d2l-ui/scroll';
 import { DimTitle } from 'app/inventory/store-types';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { percent } from 'app/shell/formatters';
@@ -11,7 +11,7 @@ import { FontGlyphs } from 'data/font/d2-font-glyphs';
 import { deepEqual } from 'fast-equals';
 import { useEffect, useId, useRef } from 'react';
 import { useSelector } from 'react-redux';
-import BungieImage from '../dim-ui/BungieImage';
+import BungieImage from '../d2l-ui/BungieImage';
 import styles from './PresentationNode.m.scss';
 import PresentationNodeLeaf from './PresentationNodeLeaf';
 import { DimPresentationNode } from './presentation-nodes';

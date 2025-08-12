@@ -1,6 +1,6 @@
-import CheckButton from 'app/dim-ui/CheckButton';
-import PageWithMenu from 'app/dim-ui/PageWithMenu';
-import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
+import CheckButton from 'app/d2l-ui/CheckButton';
+import PageWithMenu from 'app/d2l-ui/PageWithMenu';
+import ShowPageLoading from 'app/d2l-ui/ShowPageLoading';
 import { t } from 'app/i18next-t';
 import { useLoadStores } from 'app/inventory/store/hooks';
 import { getCurrentStore } from 'app/inventory/stores-helpers';
@@ -15,8 +15,8 @@ import { PanInfo, motion } from 'motion/react';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { DestinyAccount } from '../accounts/destiny-account';
-import CharacterSelect from '../dim-ui/CharacterSelect';
-import ErrorBoundary from '../dim-ui/ErrorBoundary';
+import CharacterSelect from '../d2l-ui/CharacterSelect';
+import ErrorBoundary from '../d2l-ui/ErrorBoundary';
 import { sortedStoresSelector } from '../inventory/selectors';
 import Vendor from './Vendor';
 import styles from './Vendors.m.scss';
@@ -100,7 +100,7 @@ export default function Vendors({ account }: { account: DestinyAccount }) {
 
   if (!vendorsResponse && vendorData?.error) {
     return (
-      <div className="dim-page">
+      <div className="d2l-page">
         <ErrorPanel error={vendorData.error} />
       </div>
     );
@@ -108,7 +108,7 @@ export default function Vendors({ account }: { account: DestinyAccount }) {
 
   if (!stores.length) {
     return (
-      <div className="dim-page">
+      <div className="d2l-page">
         <ShowPageLoading message={t('Loading.Profile')} />
       </div>
     );

@@ -1,6 +1,6 @@
 import { useD2Definitions } from 'app/manifest/selectors';
 import { KillTracker } from 'app/utils/item-utils';
-import BungieImage from '../dim-ui/BungieImage';
+import BungieImage from '../d2l-ui/BungieImage';
 
 /**
  * this renders an objective image, optionally a text label, then a kill count

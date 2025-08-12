@@ -2,7 +2,7 @@
 
 /* Row Headers */
 .header {
-  composes: flexRow from '../dim-ui/common.m.scss';
+  composes: flexRow from '../d2l-ui/common.m.scss';
   align-items: center;
   padding-right: 16px;
   padding-left: 4px;
@@ -35,7 +35,7 @@
   cursor: default !important;
 }
 .headerContent {
-  composes: flexRow from '../dim-ui/common.m.scss';
+  composes: flexRow from '../d2l-ui/common.m.scss';
   align-items: center;
   gap: 2px;
 }
@@ -99,7 +99,7 @@
 
 // The "dismiss" button in the item header
 .close {
-  composes: resetButton from '../dim-ui/common.m.scss';
+  composes: resetButton from '../d2l-ui/common.m.scss';
   width: 32px;
   height: 32px;
   background-size: 16px;

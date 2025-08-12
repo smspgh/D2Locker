@@ -1,4 +1,4 @@
-import { itemPop } from 'app/dim-ui/scroll';
+import { itemPop } from 'app/d2l-ui/scroll';
 import { t } from 'app/i18next-t';
 import { InventoryBucket, InventoryBuckets } from 'app/inventory/inventory-buckets';
 import { locateItem$ } from 'app/inventory/locate-item';
@@ -156,8 +156,7 @@ function CollapsibleContainer({
 
   return (
     <InventoryCollapsibleTitle
-      // @ts-expect-error The type of `category` is wider than the keys defined in i18n.
-      title={t(`Bucket.${category}`, { metadata: { keys: 'buckets' } })}
+      title={(t as any)(`Bucket.${category}`, { metadata: { keys: 'buckets' } })}
       sectionId={category}
       stores={stores}
     >

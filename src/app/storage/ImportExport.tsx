@@ -1,5 +1,5 @@
 import { ExportResponse } from '@destinyitemmanager/dim-api-types';
-import FileUpload from 'app/dim-ui/FileUpload';
+import FileUpload from 'app/d2l-ui/FileUpload';
 import { t } from 'app/i18next-t';
 import { showNotification } from 'app/notifications/notifications';
 import { AppIcon, downloadIcon } from 'app/shell/icons';
@@ -62,7 +62,7 @@ export default function ImportExport({
     <>
       <span>{t('Storage.ImportExport')}</span>
       {showExportAPIProfile && (
-        <button type="button" className="dim-button" onClick={exportData}>
+        <button type="button" className="d2l-button" onClick={exportData}>
           <AppIcon icon={downloadIcon} /> {t('Storage.Export')}
         </button>
       )}

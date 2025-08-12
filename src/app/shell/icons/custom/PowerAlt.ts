@@ -1,6 +1,6 @@
 import { makeCustomIcon } from './utils';
 
-export const dimPowerAltIcon = makeCustomIcon(
+export const d2lPowerAltIcon = makeCustomIcon(
   'Power',
   32,
   32,

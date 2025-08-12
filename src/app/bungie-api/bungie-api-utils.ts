@@ -1,6 +1,6 @@
 import { HttpClientConfig, HttpQueryParams } from 'bungie-api-ts/http';
 
-export const API_KEY = $DIM_FLAVOR !== 'dev' ? $DIM_WEB_API_KEY : localStorage.getItem('apiKey')!;
+export const API_KEY = $D2L_FLAVOR !== 'dev' ? $D2L_WEB_API_KEY : localStorage.getItem('apiKey')!;
 
 export function bungieApiUpdate(path: string, data?: Record<string, any>): HttpClientConfig {
   return {
@@ -19,11 +19,11 @@ export function bungieApiQuery(path: string, params?: HttpQueryParams): HttpClie
 }
 
 export function oauthClientId(): string {
-  return $DIM_FLAVOR !== 'dev' ? $DIM_WEB_CLIENT_ID : localStorage.getItem('oauthClientId')!;
+  return $D2L_FLAVOR !== 'dev' ? $D2L_WEB_CLIENT_ID : localStorage.getItem('oauthClientId')!;
 }
 
 export function oauthClientSecret(): string {
-  return $DIM_FLAVOR !== 'dev'
-    ? $DIM_WEB_CLIENT_SECRET
+  return $D2L_FLAVOR !== 'dev'
+    ? $D2L_WEB_CLIENT_SECRET
     : localStorage.getItem('oauthClientSecret')!;
 }

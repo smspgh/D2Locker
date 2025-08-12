@@ -49,7 +49,7 @@ async function performMeasurement() {
   // 2. Record the result.
   infoLog(
     'memory',
-    `DIM is using ${humanBytes(result.bytes)} of memory.`,
+    `D2L is using ${humanBytes(result.bytes)} of memory.`,
     result.breakdown
       .filter((b: { bytes: number }) => b.bytes)
       .map((b: { types: string[]; bytes: number }) => `${b.types.join('/')}: ${humanBytes(b.bytes)}`)

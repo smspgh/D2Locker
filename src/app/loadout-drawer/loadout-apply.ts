@@ -53,7 +53,7 @@ import { queueAction } from 'app/utils/action-queue';
 import { CancelToken, CanceledError, withCancel } from 'app/utils/cancel';
 import { count, filterMap, isEmpty, mapValues } from 'app/utils/collections';
 import { compareBy } from 'app/utils/comparators';
-import { DimError } from 'app/utils/dim-error';
+import { DimError } from 'app/utils/d2l-error';
 import { emptyArray } from 'app/utils/empty';
 import { convertToError, errorMessage } from 'app/utils/errors';
 import { isClassCompatible, itemCanBeEquippedBy } from 'app/utils/item-utils';
@@ -257,7 +257,7 @@ function doApplyLoadout(
         );
       }
 
-      // Sort loadout items by their bucket so we move items in the order that DIM displays them
+      // Sort loadout items by their bucket so we move items in the order that D2L displays them
       const applicableLoadoutItems = resolvedItems
         .sort(
           compareBy(({ item }) => {
@@ -974,15 +974,15 @@ function applySocketOverrides(
     const defs = d2ManifestSelector(getState())!;
 
     for (const loadoutItem of itemsWithOverrides) {
-      const dimItem = getLoadoutItem(loadoutItem)!;
-      if (!dimItem) {
+      const d2lItem = getLoadoutItem(loadoutItem)!;
+      if (!d2lItem) {
         continue;
       }
 
       if (loadoutItem.socketOverrides) {
         // We build up an array of mods to socket in order
         const modsForItem: Assignment[] = [];
-        const categories = dimItem.sockets?.categories || [];
+        const categories = d2lItem.sockets?.categories || [];
 
         // Loadout progress reporting is unaware of our socket remapping, so
         // we need to translate from actual item socket index to socketOverride index.
@@ -998,7 +998,7 @@ function applySocketOverrides(
           // are ignored even if they contain a needed fragment, so that we will plug it somewhere
           // in an earlier, active socket.
           const handleShuffledSockets = (socketIndices: number[]) => {
-            const sockets = getSocketsByIndexes(dimItem.sockets!, socketIndices);
+            const sockets = getSocketsByIndexes(d2lItem.sockets!, socketIndices);
             const neededOverrides = filterMap(socketIndices, (socketIndex) => {
               const hash = loadoutItem.socketOverrides![socketIndex];
               return hash ? { hash, loadoutSocketIndex: socketIndex } : undefined;
@@ -1051,11 +1051,11 @@ function applySocketOverrides(
           if (aspectSocketCategoryHashes.includes(category.category.hash)) {
             handleShuffledSockets(category.socketIndexes);
           } else if (fragmentSocketCategoryHashes.includes(category.category.hash)) {
-            const resolved = { item: dimItem, loadoutItem };
+            const resolved = { item: d2lItem, loadoutItem };
             const fragmentCapacity = getLoadoutSubclassFragmentCapacity(defs, resolved, true);
             handleShuffledSockets(category.socketIndexes.slice(0, fragmentCapacity));
           } else {
-            const sockets = getSocketsByIndexes(dimItem.sockets!, category.socketIndexes);
+            const sockets = getSocketsByIndexes(d2lItem.sockets!, category.socketIndexes);
             for (const socket of sockets) {
               const socketIndex = socket.socketIndex;
               const modHash: number | undefined = loadoutItem.socketOverrides[socketIndex];
@@ -1072,7 +1072,7 @@ function applySocketOverrides(
           requested &&
             setLoadoutState(
               setSocketOverrideResult(
-                dimItem,
+                d2lItem,
                 itemSocketToLoadoutOverrideSocket[socketIndex] ?? socketIndex,
                 LoadoutSocketOverrideState.Applied,
               ),
@@ -1086,7 +1086,7 @@ function applySocketOverrides(
           requested
             ? setLoadoutState(
                 setSocketOverrideResult(
-                  dimItem,
+                  d2lItem,
                   itemSocketToLoadoutOverrideSocket[socketIndex] ?? socketIndex,
                   LoadoutSocketOverrideState.Failed,
                   error,
@@ -1099,7 +1099,7 @@ function applySocketOverrides(
               }));
 
         await dispatch(
-          equipModsToItem(dimItem, modsForItem, handleSuccess, handleFailure, cancelToken),
+          equipModsToItem(d2lItem, modsForItem, handleSuccess, handleFailure, cancelToken),
         );
       }
     }

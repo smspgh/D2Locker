@@ -24,7 +24,7 @@ import { ItemCategoryHashes } from 'data/d2/generated-enums';
 import { InventoryBucket } from './inventory-buckets';
 
 /**
- * A generic DIM item, representing almost anything. This completely represents any D2 item, and most D1 items,
+ * A generic D2L item, representing almost anything. This completely represents any D2 item, and most D1 items,
  * though you can specialize down to the D1Item type for some special D1 properties and overrides.
  *
  * Prefer calculating values at the point of display instead of adding more stuff to this, and prefer making optional
@@ -148,7 +148,7 @@ export interface DimItem {
   /** Extra pursuit info, if this item is a quest or bounty. */
   pursuit: DimPursuit | null;
 
-  // "Mutable" data - this may be changed by moving the item around, lock/unlock, etc. Any place DIM updates its view of the world without a profile refresh. This info is always reset to server truth on a refresh.
+  // "Mutable" data - this may be changed by moving the item around, lock/unlock, etc. Any place D2L updates its view of the world without a profile refresh. This info is always reset to server truth on a refresh.
 
   /**
    * The ID of the store that currently contains this item.
@@ -431,7 +431,7 @@ export interface DimPlugInvestmentStat
 }
 
 /**
- * DIM's view of a "Plug" - an item that can go into a socket.
+ * D2L's view of a "Plug" - an item that can go into a socket.
  * In D2, both perk grids and mods/shaders are sockets with plugs.
  */
 export interface DimPlug {
@@ -444,7 +444,7 @@ export interface DimPlug {
   /** If not enabled, this is the localized reasons why, as a single string. */
   readonly enableFailReasons: string;
   /**
-   * Stats this plug modifies. Only present for dimPlugs attached to an item.
+   * Stats this plug modifies. Only present for d2lPlugs attached to an item.
    * If present, it's a map from the stat hash to the amount the stat is modified.
    */
   readonly stats: {
@@ -554,7 +554,7 @@ export interface DimSocket {
   isMod: boolean;
   /** Is this socket reusable? This is a notably different behavior and UI in Destiny, displayed in circles rather than squares. */
   isReusable: boolean;
-  /** Is this socket visible in-game? DIM mostly ignores this, but for some known sockets this controls item behavior / filter matching */
+  /** Is this socket visible in-game? D2L mostly ignores this, but for some known sockets this controls item behavior / filter matching */
   visibleInGame?: boolean;
   /** Deep information about this socket, including what types of things can be inserted into it. TODO: do we need all of this? */
   socketDefinition: DestinyItemSocketEntryDefinition;

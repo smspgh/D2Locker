@@ -5,7 +5,7 @@
 }
 
 .upgradePreview {
-  composes: flexRow from '../dim-ui/common.m.scss';
+  composes: flexRow from '../d2l-ui/common.m.scss';
   align-items: center;
   overflow: hidden;
   box-sizing: border-box;
@@ -18,7 +18,7 @@
 }
 
 .upgradeButton {
-  composes: resetButton from '../dim-ui/common.m.scss';
+  composes: resetButton from '../d2l-ui/common.m.scss';
   color: var(--theme-text);
   font-size: 16px;
   margin: 4px 0 0 0;

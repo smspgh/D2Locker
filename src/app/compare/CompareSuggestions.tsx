@@ -75,7 +75,7 @@ export default memo(function CompareSuggestions({
         <button
           key={query}
           type="button"
-          className={clsx('dim-button', {
+          className={clsx('d2l-button', {
             selected:
               parsedQuery !== undefined && canonicalizeQuery(parseQuery(query)) === parsedQuery,
           })}

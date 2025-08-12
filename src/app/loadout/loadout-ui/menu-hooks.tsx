@@ -1,7 +1,7 @@
 import { LoadoutSort } from '@destinyitemmanager/dim-api-types';
-import { bungieBackgroundStyleAdvanced } from 'app/dim-ui/BungieImage';
-import FilterPills, { Option } from 'app/dim-ui/FilterPills';
-import ColorDestinySymbols from 'app/dim-ui/destiny-symbols/ColorDestinySymbols';
+import { bungieBackgroundStyleAdvanced } from 'app/d2l-ui/BungieImage';
+import FilterPills, { Option } from 'app/d2l-ui/FilterPills';
+import ColorDestinySymbols from 'app/d2l-ui/destiny-symbols/ColorDestinySymbols';
 import { DimLanguage } from 'app/i18n';
 import { t, tl } from 'app/i18next-t';
 import { getHashtagsFromString, HashTagTracker } from 'app/inventory/note-hashtags';

@@ -1,4 +1,4 @@
-import RichDestinyText from 'app/dim-ui/destiny-symbols/RichDestinyText';
+import RichDestinyText from 'app/d2l-ui/destiny-symbols/RichDestinyText';
 import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
 import { DimItem } from 'app/inventory/item-types';
 import { isNewSelector } from 'app/inventory/selectors';

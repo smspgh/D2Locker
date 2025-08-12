@@ -1,6 +1,6 @@
 import { addCompareItem } from 'app/compare/actions';
 import { clearNewItem, setTag } from 'app/inventory/actions';
-import { TagValue, tagConfig } from 'app/inventory/dim-item-info';
+import { TagValue, tagConfig } from 'app/inventory/d2l-item-info';
 import { DimItem } from 'app/inventory/item-types';
 import { hideItemPopup } from 'app/item-popup/item-popup';
 import { AppIcon, compareIcon } from 'app/shell/icons';

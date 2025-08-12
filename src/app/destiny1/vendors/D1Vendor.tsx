@@ -1,6 +1,6 @@
 import { VendorIcon, VendorLocation } from 'app/vendors/Vendor';
-import CollapsibleTitle from '../../dim-ui/CollapsibleTitle';
-import Countdown from '../../dim-ui/Countdown';
+import CollapsibleTitle from '../../d2l-ui/CollapsibleTitle';
+import Countdown from '../../d2l-ui/Countdown';
 import D1VendorItems from './D1VendorItems';
 import { Vendor } from './vendor.service';
 

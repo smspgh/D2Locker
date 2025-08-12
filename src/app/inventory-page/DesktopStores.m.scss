@@ -22,7 +22,7 @@
 }
 
 .singleCharacterButton {
-  composes: resetButton from '../dim-ui/common.m.scss';
+  composes: resetButton from '../d2l-ui/common.m.scss';
 
   color: #9e9db5;
   font-size: 26px;

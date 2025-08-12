@@ -1,0 +1,46 @@
+@use '../variables.scss' as *;
+
+.tile {
+  height: $emblem-height;
+
+  @include phone-portrait {
+    min-width: $emblem-width;
+
+    > div {
+      margin: 0 5px;
+    }
+  }
+}
+
+.vertical {
+  composes: flexColumn from './common.m.scss';
+  gap: 8px;
+}
+
+// The > * > * is so we don't d2l out the hover border
+.unselected > * > * {
+  filter: grayscale(0.6);
+  opacity: 0.4;
+}
+
+.frame {
+  max-width: 250px;
+  margin: 8px auto;
+  overflow: visible !important;
+  position: relative;
+
+  @include phone-portrait {
+    max-width: 260px;
+  }
+}
+
+.track {
+  display: block;
+  // Don't let the browser handle touches, we'll do it ourselves
+  touch-action: none;
+
+  > * {
+    display: inline-block;
+    vertical-align: top;
+  }
+}

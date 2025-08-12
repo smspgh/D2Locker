@@ -1,0 +1,177 @@
+@use '../../variables' as *;
+
+.chartContainer {
+  background: var(--theme-surface);
+  border: 1px solid var(--theme-border);
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 20px;
+  
+  @include phone-portrait {
+    padding: 12px;
+    margin-bottom: 12px;
+  }
+}
+
+.chartHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.chartTitle {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--theme-text);
+}
+
+.pvpIndicator {
+  font-size: 0.8rem;
+  padding: 4px 8px;
+  background: rgba($arc, 0.2);
+  color: $arc;
+  border-radius: 4px;
+  font-weight: 500;
+}
+
+// Vertical Legend List (below chart)
+.legendList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid var(--theme-border);
+  
+  @include phone-portrait {
+    gap: 6px;
+    margin-top: 12px;
+    padding-top: 12px;
+  }
+}
+
+.legendItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.8rem;
+  color: var(--theme-text-d2l);
+  white-space: nowrap;
+  justify-content: flex-start;
+  
+  @include phone-portrait {
+    font-size: 0.75rem;
+    gap: 6px;
+  }
+}
+
+.benefitName {
+  flex: 1;
+  text-align: left;
+}
+
+.benefitValue {
+  color: var(--theme-text);
+  font-weight: 600;
+  font-size: 0.85rem;
+  min-width: 60px;
+  text-align: right;
+  
+  @include phone-portrait {
+    font-size: 0.8rem;
+    min-width: 50px;
+  }
+}
+
+.legendDot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.primaryColor {
+  background: #00E676;
+}
+
+.enhancedColor {
+  background: #4CAF50;
+}
+
+.breakpointColor {
+  background: $red;
+  border-style: dashed;
+}
+
+.chart {
+  height: 400px;
+  margin-bottom: 20px;
+  
+  canvas {
+    max-height: 100%;
+  }
+  
+  @include phone-portrait {
+    height: 300px;
+    margin-bottom: 12px;
+  }
+}
+
+.benefitSelector {
+  border-top: 1px solid var(--theme-border);
+  padding-top: 20px;
+  
+  h4 {
+    font-size: 1rem;
+    font-weight: 600;
+    margin: 0 0 12px 0;
+    color: var(--theme-text);
+  }
+}
+
+.benefitGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.benefitGroup {
+  h5 {
+    font-size: 0.9rem;
+    font-weight: 500;
+    margin: 0 0 8px 0;
+    color: var(--theme-text-d2l);
+  }
+}
+
+.benefitOption {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 0;
+  cursor: pointer;
+  font-size: 0.85rem;
+  color: var(--theme-text);
+  transition: color 0.2s ease;
+  
+  &:hover {
+    color: $power;
+  }
+  
+  input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+    accent-color: $power;
+  }
+}

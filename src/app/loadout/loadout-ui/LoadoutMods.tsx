@@ -1,6 +1,6 @@
 import { LoadoutParameters } from '@destinyitemmanager/dim-api-types';
-import CheckButton from 'app/dim-ui/CheckButton';
-import { PressTip } from 'app/dim-ui/PressTip';
+import CheckButton from 'app/d2l-ui/CheckButton';
+import { PressTip } from 'app/d2l-ui/PressTip';
 import { t } from 'app/i18next-t';
 import { artifactUnlocksSelector, unlockedPlugSetItemsSelector } from 'app/inventory/selectors';
 import { hashesToPluggableItems } from 'app/inventory/store/sockets';
@@ -290,7 +290,7 @@ export const LoadoutArtifactUnlocks = memo(function LoadoutArtifactUnlocks({
       ) : (
         onSyncFromEquipped && (
           <div className={styles.buttons}>
-            <button className="dim-button" type="button" onClick={onSyncFromEquipped}>
+            <button className="d2l-button" type="button" onClick={onSyncFromEquipped}>
               {t('Loadouts.SyncFromEquipped')}
             </button>
           </div>
@@ -317,7 +317,7 @@ function ShowModAssignmentButton({
 
   return (
     <>
-      <button className="dim-button" type="button" onClick={() => setShowModAssignmentDrawer(true)}>
+      <button className="d2l-button" type="button" onClick={() => setShowModAssignmentDrawer(true)}>
         {t('Loadouts.ShowModPlacement')}
       </button>
       {showModAssignmentDrawer && (

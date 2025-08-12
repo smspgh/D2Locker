@@ -1,5 +1,5 @@
-import { EnergyIncrementsWithPresstip } from 'app/dim-ui/EnergyIncrements';
-import Sheet from 'app/dim-ui/Sheet';
+import { EnergyIncrementsWithPresstip } from 'app/d2l-ui/EnergyIncrements';
+import Sheet from 'app/d2l-ui/Sheet';
 import { t } from 'app/i18next-t';
 import ConnectedInventoryItem from 'app/inventory/ConnectedInventoryItem';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';

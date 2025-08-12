@@ -1,5 +1,5 @@
-import ClickOutside from 'app/dim-ui/ClickOutside';
-import { StatTotalToggle } from 'app/dim-ui/CustomStatTotal';
+import ClickOutside from 'app/d2l-ui/ClickOutside';
+import { StatTotalToggle } from 'app/d2l-ui/CustomStatTotal';
 import { t } from 'app/i18next-t';
 import { AppIcon, enabledIcon, expandDownIcon, unselectedCheckIcon } from 'app/shell/icons';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
@@ -56,7 +56,7 @@ function DropDown({
     <ClickOutside onClickOutside={() => setDropdownOpen(false)} className={styles.dropDown}>
       <button
         type="button"
-        className={`dim-button ${styles.button}`}
+        className={`d2l-button ${styles.button}`}
         disabled={buttonDisabled}
         onClick={() => setDropdownOpen(!dropdownOpen)}
       >

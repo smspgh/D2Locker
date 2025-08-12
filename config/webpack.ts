@@ -43,22 +43,20 @@ import splash from '../icons/splash.json';
 // https://stackoverflow.com/questions/69584268/what-is-the-type-of-the-webpack-config-function-when-it-comes-to-typescript
 type CLIValues = boolean | string;
 type EnvValues = Record<string, CLIValues | Record<string, Env>>;
-interface Env extends EnvValues {
+export interface Env extends EnvValues {
   release: boolean;
   beta: boolean;
   dev: boolean;
   pr: boolean;
-  name: 'release' | 'beta' | 'dev' | 'pr';
+  'production-hmr': boolean;
+  name: 'release' | 'beta' | 'dev' | 'pr' | 'production-hmr';
 }
 type Argv = Record<string, CLIValues>;
 export type WebpackConfigurationGenerator = (env?: Env, argv?: Argv) => webpack.Configuration | Promise<webpack.Configuration>;
 
 export default (env: Env) => {
-  // Load environment variables from .env file
-  dotenv.config();
-
   env.name = Object.keys(env)[0] as Env['name'];
-  (['release', 'beta', 'dev', 'pr'] as const).forEach((e) => {
+  (['release', 'beta', 'dev', 'pr', 'production-hmr'] as const).forEach((e) => {
     // set booleans based on env
     env[e] = Boolean(env[e]);
     if (env[e]) {
@@ -66,10 +64,26 @@ export default (env: Env) => {
     }
   });
 
-  if (env.dev && env.WEBPACK_SERVE && (!fs.existsSync('key.pem') || !fs.existsSync('cert.pem'))) {
-    console.log('Generating certificate');
-    execSync('mkcert create-ca --validity 825');
-    execSync('mkcert create-cert --validity 825 --key key.pem --cert cert.pem');
+  // Load environment variables from appropriate .env file
+  const envFile = env.dev ? '.dev.env' : '.env';
+  dotenv.config({ path: envFile });
+
+  // production-hmr is like release but with HMR enabled
+  if (env['production-hmr']) {
+    env.release = true;
+    env.name = 'release';
+  }
+
+  // Check for SSL certificates in certs directory
+  const certsPath = path.resolve(__dirname, '..', 'certs');
+  const keyPath = path.join(certsPath, 'shirezaks_com.key');
+  const certPath = path.join(certsPath, 'shirezaks_com.pem');
+
+  if (env.dev && env.WEBPACK_SERVE && (!fs.existsSync(keyPath) || !fs.existsSync(certPath))) {
+    console.error('SSL certificates not found in certs directory!');
+    console.error(`Expected key at: ${keyPath}`);
+    console.error(`Expected cert at: ${certPath}`);
+    throw new Error('SSL certificates missing');
   }
 
   const version = env.dev ? (packageJson.version?.toString() || '2.0.0') : (process.env.VERSION || '2.0.0');
@@ -109,19 +123,22 @@ export default (env: Env) => {
       chunkFilename: jsFilenamePattern,
       assetModuleFilename: ASSET_NAME_PATTERN,
       hashFunction: 'xxhash64',
+      // Enable HMR in production
+      hotUpdateChunkFilename: 'hot/hot-update-[id]-[fullhash].js',
+      hotUpdateMainFilename: 'hot/hot-update-[runtime]-[fullhash].json',
     },
 
     // Dev server
-    devServer: env.dev
+    devServer: env.dev || env['production-hmr']
       ? ({
           host: process.env.DOCKER ? '0.0.0.0' : 'localhost',
-          port: 443, // Set frontend dev server to use port 443
+          port: 443, // Use port 443 for both dev and production-hmr
           allowedHosts: 'all',
           server: {
             type: 'https',
             options: {
-              key: fs.readFileSync('key.pem'), // Private keys in PEM format.
-              cert: fs.readFileSync('cert.pem'), // Cert chains in PEM format.
+              key: fs.readFileSync(keyPath), // Private keys in PEM format.
+              cert: fs.readFileSync(certPath), // Cert chains in PEM format.
             },
           },
           devMiddleware: {
@@ -152,11 +169,17 @@ export default (env: Env) => {
 
             return headers;
           },
+          static: [
+            {
+              directory: path.join(__dirname, '../src/D2ArmorAnalysis'),
+              publicPath: '/D2ArmorAnalysis',
+            },
+          ],
         } as DevServerConfiguration)
       : undefined,
 
     // Bail and fail hard on first error
-    bail: !env.dev,
+    bail: !env.dev && !env['production-hmr'],
 
     stats: env.dev ? 'minimal' : 'normal',
 
@@ -362,7 +385,7 @@ export default (env: Env) => {
 
     resolve: {
       extensions: ['.js', '.json', '.ts', '.tsx', '.jsx'],
-      
+
       // Speed up module resolution
       symlinks: false,
       cacheWithContext: false,
@@ -499,6 +522,7 @@ export default (env: Env) => {
         { from: `./icons/splash`, to: 'splash/' },
         { from: `./icons/screenshots`, to: 'screenshots/' },
         { from: './backend/light', to: 'backend/light/' },
+        { from: './src/D2ArmorAnalysis', to: 'D2ArmorAnalysis/' },
         { from: './src/safari-pinned-tab.svg' },
         { from: './src/nuke.php' },
         { from: './src/robots.txt' },
@@ -506,14 +530,14 @@ export default (env: Env) => {
     }),
 
     new webpack.DefinePlugin({
-      $DIM_VERSION: JSON.stringify(version),
-      $DIM_FLAVOR: JSON.stringify(env.name),
-      $DIM_BUILD_DATE: JSON.stringify(buildTime),
+      $D2L_VERSION: JSON.stringify(version),
+      $D2L_FLAVOR: JSON.stringify(env.name),
+      $D2L_BUILD_DATE: JSON.stringify(buildTime),
       // These are set from the GitHub secrets
-      $DIM_WEB_API_KEY: JSON.stringify(process.env.WEB_API_KEY),
-      $DIM_WEB_CLIENT_ID: JSON.stringify(process.env.WEB_OAUTH_CLIENT_ID),
-      $DIM_WEB_CLIENT_SECRET: JSON.stringify(process.env.WEB_OAUTH_CLIENT_SECRET),
-      $DIM_API_KEY: JSON.stringify(process.env.DIM_API_KEY),
+      $D2L_WEB_API_KEY: JSON.stringify(process.env.WEB_API_KEY),
+      $D2L_WEB_CLIENT_ID: JSON.stringify(process.env.WEB_OAUTH_CLIENT_ID),
+      $D2L_WEB_CLIENT_SECRET: JSON.stringify(process.env.WEB_OAUTH_CLIENT_SECRET),
+      $D2L_API_KEY: JSON.stringify(process.env.D2L_API_KEY),
       $DEFAULT_DESTINY_VERSION: JSON.stringify(process.env.DEFAULT_DESTINY_VERSION || '2'),
       $ANALYTICS_PROPERTY: JSON.stringify(analyticsProperty),
       $PUBLIC_PATH: JSON.stringify(publicPath),
@@ -530,7 +554,7 @@ export default (env: Env) => {
     }),
   ];
 
-  if (env.dev) {
+  if (env.dev || env['production-hmr']) {
     // In dev we use babel to compile TS, and fork off a separate typechecker
     plugins.push(new ForkTsCheckerWebpackPlugin());
 
@@ -541,7 +565,7 @@ export default (env: Env) => {
     } else {
       plugins.push(
         new WebpackNotifierPlugin({
-          title: 'DIM',
+          title: 'D2L',
           excludeWarnings: false,
           alwaysNotify: true,
           contentImage: path.join(__dirname, '../icons/release/favicon-96x96.png'),
@@ -549,7 +573,7 @@ export default (env: Env) => {
       );
       plugins.push(
         new ForkTsCheckerNotifierWebpackPlugin({
-          title: 'DIM TypeScript',
+          title: 'D2L TypeScript',
           excludeWarnings: false,
         }),
       );

@@ -8,7 +8,7 @@ export function loadoutToSearchString(loadout: Loadout | InGameLoadout) {
   return `inloadout:${quoteFilterString(loadout.name.toLowerCase())}`;
 }
 
-// related: https://github.com/DestinyItemManager/DIM/issues/9069
+// related: https://github.com/DestinyItemManager/D2L/issues/9069
 // sanity check: `inloadout:#hashta` should not suggest `inloadout:inloadout:#hashtag` (double prefix)
 function loadoutToSuggestions(loadout: Loadout) {
   return [
@@ -63,9 +63,9 @@ const loadoutFilters: ItemFilterDefinition[] = [
         Boolean(loadoutsByItem[item.id]?.some((l) => isInGameLoadout(l.loadout))),
   },
   {
-    keywords: 'indimloadout',
+    keywords: 'InD2lLoadout',
     format: 'simple',
-    description: tl('Filter.InDimLoadout'),
+    description: tl('Filter.InD2lLoadout'),
     filter:
       ({ loadoutsByItem }) =>
       (item) =>

@@ -80,7 +80,7 @@ export interface DimCollectible {
   item: DimItem;
   key: string;
   /**
-   * true if this was artificially created by DIM.
+   * true if this was artificially created by D2L.
    * some items are missing in collectibles, and we can fix that,
    * but they shouldn't be counted toward completion meters
    * or they'll seem wrong compared to in-game collections
@@ -105,7 +105,7 @@ export interface DimPresentationNodeSearchResult extends DimPresentationNodeLeaf
   path: DimPresentationNode[];
 }
 
-/** Process the live data into DIM types that collect everything in one place and can be filtered/searched. */
+/** Process the live data into D2L types that collect everything in one place and can be filtered/searched. */
 export function toPresentationNodeTree(
   itemCreationContext: ItemCreationContext,
   node: number,

@@ -66,7 +66,7 @@ const LoadoutOptimizerExotic = memo(function LoadoutOptimizerExotic({
       onRandomize={handleRandomize}
     >
       <ChosenExoticOption lockedExoticHash={lockedExoticHash} onClick={handleClickEdit} />
-      <button type="button" className="dim-button" onClick={handleClickEdit}>
+      <button type="button" className="d2l-button" onClick={handleClickEdit}>
         {t('LB.SelectExotic')}
       </button>
       {showExoticPicker && (

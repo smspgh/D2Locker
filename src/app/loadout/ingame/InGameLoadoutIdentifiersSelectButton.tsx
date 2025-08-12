@@ -1,5 +1,5 @@
 import { InGameLoadoutIdentifiers } from '@destinyitemmanager/dim-api-types';
-import ClosableContainer from 'app/dim-ui/ClosableContainer';
+import ClosableContainer from 'app/d2l-ui/ClosableContainer';
 import { t } from 'app/i18next-t';
 import { setInGameLoadoutIdentifiers } from 'app/loadout-drawer/loadout-drawer-reducer';
 import { Loadout } from 'app/loadout/loadout-types';

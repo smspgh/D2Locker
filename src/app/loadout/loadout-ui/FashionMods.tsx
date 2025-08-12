@@ -1,4 +1,4 @@
-import { PressTip } from 'app/dim-ui/PressTip';
+import { PressTip } from 'app/d2l-ui/PressTip';
 import { t } from 'app/i18next-t';
 import { DefItemIcon } from 'app/inventory/ItemIcon';
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';

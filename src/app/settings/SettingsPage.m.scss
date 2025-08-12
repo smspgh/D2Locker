@@ -53,7 +53,7 @@
 }
 
 .setting {
-  composes: flexColumn from '../dim-ui/common.m.scss';
+  composes: flexColumn from '../d2l-ui/common.m.scss';
   gap: 8px;
   padding: 8px;
   background-color: var(--theme-section-bg);
@@ -82,7 +82,7 @@
 }
 
 .horizontal {
-  composes: flexRow from '../dim-ui/common.m.scss';
+  composes: flexRow from '../d2l-ui/common.m.scss';
   align-items: center;
   justify-content: space-between;
   gap: 1em;

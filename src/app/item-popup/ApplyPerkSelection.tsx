@@ -105,7 +105,7 @@ export default function ApplyPerkSelection({
   return (
     <div className={styles.buttons}>
       {wishListSocketChanges.length > 0 && (
-        <button type="button" className="dim-button" onClick={selectWishlistPerks}>
+        <button type="button" className="d2l-button" onClick={selectWishlistPerks}>
           <AppIcon icon={thumbsUpIcon} /> {t('Sockets.SelectWishlistPerks')}
         </button>
       )}

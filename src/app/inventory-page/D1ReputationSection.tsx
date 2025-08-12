@@ -1,6 +1,6 @@
 import { t } from 'app/i18next-t';
 import { D1Store, DimStore } from 'app/inventory/store-types';
-import CollapsibleTitle from '../dim-ui/CollapsibleTitle';
+import CollapsibleTitle from '../d2l-ui/CollapsibleTitle';
 import D1Reputation from './D1Reputation';
 
 export default function D1ReputationSection({ stores }: { stores: DimStore[] }) {

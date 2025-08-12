@@ -1,22 +1,22 @@
 import { getToken } from 'app/bungie-api/oauth-tokens';
-import StaticPage from 'app/dim-ui/StaticPage';
+import StaticPage from 'app/d2l-ui/StaticPage';
 import { t } from 'app/i18next-t';
 import { isAppStoreVersion } from 'app/utils/browsers';
 import { usePageTitle } from 'app/utils/hooks';
 import { systemInfo } from 'app/utils/system-info';
-import logo from 'images/dimlogo.svg';
+import logo from 'images/d2llogo.svg';
 import { useEffect } from 'react';
 import { Link } from 'react-router';
-import ExternalLink from '../dim-ui/ExternalLink';
+import ExternalLink from '../d2l-ui/ExternalLink';
 import styles from './About.m.scss';
 import { AppIcon, faDiscord, faGithub, faTshirt, heartIcon, helpIcon } from './icons';
 import { discordLink, userGuideLink } from './links';
 
-const githubLinkDirect = 'https://github.com/DestinyItemManager/DIM/';
+const githubLinkDirect = 'https://github.com/DestinyItemManager/D2L/';
 const crowdinLinkDirect =
   'https://crowdin.com/project/destiny-item-manager/invite?d=65a5l46565176393s2a3p403a3u22323e46383232393h4k4r443o4h3d4c333t2a3j4f453f4f3o4u643g393b343n4';
 const bungieLinkDirect = 'https://www.bungie.net';
-const openCollectiveLinkDirect = 'https://opencollective.com/dim';
+const openCollectiveLinkDirect = 'https://opencollective.com/d2l';
 const storeLinkDirect = 'https://www.designbyhumans.com/shop/DestinyItemManager/';
 
 const githubLink = `<a href='${githubLinkDirect}' target='_blank' rel='noopener noreferrer'>GitHub</a>`;
@@ -37,7 +37,7 @@ export default function About() {
     const script = document.createElement('script');
 
     script.src =
-      'https://opencollective.com/dim/banner.js?style={"a":{"display":"none"}, "h2":{"color":"white"}}';
+      'https://opencollective.com/d2l/banner.js?style={"a":{"display":"none"}, "h2":{"color":"white"}}';
     script.async = true;
 
     document.getElementById('opencollective')!.appendChild(script);
@@ -51,16 +51,16 @@ export default function About() {
   return (
     <StaticPage className={styles.about}>
       <div className={styles.header}>
-        <img src={logo} className={styles.logo} alt="DIM Logo" height="48" width="48" />
+        <img src={logo} className={styles.logo} alt="D2L Logo" height="48" width="48" />
         <h1>
           <span>{t('Views.About.Header')}</span>
         </h1>
         <Link to="/whats-new">
           <span>
             {t('Views.About.Version', {
-              version: $DIM_VERSION,
-              flavor: $DIM_FLAVOR,
-              date: new Date($DIM_BUILD_DATE).toLocaleString(),
+              version: $D2L_VERSION,
+              flavor: $D2L_FLAVOR,
+              date: new Date($D2L_BUILD_DATE).toLocaleString(),
             })}
           </span>
         </Link>
@@ -68,11 +68,11 @@ export default function About() {
         <span>{systemInfo}</span> <Link to="/debug">Debug</Link>
       </div>
       <p>{t('Views.About.HowItsMade')}</p>
-      {$DIM_FLAVOR === 'release' && <p>{t(`Views.About.Schedule.release`)}</p>}
-      {$DIM_FLAVOR === 'beta' && <p>{t(`Views.About.Schedule.beta`)}</p>}
-      {$DIM_FLAVOR === 'pr' && (
+      {$D2L_FLAVOR === 'release' && <p>{t(`Views.About.Schedule.release`)}</p>}
+      {$D2L_FLAVOR === 'beta' && <p>{t(`Views.About.Schedule.beta`)}</p>}
+      {$D2L_FLAVOR === 'pr' && (
         <p>
-          <a href={`https://github.com/DestinyItemManager/DIM/pull${$PUBLIC_PATH}`}>
+          <a href={`https://github.com/DestinyItemManager/D2L/pull${$PUBLIC_PATH}`}>
             Pull Request #{$PUBLIC_PATH.replaceAll('/', '')}
           </a>
         </p>
@@ -80,7 +80,7 @@ export default function About() {
       <ul>
         <li>{t('Views.About.BungieCopyright')}</li>
         <li>
-          <Link to="/privacy">DIM Privacy Policy</Link>
+          <Link to="/privacy">D2L Privacy Policy</Link>
         </li>
         {token && (
           <li>

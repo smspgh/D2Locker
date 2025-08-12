@@ -5,7 +5,7 @@ import type { AnyAction } from 'redux';
 import type { ThunkAction, ThunkDispatch } from 'redux-thunk';
 import type { AccountsState } from '../accounts/reducer';
 import type { CompareState } from '../compare/reducer';
-import type { DimApiState } from '../dim-api/reducer';
+import type { DimApiState } from '../d2l-api/reducer';
 import type { FarmingState } from '../farming/reducer';
 import type { InventoryState } from '../inventory/reducer';
 import type { InGameLoadoutState } from '../loadout/ingame/reducer';
@@ -27,7 +27,7 @@ export interface RootState {
   readonly vendors: VendorsState;
   readonly compare: CompareState;
   readonly streamDeck: StreamDeckState;
-  readonly dimApi: DimApiState;
+  readonly d2lApi: DimApiState;
   readonly clarity: ClarityState;
   readonly inGameLoadouts: InGameLoadoutState;
 }

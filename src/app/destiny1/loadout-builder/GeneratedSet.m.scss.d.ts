@@ -2,7 +2,7 @@
 // Please do not change this file!
 interface CssExports {
   'controls': string;
-  'dimStats': string;
+  'd2lStats': string;
   'expandConfigs': string;
   'label': string;
   'loadout': string;

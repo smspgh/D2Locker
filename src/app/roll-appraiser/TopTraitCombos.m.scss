@@ -1,0 +1,152 @@
+.topTraitCombos {
+  margin-bottom: 16px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  overflow: hidden;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 12px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  
+  &:hover {
+    background: rgba(255, 255, 255, 0.05);
+  }
+  
+  &:focus {
+    outline: 2px solid rgba(255, 255, 255, 0.3);
+    outline-offset: -2px;
+  }
+}
+
+.chevron {
+  margin-right: 8px;
+  transition: transform 0.2s ease;
+  color: #ccc;
+}
+
+.title {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: #f0f0f0;
+  flex: 1;
+  text-align: left;
+}
+
+.count {
+  font-size: 12px;
+  color: #aaa;
+  margin-left: 8px;
+}
+
+.combos {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 0 12px 12px 12px;
+}
+
+.combo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 12px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.05);
+  border-left: 3px solid;
+  font-size: 12px;
+}
+
+.rank {
+  font-weight: 700;
+  font-size: 14px;
+  min-width: 24px;
+  text-align: center;
+}
+
+.perks {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+}
+
+.perk {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.perkName {
+  font-weight: 500;
+  color: #e0e0e0;
+}
+
+.separator {
+  font-weight: 600;
+  color: #888;
+  margin: 0 4px;
+}
+
+.comboCount {
+  font-size: 11px;
+  color: #aaa;
+  white-space: nowrap;
+}
+
+// Rank color styles
+.rank1 {
+  border-left-color: #ffd700; // Gold
+  .rank { color: #ffd700; }
+}
+
+.rank2 {
+  border-left-color: #c0c0c0; // Silver
+  .rank { color: #c0c0c0; }
+}
+
+.rank3 {
+  border-left-color: #cd7f32; // Bronze
+  .rank { color: #cd7f32; }
+}
+
+.rank4 {
+  border-left-color: #4a90e2; // Blue
+  .rank { color: #4a90e2; }
+}
+
+.rank5 {
+  border-left-color: #7b68ee; // Purple
+  .rank { color: #7b68ee; }
+}
+
+// Responsive design
+@media (max-width: 768px) {
+  .combo {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+  }
+  
+  .perks {
+    order: 1;
+  }
+  
+  .rank {
+    order: 0;
+    align-self: flex-end;
+  }
+  
+  .comboCount {
+    order: 2;
+    align-self: flex-start;
+  }
+}

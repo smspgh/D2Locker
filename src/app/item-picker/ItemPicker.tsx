@@ -1,4 +1,4 @@
-import ClassIcon from 'app/dim-ui/ClassIcon';
+import ClassIcon from 'app/d2l-ui/ClassIcon';
 import { t } from 'app/i18next-t';
 import { hideItemPopup, showItemPopup, showItemPopup$ } from 'app/item-popup/item-popup';
 import SearchBar from 'app/search/SearchBar';
@@ -9,7 +9,7 @@ import { BucketHashes } from 'data/d2/generated-enums';
 import { useCallback, useDeferredValue, useEffect, useMemo, useRef, useState } from 'react';
 import { mergeProps, useKeyboard, useLongPress, usePress } from 'react-aria';
 import { useSelector } from 'react-redux';
-import Sheet from '../dim-ui/Sheet';
+import Sheet from '../d2l-ui/Sheet';
 import '../inventory-page/StoreBucket.scss';
 import ConnectedInventoryItem from '../inventory/ConnectedInventoryItem';
 import { DimItem } from '../inventory/item-types';

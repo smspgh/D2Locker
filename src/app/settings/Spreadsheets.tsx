@@ -1,5 +1,5 @@
-import FileUpload from 'app/dim-ui/FileUpload';
-import useConfirm from 'app/dim-ui/useConfirm';
+import FileUpload from 'app/d2l-ui/FileUpload';
+import useConfirm from 'app/d2l-ui/useConfirm';
 import { t } from 'app/i18next-t';
 import { storesLoadedSelector } from 'app/inventory/selectors';
 import { downloadCsvFiles, importTagsNotesFromCsv } from 'app/inventory/spreadsheets';
@@ -55,7 +55,7 @@ export default function Spreadsheets() {
         <div className={styles.buttons}>
           <button
             type="button"
-            className="dim-button"
+            className="d2l-button"
             onClick={() => downloadCsv('weapon')}
             disabled={disabled}
           >
@@ -63,7 +63,7 @@ export default function Spreadsheets() {
           </button>{' '}
           <button
             type="button"
-            className="dim-button"
+            className="d2l-button"
             onClick={() => downloadCsv('armor')}
             disabled={disabled}
           >
@@ -71,7 +71,7 @@ export default function Spreadsheets() {
           </button>{' '}
           <button
             type="button"
-            className="dim-button"
+            className="d2l-button"
             onClick={() => downloadCsv('ghost')}
             disabled={disabled}
           >
@@ -94,7 +94,7 @@ export default function Spreadsheets() {
           <div>
             <button
               type="button"
-              className="dim-button"
+              className="d2l-button"
               onClick={() => dispatch(downloadLoadoutsCsv())}
               disabled={disabled}
             >

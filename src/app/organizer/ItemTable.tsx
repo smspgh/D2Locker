@@ -1,8 +1,8 @@
 import { destinyVersionSelector } from 'app/accounts/selectors';
-import { languageSelector, settingSelector } from 'app/dim-api/selectors';
-import UserGuideLink from 'app/dim-ui/UserGuideLink';
-import useBulkNote from 'app/dim-ui/useBulkNote';
-import useConfirm from 'app/dim-ui/useConfirm';
+import { languageSelector, settingSelector } from 'app/d2l-api/selectors';
+import UserGuideLink from 'app/d2l-ui/UserGuideLink';
+import useBulkNote from 'app/d2l-ui/useBulkNote';
+import useConfirm from 'app/d2l-ui/useConfirm';
 import { t, tl } from 'app/i18next-t';
 import { bulkLockItems, bulkTagItems } from 'app/inventory/bulk-actions';
 import { DimItem, DimStat } from 'app/inventory/item-types';
@@ -48,7 +48,7 @@ import ItemActions, { TagCommandInfo } from './ItemActions';
 
 import { compareSelectedItems } from 'app/compare/actions';
 
-import { useTableColumnSorts } from 'app/dim-ui/table-columns';
+import { useTableColumnSorts } from 'app/d2l-ui/table-columns';
 import { compact, filterMap } from 'app/utils/collections';
 import { errorMessage } from 'app/utils/errors';
 
@@ -390,7 +390,7 @@ export default function ItemTable({ categories }: { categories: ItemCategoryTree
     downloadAction = (
       <button
         type="button"
-        className={clsx(styles.importButton, 'dim-button')}
+        className={clsx(styles.importButton, 'd2l-button')}
         onClick={downloadHandler}
       >
         <AppIcon icon={spreadsheetIcon} /> <span>{t(downloadButtonSetting.label)}.csv</span>
@@ -444,7 +444,7 @@ export default function ItemTable({ categories }: { categories: ItemCategoryTree
             {({ getRootProps, getInputProps }) => (
               <div {...getRootProps()} className={styles.importButton}>
                 <input {...getInputProps()} />
-                <div className="dim-button">
+                <div className="d2l-button">
                   <AppIcon icon={uploadIcon} /> {t('Settings.CsvImport')}
                 </div>
               </div>

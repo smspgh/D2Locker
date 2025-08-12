@@ -1,7 +1,7 @@
 @use '../variables.scss' as *;
 
 .headerRow {
-  composes: flexRow from '../dim-ui/common.m.scss';
+  composes: flexRow from '../d2l-ui/common.m.scss';
   align-items: center;
 
   label {
@@ -62,7 +62,7 @@
 
 // editor for a single stat
 .customStatEditor {
-  composes: flexColumn from '../dim-ui/common.m.scss';
+  composes: flexColumn from '../d2l-ui/common.m.scss';
   border: 1px solid;
   margin: 8px 0;
   padding: 6px;
@@ -71,7 +71,7 @@
 }
 
 .identifyingInfo {
-  composes: flexWrap from '../dim-ui/common.m.scss';
+  composes: flexWrap from '../d2l-ui/common.m.scss';
   align-items: center;
   justify-content: flex-end;
   gap: 8px;
@@ -105,7 +105,7 @@
 }
 
 .editableStatsRow {
-  composes: flexRow from '../dim-ui/common.m.scss';
+  composes: flexRow from '../d2l-ui/common.m.scss';
   align-items: center;
   justify-content: space-between;
   gap: 4px;
@@ -117,7 +117,7 @@
 
 // all info for a custom stat, without the editing controls
 .customStatView {
-  composes: flexRow from '../dim-ui/common.m.scss';
+  composes: flexRow from '../d2l-ui/common.m.scss';
   align-items: center;
   gap: 8px;
 }

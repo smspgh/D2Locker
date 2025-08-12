@@ -28,8 +28,8 @@ export default memo(function StoreInventoryItem({ item }: { item: DimItem }) {
             onClick={onClick}
             onDoubleClick={doubleClicked}
             // for only StoreInventoryItems (the main inventory page)
-            // we mark these to be dimmed if archived
-            dimArchived
+            // we mark these to be d2lmed if archived
+            d2lArchived
           />
         )}
       </ItemPopupTrigger>

@@ -1,4 +1,4 @@
-import RichDestinyText from 'app/dim-ui/destiny-symbols/RichDestinyText';
+import RichDestinyText from 'app/d2l-ui/destiny-symbols/RichDestinyText';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { ObjectiveValue } from 'app/progress/Objective';
 import clsx from 'clsx';

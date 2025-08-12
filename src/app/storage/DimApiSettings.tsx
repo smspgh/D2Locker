@@ -1,13 +1,13 @@
 import { ExportResponse } from '@destinyitemmanager/dim-api-types';
-import { deleteAllApiData, loadDimApiData } from 'app/dim-api/actions';
-import { setApiPermissionGranted } from 'app/dim-api/basic-actions';
-import { exportDimApiData } from 'app/dim-api/dim-api';
-import { importDataBackup } from 'app/dim-api/import';
-import { apiPermissionGrantedSelector, D2LSyncErrorSelector } from 'app/dim-api/selectors';
-import HelpLink from 'app/dim-ui/HelpLink';
-import useConfirm from 'app/dim-ui/useConfirm';
+import { deleteAllApiData, loadDimApiData } from 'app/d2l-api/actions';
+import { setApiPermissionGranted } from 'app/d2l-api/basic-actions';
+import { exportDimApiData } from 'app/d2l-api/d2l-api';
+import { importDataBackup } from 'app/d2l-api/import';
+import { apiPermissionGrantedSelector, D2LSyncErrorSelector } from 'app/d2l-api/selectors';
+import HelpLink from 'app/d2l-ui/HelpLink';
+import useConfirm from 'app/d2l-ui/useConfirm';
 import { t } from 'app/i18next-t';
-import { dimApiHelpLink } from 'app/login/Login';
+import { d2lApiHelpLink } from 'app/login/Login';
 import { showNotification } from 'app/notifications/notifications';
 import Checkbox from 'app/settings/Checkbox';
 import { fineprintClass, horizontalClass, settingClass } from 'app/settings/SettingsPage';
@@ -27,7 +27,7 @@ import { exportBackupData, exportLocalData } from './export-data';
 // Configuration to control which storage settings are visible
 // Set to true to show, false to hide
 const STORAGE_SETTINGS_VISIBILITY = {
-  D2LSync: true, // Show Enable DIM Sync section so users can manage their sync settings
+  D2LSync: true, // Show Enable d2l sync section so users can manage their sync settings
   storageInfo: false, // Hide storage usage info
   importBackup: false, // Hide Import Data Backup button
   exportAPIProfile: false, // Hide Export API profile response section
@@ -36,7 +36,7 @@ const STORAGE_SETTINGS_VISIBILITY = {
 export default function DimApiSettings() {
   const dispatch = useThunkDispatch();
   const apiPermissionGranted = useSelector(apiPermissionGrantedSelector);
-   
+
   const profileLoadedError = useSelector(D2LSyncErrorSelector);
   const [hasBackedUp, setHasBackedUp] = useState(false);
 
@@ -109,7 +109,7 @@ export default function DimApiSettings() {
             name={'apiPermissionGranted' as keyof Settings}
             label={
               <>
-                {t('Storage.EnableDimApi')} <HelpLink helpLink={dimApiHelpLink} />
+                {t('Storage.EnableDimApi')} <HelpLink helpLink={d2lApiHelpLink} />
               </>
             }
             value={apiPermissionGranted}
@@ -118,10 +118,10 @@ export default function DimApiSettings() {
           <div className={fineprintClass}>{t('Storage.DimApiFinePrint')}</div>
           {apiPermissionGranted && (
             <>
-              <button type="button" className="dim-button" onClick={refreshD2LSync}>
+              <button type="button" className="d2l-button" onClick={refreshD2LSync}>
                 <AppIcon icon={refreshIcon} /> {t('Storage.RefreshD2LSync')}
               </button>
-              <button type="button" className="dim-button" onClick={deleteAllData}>
+              <button type="button" className="d2l-button" onClick={deleteAllData}>
                 <AppIcon icon={deleteIcon} /> {t('Storage.DeleteAllData')}
               </button>
             </>
@@ -135,7 +135,7 @@ export default function DimApiSettings() {
         <div className={settingClass}>
           <div className={horizontalClass}>
             <label>{t('SearchHistory.Link')}</label>
-            <Link to="/search-history" className="dim-button">
+            <Link to="/search-history" className="d2l-button">
               {t('SearchHistory.Title')}
             </Link>
           </div>

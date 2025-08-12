@@ -5,7 +5,7 @@ import { DestinyCollectibleState } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { ItemCategoryHashes } from 'data/d2/generated-enums';
 import React, { use } from 'react';
-import BungieImage from '../dim-ui/BungieImage';
+import BungieImage from '../d2l-ui/BungieImage';
 import ConnectedInventoryItem from '../inventory/ConnectedInventoryItem';
 import ItemPopupTrigger from '../inventory/ItemPopupTrigger';
 import '../progress/milestone.scss';
@@ -60,7 +60,7 @@ export default function VendorItemComponent({
   return (
     <VendorItemDisplay
       item={item.item}
-      // do not allow dimming from filtering, since the D2 vendors page hides non-matching items entirely
+      // do not allow d2lming from filtering, since the D2 vendors page hides non-matching items entirely
       allowFilter={false}
       unavailable={unavailable}
       owned={owned}

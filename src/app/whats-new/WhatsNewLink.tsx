@@ -4,7 +4,7 @@ import clsx from 'clsx';
 import { useSelector } from 'react-redux';
 import { NavLink } from 'react-router';
 import { useSubscription } from 'use-subscription';
-import { dimNeedsUpdate$, reloadDIM } from '../register-service-worker';
+import { d2lNeedsUpdate$, reloadD2L } from '../register-service-worker';
 import { AppIcon, updateIcon } from '../shell/icons';
 import { GlobalAlertLevelsToToastLevels } from './BungieAlerts';
 import styles from './WhatsNewLink.m.scss';
@@ -18,16 +18,16 @@ export default function WhatsNewLink({
   className: (props: { isActive: boolean }) => string;
 }) {
   const alerts = useSelector(bungieAlertsSelector);
-  const dimNeedsUpdate = useSubscription(dimNeedsUpdate$);
+  const d2lNeedsUpdate = useSubscription(d2lNeedsUpdate$);
 
   // TODO: use presstip/tooltip to help?
   // TODO: try dots and bottom-borders
 
-  if (dimNeedsUpdate) {
+  if (d2lNeedsUpdate) {
     return (
-      <a className={className({ isActive: false })} onClick={reloadDIM}>
+      <a className={className({ isActive: false })} onClick={reloadD2L}>
         <AppIcon className={styles.upgrade} icon={updateIcon} ariaHidden />
-        {t('Header.UpgradeDIM')}
+        {t('Header.UpgradeD2L')}
       </a>
     );
   }

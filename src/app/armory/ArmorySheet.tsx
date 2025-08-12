@@ -1,5 +1,5 @@
-import ClickOutsideRoot from 'app/dim-ui/ClickOutsideRoot';
-import Sheet from 'app/dim-ui/Sheet';
+import ClickOutsideRoot from 'app/d2l-ui/ClickOutsideRoot';
+import Sheet from 'app/d2l-ui/Sheet';
 import { DimItem } from 'app/inventory/item-types';
 import { filterMap } from 'app/utils/collections';
 import focusingItemOutputs from 'data/d2/focusing-item-outputs.json';

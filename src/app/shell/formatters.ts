@@ -35,7 +35,7 @@ export function getCompareColor(value: number) {
 
 /**
  * Given a value on (or outside) a 0-100 scale, returns a css color key and
- * value for a react `style` attribute. This is the color scale DIM used for a
+ * value for a react `style` attribute. This is the color scale D2L used for a
  * long time, and it's preserved here for D1 reasons.
  */
 export function getD1QualityColor(value: number, property = 'background-color') {

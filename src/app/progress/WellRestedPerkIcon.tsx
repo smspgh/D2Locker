@@ -1,4 +1,4 @@
-import RichDestinyText from 'app/dim-ui/destiny-symbols/RichDestinyText';
+import RichDestinyText from 'app/d2l-ui/destiny-symbols/RichDestinyText';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { WELL_RESTED_PERK } from 'app/search/d2-known-values';
 import {
@@ -6,7 +6,7 @@ import {
   DestinySeasonDefinition,
   DestinySeasonPassDefinition,
 } from 'bungie-api-ts/destiny2';
-import BungieImage from '../dim-ui/BungieImage';
+import BungieImage from '../d2l-ui/BungieImage';
 import { isWellRested } from '../inventory/store/well-rested';
 
 export default function WellRestedPerkIcon({

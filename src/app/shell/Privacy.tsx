@@ -1,5 +1,5 @@
-import ExternalLink from 'app/dim-ui/ExternalLink';
-import StaticPage from 'app/dim-ui/StaticPage';
+import ExternalLink from 'app/d2l-ui/ExternalLink';
+import StaticPage from 'app/d2l-ui/StaticPage';
 import { Link } from 'react-router';
 import styles from './Privacy.m.scss';
 
@@ -14,12 +14,12 @@ export default function Privacy() {
           <strong>Introduction.</strong>
           <ol>
             <li>
-              D2 Locker ("DIM") is a free, open source, fan made service for the Destiny
+              D2 Locker ("D2L") is a free, open source, fan made service for the Destiny
               and Destiny 2 video games. This privacy policy explains how your data is used by this
               application.
             </li>
             <li>
-              DIM is constantly improving, and we may modify this Privacy Policy from time to time
+              D2L is constantly improving, and we may modify this Privacy Policy from time to time
               to reflect changes in our privacy practices. You are encouraged to review this Privacy
               Policy periodically and to check the "Last Updated" date at the top of the Privacy
               Policy for the most recent version.
@@ -50,7 +50,7 @@ export default function Privacy() {
                   gathered relating to our website is used to create reports about the use of our
                   website. Besides generic usage data, we also share your Bungie.net membership ID
                   with Google Analytics to help provide a more accurate measure of how users use
-                  DIM. Google's privacy policy is available at:{' '}
+                  D2L. Google's privacy policy is available at:{' '}
                   <ExternalLink href="https://www.google.com/policies/privacy/">
                     https://www.google.com/policies/privacy/
                   </ExternalLink>
@@ -68,9 +68,9 @@ export default function Privacy() {
               <strong>Destiny and Bungie account info.</strong>
               <ol>
                 <li>
-                  In order to display and manipulate Destiny game information, DIM uses the
-                  Bungie.net API. You must grant permission for DIM to use this API through
-                  Bungie.net. The only information DIM receives, or has access to, is your game
+                  In order to display and manipulate Destiny game information, D2L uses the
+                  Bungie.net API. You must grant permission for D2L to use this API through
+                  Bungie.net. The only information D2L receives, or has access to, is your game
                   information (items, characters, etc.) and basic account information including your
                   Bungie.net membership ID, and the identifiers of any linked services such as your
                   public PSN, Xbox Live, Steam, Stadia, Blizzard or Bungie.net usernames. We do not
@@ -78,9 +78,9 @@ export default function Privacy() {
                   personal information held by Bungie or the game platforms.
                 </li>
                 <li>
-                  DIM only stores your Destiny and Bungie information locally on your own device and
-                  in memory, in order to provide DIM's functionality. We do not store any of this
-                  information anywhere that the DIM maintainers and contributors can access it.
+                  D2L only stores your Destiny and Bungie information locally on your own device and
+                  in memory, in order to provide D2L's functionality. We do not store any of this
+                  information anywhere that the D2L maintainers and contributors can access it.
                 </li>
                 <li>
                   Use of the Bungie.net API is governed by the{' '}
@@ -97,15 +97,15 @@ export default function Privacy() {
             </li>
 
             <li>
-              <strong>DIM Sync: Settings (preferences), loadouts, tags and notes.</strong>
+              <strong>d2l sync: Settings (preferences), loadouts, tags and notes.</strong>
               <ol>
                 <li>
-                  DIM allows you to connect to DIM Sync, a cloud service operated by the DIM team,
-                  in order to store your data and sync it between instances of DIM or other Destiny
-                  apps. This information is only accessible to you and the DIM team. Information
-                  stored in DIM Sync includes your DIM preferences and settings, loadouts, any
+                  D2L allows you to connect to d2l sync, a cloud service operated by the D2L team,
+                  in order to store your data and sync it between instances of D2L or other Destiny
+                  apps. This information is only accessible to you and the D2L team. Information
+                  stored in d2l sync includes your D2L preferences and settings, loadouts, any
                   per-item item tags and notes, saved and recently used search filters, and tracked
-                  triumphs. Your Bungie.net authentication information is sent to DIM Sync only in
+                  triumphs. Your Bungie.net authentication information is sent to d2l sync only in
                   order to verify your account - it is not saved.
                 </li>
               </ol>
@@ -116,9 +116,9 @@ export default function Privacy() {
                 <strong>Sentry: Error reporting</strong>
                 <ol>
                   <li>
-                    Errors encountered while using DIM may be sent to Sentry, a service provided by
+                    Errors encountered while using D2L may be sent to Sentry, a service provided by
                     Functional Software, Inc. These error reports contain information about your
-                    browser, recent actions in DIM as well as the details of any errors. No personal
+                    browser, recent actions in D2L as well as the details of any errors. No personal
                     information is shared with Sentry.
                   </li>
                   <li>

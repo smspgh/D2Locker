@@ -3,6 +3,7 @@ const coreJSPackage = require('core-js/package.json');
 module.exports = function (api) {
   const isProduction = api.env('production');
   const isTest = api.env('test');
+  const isProductionHMR = process.env.WEBPACK_SERVE && isProduction;
   const plugins = [
     // Statically optimize away clsx functions
     'babel-plugin-optimize-clsx',
@@ -36,7 +37,7 @@ module.exports = function (api) {
     ],
   ];
 
-  if (isProduction) {
+  if (isProduction && !isProductionHMR) {
     plugins.push(
       // Optimize React components at the cost of some memory by automatically
       // factoring out constant/inline JSX fragments
@@ -44,10 +45,11 @@ module.exports = function (api) {
       // This transform is not compatible with React 19
       // '@babel/plugin-transform-react-inline-elements',
     );
-  } else {
-    if (!isTest) {
-      plugins.push('react-refresh/babel');
-    }
+  }
+  
+  // Add React Refresh for development or production HMR
+  if (!isTest && (!isProduction || isProductionHMR)) {
+    plugins.push('react-refresh/babel');
   }
 
   const corejs = { version: coreJSPackage.version };

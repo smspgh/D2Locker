@@ -1,5 +1,5 @@
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-// DIM Main stylesheet
+// D2L Main stylesheet
 //
 // The main stylesheet for all of the styles!
 //
@@ -7,14 +7,14 @@
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 @use 'variables.scss' as *;
 @use 'themes/theme';
-@use 'themes/theme-dimdark';
+@use 'themes/theme-d2ldark';
 @use 'themes/theme-pyramid';
 @use 'themes/theme-classic';
 @use 'themes/theme-neomuna';
 @use 'themes/theme-throneworld';
 @use 'themes/theme-vexnet';
 @use 'themes/theme-europa';
-@use 'app/dim-ui/dim-button.scss';
+@use 'app/d2l-ui/d2l-button.scss';
 
 @layer base {
   @include phone-portrait {
@@ -66,8 +66,8 @@
   }
 
   @font-face {
-    font-family: 'DIM Symbols';
-    src: url('../data/font/DIMSymbols.woff2') format('woff2');
+    font-family: 'D2L Symbols';
+    src: url('../data/font/D2LSymbols.woff2') format('woff2');
     font-weight: 400;
     font-style: normal;
     font-display: fallback;
@@ -138,7 +138,7 @@
     cursor: inherit;
   }
 
-  // Styles for the warning saying DIM isn't compatible with your browser. Once this CSS loads the warning will fade out after some time.
+  // Styles for the warning saying D2L isn't compatible with your browser. Once this CSS loads the warning will fade out after some time.
   #browser-warning {
     position: fixed;
     bottom: 0;
@@ -181,7 +181,7 @@
     margin: 0 auto;
     background-color: var(--theme-pwa-background);
     color: var(--theme-text);
-    font-family: 'Open Sans', sans-serif, 'Destiny Symbols', 'DIM Symbols';
+    font-family: 'Open Sans', sans-serif, 'Destiny Symbols', 'D2L Symbols';
     font-size: 12px;
     line-height: calc(16 / 12);
     accent-color: var(--theme-accent-primary);
@@ -207,7 +207,7 @@
   input,
   select,
   option {
-    font-family: 'Open Sans', sans-serif, 'Destiny Symbols', 'DIM Symbols';
+    font-family: 'Open Sans', sans-serif, 'Destiny Symbols', 'D2L Symbols';
   }
 
   input[type='text'],
@@ -230,7 +230,7 @@
     outline: none;
     color: var(--theme-text);
     box-sizing: border-box;
-    font-family: monospace, 'Destiny Symbols', 'DIM Symbols';
+    font-family: monospace, 'Destiny Symbols', 'D2L Symbols';
     font-size: inherit;
     // Setting this makes yuku/textcomplete faster because it doesn't need to make a fake element to measure line height (incorrectly, too)
     line-height: calc(16 / 12);
@@ -296,9 +296,9 @@
   }
 
   /**
-    Misc DIM page
+    Misc D2L page
    **/
-  .dim-page {
+  .d2l-page {
     // non-inventory page settings
     max-width: 900px;
     margin: 0 auto;

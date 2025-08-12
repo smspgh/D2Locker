@@ -1,7 +1,7 @@
 @use '../../variables.scss' as *;
 
 .button {
-  composes: resetButton from '../../dim-ui/common.m.scss';
+  composes: resetButton from '../../d2l-ui/common.m.scss';
   width: 52px;
   height: 52px;
   padding: 2px;

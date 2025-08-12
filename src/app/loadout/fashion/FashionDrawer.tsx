@@ -1,8 +1,8 @@
 import { LoadoutParameters } from '@destinyitemmanager/dim-api-types';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
-import ClosableContainer from 'app/dim-ui/ClosableContainer';
-import { PressTip } from 'app/dim-ui/PressTip';
-import Sheet from 'app/dim-ui/Sheet';
+import ClosableContainer from 'app/d2l-ui/ClosableContainer';
+import { PressTip } from 'app/d2l-ui/PressTip';
+import Sheet from 'app/d2l-ui/Sheet';
 import { t } from 'app/i18next-t';
 import ConnectedInventoryItem from 'app/inventory/ConnectedInventoryItem';
 import { DefItemIcon } from 'app/inventory/ItemIcon';
@@ -87,7 +87,7 @@ export default function FashionDrawer({
         allItems.find(
           (i) => !i.isExotic && looksFashionable(i) && getFashionSockets(i).length > 1,
         ) ??
-        // Finally, find something shaderable at least. This user must have only rudimentary armor.
+        // Finally, find something shaderable at least. This user must have only rud2lentary armor.
         allItems.find(
           (i) =>
             !i.isExotic &&
@@ -116,7 +116,7 @@ export default function FashionDrawer({
     <>
       <button
         type="button"
-        className="dim-button"
+        className="d2l-button"
         onClick={() => {
           onModsByBucketUpdated(modsByBucket);
           onClose();
@@ -295,14 +295,14 @@ export default function FashionDrawer({
   const leftButtons = (
     <>
       <div>
-        <button type="button" className="dim-button" onClick={handleUseEquipped}>
+        <button type="button" className="d2l-button" onClick={handleUseEquipped}>
           {t('FashionDrawer.UseEquipped')}
         </button>
       </div>
       <div>
         <button
           type="button"
-          className="dim-button"
+          className="d2l-button"
           onClick={handleSyncShader}
           disabled={shaders.length === 0}
           title={t('FashionDrawer.SyncShadersTitle')}
@@ -314,7 +314,7 @@ export default function FashionDrawer({
       <div>
         <button
           type="button"
-          className="dim-button"
+          className="d2l-button"
           onClick={handleSyncOrnament}
           disabled={ornaments.length === 0}
           title={t('FashionDrawer.SyncOrnamentsTitle')}
@@ -331,7 +331,7 @@ export default function FashionDrawer({
       <div>
         <button
           type="button"
-          className="dim-button"
+          className="d2l-button"
           onClick={() => setModsByBucket({})}
           disabled={isEmpty(modsByBucket)}
         >
@@ -341,7 +341,7 @@ export default function FashionDrawer({
       <div>
         <button
           type="button"
-          className="dim-button"
+          className="d2l-button"
           onClick={() => handleClearType(true)}
           disabled={shaders.length === 0}
           title={t('FashionDrawer.ClearShadersTitle')}
@@ -352,7 +352,7 @@ export default function FashionDrawer({
       <div>
         <button
           type="button"
-          className="dim-button"
+          className="d2l-button"
           onClick={() => handleClearType(false)}
           disabled={ornaments.length === 0}
           title={t('FashionDrawer.ClearOrnamentsTitle')}

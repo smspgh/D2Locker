@@ -1,8 +1,8 @@
-import { Tooltip } from 'app/dim-ui/PressTip';
+import { Tooltip } from 'app/d2l-ui/PressTip';
 import { t } from 'app/i18next-t';
 import { Observable } from 'app/utils/observable';
 import { useSubscription } from 'use-subscription';
-import Sheet from '../dim-ui/Sheet';
+import Sheet from '../d2l-ui/Sheet';
 import { MaterialCounts } from './MaterialCounts';
 import styles from './MaterialCountsWrappers.m.scss';
 

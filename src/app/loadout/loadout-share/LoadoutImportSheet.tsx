@@ -1,5 +1,5 @@
-import Sheet from 'app/dim-ui/Sheet';
-import UserGuideLink from 'app/dim-ui/UserGuideLink';
+import Sheet from 'app/d2l-ui/Sheet';
+import UserGuideLink from 'app/d2l-ui/UserGuideLink';
 import { t } from 'app/i18next-t';
 import { editLoadout } from 'app/loadout-drawer/loadout-events';
 import { AppIcon, refreshIcon } from 'app/shell/icons';
@@ -10,7 +10,7 @@ import { useEffect, useState } from 'react';
 import styles from './LoadoutImportSheet.m.scss';
 import { decodeShareUrl, getDecodedLoadout } from './loadout-import';
 
-const placeHolder = `https://dim.gg/bwipb2a/, https://app.destinyitemmanager.com/loadouts?loadout=...`;
+const placeHolder = `https://d2l.gg/bwipb2a/, https://app.destinyitemmanager.com/loadouts?loadout=...`;
 
 export default function LoadoutImportSheet({
   currentStoreId,

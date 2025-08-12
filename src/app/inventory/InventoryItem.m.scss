@@ -3,8 +3,49 @@
 // Items hidden by search.
 .searchHidden {
   opacity: 0.2;
-  // TODO: Testing whether scale transform triggers slow sheet animations: https://github.com/DestinyItemManager/DIM/issues/7458
+  // TODO: Testing whether scale transform triggers slow sheet animations: https://github.com/DestinyItemManager/D2L/issues/7458
   // transform: scale(0.75);
+}
+
+.comboRankBadge {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  z-index: 2;
+}
+
+.comboRankNumber {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: bold;
+  color: white;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
+  border: 1px solid rgba(0, 0, 0, 0.3);
+}
+
+.comboRank1 {
+  background: linear-gradient(135deg, #FFD700, #FFA500);
+}
+
+.comboRank2 {
+  background: linear-gradient(135deg, #C0C0C0, #808080);
+}
+
+.comboRank3 {
+  background: linear-gradient(135deg, #CD7F32, #8B4513);
+}
+
+.comboRank4 {
+  background: linear-gradient(135deg, #708090, #2F4F4F);
+}
+
+.comboRank5 {
+  background: linear-gradient(135deg, #DC143C, #8B0000);
 }
 
 // The top-level item container. Global because it's referenced by other styles.

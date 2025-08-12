@@ -1,6 +1,6 @@
 import { makeCustomIcon } from './utils';
 
-export const dimWarlockIcon = makeCustomIcon(
+export const d2lWarlockIcon = makeCustomIcon(
   'Warlock',
   32,
   32,

@@ -1,4 +1,4 @@
-import { TagValue } from 'app/inventory/dim-item-info';
+import { TagValue } from 'app/inventory/d2l-item-info';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { ModMap } from 'app/loadout/mod-assignment-utils';
 import { mapValues } from 'app/utils/collections';
@@ -159,7 +159,7 @@ export function runProcess({
 }
 
 interface MappedItem {
-  dimItem: DimItem;
+  d2lItem: DimItem;
   processItem: ProcessItem;
 }
 
@@ -167,15 +167,15 @@ interface MappedItem {
 const groupComparator = (getTag?: (item: DimItem) => TagValue | undefined) =>
   chainComparator(
     // Prefer higher-energy (ideally masterworked)
-    compareBy(({ dimItem }: MappedItem) => -(dimItem.energy?.energyCapacity || 0)),
+    compareBy(({ d2lItem }: MappedItem) => -(d2lItem.energy?.energyCapacity || 0)),
     // Prefer owned items over vendor items
-    compareBy(({ dimItem }: MappedItem) => Boolean(dimItem.vendor)),
-    // Prefer hotperk items
-    compareBy(({ dimItem }: MappedItem) => getTag?.(dimItem) !== 'hotperk'),
+    compareBy(({ d2lItem }: MappedItem) => Boolean(d2lItem.vendor)),
+    // Prefer keep items
+    compareBy(({ d2lItem }: MappedItem) => getTag?.(d2lItem) !== 'keep'),
     // Prefer items with higher power
-    compareBy(({ dimItem }: MappedItem) => -dimItem.power),
+    compareBy(({ d2lItem }: MappedItem) => -d2lItem.power),
     // Prefer items that are equipped
-    compareBy(({ dimItem }: MappedItem) => (dimItem.equipped ? 0 : 1)),
+    compareBy(({ d2lItem }: MappedItem) => (d2lItem.equipped ? 0 : 1)),
   );
 
 /**
@@ -224,9 +224,9 @@ function mapItemsToGroups(
   }
 
   // First, map the DimItems to ProcessItems so that we can consider all things relevant to Loadout Optimizer.
-  const mappedItems: MappedItem[] = items.map((dimItem) => ({
-    dimItem,
-    processItem: mapDimItemToProcessItem({ dimItem, armorEnergyRules, modsForSlot }),
+  const mappedItems: MappedItem[] = items.map((d2lItem) => ({
+    d2lItem,
+    processItem: mapDimItemToProcessItem({ d2lItem, armorEnergyRules, modsForSlot }),
   }));
 
   // First, group by exoticness to ensure exotics always form a distinct group
@@ -258,7 +258,7 @@ function mapItemsToGroups(
       item.processItem.compatibleModSeasons?.filter((season) => requiredModTags.has(season)) ?? [];
     relevantModSeasons.sort();
 
-    cache.set(item.dimItem, {
+    cache.set(item.d2lItem, {
       stats: statValues,
       energyCapacity,
       relevantModSeasons: new Set(relevantModSeasons),
@@ -299,8 +299,8 @@ function mapItemsToGroups(
     // will be important when considering Tuning mods and would involve
     // correctly accounting for artifice mods in this function.
     const isStrictlyBetter = (testItem: MappedItem, existingItem: MappedItem) => {
-      const testInfo = cache.get(testItem.dimItem)!;
-      const existingInfo = cache.get(existingItem.dimItem)!;
+      const testInfo = cache.get(testItem.d2lItem)!;
+      const existingInfo = cache.get(existingItem.d2lItem)!;
 
       const betterOrEqual =
         testInfo.stats.every((statValue, idx) => statValue >= existingInfo.stats[idx]) &&
@@ -311,7 +311,7 @@ function mapItemsToGroups(
         return false;
       }
       // The item is better or equal, so check if there are any differences -- if any of these properties are not equal
-      // it means the item is better in one of these dimensions, so it must be strictly better.
+      // it means the item is better in one of these d2lensions, so it must be strictly better.
       const isDifferent =
         testInfo.stats.some((statValue, idx) => statValue !== existingInfo.stats[idx]) ||
         testInfo.energyCapacity !== existingInfo.energyCapacity ||
@@ -336,13 +336,13 @@ function mapItemsToGroups(
       }
     }
 
-    const groupedByEverything = Map.groupBy(keepSet, ({ dimItem }) => finalGroupingFn(dimItem));
+    const groupedByEverything = Map.groupBy(keepSet, ({ d2lItem }) => finalGroupingFn(d2lItem));
     for (const group of groupedByEverything.values()) {
       if (group) { // Add check for undefined group
         group.sort(groupComparator(getUserItemTag));
         groups.push({
           canonicalProcessItem: group[0].processItem,
-          items: group.map(({ dimItem }) => dimItem),
+          items: group.map(({ d2lItem }) => d2lItem),
         });
       }
     }

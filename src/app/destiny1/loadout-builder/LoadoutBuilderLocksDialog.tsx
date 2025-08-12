@@ -1,8 +1,8 @@
 import { useShiftHeld } from 'app/utils/hooks';
 import clsx from 'clsx';
 import React from 'react';
-import BungieImage from '../../dim-ui/BungieImage';
-import ClickOutside from '../../dim-ui/ClickOutside';
+import BungieImage from '../../d2l-ui/BungieImage';
+import ClickOutside from '../../d2l-ui/ClickOutside';
 import { D1GridNode } from '../../inventory/item-types';
 import styles from './LoadoutBuilderLocksDialog.m.scss';
 import { ArmorTypes, LockedPerkHash, PerkCombination } from './types';

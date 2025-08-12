@@ -1,6 +1,6 @@
-import BungieImage, { bungieBackgroundStyle } from 'app/dim-ui/BungieImage';
-import BucketIcon from 'app/dim-ui/svgs/BucketIcon';
-import { getBucketSvgIcon } from 'app/dim-ui/svgs/itemCategory';
+import BungieImage, { bungieBackgroundStyle } from 'app/d2l-ui/BungieImage';
+import BucketIcon from 'app/d2l-ui/svgs/BucketIcon';
+import { getBucketSvgIcon } from 'app/d2l-ui/svgs/itemCategory';
 import { d2MissingIcon, ItemRarityMap, ItemRarityName } from 'app/search/d2-known-values';
 import { braveShiny, riteShiny } from 'app/utils/item-utils';
 import { errorLog } from 'app/utils/log';

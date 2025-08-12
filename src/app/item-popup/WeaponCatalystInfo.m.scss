@@ -1,7 +1,7 @@
 @use '../variables.scss' as *;
 
 .catalystProgressTitle {
-  composes: flexRow from '../dim-ui/common.m.scss';
+  composes: flexRow from '../d2l-ui/common.m.scss';
   align-items: center;
   margin-bottom: 4px;
 }
@@ -16,7 +16,7 @@
 
 .catalystProgress {
   --objective-background-color: var(--theme-item-popup-progress-bar-bg);
-  composes: flexColumn from '../dim-ui/common.m.scss';
+  composes: flexColumn from '../d2l-ui/common.m.scss';
   background: var(--theme-item-popup-panel-bg);
   padding: 4px 10px;
 

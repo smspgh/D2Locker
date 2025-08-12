@@ -1,11 +1,11 @@
-import CheckButton from 'app/dim-ui/CheckButton';
-import ClassIcon from 'app/dim-ui/ClassIcon';
-import { VirtualList, WindowVirtualList } from 'app/dim-ui/VirtualList';
+import CheckButton from 'app/d2l-ui/CheckButton';
+import ClassIcon from 'app/d2l-ui/ClassIcon';
+import { VirtualList, WindowVirtualList } from 'app/d2l-ui/VirtualList';
 import { t } from 'app/i18next-t';
 import ConnectedInventoryItem from 'app/inventory/ConnectedInventoryItem';
 import DraggableInventoryItem from 'app/inventory/DraggableInventoryItem';
 import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
-import { TagValue } from 'app/inventory/dim-item-info';
+import { TagValue } from 'app/inventory/d2l-item-info';
 import { DimItem } from 'app/inventory/item-types';
 import { allItemsSelector, getTagSelector } from 'app/inventory/selectors';
 import { useSetting } from 'app/settings/hooks';
@@ -83,7 +83,7 @@ export default function ItemFeed({ page }: { page?: boolean }) {
       {items.length > 0 && (
         <button
           type="button"
-          className={clsx('dim-button', styles.clearButton)}
+          className={clsx('d2l-button', styles.clearButton)}
           onClick={() => setItemFeedWatermark(allItems[0].id)}
         >
           {t('ItemFeed.ClearFeed')}
@@ -93,7 +93,7 @@ export default function ItemFeed({ page }: { page?: boolean }) {
         <>
           <button
             type="button"
-            className={clsx('dim-button', styles.clearButton)}
+            className={clsx('d2l-button', styles.clearButton)}
             onClick={() => {
               setItemFeedWatermark('0');
             }}

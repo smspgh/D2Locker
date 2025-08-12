@@ -1,12 +1,12 @@
 @use '../../variables.scss' as *;
 
 .warnItems {
-  composes: flexWrap from '../../dim-ui/common.m.scss';
+  composes: flexWrap from '../../d2l-ui/common.m.scss';
   gap: 4px;
 }
 
 .contents {
-  composes: flexColumn from '../../dim-ui/common.m.scss';
+  composes: flexColumn from '../../d2l-ui/common.m.scss';
   margin-top: 8px;
   padding: 0 10px;
 }

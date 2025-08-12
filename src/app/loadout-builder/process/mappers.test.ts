@@ -22,7 +22,7 @@ describe('lo process mappers', () => {
 
   test('mapped energy capacity is 10 when assumed masterwork is used', () => {
     const mappedItem = mapDimItemToProcessItem({
-      dimItem: classItem,
+      d2lItem: classItem,
       armorEnergyRules: {
         ...loDefaultArmorEnergyRules,
         assumeArmorMasterwork: AssumeArmorMasterwork.All,
@@ -39,7 +39,7 @@ describe('lo process mappers', () => {
       energy: { ...classItem.energy!, energyCapacity: 9 },
     };
     const mappedItem = mapDimItemToProcessItem({
-      dimItem: modifiedItem,
+      d2lItem: modifiedItem,
       armorEnergyRules: loDefaultArmorEnergyRules,
       modsForSlot: [],
     });
@@ -53,7 +53,7 @@ describe('lo process mappers', () => {
       energy: { ...classItem.energy!, energyCapacity: 2 },
     };
     const mappedItem = mapDimItemToProcessItem({
-      dimItem: modifiedItem,
+      d2lItem: modifiedItem,
       armorEnergyRules: loDefaultArmorEnergyRules,
       modsForSlot: [],
     });

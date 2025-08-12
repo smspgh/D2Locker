@@ -2,7 +2,7 @@
 @use 'sass:math';
 
 .header {
-  composes: resetButton from 'app/dim-ui/common.m.scss';
+  composes: resetButton from 'app/d2l-ui/common.m.scss';
   display: block;
   text-align: left;
   width: 100%;
@@ -135,7 +135,7 @@
 
 .iconOverlay {
   $scale: math.div(65, 92);
-  composes: flexColumn from '../dim-ui/common.m.scss';
+  composes: flexColumn from '../d2l-ui/common.m.scss';
   position: absolute;
   box-sizing: border-box;
   align-items: center;

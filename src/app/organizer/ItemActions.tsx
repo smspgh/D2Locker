@@ -1,9 +1,9 @@
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
-import Dropdown, { Option } from 'app/dim-ui/Dropdown';
-import KeyHelp from 'app/dim-ui/KeyHelp';
+import Dropdown, { Option } from 'app/d2l-ui/Dropdown';
+import KeyHelp from 'app/d2l-ui/KeyHelp';
 import { useHotkey, useHotkeys } from 'app/hotkeys/useHotkey';
 import { I18nKey, t } from 'app/i18next-t';
-import { TagCommand, itemTagList } from 'app/inventory/dim-item-info';
+import { TagCommand, itemTagList } from 'app/inventory/d2l-item-info';
 import { DimStore } from 'app/inventory/store-types';
 import { getCurrentStore, getVault } from 'app/inventory/stores-helpers';
 import {
@@ -115,7 +115,7 @@ function ItemActions({
     <div className={styles.itemActions}>
       <button
         type="button"
-        className={`dim-button ${styles.actionButton}`}
+        className={`d2l-button ${styles.actionButton}`}
         disabled={!itemsAreSelected}
         name="lock"
         onClick={() => onLock(true)}
@@ -125,7 +125,7 @@ function ItemActions({
       </button>
       <button
         type="button"
-        className={`dim-button ${styles.actionButton}`}
+        className={`d2l-button ${styles.actionButton}`}
         disabled={!itemsAreSelected}
         name="unlock"
         onClick={() => onLock(false)}
@@ -153,7 +153,7 @@ function ItemActions({
       </Dropdown>
       <button
         type="button"
-        className={`dim-button ${styles.actionButton}`}
+        className={`d2l-button ${styles.actionButton}`}
         disabled={!itemsAreSelected}
         name="note"
         onClick={onNote}
@@ -165,7 +165,7 @@ function ItemActions({
       </button>
       <button
         type="button"
-        className={`dim-button ${styles.actionButton}`}
+        className={`d2l-button ${styles.actionButton}`}
         disabled={!itemsAreSelected}
         name="compare"
         onClick={onCompareSelectedItems}

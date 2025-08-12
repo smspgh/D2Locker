@@ -25,7 +25,7 @@ export default function AppInstallBanner({ onClick }: { onClick: React.MouseEven
 
   return (
     <a className={styles.banner} onClick={onClick}>
-      <span>{t('Header.InstallDIMBanner')}</span>
+      <span>{t('Header.InstallD2LBanner')}</span>
       <button type="button" className={styles.hideButton} onClick={hide}>
         <AppIcon icon={closeIcon} />
       </button>

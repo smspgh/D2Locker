@@ -1,4 +1,4 @@
-import { ItemInfos } from './dim-item-info';
+import { ItemInfos } from './d2l-item-info';
 import {
   appendedToNote,
   collectHashtagsFromInfos,

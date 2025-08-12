@@ -1,4 +1,4 @@
-import HelpLink from 'app/dim-ui/HelpLink';
+import HelpLink from 'app/d2l-ui/HelpLink';
 import { t } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
 import { showNotification } from 'app/notifications/notifications';
@@ -26,7 +26,7 @@ export default function WishListEntry({ item }: { item: DimItem }) {
 
   return (
     <div className={styles.wishlist}>
-      <button type="button" className="dim-button" onClick={handleButtonClick}>
+      <button type="button" className="d2l-button" onClick={handleButtonClick}>
         {t('WishListRoll.CopyLine')}
       </button>
       <input onFocus={handleFocusWishlist} value={wishlistLine ?? ''} readOnly size={50} />
@@ -47,5 +47,5 @@ function createWishListRollString(item: DimItem) {
     );
   }
 
-  return `dimwishlist:item=${item.hash}&perks=${perkHashes.join(',')}`;
+  return `d2lwishlist:item=${item.hash}&perks=${perkHashes.join(',')}`;
 }

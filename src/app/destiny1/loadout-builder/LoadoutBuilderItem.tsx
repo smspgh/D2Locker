@@ -1,5 +1,5 @@
 import React from 'react';
-import BungieImage from '../../dim-ui/BungieImage';
+import BungieImage from '../../d2l-ui/BungieImage';
 import ConnectedInventoryItem from '../../inventory/ConnectedInventoryItem';
 import DraggableInventoryItem from '../../inventory/DraggableInventoryItem';
 import ItemPopupTrigger from '../../inventory/ItemPopupTrigger';

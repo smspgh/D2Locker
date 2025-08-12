@@ -1,19 +1,20 @@
+import { CustomStatDef } from '@destinyitemmanager/dim-api-types';
 import { stripAdept } from 'app/compare/compare-utils';
 import { tl } from 'app/i18next-t';
-import { TagValue } from 'app/inventory/dim-item-info';
+import { TagValue } from 'app/inventory/d2l-item-info';
 import { DimItem } from 'app/inventory/item-types';
 import { getRollAppraiserUtilsSync } from 'app/roll-appraiser/rollAppraiserService';
 import { DEFAULT_SHADER, armorStats } from 'app/search/d2-known-values';
 import { chainComparator, compareBy, reverseComparator } from 'app/utils/comparators';
-import { isArtifice } from 'app/utils/item-utils';
-import { getSocketsByType } from 'app/utils/socket-utils';
+import { isArtifice, isClassCompatible } from 'app/utils/item-utils';
+import { getSocketsByType, getWeaponSockets } from 'app/utils/socket-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { BucketHashes } from 'data/d2/generated-enums';
 import { ItemFilterDefinition } from '../item-filter-types';
 import { PerksSet } from './perks-set';
 import { StatsSet } from './stats-set';
 
-const notableTags = ['favorite', 'keep'];
+const notableTags = ['keep'];
 
 /** outputs a string combination of the identifying features of an item, or the hash if classified */
 export const makeDupeID = (item: DimItem) =>
@@ -40,19 +41,19 @@ export const sortDupes = (
   sortType: 'power' | 'combo' | 'dupebest' = 'power',
 ) => {
   // The comparator for sorting dupes - the first item will be the "best" and all others are "dupelower".
-  const dupeComparator = sortType === 'dupebest' 
+  const dupeComparator = sortType === 'dupebest'
     ? chainComparator<DimItem>(
         // 1. Best Combo Rank (for weapons) - lower rank numbers are better
         compareBy((item) => {
           if (item.bucket.inWeapons && item.sockets) {
             const utils = getRollAppraiserUtilsSync();
             if (!utils) return Number.MAX_SAFE_INTEGER; // No data = worst
-            
-            const traitPerks = getSocketsByType(item, 'trait');
+
+            const traitPerks = getSocketsByType(item, 'traits');
             if (traitPerks.length >= 2) {
               const perk4Hash = traitPerks[0]?.plugged?.plugDef.hash;
               const perk5Hash = traitPerks[1]?.plugged?.plugDef.hash;
-              
+
               if (perk4Hash && perk5Hash) {
                 const comboRank = utils.getTraitComboRank(item.hash.toString(), perk4Hash, perk5Hash);
                 if (comboRank) {
@@ -81,18 +82,18 @@ export const sortDupes = (
     : reverseComparator(
         chainComparator<DimItem>(
           // primary comparison based on sort type
-          sortType === 'combo' 
+          sortType === 'combo'
             ? compareBy((item) => {
                 // For weapons, use combo rank (lower rank number = better, so higher rank numbers should be "dupelower")
                 if (item.bucket.inWeapons && item.sockets) {
                   const utils = getRollAppraiserUtilsSync();
                   if (!utils) return -item.power; // Fallback to power if no roll appraiser data
-                  
+
                   const traitPerks = getSocketsByType(item, 'traits');
                   if (traitPerks.length >= 2) {
                     const perk4Hash = traitPerks[0]?.plugged?.plugDef.hash;
                     const perk5Hash = traitPerks[1]?.plugged?.plugDef.hash;
-                    
+
                     if (perk4Hash && perk5Hash) {
                       const comboRank = utils.getTraitComboRank(item.hash.toString(), perk4Hash, perk5Hash);
                       if (comboRank) {
@@ -126,6 +127,151 @@ export const sortDupes = (
   return dupes;
 };
 
+/**
+ * Sort duplicates for "dupebest" search - best item first.
+ * For weapons: Use combo rank (lower rank number = better)
+ * For armor: Use custom stat value (higher value = better) when available, otherwise use power
+ */
+export const sortDupesBest = (
+  dupes: {
+    [dupeID: string]: DimItem[];
+  },
+  getTag: (item: DimItem) => TagValue | undefined,
+  customStats: CustomStatDef[],
+) => {
+  const dupeComparator = chainComparator<DimItem>(
+    // 1. For armor: prioritize highest custom stat value if custom stats exist
+    compareBy((item) => {
+      if (item.bucket.inArmor && customStats.length > 0) {
+        // Find the highest custom stat value for this item
+        let highestCustomStatValue = 0;
+        for (const customStat of customStats) {
+          if (isClassCompatible(customStat.class, item.classType)) {
+            const stat = item.stats?.find(s => s.statHash === customStat.statHash);
+            if (stat && stat.value > highestCustomStatValue) {
+              highestCustomStatValue = stat.value;
+            }
+          }
+        }
+        // Return negative value so higher custom stat values are sorted first
+        return -highestCustomStatValue;
+      }
+      return 0; // No priority for non-armor or when no custom stats exist
+    }),
+    // 2. Best Combo Rank (for weapons) - lower rank numbers are better
+    compareBy((item) => {
+      if (item.bucket.inWeapons && item.sockets) {
+        const utils = getRollAppraiserUtilsSync();
+        if (!utils) return Number.MAX_SAFE_INTEGER;
+
+        const traitPerks = getSocketsByType(item, 'traits');
+        if (traitPerks.length >= 2) {
+          const perk4Hash = traitPerks[0]?.plugged?.plugDef.hash;
+          const perk5Hash = traitPerks[1]?.plugged?.plugDef.hash;
+
+          if (perk4Hash && perk5Hash) {
+            const comboRank = utils.getTraitComboRank(item.hash.toString(), perk4Hash, perk5Hash);
+            if (comboRank) {
+              return comboRank.rank;
+            }
+          }
+        }
+      }
+      return Number.MAX_SAFE_INTEGER;
+    }),
+    // 3. Weighted average of perk ranks in first two columns (tie-breaker for combo rank)
+    compareBy((item) => {
+      if (item.bucket.inWeapons && item.sockets) {
+        const utils = getRollAppraiserUtilsSync();
+        if (!utils) return Number.MAX_SAFE_INTEGER;
+
+        // Get weapon sockets properly categorized
+        const weaponSockets = getWeaponSockets(item, { excludeEmptySockets: false });
+        if (!weaponSockets) return 0;
+
+        // Get the first two perk sockets with multiple options (like Compare.tsx does)
+        const allPerkSockets = item.sockets.allSockets
+          .filter((s) => {
+            // Must be a perk socket with multiple options
+            if (!s.isPerk || s.plugOptions.length <= 1) return false;
+
+            // Exclude intrinsic socket
+            if (weaponSockets.intrinsicSocket && s.socketIndex === weaponSockets.intrinsicSocket.socketIndex) {
+              return false;
+            }
+
+            return true;
+          })
+          .sort((a, b) => a.socketIndex - b.socketIndex);
+
+        // Use the first two perk sockets (which should be columns 1 & 2)
+        if (allPerkSockets.length >= 2) {
+          // Find the best rank among all available perks in each column
+          let bestRank1 = Number.MAX_SAFE_INTEGER;
+          let bestRank2 = Number.MAX_SAFE_INTEGER;
+
+          // Check all plug options in first column
+          for (const plug of allPerkSockets[0].plugOptions) {
+            const perkRank = utils.getPerkRank(item.hash.toString(), plug.plugDef.hash);
+            if (perkRank && perkRank.rank < bestRank1) {
+              bestRank1 = perkRank.rank;
+            }
+          }
+
+          // Check all plug options in second column
+          for (const plug of allPerkSockets[1].plugOptions) {
+            const perkRank = utils.getPerkRank(item.hash.toString(), plug.plugDef.hash);
+            if (perkRank && perkRank.rank < bestRank2) {
+              bestRank2 = perkRank.rank;
+            }
+          }
+
+          if (bestRank1 !== Number.MAX_SAFE_INTEGER && bestRank2 !== Number.MAX_SAFE_INTEGER) {
+            // Weight calculation: 1=2.5, 2=2.0, 3=1.5, 4+=1.0
+            const getWeight = (rank: number) => {
+              switch (rank) {
+                case 1: return 2.5;
+                case 2: return 2.0;
+                case 3: return 1.5;
+                default: return 1.0;
+              }
+            };
+
+            const weight1 = getWeight(bestRank1);
+            const weight2 = getWeight(bestRank2);
+            const weightedAverage = (weight1 + weight2) / 2;
+
+            // Return negative so higher averages (better) sort first
+            return -weightedAverage;
+          }
+        }
+      }
+      return 0; // No penalty for non-weapons or items without perk data
+    }),
+    // 4. Highest Power
+    compareBy((item) => -item.power),
+    // 5. Tag priority
+    compareBy((item) => {
+      const tag = getTag(item);
+      return !Boolean(tag && notableTags.includes(tag));
+    }),
+    // 6. Masterwork status
+    compareBy((item) => !item.masterwork),
+    // 7. Lock status
+    compareBy((item) => !item.locked),
+    // 8. Item ID tiebreaker
+    compareBy((i) => i.id),
+  );
+
+  for (const dupeList of Object.values(dupes)) {
+    if (dupeList.length > 1) {
+      dupeList.sort(dupeComparator);
+    }
+  }
+
+  return dupes;
+};
+
 const computeDupesByIdFn = (allItems: DimItem[], makeDupeIdFn: (item: DimItem) => string) => {
   // Holds a map from item hash to count of occurrences of that hash
   const duplicates: { [dupeID: string]: DimItem[] } = {};
@@ -149,6 +295,50 @@ const computeDupesByIdFn = (allItems: DimItem[], makeDupeIdFn: (item: DimItem) =
  */
 export const computeDupes = (allItems: DimItem[]) => computeDupesByIdFn(allItems, makeDupeID);
 
+/**
+ * Create a dupe ID for armor based on class + type + tier, ignoring specific item name/hash.
+ * For exotic armor, also include perks since the perk combination determines uniqueness.
+ * This groups all armor pieces of the same class, type, and tier together.
+ */
+export const makeArmorClassTypeTierDupeID = (item: DimItem) => {
+  if (!item.bucket.inArmor) {
+    return makeDupeID(item); // Fallback to normal behavior for non-armor
+  }
+
+  let dupeId = `${item.classType}-${item.bucket.hash}-${item.rarity}`;
+
+  // For exotic armor, include perks in the dupe ID since perk combinations determine uniqueness
+  if (item.isExotic && item.sockets?.allSockets) {
+    const perkHashes: number[] = [];
+
+    // Get all perk sockets (intrinsic and regular perks)
+    for (const socket of item.sockets.allSockets) {
+      if (socket.isPerk && socket.plugged?.plugDef.hash) {
+        // Include perk hash to differentiate exotic armor by their perk combinations
+        perkHashes.push(socket.plugged.plugDef.hash);
+      }
+    }
+
+    // Sort perk hashes for consistent ordering
+    perkHashes.sort((a, b) => a - b);
+
+    if (perkHashes.length > 0) {
+      dupeId += `-perks:${perkHashes.join(',')}`;
+    }
+  }
+
+  return dupeId;
+};
+
+/**
+ * Compute armor duplicates grouped by class/type/tier instead of itemHash.
+ * This allows finding the best armor piece per class/type/tier combination.
+ */
+export const computeArmorDupesByClassTypeTier = (allItems: DimItem[]) => {
+  const armorItems = allItems.filter(item => item.bucket.inArmor);
+  return computeDupesByIdFn(armorItems, makeArmorClassTypeTierDupeID);
+};
+
 const dupeFilters: ItemFilterDefinition[] = [
   {
     keywords: 'dupe',
@@ -170,7 +360,7 @@ const dupeFilters: ItemFilterDefinition[] = [
       // Default to 'power' if no specific value is provided
       const sortType = filterValue === 'combo' ? 'combo' : 'power';
       const duplicates = sortDupes(computeDupes(allItems), getTag, sortType);
-      
+
       return (item) => {
         if (
           !(
@@ -301,15 +491,63 @@ const dupeFilters: ItemFilterDefinition[] = [
   {
     keywords: 'dupebest',
     description: tl('Filter.DupeBest'),
-    filter: ({ allItems, getTag }) => {
-      const duplicates = sortDupes(computeDupes(allItems), getTag, 'dupebest');
+    filter: ({ allItems, getTag, customStats }) => {
+      // For armor, group by class/type/tier instead of itemHash
+      const armorDupes = computeArmorDupesByClassTypeTier(allItems);
+      const armorDupesSorted = sortDupesBest(armorDupes, getTag, customStats);
+
+      // For non-armor, use the original itemHash-based grouping
+      const nonArmorItems = allItems.filter(item => !item.bucket.inArmor);
+      const nonArmorDupes = computeDupes(nonArmorItems);
+      const nonArmorDupesSorted = sortDupesBest(nonArmorDupes, getTag, customStats);
+
       return (item) => {
-        const dupeId = makeDupeID(item);
-        const dupes = duplicates[dupeId];
-        if (dupes?.length > 1) {
+        if (item.bucket.inArmor) {
+          // Use class/type/tier grouping for armor
+          const dupeId = makeArmorClassTypeTierDupeID(item);
+          const dupes = armorDupesSorted[dupeId];
+          if (dupes?.length > 1) {
+            const bestDupe = dupes[0];
+            return item === bestDupe;
+          }
+        } else {
+          // Use itemHash grouping for non-armor
+          const dupeId = makeDupeID(item);
+          const dupes = nonArmorDupesSorted[dupeId];
+          if (dupes?.length > 1) {
+            const bestDupe = dupes[0];
+            return item === bestDupe;
+          }
+        }
+        return false;
+      };
+    },
+  },
+  {
+    keywords: 'bestarmor',
+    description: tl('Filter.BestArmor'),
+    filter: ({ allItems, getTag, customStats }) => {
+      // Only process armor items
+      const armorItems = allItems.filter(item => item.bucket.inArmor);
+      const armorDupes = computeArmorDupesByClassTypeTier(armorItems);
+      const armorDupesSorted = sortDupesBest(armorDupes, getTag, customStats);
+
+      return (item) => {
+        // Only match armor items
+        if (!item.bucket.inArmor) {
+          return false;
+        }
+
+        const dupeId = makeArmorClassTypeTierDupeID(item);
+        const dupes = armorDupesSorted[dupeId];
+
+        if (dupes && dupes.length >= 1) {
+          // Return true if this item is the best in its group (first after sorting)
+          // This includes single items (length 1) and best of duplicates (length > 1)
           const bestDupe = dupes[0];
           return item === bestDupe;
         }
+
         return false;
       };
     },

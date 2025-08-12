@@ -1,5 +1,5 @@
-import { loadDimApiData } from 'app/dim-api/actions';
-import { deleteDimApiToken } from 'app/dim-api/dim-api-helper';
+import { loadDimApiData } from 'app/d2l-api/actions';
+import { deleteDimApiToken } from 'app/d2l-api/d2l-api-helper';
 import { del, get } from 'app/storage/idb-keyval';
 import { ThunkResult } from 'app/store/types';
 import { convertToError } from 'app/utils/errors';
@@ -80,8 +80,8 @@ export function setActivePlatform(
     if (account) {
       const currentAccount = currentAccountSelector(getState());
       if (!currentAccount || !compareAccounts(currentAccount, account)) {
-        localStorage.setItem('dim-last-membership-id', account.membershipId);
-        localStorage.setItem('dim-last-destiny-version', account.destinyVersion.toString());
+        localStorage.setItem('d2l-last-membership-id', account.membershipId);
+        localStorage.setItem('d2l-last-destiny-version', account.destinyVersion.toString());
         dispatch(actions.setCurrentAccount(account));
         dispatch(loadDimApiData());
       }
@@ -109,8 +109,8 @@ export function logOut(): ThunkResult {
   return async (dispatch) => {
     removeToken();
     deleteDimApiToken();
-    localStorage.removeItem('dim-last-membership-id');
-    localStorage.removeItem('dim-last-destiny-version');
+    localStorage.removeItem('d2l-last-membership-id');
+    localStorage.removeItem('d2l-last-destiny-version');
     del('accounts'); // remove saved accounts from IDB
 
     dispatch(actions.loggedOut());

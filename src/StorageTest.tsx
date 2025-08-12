@@ -8,7 +8,7 @@ const TAG = 'storage';
 
 export function StorageBroken() {
   return (
-    <div className="dim-page">
+    <div className="d2l-page">
       <ErrorPanel
         title={t('Help.NoStorage')}
         fallbackMessage={t('Help.NoStorageMessage')}

@@ -87,7 +87,7 @@ function getEquippedItemsFromLoadout(
   // 1. items must be weapons or armor
   // 2. items must be able to be equipped by the character
   // This may not be sufficient, but for the moment it seems good enough
-  const dimItems = filterMap(loadout.items, (loadoutItem) => {
+  const d2lItems = filterMap(loadout.items, (loadoutItem) => {
     if (loadoutItem.equip) {
       const newItem = findItemForLoadout(d2Definitions, allItems, store.id, loadoutItem);
       if (
@@ -100,7 +100,7 @@ function getEquippedItemsFromLoadout(
     }
   });
   // Resolve this into an object that tells us what we need to know
-  const groupedItems: Partial<Record<number, DimItem[]>> = Object.groupBy(dimItems, (item) => item.bucket.hash);
+  const groupedItems: Partial<Record<number, DimItem[]>> = Object.groupBy(d2lItems, (item) => item.bucket.hash);
   const result: EquippedItemBuckets = {};
   for (const key in groupedItems) {
     if (groupedItems[key]) {

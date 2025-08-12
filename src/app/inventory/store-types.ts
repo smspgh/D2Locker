@@ -13,7 +13,7 @@ import {
 import { D1Item, DimItem } from './item-types';
 
 /**
- * A generic DIM character or vault - a "store" of items. This completely
+ * A generic D2L character or vault - a "store" of items. This completely
  * represents any D2 store, and most properties of D1 stores, though you can
  * specialize down to the D1Store type for some special D1 properties and
  * overrides.
@@ -44,7 +44,7 @@ export interface DimStore<Item = DimItem> {
   /** String gender name: 'male' | 'female' | '', used exclusively for i18n when translating to gendered languages */
   genderName: 'male' | 'female' | '';
 
-  // "Mutable" data - this may be changed by moving the item around, lock/unlock, etc. Any place DIM updates its view of the world without a profile refresh.
+  // "Mutable" data - this may be changed by moving the item around, lock/unlock, etc. Any place D2L updates its view of the world without a profile refresh.
 
   /** All items in the store, across all buckets. */
   items: readonly Item[];

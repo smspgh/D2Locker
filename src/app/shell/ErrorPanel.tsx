@@ -1,7 +1,7 @@
 import { BungieError, HttpStatusError } from 'app/bungie-api/http-client';
-import ExternalLink from 'app/dim-ui/ExternalLink';
+import ExternalLink from 'app/d2l-ui/ExternalLink';
 import { t } from 'app/i18next-t';
-import { DimError } from 'app/utils/dim-error';
+import { DimError } from 'app/utils/d2l-error';
 import BungieAlerts from 'app/whats-new/BungieAlerts';
 import { PlatformErrorCodes } from 'bungie-api-ts/destiny2';
 import { AppIcon, helpIcon, mastodonIcon, refreshIcon } from '../shell/icons';
@@ -96,15 +96,15 @@ export default function ErrorPanel({
       ) : (
         <div className={styles.links}>
           {!ourFault && (
-            <ExternalLink href={bungieHelpLink} className="dim-button">
+            <ExternalLink href={bungieHelpLink} className="d2l-button">
               <AppIcon icon={mastodonIcon} /> {bungieHelpAccount}
             </ExternalLink>
           )}
-          <ExternalLink href={troubleshootingLink} className="dim-button">
+          <ExternalLink href={troubleshootingLink} className="d2l-button">
             <AppIcon icon={helpIcon} /> {t('ErrorPanel.Troubleshooting')}
           </ExternalLink>
           {showReload && (
-            <div className="dim-button" onClick={() => window.location.reload()}>
+            <div className="d2l-button" onClick={() => window.location.reload()}>
               <AppIcon icon={refreshIcon} /> Reload
             </div>
           )}

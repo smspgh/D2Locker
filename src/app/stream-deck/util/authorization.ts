@@ -2,7 +2,7 @@ import { ThunkResult } from 'app/store/types';
 import { streamDeckAuthorization } from '../actions';
 import { startStreamDeckConnection, stopStreamDeckConnection } from '../stream-deck';
 
-export const STREAM_DECK_DEEP_LINK = 'streamdeck://plugins/message/com.dim.streamdeck';
+export const STREAM_DECK_DEEP_LINK = 'streamdeck://plugins/message/com.d2l.streamdeck';
 
 export function streamDeckAuthorizationInit(): ThunkResult {
   return async (dispatch) => {

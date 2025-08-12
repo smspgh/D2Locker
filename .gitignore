@@ -27,6 +27,7 @@ logs/
 *.pem
 *.key
 *.crt
+certs/
 
 # Development files
 webpack-stats.json*

@@ -185,7 +185,7 @@
 }
 
 .inGameLoadoutButton {
-  composes: resetButton from '../../dim-ui/common.m.scss';
+  composes: resetButton from '../../d2l-ui/common.m.scss';
   display: block;
 
   @include interactive($hover: true, $focus: true) {

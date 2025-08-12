@@ -1,5 +1,5 @@
-import BungieImage from 'app/dim-ui/BungieImage';
-import RichDestinyText from 'app/dim-ui/destiny-symbols/RichDestinyText';
+import BungieImage from 'app/d2l-ui/BungieImage';
+import RichDestinyText from 'app/d2l-ui/destiny-symbols/RichDestinyText';
 import { DimItem } from 'app/inventory/item-types';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { DestinyItemPerkEntryDefinition } from 'bungie-api-ts/destiny2';

@@ -2,12 +2,12 @@
 
 .buttons {
   composes: item-details from global;
-  composes: flexRow from '../dim-ui/common.m.scss';
+  composes: flexRow from '../d2l-ui/common.m.scss';
   gap: 8px;
 }
 
 .insertButton {
-  composes: dim-button from global;
+  composes: d2l-button from global;
   display: flex;
   flex-direction: row;
   align-items: center;

@@ -103,18 +103,18 @@ function useUnlockedPlugSets(
           (p) => p?.plugDef.plug.plugCategoryHash === PlugCategoryHashes.EnhancementsArtifice,
         );
 
-        const dimPlugs = sockets[0].plugSet!.plugs.filter((p) => unlockedPlugs.has(p.plugDef.hash));
+        const d2lPlugs = sockets[0].plugSet!.plugs.filter((p) => unlockedPlugs.has(p.plugDef.hash));
 
         // Filter down to plugs that match the plugCategoryHashWhitelist
         const plugsWithDuplicates: PluggableInventoryItemDefinition[] = [];
-        for (const dimPlug of dimPlugs) {
+        for (const d2lPlug of d2lPlugs) {
           if (
-            isInsertableArmor2Mod(dimPlug.plugDef) &&
+            isInsertableArmor2Mod(d2lPlug.plugDef) &&
             (!plugCategoryHashWhitelist ||
-              plugCategoryHashWhitelist.includes(dimPlug.plugDef.plug.plugCategoryHash)) &&
-            !plugCategoryHashDenyList?.includes(dimPlug.plugDef.plug.plugCategoryHash)
+              plugCategoryHashWhitelist.includes(d2lPlug.plugDef.plug.plugCategoryHash)) &&
+            !plugCategoryHashDenyList?.includes(d2lPlug.plugDef.plug.plugCategoryHash)
           ) {
-            plugsWithDuplicates.push(dimPlug.plugDef);
+            plugsWithDuplicates.push(d2lPlug.plugDef);
           }
         }
 

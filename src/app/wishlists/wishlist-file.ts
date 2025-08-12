@@ -176,7 +176,7 @@ function toBansheeWishListRoll(bansheeTextLine: string, blockNotes?: string): Wi
 }
 
 const textLineRegex =
-  /^dimwishlist:item=(?<itemHash>-?\d+)(?:&perks=)?(?<itemPerks>[\d|,]*)(?:#notes:)?(?<wishListNotes>[^|]*)/;
+  /^d2lwishlist:item=(?<itemHash>-?\d+)(?:&perks=)?(?<itemPerks>[\d|,]*)(?:#notes:)?(?<wishListNotes>[^|]*)/;
 function toDimWishListRoll(textLine: string, blockNotes?: string): WishListRoll | null {
   const matchResults = textLineRegex.exec(textLine);
 

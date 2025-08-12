@@ -111,7 +111,7 @@ export const classFilter = {
     item.classType === DestinyClass.Unknown ? '' : `is:${classes[item.classType]}`,
 } satisfies ItemFilterDefinition;
 
-// A mapping from the bucket hash to DIM item types
+// A mapping from the bucket hash to D2L item types
 const bucketToType: LookupTable<BucketHashes, string> = {
   [BucketHashes.Engrams]: 'engrams',
   [BucketHashes.LostItems]: 'lostitems',
@@ -181,7 +181,7 @@ export const itemTypeFilter = {
     .flat()
     .map((v) => {
       const type = bucketToType[v];
-      if (!type && $DIM_FLAVOR === 'dev') {
+      if (!type && $D2L_FLAVOR === 'dev') {
         throw new Error(
           `itemTypeFilter: You forgot to map a string type name for bucket hash ${v}`,
         );
@@ -209,7 +209,7 @@ const d1itemTypeFilter = {
     .flat()
     .map((v) => {
       const type = d1BucketToType[v];
-      if (!type && $DIM_FLAVOR === 'dev') {
+      if (!type && $D2L_FLAVOR === 'dev') {
         throw new Error(
           `d1itemTypeFilter You forgot to map a string type name for bucket hash ${v}`,
         );

@@ -98,7 +98,7 @@ export const enum GhostActivitySocketTypeHashes {
 // STATS KNOWN VALUES
 //
 
-/** the stat hash for DIM's artificial armor stat, "Total" */
+/** the stat hash for D2L's artificial armor stat, "Total" */
 export const TOTAL_STAT_HASH = -1000;
 export const CUSTOM_TOTAL_STAT_HASH = -111000;
 

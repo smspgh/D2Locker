@@ -1,7 +1,7 @@
 @use '../../variables.scss' as *;
 
 .recordBooks {
-  composes: dim-page from global;
+  composes: d2l-page from global;
 
   h1 {
     display: flex;
@@ -50,7 +50,7 @@
 }
 
 .record {
-  composes: flexRow from '../../dim-ui/common.m.scss';
+  composes: flexRow from '../../d2l-ui/common.m.scss';
   background: #333;
   padding: 8px;
 

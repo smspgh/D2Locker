@@ -1,8 +1,8 @@
 import { D1Store } from 'app/inventory/store-types';
 import { compareBy } from 'app/utils/comparators';
-import { bungieNetPath } from '../dim-ui/BungieImage';
-import DiamondProgress from '../dim-ui/DiamondProgress';
-import { PressTip, Tooltip } from '../dim-ui/PressTip';
+import { bungieNetPath } from '../d2l-ui/BungieImage';
+import DiamondProgress from '../d2l-ui/DiamondProgress';
+import { PressTip, Tooltip } from '../d2l-ui/PressTip';
 import styles from './D1Reputation.m.scss';
 
 export default function D1Reputation({ store }: { store: D1Store }) {

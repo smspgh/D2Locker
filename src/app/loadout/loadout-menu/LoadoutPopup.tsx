@@ -1,8 +1,8 @@
 import { SearchType } from '@destinyitemmanager/dim-api-types';
-import { languageSelector, settingSelector } from 'app/dim-api/selectors';
-import { AlertIcon } from 'app/dim-ui/AlertIcon';
-import ClassIcon from 'app/dim-ui/ClassIcon';
-import ColorDestinySymbols from 'app/dim-ui/destiny-symbols/ColorDestinySymbols';
+import { languageSelector, settingSelector } from 'app/d2l-api/selectors';
+import { AlertIcon } from 'app/d2l-ui/AlertIcon';
+import ClassIcon from 'app/d2l-ui/ClassIcon';
+import ColorDestinySymbols from 'app/d2l-ui/destiny-symbols/ColorDestinySymbols';
 import { startFarming } from 'app/farming/actions';
 import { t } from 'app/i18next-t';
 import {
@@ -77,18 +77,18 @@ import { RandomLoadoutOptions, useRandomizeLoadout } from './LoadoutPopupRandomi
 import MaxlightButton from './MaxlightButton';
 
 export default function LoadoutPopup({
-  dimStore,
+  d2lStore,
   onClick,
 }: {
-  dimStore: DimStore;
+  d2lStore: DimStore;
   onClick?: () => void;
 }) {
   // For the most part we don't need to memoize this - this menu is destroyed when closed
   const defs = useDefinitions()!;
   const isPhonePortrait = useIsPhonePortrait();
-  const numPostmasterItemsTotal = totalPostmasterItems(dimStore);
+  const numPostmasterItemsTotal = totalPostmasterItems(d2lStore);
   const language = useSelector(languageSelector);
-  const previousLoadout = useSelector(previousLoadoutSelector(dimStore.id));
+  const previousLoadout = useSelector(previousLoadoutSelector(d2lStore.id));
   const query = useSelector(querySelector);
   const buckets = useSelector(bucketsSelector)!;
   const allItems = useSelector(allItemsSelector);
@@ -96,14 +96,14 @@ export default function LoadoutPopup({
   const loadoutSort = useSelector(settingSelector('loadoutSort'));
   const dispatch = useThunkDispatch();
   const hasClassifiedAffectingMaxPower = useSelector(
-    (state: RootState) => powerLevelSelector(state, dimStore.id)?.problems.hasClassified,
+    (state: RootState) => powerLevelSelector(state, d2lStore.id)?.problems.hasClassified,
   );
 
-  const loadouts = useSelector(loadoutsForClassTypeSelector(dimStore.classType));
+  const loadouts = useSelector(loadoutsForClassTypeSelector(d2lStore.classType));
   const inGameLoadouts = useSelector((state: RootState) =>
-    dimStore.isVault
+    d2lStore.isVault
       ? emptyArray<InGameLoadout>()
-      : inGameLoadoutsForCharacterSelector(state, dimStore.id),
+      : inGameLoadoutsForCharacterSelector(state, d2lStore.id),
   );
 
   const [loadoutQuery, setLoadoutQuery] = useState('');
@@ -111,19 +111,19 @@ export default function LoadoutPopup({
   // This sets the store id for loadouts page, so that when navigating to it the correct
   // character will be set.
   const setLoadoutPageStore = () => {
-    if (!dimStore.isVault) {
-      dispatch(updateLoadoutStore({ storeId: dimStore.id }));
+    if (!d2lStore.isVault) {
+      dispatch(updateLoadoutStore({ storeId: d2lStore.id }));
     }
   };
 
-  const makeNewLoadout = () => editLoadout(newLoadout('', [], dimStore.classType), dimStore.id);
+  const makeNewLoadout = () => editLoadout(newLoadout('', [], d2lStore.classType), d2lStore.id);
 
   const applySavedLoadout = (loadout: Loadout, { filterToEquipped = false } = {}) => {
     if (filterToEquipped) {
       loadout = filterLoadoutToEquipped(loadout);
     }
 
-    dispatch(applyLoadout(dimStore, loadout, { allowUndo: true, onlyMatchingClass: true }));
+    dispatch(applyLoadout(d2lStore, loadout, { allowUndo: true, onlyMatchingClass: true }));
   };
 
   const handleApplyInGameLoadout = (loadout: InGameLoadout) =>
@@ -131,26 +131,26 @@ export default function LoadoutPopup({
 
   // A D1 dynamic loadout set up to level weapons and armor
   const makeItemLevelingLoadout = () => {
-    const loadout = itemLevelingLoadout(allItems, dimStore);
-    dispatch(applyLoadout(dimStore, loadout, { allowUndo: true }));
+    const loadout = itemLevelingLoadout(allItems, d2lStore);
+    dispatch(applyLoadout(d2lStore, loadout, { allowUndo: true }));
   };
 
   // Move items matching the current search. Max 9 per type.
   const applySearchLoadout = () => {
-    const loadout = itemMoveLoadout(filteredItems, dimStore);
-    dispatch(applyLoadout(dimStore, loadout, { allowUndo: true }));
+    const loadout = itemMoveLoadout(filteredItems, d2lStore);
+    dispatch(applyLoadout(d2lStore, loadout, { allowUndo: true }));
   };
 
   const doMakeRoomForPostmaster = () =>
-    queueAction(() => dispatch(makeRoomForPostmaster(dimStore, buckets)));
+    queueAction(() => dispatch(makeRoomForPostmaster(d2lStore, buckets)));
 
-  const onStartFarming = () => dispatch(startFarming(dimStore.id));
+  const onStartFarming = () => dispatch(startFarming(d2lStore.id));
 
   const totalLoadouts = loadouts.length;
 
   const [pillFilteredLoadouts, filterPills, hasSelectedFilters] = useLoadoutFilterPills(
     loadouts,
-    dimStore,
+    d2lStore,
     { className: styles.filterPills, darkBackground: true },
   );
 
@@ -184,7 +184,7 @@ export default function LoadoutPopup({
       {filterPills}
 
       <ul className={styles.list}>
-        {!filteringLoadouts && dimStore.isVault && isPhonePortrait && (
+        {!filteringLoadouts && d2lStore.isVault && isPhonePortrait && (
           <li className={styles.menuItem}>
             <span onClick={noop}>
               <img src={consumablesIcon} />
@@ -202,7 +202,7 @@ export default function LoadoutPopup({
           </li>
         )}
 
-        {!filteringLoadouts && !dimStore.isVault && (
+        {!filteringLoadouts && !d2lStore.isVault && (
           <li className={styles.menuItem}>
             <span onClick={onStartFarming}>
               <AppIcon icon={engramIcon} />
@@ -214,7 +214,7 @@ export default function LoadoutPopup({
           </li>
         )}
 
-        {!filteringLoadouts && dimStore.destinyVersion === 2 && (
+        {!filteringLoadouts && d2lStore.destinyVersion === 2 && (
           <li className={styles.menuItem}>
             <Link to="../loadouts" onClick={setLoadoutPageStore}>
               <AppIcon icon={faList} />
@@ -271,17 +271,17 @@ export default function LoadoutPopup({
           </li>
         )}
 
-        {!filteringLoadouts && !dimStore.isVault && (
+        {!filteringLoadouts && !d2lStore.isVault && (
           <>
             <li className={styles.menuItem}>
               <MaxlightButton
                 allItems={allItems}
-                dimStore={dimStore}
+                d2lStore={d2lStore}
                 hasClassified={Boolean(hasClassifiedAffectingMaxPower)}
               />
             </li>
 
-            {dimStore.destinyVersion === 1 && (
+            {d2lStore.destinyVersion === 1 && (
               <>
                 <li className={styles.menuItem}>
                   <span onClick={makeItemLevelingLoadout}>
@@ -315,10 +315,10 @@ export default function LoadoutPopup({
               {defs.isDestiny2 && isArmorModsOnly(defs, loadout) && (
                 <ModificationsIcon className={styles.modificationIcon} />
               )}
-              {(dimStore.isVault || loadout.classType === DestinyClass.Unknown) && (
+              {(d2lStore.isVault || loadout.classType === DestinyClass.Unknown) && (
                 <ClassIcon className={styles.loadoutTypeIcon} classType={loadout.classType} />
               )}
-              {isMissingItems(defs, allItems, dimStore.id, loadout) && (
+              {isMissingItems(defs, allItems, d2lStore.id, loadout) && (
                 <AlertIcon
                   className={styles.warningIcon}
                   title={t('Loadouts.MissingItemsWarning')}
@@ -329,16 +329,16 @@ export default function LoadoutPopup({
             <span
               className={styles.altButton}
               title={t('Loadouts.Edit')}
-              onClick={() => editLoadout(loadout, dimStore.id)}
+              onClick={() => editLoadout(loadout, d2lStore.id)}
             >
               <AppIcon icon={editIcon} />
             </span>
           </li>
         ))}
 
-        {!dimStore.isVault && !loadoutQuery && (
+        {!d2lStore.isVault && !loadoutQuery && (
           <RandomLoadoutButton
-            store={dimStore}
+            store={d2lStore}
             query={query}
             isD2={defs.isDestiny2}
             onClick={onClick}

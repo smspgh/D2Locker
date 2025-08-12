@@ -71,7 +71,7 @@ const collectiblesByItemHash = memoizeOne(
 );
 
 /**
- * Process an entire list of items into DIM items.
+ * Process an entire list of items into D2L items.
  */
 export function processItems(
   context: ItemCreationContext,
@@ -246,7 +246,7 @@ export interface ItemCreationContext {
 }
 
 /**
- * Process a single raw item into a DIM item.
+ * Process a single raw item into a D2L item.
  */
 export function makeItem(
   { defs, buckets, itemComponents, customStats, profileResponse }: ItemCreationContext,
@@ -306,7 +306,7 @@ export function makeItem(
 
   // shaders currently claim they belong in the Forbidden Bucket, but they can be physically
   // present in the Vault, taking up space. so: we'll claim they are Consumables.
-  // (so that they show up in DIM, but don't cause a whole separate inventory section)
+  // (so that they show up in D2L, but don't cause a whole separate inventory section)
 
   // they aren't transferrable, and stop existing if removed from the vault, so they won't
   // interfere with the 50 consumables bucket limit.

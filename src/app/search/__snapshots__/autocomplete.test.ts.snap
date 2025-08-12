@@ -796,7 +796,7 @@ exports[`filterSortRecentSearches filter/sort recent searches for query || 1`] =
   "29 days old, 1 uses",
   "yearold highuse",
   "yearold unsaved",
-  "dim api autosuggest",
+  "d2l api autosuggest",
 ]
 `;
 

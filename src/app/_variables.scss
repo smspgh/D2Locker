@@ -1,12 +1,12 @@
 @use 'sass:color';
 
 // Variables and mixins that can be used from any SCSS file
-$dim-brand: #e8a534;
+$d2l-brand: #e8a534;
 $red: #ff3232; // For warnings/errors
 $green: #51a351; // For success statuses or positive deltas
 $stat-modded: #68a0b7; // For highlighting the difference in modded item stats
 $stat-masterworked: #e8a534;
-$new-notification-dot: #cf0707;
+$new-notification-dot: #51a351;
 $upgrade-notification-dot: #e8a534;
 
 // Blue used to denote community-provided data
@@ -119,22 +119,22 @@ $tempContainerZindex: 1000;
 
 // Utility functions to allow for augmenting a hex color value with an alpha component.
 // e.g.
-//   --my-base-color-rgb: #{dim-hex-to-rgb-values(#ff7b00)};
-//   background-color: dim-rgb-values-to-rgba(var(--my-base-color-rgb));
-//   border-color: dim-rgb-values-to-rgba(var(--my-base-color-rgb), $alpha: 0.75);
+//   --my-base-color-rgb: #{d2l-hex-to-rgb-values(#ff7b00)};
+//   background-color: d2l-rgb-values-to-rgba(var(--my-base-color-rgb));
+//   border-color: d2l-rgb-values-to-rgba(var(--my-base-color-rgb), $alpha: 0.75);
 // produces
 //   --my-base-color-rgb: 255, 128, 0;
 //   background-color: rgb(255, 128, 0, 1);
 //   border-color: rgb(255, 128, 0, 0.75);
 
 // Converts a 6-character hex color into a comma-separated list of RGB values, to use within the 'rgba' function.
-@function dim-hex-to-rgb-values($hex) {
+@function d2l-hex-to-rgb-values($hex) {
   @return color.channel($hex, 'red', $space: rgb), color.channel($hex, 'green', $space: rgb),
     color.channel($hex, 'blue', $space: rgb);
 }
 
 // Produces an 'rgba' function usage for the specified comma-separated RGB values and alpha.
-@function dim-rgb-values-to-rgba($values, $alpha: 1) {
+@function d2l-rgb-values-to-rgba($values, $alpha: 1) {
   @return #{'rgba(' + $values + ', ' + $alpha + ')'};
 }
 

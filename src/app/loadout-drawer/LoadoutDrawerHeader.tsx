@@ -1,5 +1,5 @@
-import { WithSymbolsPicker } from 'app/dim-ui/destiny-symbols/SymbolsPicker';
-import { useAutocomplete } from 'app/dim-ui/text-complete/text-complete';
+import { WithSymbolsPicker } from 'app/d2l-ui/destiny-symbols/SymbolsPicker';
+import { useAutocomplete } from 'app/d2l-ui/text-complete/text-complete';
 import { t } from 'app/i18next-t';
 import React, { useRef } from 'react';
 import { useSelector } from 'react-redux';
@@ -21,7 +21,7 @@ export default function LoadoutDrawerHeader({
   useAutocomplete(inputRef, tags);
 
   return (
-    <WithSymbolsPicker className={styles.dimInput} input={inputRef} setValue={onNameChanged}>
+    <WithSymbolsPicker className={styles.d2lInput} input={inputRef} setValue={onNameChanged}>
       <input
         name="name"
         ref={inputRef}

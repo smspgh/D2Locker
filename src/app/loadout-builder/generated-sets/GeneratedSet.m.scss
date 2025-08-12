@@ -21,7 +21,7 @@
 }
 
 .build {
-  composes: flexRow from '../../dim-ui/common.m.scss';
+  composes: flexRow from '../../d2l-ui/common.m.scss';
   gap: 16px;
 
   @include phone-portrait {

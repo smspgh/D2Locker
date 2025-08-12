@@ -4,16 +4,16 @@ import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { isAppStoreVersion } from 'app/utils/browsers';
 import { useEffect, useMemo } from 'react';
 import { useLocation } from 'react-router';
-import { loadDimApiData } from '../dim-api/actions';
+import { loadDimApiData } from '../d2l-api/actions';
 import { oauthClientId } from '../bungie-api/bungie-api-utils';
 import styles from './Login.m.scss';
 
-export const dimApiHelpLink = userGuideUrl('DIM-Sync');
+export const d2lApiHelpLink = userGuideUrl('D2L-Sync');
 
 export default function Login() {
   const dispatch = useThunkDispatch();
   const authorizationState = useMemo(
-    () => (isAppStoreVersion() ? 'dimauth-' : '') + globalThis.crypto.randomUUID(),
+    () => (isAppStoreVersion() ? 'd2lauth-' : '') + globalThis.crypto.randomUUID(),
     [],
   );
   const clientId = oauthClientId();
@@ -46,11 +46,11 @@ export default function Login() {
     return `https://www.bungie.net/en/OAuth/Authorize?${queryParams.toString()}`;
   };
 
-  // DIM Sync is always enabled by default
-  
-  // Always set DIM Sync to enabled
+  // d2l sync is always enabled by default
+
+  // Always set d2l sync to enabled
   useEffect(() => {
-    localStorage.setItem('dim-api-enabled', 'true');
+    localStorage.setItem('d2l-api-enabled', 'true');
   }, []);
 
 

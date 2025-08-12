@@ -17,16 +17,16 @@
 }
 
 .buttons {
-  composes: flexRow from '../../dim-ui/common.m.scss';
+  composes: flexRow from '../../d2l-ui/common.m.scss';
   align-items: center;
   gap: 6px;
 }
 
 .volumeRocker {
-  composes: flexColumn from '../../dim-ui/common.m.scss';
+  composes: flexColumn from '../../d2l-ui/common.m.scss';
   height: 100%;
   gap: 4px;
-  > :global(.dim-button) {
+  > :global(.d2l-button) {
     padding-bottom: 0;
     padding-top: 0;
     flex: 1;

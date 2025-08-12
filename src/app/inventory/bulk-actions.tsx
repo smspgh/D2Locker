@@ -1,4 +1,4 @@
-import { settingSelector } from 'app/dim-api/selectors';
+import { settingSelector } from 'app/d2l-api/selectors';
 import { t } from 'app/i18next-t';
 import NotificationButton from 'app/notifications/NotificationButton';
 import { showNotification } from 'app/notifications/notifications';
@@ -8,7 +8,7 @@ import { errorMessage } from 'app/utils/errors';
 import { partition } from 'es-toolkit';
 import { canSyncLockState } from './SyncTagLock';
 import { setItemHashTag, setItemTagsBulk } from './actions';
-import { TagCommand, TagValue, tagConfig } from './dim-item-info';
+import { TagCommand, TagValue, tagConfig } from './d2l-item-info';
 import { setItemLockState } from './item-move-service';
 import { DimItem } from './item-types';
 import { getTagSelector, tagSelector } from './selectors';

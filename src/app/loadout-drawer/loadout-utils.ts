@@ -174,10 +174,10 @@ export function createSocketOverridesFromEquipped(item: DimItem) {
  */
 export function newLoadoutFromEquipped(
   name: string,
-  dimStore: DimStore,
+  d2lStore: DimStore,
   artifactUnlocks: LoadoutParameters['artifactUnlocks'],
 ) {
-  const items = dimStore.items.filter(
+  const items = d2lStore.items.filter(
     (item) =>
       item.equipped && itemCanBeInLoadout(item) && fromEquippedTypes.includes(item.bucket.hash),
   );
@@ -188,7 +188,7 @@ export function newLoadoutFromEquipped(
     }
     return item;
   });
-  const loadout = newLoadout(name, loadoutItems, dimStore.classType);
+  const loadout = newLoadout(name, loadoutItems, d2lStore.classType);
   // Choose a stable ID
   loadout.id = 'equipped';
   const mods = items.flatMap((i) => extractArmorModHashes(i));
@@ -371,17 +371,17 @@ export function getLoadoutStats(
  * actually are masterworked or if we assume they are.
  */
 export function calculateAssumedMasterworkStats(
-  dimItem: DimItem,
+  d2lItem: DimItem,
   armorEnergyRules: ArmorEnergyRules | undefined,
 ): { [statHash: number]: number } {
-  if (!dimItem.stats) {
+  if (!d2lItem.stats) {
     return emptyObject();
   }
 
   const statMap: { [statHash: number]: number } = {};
   const capacity = armorEnergyRules
-    ? calculateAssumedItemEnergy(dimItem, armorEnergyRules)
-    : (dimItem.energy?.energyCapacity ?? 0);
+    ? calculateAssumedItemEnergy(d2lItem, armorEnergyRules)
+    : (d2lItem.energy?.energyCapacity ?? 0);
 
   // TODO: Rather than patch this directly, figure out what mod we'd insert
   // for the given assume-masterwork level, and apply its stats
@@ -392,14 +392,14 @@ export function calculateAssumedMasterworkStats(
   // Alternatively, once we pick the right masterwork mod, we could use socketOverrides to get a resolved item with stats
 
   const assumeMasterworked = armorEnergyRules
-    ? isAssumedMasterworked(dimItem, armorEnergyRules)
+    ? isAssumedMasterworked(d2lItem, armorEnergyRules)
     : false;
-  const newMasterworkType = isEdgeOfFateArmorMasterwork(dimItem);
+  const newMasterworkType = isEdgeOfFateArmorMasterwork(d2lItem);
   const mwPlug =
     newMasterworkType &&
-    dimItem.sockets?.allSockets.find(isEdgeOfFateArmorMasterworkSocket)?.plugged;
+    d2lItem.sockets?.allSockets.find(isEdgeOfFateArmorMasterworkSocket)?.plugged;
 
-  for (const { statHash, base } of dimItem.stats) {
+  for (const { statHash, base } of d2lItem.stats) {
     let value = base;
     // For now, manually apply the masterwork stats:
     if (!newMasterworkType && capacity >= MAX_ARMOR_ENERGY_CAPACITY) {
@@ -985,14 +985,14 @@ function sumAspectCapacity(
  * filter for items that are in a character's "pockets" but not equipped,
  * and can be added to a loadout
  */
-export function getUnequippedItemsForLoadout(dimStore: DimStore, category?: string) {
-  return dimStore.items.filter(
+export function getUnequippedItemsForLoadout(d2lStore: DimStore, category?: string) {
+  return d2lStore.items.filter(
     (item) =>
       !item.equipped &&
       !item.location.inPostmaster &&
       !singularBucketHashes.includes(item.bucket.hash) &&
       itemCanBeInLoadout(item) &&
-      isClassCompatible(item.classType, dimStore.classType) &&
+      isClassCompatible(item.classType, d2lStore.classType) &&
       (category ? item.bucket.sort === category : fromEquippedTypes.includes(item.bucket.hash)),
   );
 }

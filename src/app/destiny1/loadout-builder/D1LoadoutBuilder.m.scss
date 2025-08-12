@@ -2,12 +2,12 @@
 @use './LoadoutBuilderLocksDialog.m.scss' as locks;
 
 .lockedButton {
-  composes: dim-button from global;
+  composes: d2l-button from global;
 }
 
 // TODO: Combine with the controls-strip in GeneratedSet
 .controls {
-  composes: flexWrap from '../../dim-ui/common.m.scss';
+  composes: flexWrap from '../../d2l-ui/common.m.scss';
   align-items: center;
   gap: 8px;
   margin: 12px 0;
@@ -25,7 +25,7 @@
 }
 
 .itemRow {
-  composes: flexWrap from '../../dim-ui/common.m.scss';
+  composes: flexWrap from '../../d2l-ui/common.m.scss';
   width: 100%;
   align-items: flex-start;
   gap: 16px;

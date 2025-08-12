@@ -6,9 +6,16 @@
   margin-left: 8px;
 }
 
+.dupeCount {
+  font-size: 12px;
+  font-weight: bold;
+  margin-right: 4px;
+  opacity: 0.8;
+}
+
 .tagSelectorLabelHidden {
   padding: 0 !important;
-  :global(.dim-button) {
+  :global(.d2l-button) {
     border-radius: 0;
     padding: 6px 8px;
     > div > :global(.app-icon) {

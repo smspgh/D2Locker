@@ -7,7 +7,7 @@ import { Reducer, combineReducers } from 'redux';
 import { PayloadAction } from 'typesafe-actions';
 import { accounts } from '../accounts/reducer';
 import { compare } from '../compare/reducer';
-import { DimApiState, dimApi, initialState as dimApiInitialState } from '../dim-api/reducer';
+import { DimApiState, d2lApi, initialState as d2lApiInitialState } from '../d2l-api/reducer';
 import { farming } from '../farming/reducer';
 import { inventory } from '../inventory/reducer';
 import { loadouts } from '../loadout/reducer';
@@ -31,22 +31,22 @@ const reducer: Reducer<RootState> = (state, action) => {
     inGameLoadouts,
     streamDeck,
     // Dummy reducer to get the types to work
-    dimApi: (state: DimApiState = dimApiInitialState) => state,
+    d2lApi: (state: DimApiState = d2lApiInitialState) => state,
   });
 
   const intermediateState = combinedReducers(state, action);
 
-  // Run the DIM API reducer last, and provide the current account along with it
-  const dimApiState = dimApi(
-    intermediateState.dimApi,
+  // Run the D2L API reducer last, and provide the current account along with it
+  const d2lApiState = d2lApi(
+    intermediateState.d2lApi,
     action as PayloadAction<any, any>,
     currentAccountSelector(intermediateState),
   );
 
-  if (intermediateState.dimApi !== dimApiState) {
+  if (intermediateState.d2lApi !== d2lApiState) {
     return {
       ...intermediateState,
-      dimApi: dimApiState,
+      d2lApi: d2lApiState,
     };
   }
 

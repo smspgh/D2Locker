@@ -1,0 +1,17 @@
+version: '3.8'
+
+# Production-specific configuration with live reload
+# Usage: docker-compose -f docker-compose.yml -f docker-compose.prod.yml up d2locker-prod
+
+services:
+  d2locker-prod:
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=production
+      - ENABLE_HMR=true
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "https://localhost/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s

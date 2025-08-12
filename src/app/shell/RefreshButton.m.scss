@@ -1,9 +1,9 @@
 @use 'sass:color';
 @use '../variables' as *;
-@use '../dim-ui/tooltip-mixins' as *;
+@use '../d2l-ui/tooltip-mixins' as *;
 
 .refreshButton {
-  composes: resetButton from '../dim-ui/common.m.scss';
+  composes: resetButton from '../d2l-ui/common.m.scss';
   position: relative;
 }
 

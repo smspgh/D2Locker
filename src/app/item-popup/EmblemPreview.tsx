@@ -1,4 +1,4 @@
-import BungieImage from 'app/dim-ui/BungieImage';
+import BungieImage from 'app/d2l-ui/BungieImage';
 import { DimItem } from 'app/inventory/item-types';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { ObjectiveValue } from 'app/progress/Objective';

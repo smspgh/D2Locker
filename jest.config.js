@@ -21,12 +21,12 @@ export default {
   transformIgnorePatterns: ['node_modules/.pnpm/(?!bungie-api-ts|@popper|@react-hook)'],
   globals: {
     $BROWSERS: [],
-    $DIM_FLAVOR: 'test',
-    $DIM_WEB_API_KEY: 'xxx',
-    $DIM_API_KEY: 'xxx',
-    $DIM_VERSION: '1.0.0',
+    $D2L_FLAVOR: 'test',
+    $D2L_WEB_API_KEY: 'xxx',
+    $D2L_API_KEY: 'xxx',
+    $D2L_VERSION: '1.0.0',
     $featureFlags: {
-      dimApi: true,
+      d2lApi: true,
       runLoInBackground: true,
       sentry: false,
     },

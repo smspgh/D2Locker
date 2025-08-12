@@ -1,5 +1,5 @@
 import { AssumeArmorMasterwork } from '@destinyitemmanager/dim-api-types';
-import RadioButtons, { Option } from 'app/dim-ui/RadioButtons';
+import RadioButtons, { Option } from 'app/d2l-ui/RadioButtons';
 import { t } from 'app/i18next-t';
 import { Dispatch, useCallback, useMemo } from 'react';
 import { LoadoutBuilderAction } from '../loadout-builder-reducer';

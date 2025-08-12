@@ -1,4 +1,4 @@
-import BungieImage from 'app/dim-ui/BungieImage';
+import BungieImage from 'app/d2l-ui/BungieImage';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { DestinyItemQuantity } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';

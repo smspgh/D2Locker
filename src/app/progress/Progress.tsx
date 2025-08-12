@@ -1,6 +1,6 @@
-import CharacterSelect from 'app/dim-ui/CharacterSelect';
-import PageWithMenu from 'app/dim-ui/PageWithMenu';
-import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
+import CharacterSelect from 'app/d2l-ui/CharacterSelect';
+import PageWithMenu from 'app/d2l-ui/PageWithMenu';
+import ShowPageLoading from 'app/d2l-ui/ShowPageLoading';
 import { t } from 'app/i18next-t';
 import {
   bucketsSelector,
@@ -18,8 +18,8 @@ import { PanInfo, motion } from 'motion/react';
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { DestinyAccount } from '../accounts/destiny-account';
-import CollapsibleTitle from '../dim-ui/CollapsibleTitle';
-import ErrorBoundary from '../dim-ui/ErrorBoundary';
+import CollapsibleTitle from '../d2l-ui/CollapsibleTitle';
+import ErrorBoundary from '../d2l-ui/ErrorBoundary';
 import { Event } from './Event';
 import Milestones from './Milestones';
 import Pathfinder from './Pathfinder';

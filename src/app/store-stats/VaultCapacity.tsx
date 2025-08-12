@@ -1,4 +1,4 @@
-import { PressTip } from 'app/dim-ui/PressTip';
+import { PressTip } from 'app/d2l-ui/PressTip';
 import { InventoryBucket, InventoryBuckets } from 'app/inventory/inventory-buckets';
 import { bucketsSelector, currentStoreSelector, vaultSelector } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
@@ -38,13 +38,13 @@ const vaultBucketOrder = [
   BucketHashes.Modifications,
 ];
 
-/** How many items are in each vault bucket. DIM hides the vault bucket concept from users but needs the count to track progress. */
+/** How many items are in each vault bucket. D2L hides the vault bucket concept from users but needs the count to track progress. */
 interface VaultCounts {
   [bucketHash: string]: { count: number; bucket: InventoryBucket };
 }
 
 /**
- * DIM represents items in the vault different from how they actually are - we separate them by inventory bucket as if
+ * D2L represents items in the vault different from how they actually are - we separate them by inventory bucket as if
  * the vault were a character, when really they're just big undifferentiated buckets. This re-calculates how full those
  * buckets are, for display. We could calculate this straight from the profile, but we want to be able to recompute it
  * when items move without reloading the profile.

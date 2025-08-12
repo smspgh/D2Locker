@@ -1,7 +1,7 @@
 @use '../variables.scss' as *;
 
 .selectedPlug {
-  composes: flexRow from '../dim-ui/common.m.scss';
+  composes: flexRow from '../d2l-ui/common.m.scss';
   min-height: calc(var(--item-size) + 20px);
   display: grid;
   grid-template-columns: var(--item-size) 1fr;
@@ -35,7 +35,7 @@
 }
 
 .modIcon {
-  composes: flexColumn from '../dim-ui/common.m.scss';
+  composes: flexColumn from '../d2l-ui/common.m.scss';
   align-items: center;
   grid-area: mod;
 
@@ -51,7 +51,7 @@
 }
 
 .modDescription {
-  composes: flexColumn from '../dim-ui/common.m.scss';
+  composes: flexColumn from '../d2l-ui/common.m.scss';
   gap: 8px 8px;
   grid-area: desc;
   overflow: auto;
@@ -81,7 +81,7 @@
 }
 
 .material {
-  composes: flexRow from '../dim-ui/common.m.scss';
+  composes: flexRow from '../d2l-ui/common.m.scss';
   align-items: center;
   margin-top: 4px;
   font-size: 10px;
@@ -93,7 +93,7 @@
 }
 
 .insertButton {
-  composes: dim-button from global;
+  composes: d2l-button from global;
   display: flex;
   flex-direction: row;
   align-items: center;

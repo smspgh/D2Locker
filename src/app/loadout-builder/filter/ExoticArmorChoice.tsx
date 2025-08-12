@@ -1,5 +1,5 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
-import ClosableContainer from 'app/dim-ui/ClosableContainer';
+import ClosableContainer from 'app/d2l-ui/ClosableContainer';
 import { t } from 'app/i18next-t';
 import { DefItemIcon } from 'app/inventory/ItemIcon';
 import { useD2Definitions } from 'app/manifest/selectors';

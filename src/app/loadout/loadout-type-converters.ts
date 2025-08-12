@@ -26,11 +26,11 @@ import {
 } from './loadout-types';
 
 /**
- * DIM API stores loadouts in a new format, but the app still uses the old format everywhere. These functions convert
+ * D2L API stores loadouts in a new format, but the app still uses the old format everywhere. These functions convert
  * back and forth.
  */
-export function convertDimLoadoutToApiLoadout(dimLoadout: DimLoadout): Loadout {
-  const { items, name, parameters, ...rest } = dimLoadout;
+export function convertDimLoadoutToApiLoadout(d2lLoadout: DimLoadout): Loadout {
+  const { items, name, parameters, ...rest } = d2lLoadout;
   const equipped = items.filter((i) => i.equip).map(convertDimLoadoutItemToLoadoutItem);
   const unequipped = items.filter((i) => !i.equip).map(convertDimLoadoutItemToLoadoutItem);
 
@@ -85,7 +85,7 @@ function migrateLoadoutParameters(
 }
 
 /**
- * DIM API stores loadouts in a new format, but the app still uses the old format everywhere. This converts the API
+ * D2L API stores loadouts in a new format, but the app still uses the old format everywhere. This converts the API
  * storage format to the old loadout format.
  */
 export function convertDimApiLoadoutToLoadout(loadout: Loadout): DimLoadout {
@@ -239,11 +239,11 @@ export function convertInGameLoadoutToDimLoadout(
 
 /**
  * In game loadouts' plug item hashes are a list of plug items, one per socket index. We strip
- * out unset or empty plugs when converting to DIM's SocketOverrides, which are only set for sockets
+ * out unset or empty plugs when converting to D2L's SocketOverrides, which are only set for sockets
  * that should be modified.
  *
  * NOTE: In game loadouts map any socket that has only a single option to UNSET_PLUG_HASH instead of
- * the real plug hash. Not sure why they bother, and it doesn't matter for saving loadouts to DIM's
+ * the real plug hash. Not sure why they bother, and it doesn't matter for saving loadouts to D2L's
  * format, but it does matter for displaying them.
  */
 export function convertInGameLoadoutPlugItemHashesToSocketOverrides(

@@ -1,4 +1,4 @@
-import { AlertIcon } from 'app/dim-ui/AlertIcon';
+import { AlertIcon } from 'app/d2l-ui/AlertIcon';
 import { I18nKey, t, tl } from 'app/i18next-t';
 import {
   LoadoutApplyPhase,
@@ -13,7 +13,7 @@ import { useD2Definitions } from 'app/manifest/selectors';
 import { NotificationError, NotifyInput } from 'app/notifications/notifications';
 import { AppIcon, faCheckCircle, faExclamationCircle, refreshIcon } from 'app/shell/icons';
 import { isEmpty } from 'app/utils/collections';
-import { DimError } from 'app/utils/dim-error';
+import { DimError } from 'app/utils/d2l-error';
 import { errorMessage } from 'app/utils/errors';
 import { useThrottledSubscription } from 'app/utils/hooks';
 import { Observable } from 'app/utils/observable';

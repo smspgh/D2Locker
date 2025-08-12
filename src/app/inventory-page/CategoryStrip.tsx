@@ -25,8 +25,7 @@ export default function CategoryStrip({
               onClick={() => onCategorySelected(category)}
               className={clsx({ [styles.selected]: category === selectedCategoryId })}
             >
-              {/* @ts-expect-error The type of `category` is wider than the keys defined in i18n. */}
-              {t(`Bucket.${category}`, { metadata: { keys: 'buckets' } })}
+              {(t as any)(`Bucket.${category}`, { metadata: { keys: 'buckets' } })}
             </div>
           ),
       )}

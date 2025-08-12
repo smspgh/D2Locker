@@ -1,7 +1,7 @@
-import ClosableContainer from 'app/dim-ui/ClosableContainer';
+import ClosableContainer from 'app/d2l-ui/ClosableContainer';
 import { t } from 'app/i18next-t';
 import React, { useState } from 'react';
-import BungieImage from '../../dim-ui/BungieImage';
+import BungieImage from '../../d2l-ui/BungieImage';
 import { D1GridNode, DimItem } from '../../inventory/item-types';
 import { AppIcon, plusIcon } from '../../shell/icons';
 import LoadoutBucketDropTarget from './LoadoutBuilderDropTarget';

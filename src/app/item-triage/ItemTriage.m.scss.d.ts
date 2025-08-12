@@ -5,7 +5,7 @@ interface CssExports {
   'collapseTitle': string;
   'controls': string;
   'count': string;
-  'dimmed': string;
+  'd2Lmed': string;
   'factorCollapsedValue': string;
   'factorCombo': string;
   'factorIcon': string;

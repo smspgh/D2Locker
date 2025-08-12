@@ -1,4 +1,4 @@
-import { settingSelector } from 'app/dim-api/selectors';
+import { settingSelector } from 'app/d2l-api/selectors';
 import { bucketsSelector, sortedStoresSelector } from 'app/inventory/selectors';
 import { useIsPhonePortrait } from 'app/shell/selectors';
 import { useSelector } from 'react-redux';

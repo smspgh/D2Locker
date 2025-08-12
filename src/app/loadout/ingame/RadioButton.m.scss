@@ -1,7 +1,7 @@
 @use '../../variables.scss' as *;
 
 .button {
-  composes: dim-button from global;
+  composes: d2l-button from global;
   position: relative;
 
   @include interactive($hover: true, $active: true) {

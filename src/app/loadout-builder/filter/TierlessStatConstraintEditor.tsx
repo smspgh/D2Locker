@@ -7,7 +7,7 @@ import {
   SensorAPI,
   SnapDragActions,
 } from '@hello-pangea/dnd';
-import BungieImage from 'app/dim-ui/BungieImage';
+import BungieImage from 'app/d2l-ui/BungieImage';
 import { t } from 'app/i18next-t';
 import { DimStore } from 'app/inventory/store-types';
 import { MAX_STAT } from 'app/loadout/known-values';

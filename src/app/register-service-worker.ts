@@ -1,5 +1,5 @@
 import { toHttpStatusError } from './bungie-api/http-client';
-import { sheetsOpen } from './dim-ui/sheets-open';
+import { sheetsOpen } from './d2l-ui/sheets-open';
 import { errorLog, infoLog, warnLog } from './utils/log';
 import { Observable } from './utils/observable';
 import { delay } from './utils/promises';
@@ -15,20 +15,20 @@ const TAG = 'SW';
 let updateServiceWorker = async () => true;
 
 /**
- * Whether there is new content available if you reload DIM.
+ * Whether there is new content available if you reload D2L.
  *
  * We only need to update when there's new content and we've already updated the service worker.
  */
-export const dimNeedsUpdate$ = new Observable<boolean>(false);
+export const d2lNeedsUpdate$ = new Observable<boolean>(false);
 
 /**
  * Poll what the server thinks is current.
- * This is to handle cases where folks have DIM open for a long time.
- * It will attempt to update the service worker before reporting that DIM needs update.
+ * This is to handle cases where folks have D2L open for a long time.
+ * It will attempt to update the service worker before reporting that D2L needs update.
  */
 // TODO: Move this state into Redux?
 
-let currentVersion = $DIM_VERSION;
+let currentVersion = $D2L_VERSION;
 
 (async () => {
   await delay(10 * 1000);
@@ -40,13 +40,13 @@ let currentVersion = $DIM_VERSION;
       if (updated) {
         currentVersion = serverVersion;
         // Auto-reload immediately instead of showing UI indicator
-        await reloadDIM();
+        await reloadD2L();
       }
     }
   } catch (e) {
     errorLog(TAG, 'Failed to check version.json on startup', e);
   }
-  
+
   // Check every minute for updates
   setInterval(
     async () => {
@@ -57,7 +57,7 @@ let currentVersion = $DIM_VERSION;
           if (updated) {
             currentVersion = serverVersion;
             // Auto-reload immediately instead of showing UI indicator
-            await reloadDIM();
+            await reloadD2L();
           }
         }
       } catch (e) {
@@ -86,7 +86,7 @@ export default function registerServiceWorker() {
           if (updated) {
             currentVersion = serverVersion;
             // Auto-reload immediately
-            await reloadDIM();
+            await reloadD2L();
           }
         }
       } catch (e) {
@@ -117,7 +117,7 @@ export default function registerServiceWorker() {
                 infoLog(TAG, 'New content is available; please refresh. (from onupdatefound)');
                 // At this point, is it really cached??
 
-                dimNeedsUpdate$.next(true);
+                d2lNeedsUpdate$.next(true);
 
                 let preventDevToolsReloadLoop = false;
                 navigator.serviceWorker.addEventListener('controllerchange', () => {
@@ -226,9 +226,9 @@ export function isNewVersion(version: string, currentVersion: string) {
 }
 
 /**
- * Attempt to update the service worker and reload DIM with the new version.
+ * Attempt to update the service worker and reload D2L with the new version.
  */
-export async function reloadDIM() {
+export async function reloadD2L() {
   try {
     const registration = await navigator.serviceWorker.getRegistration();
 

@@ -1,5 +1,5 @@
 import { DestinyVersion, VaultWeaponGroupingStyle } from '@destinyitemmanager/dim-api-types';
-import WeaponGroupingIcon from 'app/dim-ui/WeaponGroupingIcon';
+import WeaponGroupingIcon from 'app/d2l-ui/WeaponGroupingIcon';
 import { InventoryBucket } from 'app/inventory/inventory-buckets';
 import { DimItem } from 'app/inventory/item-types';
 import {

@@ -1,6 +1,6 @@
 import { CustomStatDef } from '@destinyitemmanager/dim-api-types';
 import CompareStat from 'app/compare/CompareStat';
-import { CustomStatWeightsDisplay } from 'app/dim-ui/CustomStatWeights';
+import { CustomStatWeightsDisplay } from 'app/d2l-ui/CustomStatWeights';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { ColumnDefinition, SortDirection } from './table-types';
 

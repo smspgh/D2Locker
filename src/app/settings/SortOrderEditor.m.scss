@@ -1,7 +1,7 @@
 @use '../variables' as *;
 
 .editor {
-  composes: flexColumn from '../dim-ui/common.m.scss';
+  composes: flexColumn from '../d2l-ui/common.m.scss';
   gap: 4px;
   padding: 4px 0 0 0;
 }
@@ -23,7 +23,7 @@
   font-size: 10px;
   padding-left: 10px;
   align-self: stretch;
-  composes: flexRow from '../dim-ui/common.m.scss';
+  composes: flexRow from '../d2l-ui/common.m.scss';
   align-items: center;
 }
 
@@ -39,7 +39,7 @@
 }
 
 .button {
-  composes: resetButton from '../dim-ui/common.m.scss';
+  composes: resetButton from '../d2l-ui/common.m.scss';
   opacity: 0.9;
   padding: 4px 6px;
 }

@@ -1,4 +1,4 @@
-import { PressTip } from 'app/dim-ui/PressTip';
+import { PressTip } from 'app/d2l-ui/PressTip';
 import { t } from 'app/i18next-t';
 import { AppIcon, banIcon } from 'app/shell/icons';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';

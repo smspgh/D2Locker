@@ -18,14 +18,14 @@ async function loadRollAppraiserData(): Promise<RollAppraiserUtils> {
   loadingPromise = (async () => {
     try {
       // Load the processed light data
-      const response = await fetch('/backend/light/rollAppraiserData.light.json');
+      const response = await fetch('/backend/light/rollAppraiserData.json');
       if (!response.ok) {
         throw new Error(`Failed to load roll appraiser data: ${response.statusText}`);
       }
 
       const data: RollAppraiserData = await response.json();
       rollAppraiserUtils = new RollAppraiserUtils(data);
-      
+
       console.log('Roll appraiser data loaded successfully');
       return rollAppraiserUtils;
     } catch (error) {

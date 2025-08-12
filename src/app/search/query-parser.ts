@@ -373,7 +373,7 @@ export function* lexer(query: string): Generator<Token> {
    */
   const extract = (re: RegExp): string | undefined => {
     // These checks only run in unit tests
-    if ($DIM_FLAVOR === 'test') {
+    if ($D2L_FLAVOR === 'test') {
       if (!re.sticky) {
         throw new Error('regexp must be sticky');
       }

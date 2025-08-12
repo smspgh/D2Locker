@@ -156,13 +156,13 @@ const upgradeToArtificePlug = 720825311; // Upgrade to Artifice Armor
 function getUpgradeCost(
   model: EnergyUpgradeCostModel,
   item: ItemEnergy,
-  dimItem: DimItem,
+  d2lItem: DimItem,
   newEnergy: number,
   needsArtifice: boolean,
 ) {
-  const maxEnergy = maxEnergyCapacity(dimItem);
+  const maxEnergy = maxEnergyCapacity(d2lItem);
   if (!model.byRarity[item.rarity]) {
-    const plugs = getEnergyUpgradePlugs(dimItem);
+    const plugs = getEnergyUpgradePlugs(d2lItem);
     const costsPerTier = Array<number[]>(maxEnergy);
     for (let i = 0; i <= maxEnergy; i++) {
       const previousTierCosts = costsPerTier[i - 1];
@@ -183,11 +183,11 @@ function getUpgradeCost(
         }
       }
     }
-    model.byRarity[dimItem.rarity] = costsPerTier;
+    model.byRarity[d2lItem.rarity] = costsPerTier;
   }
-  const needsEnhancing = item.rarity === 'Exotic' && needsArtifice && !isArtifice(dimItem);
+  const needsEnhancing = item.rarity === 'Exotic' && needsArtifice && !isArtifice(d2lItem);
   const targetEnergy = needsEnhancing ? maxEnergy : newEnergy;
-  const rarityModel = model.byRarity[dimItem.rarity]!;
+  const rarityModel = model.byRarity[d2lItem.rarity]!;
   const alreadyPaidCosts = rarityModel[item.originalCapacity];
 
   const costs = rarityModel[targetEnergy]?.map((val, idx) => val - alreadyPaidCosts[idx]) ?? [];
@@ -739,7 +739,7 @@ export function createPluggingStrategy(
     const destinationSocket = getSocketByIndex(item.sockets!, assignment.socketIndex)!;
 
     // an item might have a classified def (ornament or mod) plugged into a socket,
-    // in which case DIM will have a null plugged here.
+    // in which case D2L will have a null plugged here.
     // we fall back to assuming 0 energy cost and let bungie.net be the arbiter of the outcome
     // TO-DO: instead, allow classified plugs instead. soon (tm)
     if (!destinationSocket.plugged) {
@@ -762,7 +762,7 @@ export function createPluggingStrategy(
     //   always assign to empty, so they're fine, but a requiredSpend must not depend on another requiredSpend
     //   that frees up an exclusion group, and a requiredRegain must not depend on another requiredRegain or
     //   another requiredSpend that frees an exclusion group.
-    // See https://github.com/DestinyItemManager/DIM/issues/7465#issuecomment-1379112834 for a fun cyclical dependency.
+    // See https://github.com/DestinyItemManager/D2L/issues/7465#issuecomment-1379112834 for a fun cyclical dependency.
 
     const existingExclusionGroup = destinationSocket.plugged
       ? getModExclusionGroup(destinationSocket.plugged.plugDef)

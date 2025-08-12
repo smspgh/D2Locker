@@ -1,4 +1,4 @@
-import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
+import ShowPageLoading from 'app/d2l-ui/ShowPageLoading';
 import { t } from 'app/i18next-t';
 import { useLoadStores } from 'app/inventory/store/hooks';
 import { Loadout } from 'app/loadout/loadout-types';
@@ -37,7 +37,7 @@ export default function LoadoutBuilderContainer({ account }: { account: DestinyA
 
   let query: string | undefined;
 
-  // Get an entire loadout from state - this is used when optimizing a loadout from within DIM.
+  // Get an entire loadout from state - this is used when optimizing a loadout from within D2L.
   const locationState = location.state as
     | {
         loadout: Loadout | undefined;
@@ -66,7 +66,7 @@ export default function LoadoutBuilderContainer({ account }: { account: DestinyA
   // Don't even bother showing the tool when Bungie has shut off sockets.
   if (disabledDueToMaintenance) {
     return (
-      <div className="dim-page">
+      <div className="d2l-page">
         <ErrorPanel title={t('LoadoutBuilder.DisabledDueToMaintenance')} showSocials />
       </div>
     );

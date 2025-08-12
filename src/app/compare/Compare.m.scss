@@ -1,7 +1,7 @@
 @use '../variables' as *;
 
 .organizerLink {
-  composes: dim-button from global;
+  composes: d2l-button from global;
   margin-left: auto;
 
   @include phone-portrait {
@@ -44,8 +44,8 @@
     margin-right: 4px;
   }
 
-  // TODO: Bake some of this back into dim-button
-  :global(.dim-button) {
+  // TODO: Bake some of this back into d2l-button
+  :global(.d2l-button) {
     display: flex;
     align-items: center;
     min-height: 26px;

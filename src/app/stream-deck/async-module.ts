@@ -89,7 +89,7 @@ function start(): ThunkResult {
 
       // if settings/manifest/profile are not loaded retry after 1s
       if (
-        !state.dimApi.globalSettingsLoaded ||
+        !state.d2lApi.globalSettingsLoaded ||
         !state.manifest.destiny2CoreSettings ||
         !state.inventory.profileResponse?.profileProgression
       ) {

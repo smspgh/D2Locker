@@ -1,5 +1,5 @@
-import BungieImage from 'app/dim-ui/BungieImage';
-import { PressTip } from 'app/dim-ui/PressTip';
+import BungieImage from 'app/d2l-ui/BungieImage';
+import { PressTip } from 'app/d2l-ui/PressTip';
 import { t } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
 import { useD2Definitions } from 'app/manifest/selectors';

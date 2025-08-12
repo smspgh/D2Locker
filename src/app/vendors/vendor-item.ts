@@ -155,7 +155,7 @@ export function vendorItemForSaleItem(
   context: ItemCreationContext,
   vendorDef: DestinyVendorDefinition,
   saleItem: DestinyVendorSaleItemComponent,
-  /** all DIM vendor calls are character-specific. any sale item should have an associated character. */
+  /** all D2L vendor calls are character-specific. any sale item should have an associated character. */
   characterId: string,
   nextRefreshDate?: string,
 ): VendorItem {

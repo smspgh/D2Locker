@@ -16,7 +16,7 @@ export function isLoadoutBuilderItem(item: DimItem) {
   return Boolean(
     item.bucket.inArmor &&
       item.energy &&
-      armorStats.every((statHash) => item.stats?.some((dimStat) => dimStat.statHash === statHash)),
+      armorStats.every((statHash) => item.stats?.some((d2lStat) => d2lStat.statHash === statHash)),
   );
 }
 

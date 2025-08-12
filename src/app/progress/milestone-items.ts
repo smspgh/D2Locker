@@ -113,7 +113,7 @@ function availableQuestToItem(
 
   const objectives = availableQuest.status.stepObjectives;
 
-  const dimItem = makeMilestonePursuitItem(
+  const d2lItem = makeMilestonePursuitItem(
     buckets,
     milestone,
     milestoneDef,
@@ -121,15 +121,15 @@ function availableQuestToItem(
     objectives,
     store,
   );
-  if (dimItem.pursuit === null) {
+  if (d2lItem.pursuit === null) {
     throw new Error(''); // can't happen
   }
 
-  dimItem.secondaryIcon = challengeItem?.secondaryIcon;
-  dimItem.pursuit.modifierHashes = availableQuest?.activity?.modifierHashes || [];
+  d2lItem.secondaryIcon = challengeItem?.secondaryIcon;
+  d2lItem.pursuit.modifierHashes = availableQuest?.activity?.modifierHashes || [];
 
   if (questRewards?.length) {
-    dimItem.pursuit.rewards = questRewards.map((r) => ({
+    d2lItem.pursuit.rewards = questRewards.map((r) => ({
       itemHash: r.hash,
       quantity: 1,
       hasConditionalVisibility: false,
@@ -137,7 +137,7 @@ function availableQuestToItem(
   } else if (questDef.questItemHash) {
     const questItem = defs.InventoryItem.get(questDef.questItemHash);
     if (questItem?.value?.itemValue.length) {
-      dimItem.pursuit.rewards = questItem.value.itemValue
+      d2lItem.pursuit.rewards = questItem.value.itemValue
         .filter((v) => v.itemHash !== 0)
         .map((v) => ({
           itemHash: v.itemHash,
@@ -147,7 +147,7 @@ function availableQuestToItem(
     }
   }
 
-  return dimItem;
+  return d2lItem;
 }
 
 function activityMilestoneToItem(
@@ -167,7 +167,7 @@ function activityMilestoneToItem(
   }
   const activityDef = activity && defs.Activity.get(activity.activityHash);
   const objectives = activity.challenges.map((a) => a.objective);
-  const dimItem = makeMilestonePursuitItem(
+  const d2lItem = makeMilestonePursuitItem(
     buckets,
     milestone,
     milestoneDef,
@@ -175,26 +175,26 @@ function activityMilestoneToItem(
     objectives,
     store,
   );
-  if (dimItem.pursuit === null) {
+  if (d2lItem.pursuit === null) {
     throw new Error(''); // can't happen
   }
 
-  dimItem.pursuit.modifierHashes = activity.modifierHashes || [];
+  d2lItem.pursuit.modifierHashes = activity.modifierHashes || [];
 
   if (activityDef) {
     if (!milestone.rewards) {
-      dimItem.pursuit.rewards = activityDef.challenges
+      d2lItem.pursuit.rewards = activityDef.challenges
         .filter((c) => objectives.some((o) => o.objectiveHash === c.objectiveHash))
         .flatMap((c) => c.dummyRewards);
     }
     if (milestoneDef.hash === 2029743966 /* Nightfall Weekly Score Challenge */) {
-      dimItem.name = `${dimItem.name}: ${activityDef.displayProperties.description}`;
+      d2lItem.name = `${d2lItem.name}: ${activityDef.displayProperties.description}`;
     } else if (milestoneDef.hash === 1506285920 /* Crucible Labs Playlist Challenge */) {
-      dimItem.name = `${dimItem.name}: ${activityDef.displayProperties.name}`;
+      d2lItem.name = `${d2lItem.name}: ${activityDef.displayProperties.name}`;
     }
   }
 
-  return dimItem;
+  return d2lItem;
 }
 
 /** Build an individual clan milestone activity into a pursuit. */
@@ -213,7 +213,7 @@ function weeklyClanMilestoneToItems(
     ...reward.displayProperties,
   };
 
-  const dimItem = makeFakePursuitItem(
+  const d2lItem = makeFakePursuitItem(
     buckets,
     displayProperties,
     rewardEntry.rewardEntryHash,
@@ -221,13 +221,13 @@ function weeklyClanMilestoneToItems(
     store,
   );
 
-  dimItem.pursuit = {
+  d2lItem.pursuit = {
     expiration: milestoneExpiration(milestone),
     modifierHashes: [],
     rewards: reward.items,
   };
 
-  return dimItem;
+  return d2lItem;
 }
 
 function makeFakePursuitItem(
@@ -311,7 +311,7 @@ function makeMilestonePursuitItem(
   objectives: DestinyObjectiveProgress[],
   store: DimStore,
 ) {
-  const dimItem = makeFakePursuitItem(
+  const d2lItem = makeFakePursuitItem(
     buckets,
     displayProperties,
     milestone.milestoneHash,
@@ -320,21 +320,21 @@ function makeMilestonePursuitItem(
   );
 
   if (objectives) {
-    dimItem.objectives = objectives;
-    dimItem.percentComplete = calculatePercentComplete(dimItem.objectives);
+    d2lItem.objectives = objectives;
+    d2lItem.percentComplete = calculatePercentComplete(d2lItem.objectives);
   }
 
-  dimItem.pursuit = {
+  d2lItem.pursuit = {
     expiration: milestoneExpiration(milestone),
     modifierHashes: milestone.activities?.[0]?.modifierHashes || [],
     rewards: [],
   };
 
   if (milestone.rewards) {
-    dimItem.pursuit.rewards = processRewards(milestone.rewards, milestoneDef);
+    d2lItem.pursuit.rewards = processRewards(milestone.rewards, milestoneDef);
   }
 
-  return dimItem;
+  return d2lItem;
 }
 
 function milestoneTypeName(milestoneType: DestinyMilestoneType) {
@@ -361,7 +361,7 @@ export function recordToPursuitItem(
   typeName: string,
   tracked: boolean,
 ) {
-  const dimItem = makeFakePursuitItem(
+  const d2lItem = makeFakePursuitItem(
     buckets,
     record.recordDef.displayProperties,
     record.recordDef.hash,
@@ -370,15 +370,15 @@ export function recordToPursuitItem(
   );
 
   if (record.recordComponent.objectives) {
-    dimItem.objectives = record.recordComponent.objectives;
-    dimItem.percentComplete = calculatePercentComplete(dimItem.objectives);
+    d2lItem.objectives = record.recordComponent.objectives;
+    d2lItem.percentComplete = calculatePercentComplete(d2lItem.objectives);
   }
 
   const state = record.recordComponent.state;
   const acquired = Boolean(state & DestinyRecordState.RecordRedeemed);
-  dimItem.complete = !acquired && !(state & DestinyRecordState.ObjectiveNotCompleted);
+  d2lItem.complete = !acquired && !(state & DestinyRecordState.ObjectiveNotCompleted);
 
-  dimItem.pursuit = {
+  d2lItem.pursuit = {
     expiration: undefined,
     modifierHashes: [],
     rewards: [],
@@ -387,15 +387,15 @@ export function recordToPursuitItem(
   };
 
   if (record.recordDef.rewardItems) {
-    dimItem.pursuit.rewards = record.recordDef.rewardItems.filter(
+    d2lItem.pursuit.rewards = record.recordDef.rewardItems.filter(
       (_r, i) => record.recordComponent.rewardVisibilty?.[i] ?? true,
     );
   }
 
-  dimItem.trackable = true;
-  dimItem.tracked = record.trackedInGame || tracked;
+  d2lItem.trackable = true;
+  d2lItem.tracked = record.trackedInGame || tracked;
 
-  return dimItem;
+  return d2lItem;
 }
 
 function calculatePercentComplete(objectives: DestinyObjectiveProgress[]) {

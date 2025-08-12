@@ -1,6 +1,6 @@
 import { AssumeArmorMasterwork, LoadoutParameters } from '@destinyitemmanager/dim-api-types';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
-import { AlertIcon } from 'app/dim-ui/AlertIcon';
+import { AlertIcon } from 'app/d2l-ui/AlertIcon';
 import { t } from 'app/i18next-t';
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { ResolvedLoadoutMod } from 'app/loadout/loadout-types';
@@ -106,7 +106,7 @@ export default function NoBuildsFoundExplainer({
               <button
                 key="removeAllInvalid"
                 type="button"
-                className="dim-button"
+                className="d2l-button"
                 onClick={() =>
                   dispatch({
                     type: 'lockedModsChanged',
@@ -228,7 +228,7 @@ export default function NoBuildsFoundExplainer({
             <button
               key="assumeMasterworked"
               type="button"
-              className="dim-button"
+              className="d2l-button"
               onClick={() =>
                 dispatch({
                   type: 'assumeArmorMasterworkChanged',
@@ -339,7 +339,7 @@ export default function NoBuildsFoundExplainer({
                 <button
                   key="allowAutoStatMods"
                   type="button"
-                  className="dim-button"
+                  className="d2l-button"
                   onClick={() =>
                     dispatch({
                       type: 'autoStatModsChanged',

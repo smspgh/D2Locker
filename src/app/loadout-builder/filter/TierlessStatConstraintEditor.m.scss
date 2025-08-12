@@ -1,7 +1,7 @@
 @use '../../variables' as *;
 
 .editor {
-  composes: flexColumn from '../../dim-ui/common.m.scss';
+  composes: flexColumn from '../../d2l-ui/common.m.scss';
   margin: 0 -4px -4px -4px;
   gap: 2px;
 }
@@ -19,7 +19,7 @@
   padding-left: 10px;
   padding-top: 4px;
   align-self: stretch;
-  composes: flexRow from '../../dim-ui/common.m.scss';
+  composes: flexRow from '../../d2l-ui/common.m.scss';
   align-items: flex-start;
 }
 
@@ -47,7 +47,7 @@
 
 .name {
   grid-area: name;
-  composes: flexRow from '../../dim-ui/common.m.scss';
+  composes: flexRow from '../../d2l-ui/common.m.scss';
   align-items: center;
   gap: 2px;
 }
@@ -70,7 +70,7 @@
 
 .statBar {
   grid-area: bar;
-  composes: flexRow from '../../dim-ui/common.m.scss';
+  composes: flexRow from '../../d2l-ui/common.m.scss';
   margin: 4px 0 2px 4px;
   gap: 6px;
   align-items: center;
@@ -78,11 +78,11 @@
 }
 
 .buttons {
-  composes: flexRow from '../../dim-ui/common.m.scss';
+  composes: flexRow from '../../d2l-ui/common.m.scss';
 }
 
 .rowControl {
-  composes: resetButton from '../../dim-ui/common.m.scss';
+  composes: resetButton from '../../d2l-ui/common.m.scss';
   padding: 0 6px;
   opacity: 0.9;
 

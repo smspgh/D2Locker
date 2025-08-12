@@ -1,9 +1,9 @@
-import { customStatsSelector, settingSelector } from 'app/dim-api/selectors';
-import AnimatedNumber from 'app/dim-ui/AnimatedNumber';
-import BungieImage from 'app/dim-ui/BungieImage';
-import { CustomStatWeightsFromHash } from 'app/dim-ui/CustomStatWeights';
-import ExternalLink from 'app/dim-ui/ExternalLink';
-import { PressTip } from 'app/dim-ui/PressTip';
+import { customStatsSelector, settingSelector } from 'app/d2l-api/selectors';
+import AnimatedNumber from 'app/d2l-ui/AnimatedNumber';
+import BungieImage from 'app/d2l-ui/BungieImage';
+import { CustomStatWeightsFromHash } from 'app/d2l-ui/CustomStatWeights';
+import ExternalLink from 'app/d2l-ui/ExternalLink';
+import { PressTip } from 'app/d2l-ui/PressTip';
 import { I18nKey, t, tl } from 'app/i18next-t';
 import { D1Item, D1Stat, DimItem, DimSocket, DimStat } from 'app/inventory/item-types';
 import { statsMs } from 'app/inventory/store/stats';

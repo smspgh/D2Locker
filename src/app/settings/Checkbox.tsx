@@ -1,5 +1,5 @@
-import Switch from 'app/dim-ui/Switch';
-import HelpLink from '../dim-ui/HelpLink';
+import Switch from 'app/d2l-ui/Switch';
+import HelpLink from '../d2l-ui/HelpLink';
 import { horizontalClass } from './SettingsPage';
 import { Settings } from './initial-settings';
 

@@ -1,0 +1,126 @@
+version: '3.8'
+
+services:
+  # Development setup
+  d2locker-dev:
+    container_name: d2locker-dev
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    ports:
+      - "443:443"      # Frontend HTTPS
+      - "3000:3000"    # Backend API
+      - "8080:8080"    # Webpack dev server
+    volumes:
+      - .:/app
+      - /app/node_modules
+      - /app/backend/node_modules
+      - ./certs:/app/certs:ro
+      - backend-db:/app/backend/db
+    environment:
+      - NODE_ENV=development
+      - DOCKER=true
+    env_file:
+      - .env
+    command: pnpm dev
+    networks:
+      - d2locker-network
+
+  # Production with HMR
+  d2locker-prod:
+    container_name: d2locker-prod
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "443:443"      # Frontend HTTPS
+      - "3000:3000"    # Backend API
+    volumes:
+      - ./certs:/app/certs:ro
+      - backend-db:/app/backend/db
+      - ./dist:/app/dist  # For live reload
+    environment:
+      - NODE_ENV=production
+      - DOCKER=true
+    env_file:
+      - .env
+    networks:
+      - d2locker-network
+
+  # Development no-filter setup
+  d2locker-dev-nf:
+    container_name: d2locker-dev-nf
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    ports:
+      - "443:443"      # Frontend HTTPS
+      - "3000:3000"    # Backend API
+      - "8080:8080"    # Webpack dev server
+    volumes:
+      - .:/app
+      - /app/node_modules
+      - /app/backend/node_modules
+      - ./certs:/app/certs:ro
+      - backend-db:/app/backend/db
+    environment:
+      - NODE_ENV=development
+      - DOCKER=true
+      - NO_FILTER=true
+    env_file:
+      - .env
+    command: pnpm dev-nf
+    networks:
+      - d2locker-network
+
+  # Production with HMR no-filter
+  d2locker-prod-nf:
+    container_name: d2locker-prod-nf
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "443:443"      # Frontend HTTPS
+      - "3000:3000"    # Backend API
+    volumes:
+      - ./certs:/app/certs:ro
+      - backend-db:/app/backend/db
+      - ./dist:/app/dist  # For live reload
+    environment:
+      - NODE_ENV=production
+      - DOCKER=true
+      - NO_FILTER=true
+    env_file:
+      - .env
+    command: pnpm prod-nf
+    networks:
+      - d2locker-network
+
+  # Backend API only (for separate deployment)
+  backend-api:
+    container_name: d2locker-api
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./certs:/app/certs:ro
+      - backend-db:/app/backend/db
+    environment:
+      - NODE_ENV=production
+      - DOCKER=true
+    env_file:
+      - .env
+    working_dir: /app/backend
+    command: pnpm run api
+    networks:
+      - d2locker-network
+
+volumes:
+  backend-db:
+    driver: local
+
+networks:
+  d2locker-network:
+    driver: bridge

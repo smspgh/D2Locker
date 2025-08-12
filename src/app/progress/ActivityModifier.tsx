@@ -1,8 +1,8 @@
-import RichDestinyText from 'app/dim-ui/destiny-symbols/RichDestinyText';
+import RichDestinyText from 'app/d2l-ui/destiny-symbols/RichDestinyText';
 import { useD2Definitions } from 'app/manifest/selectors';
 import clsx from 'clsx';
-import BungieImage from '../dim-ui/BungieImage';
-import { PressTip } from '../dim-ui/PressTip';
+import BungieImage from '../d2l-ui/BungieImage';
+import { PressTip } from '../d2l-ui/PressTip';
 import styles from './ActivityModifier.m.scss';
 
 export function ActivityModifier({

@@ -1,9 +1,9 @@
 /* Utilities for text matching in filters. */
 
-import { DIM_LANG_INFOS, DimLanguage } from 'app/i18n';
+import { D2L_LANG_INFOS, DimLanguage } from 'app/i18n';
 
 /** global language bool. "latin" character sets are the main driver of string processing changes */
-const isLatinBased = (language: DimLanguage) => DIM_LANG_INFOS[language].latinBased;
+const isLatinBased = (language: DimLanguage) => D2L_LANG_INFOS[language].latinBased;
 
 /** escape special characters for a regex */
 function escapeRegExp(s: string) {

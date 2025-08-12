@@ -1,7 +1,7 @@
 import { startSpan } from '../../utils/sentry';
 import { t } from 'app/i18next-t';
 import { armorStats } from 'app/search/d2-known-values';
-import { DimError } from 'app/utils/dim-error';
+import { DimError } from 'app/utils/d2l-error';
 import { errorLog } from 'app/utils/log';
 import {
   DestinyCharacterComponent,
@@ -16,7 +16,7 @@ import { BucketHashes } from 'data/d2/generated-enums';
 import vaultBackground from 'images/vault-background.svg';
 import vaultIcon from 'images/vault.svg';
 import { D2ManifestDefinitions } from '../../destiny2/d2-definitions';
-import { bungieNetPath } from '../../dim-ui/BungieImage';
+import { bungieNetPath } from '../../d2l-ui/BungieImage';
 import { DimCharacterStat, DimStore, DimTitle } from '../store-types';
 import { ItemCreationContext, processItems } from './d2-item-factory';
 
@@ -32,7 +32,7 @@ export function buildStores(itemCreationContext: ItemCreationContext): DimStore[
       !profileResponse.characters.data
     ) {
       const additionalErrorMessage =
-        $DIM_FLAVOR === 'dev'
+        $D2L_FLAVOR === 'dev'
           ? 'Vault or character inventory was missing - you likely forgot to select \
 the required application scopes when registering the app on Bungie.net. \
 Please carefully read the instructions in docs/CONTRIBUTING.md -> \
@@ -59,7 +59,7 @@ Please carefully read the instructions in docs/CONTRIBUTING.md -> \
 }
 
 /**
- * Process a single character from its raw form to a DIM store, with all the items.
+ * Process a single character from its raw form to a D2L store, with all the items.
  */
 function processCharacter(
   itemCreationContext: ItemCreationContext,

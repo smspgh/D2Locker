@@ -47,8 +47,10 @@ interface WeaponRankingData {
 }
 
 interface RollAppraiserData {
+  Weapons: Record<string, any>; // Added Weapons key
+  MasterworkMods: Record<string, any[]>;
   PerkStats: Record<string, any[][]>;
-  TraitStats: Record<string, any[]>;
+  TraitStats: Record<string, Record<string, any>>;
   MWStats: Record<string, any[]>;
   ReviewSummary: Record<string, any>;
 }
@@ -141,8 +143,7 @@ export class RollAppraiserUtils {
 
   /**
    * Get trait combo ranking for a specific weapon and perk combination
-   * Each combo rank consists of 4 entries covering all standard/enhanced variations
-   * We need to find which rank group contains our perk combination
+   * Now uses the comboRank property directly from TraitStats data
    */
   getTraitComboRank(
     itemHash: string,
@@ -150,55 +151,43 @@ export class RollAppraiserUtils {
     perk5Hash: string | number,
   ): TraitComboRankData | null {
     const weaponTraits = this.data.TraitStats[itemHash];
-    if (!weaponTraits) {return null;}
+    if (!weaponTraits) { return null; }
 
     const targetPerk4 = typeof perk4Hash === 'string' ? parseInt(perk4Hash) : perk4Hash;
     const targetPerk5 = typeof perk5Hash === 'string' ? parseInt(perk5Hash) : perk5Hash;
 
-    // Find which 4-entry group contains our perk combination
-    for (let groupStart = 0; groupStart < weaponTraits.length; groupStart += 4) {
-      const groupEnd = Math.min(groupStart + 4, weaponTraits.length);
-      
-      // Check if any entry in this group matches our perks
-      for (let i = groupStart; i < groupEnd; i++) {
-        const trait = weaponTraits[i];
-        
-        // Check if our perks match either the standard or enhanced versions
-        const perk4Matches = 
-          trait.Perk4Hash === targetPerk4 || 
-          trait.Perk4EnhancedHash === targetPerk4 ||
-          (trait.Perk4Hash === targetPerk4 && trait.Perk4EnhancedHash === null) ||
-          (trait.Perk4EnhancedHash === targetPerk4 && trait.Perk4Hash !== null);
-          
-        const perk5Matches = 
-          trait.Perk5Hash === targetPerk5 || 
-          trait.Perk5EnhancedHash === targetPerk5 ||
-          (trait.Perk5Hash === targetPerk5 && trait.Perk5EnhancedHash === null) ||
-          (trait.Perk5EnhancedHash === targetPerk5 && trait.Perk5Hash !== null);
-        
-        if (perk4Matches && perk5Matches) {
-          // Found our combo! Calculate rank based on group
-          const rank = Math.floor(groupStart / 4) + 1;
-          
-          // Find the entry with "Show": true for display purposes
-          const displayEntry = weaponTraits.slice(groupStart, groupEnd).find(t => t.Show) || trait;
-          
-          return {
-            rank,
-            indexInRank: i % 4,
-            count: displayEntry.Count,
-            perk4Hash: displayEntry.Perk4Hash,
-            perk4EnhancedHash: displayEntry.Perk4EnhancedHash,
-            perk5Hash: displayEntry.Perk5Hash,
-            perk5EnhancedHash: displayEntry.Perk5EnhancedHash,
-            show: displayEntry.Show,
-            dateSaved: displayEntry.DateSaved,
-          };
-        }
+    let comboRank = 1;
+    let indexInRank = 0;
+
+    // Iterate through all traits to find the combo and determine its rank by its position
+    for (const trait of Object.values(weaponTraits)) {
+      const perk4Matches = trait.Perk4Hash === targetPerk4 || trait.Perk4EnhancedHash === targetPerk4;
+      const perk5Matches = trait.Perk5Hash === targetPerk5 || trait.Perk5EnhancedHash === targetPerk5;
+
+      if (perk4Matches && perk5Matches) {
+        // Found our combo! Return the rank we've calculated based on its position.
+        return {
+          rank: comboRank,
+          indexInRank: indexInRank,
+          count: trait.Count,
+          perk4Hash: trait.Perk4Hash,
+          perk4EnhancedHash: trait.Perk4EnhancedHash,
+          perk5Hash: trait.Perk5Hash,
+          perk5EnhancedHash: trait.Perk5EnhancedHash,
+          show: trait.Show,
+          dateSaved: trait.DateSaved,
+        };
+      }
+
+      // Increment counters for the next perk in the list
+      indexInRank++;
+      if (indexInRank % 4 === 0) {
+        comboRank++;
+        indexInRank = 0; // Reset index for the new rank
       }
     }
 
-    return null;
+    return null; // Return null if the combo isn't found
   }
 
   /**

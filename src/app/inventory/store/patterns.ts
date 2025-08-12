@@ -40,7 +40,7 @@ export function buildPatternInfo(
     return undefined;
   }
 
-  // Best we can do so far is to match up crafting patterns to items by their name: https://github.com/DestinyItemManager/DIM/pull/8420#issuecomment-1139188482
+  // Best we can do so far is to match up crafting patterns to items by their name: https://github.com/DestinyItemManager/D2L/pull/8420#issuecomment-1139188482
   const patternRecordHash = itemNameToCraftingPatternRecordHash(defs)[item.name];
   if (patternRecordHash) {
     return (

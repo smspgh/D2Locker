@@ -1,4 +1,4 @@
-import ClassIcon from 'app/dim-ui/ClassIcon';
+import ClassIcon from 'app/d2l-ui/ClassIcon';
 import { DimStore } from 'app/inventory/store-types';
 import clsx from 'clsx';
 import styles from './StoreIcon.m.scss';
@@ -29,7 +29,7 @@ export function StoreIcon({
     <>
       <img
         src={!useBackground ? store.icon : store.background}
-        className={clsx({ [styles.dimmedBg]: store.isVault && label })}
+        className={clsx({ [styles.d2lmedBg]: store.isVault && label })}
         style={{ backgroundColor: bgColor ?? 'black' }}
       />
       {label ? (

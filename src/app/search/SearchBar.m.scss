@@ -55,14 +55,14 @@
 }
 
 .openButton {
-  composes: resetButton from '../dim-ui/common.m.scss';
+  composes: resetButton from '../d2l-ui/common.m.scss';
   display: inline-block;
   color: #999;
   font-size: 12px !important;
 }
 
 .menuItem {
-  composes: flexRow from '../dim-ui/common.m.scss';
+  composes: flexRow from '../d2l-ui/common.m.scss';
   align-items: flex-start;
   padding: 6px 9px 6px 9px;
   gap: 6px;
@@ -97,7 +97,7 @@
 }
 
 .deleteIcon {
-  composes: resetButton from '../dim-ui/common.m.scss';
+  composes: resetButton from '../d2l-ui/common.m.scss';
   font-size: 10px !important;
   margin-top: 4px;
   color: #999;

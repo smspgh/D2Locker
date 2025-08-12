@@ -10,10 +10,10 @@ export interface BungieAccount {
 }
 
 /**
- * Get the Bungie accounts for this DIM user. For now, we only have one (or none if you're not logged in).
+ * Get the Bungie accounts for this D2L user. For now, we only have one (or none if you're not logged in).
  *
- * A DIM user may associate one or more Bungie.net accounts with their
- * DIM account. These accounts are identified with a membership ID,
+ * A D2L user may associate one or more Bungie.net accounts with their
+ * D2L account. These accounts are identified with a membership ID,
  * and have references to one or more Destiny accounts.
  */
 export function getBungieAccount(): BungieAccount | undefined {

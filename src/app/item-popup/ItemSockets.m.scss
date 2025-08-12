@@ -2,6 +2,6 @@
 
 // Horizontal list of sockets
 .itemSockets {
-  composes: flexRow from '../dim-ui/common.m.scss';
+  composes: flexRow from '../d2l-ui/common.m.scss';
   gap: 4px;
 }

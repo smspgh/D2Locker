@@ -1,4 +1,4 @@
-import BucketIcon from 'app/dim-ui/svgs/BucketIcon';
+import BucketIcon from 'app/d2l-ui/svgs/BucketIcon';
 import clsx from 'clsx';
 import React from 'react';
 import styles from './ItemPowerSet.m.scss';

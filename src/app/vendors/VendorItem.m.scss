@@ -39,7 +39,7 @@
 }
 
 .vendorItem {
-  composes: flexColumn from '../dim-ui/common.m.scss';
+  composes: flexColumn from '../d2l-ui/common.m.scss';
   align-items: center;
   position: relative;
   width: min-content;

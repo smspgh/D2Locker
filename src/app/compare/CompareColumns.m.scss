@@ -37,7 +37,7 @@
 }
 
 .energy {
-  composes: flexRow from '../dim-ui/common.m.scss';
+  composes: flexRow from '../d2l-ui/common.m.scss';
   align-items: center;
 }
 
@@ -83,7 +83,7 @@
 
 .archetypeRow {
   --archetype-size: 22px !important;
-  composes: flexRow from '../dim-ui/common.m.scss';
+  composes: flexRow from '../d2l-ui/common.m.scss';
   align-items: center;
   gap: 2px;
 }

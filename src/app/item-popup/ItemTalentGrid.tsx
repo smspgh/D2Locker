@@ -2,8 +2,8 @@ import { percent } from 'app/shell/formatters';
 import { maxOf } from 'app/utils/collections';
 import clsx from 'clsx';
 import { memo } from 'react';
-import { bungieNetPath } from '../dim-ui/BungieImage';
-import { PressTip, Tooltip } from '../dim-ui/PressTip';
+import { bungieNetPath } from '../d2l-ui/BungieImage';
+import { PressTip, Tooltip } from '../d2l-ui/PressTip';
 import { D1GridNode, D1Item } from '../inventory/item-types';
 import styles from './ItemTalentGrid.m.scss';
 

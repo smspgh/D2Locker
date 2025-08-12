@@ -1,7 +1,7 @@
 @use '../../variables' as *;
 
 .controls {
-  composes: flexWrap from '../../dim-ui/common.m.scss';
+  composes: flexWrap from '../../d2l-ui/common.m.scss';
   align-items: center;
   margin-bottom: 7px;
   gap: 8px;
@@ -28,18 +28,18 @@
 }
 
 .set {
-  composes: flexWrap from '../../dim-ui/common.m.scss';
+  composes: flexWrap from '../../d2l-ui/common.m.scss';
   align-items: flex-start;
   gap: 16px;
 }
 
 .setItem {
-  composes: flexColumn from '../../dim-ui/common.m.scss';
+  composes: flexColumn from '../../d2l-ui/common.m.scss';
   gap: 4px;
   position: relative;
 }
 
-.dimStats {
+.d2lStats {
   flex: 1;
   min-width: 100px;
 }

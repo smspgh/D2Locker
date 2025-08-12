@@ -21,7 +21,7 @@ export function getBuckets(defs: D2ManifestDefinitions) {
     byHash: {},
     byCategory: {},
     unknown: {
-      description: 'Unknown items. DIM needs a manifest update.',
+      description: 'Unknown items. D2L needs a manifest update.',
       name: 'Unknown',
       hash: -1,
       // default to false. an equipped item existing, will override this in inv display

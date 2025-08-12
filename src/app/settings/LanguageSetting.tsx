@@ -1,7 +1,7 @@
 import { currentAccountSelector } from 'app/accounts/selectors';
 import { getDefinitions as getDefinitionsD1 } from 'app/destiny1/d1-definitions';
 import { getDefinitions } from 'app/destiny2/d2-definitions';
-import { settingsSelector } from 'app/dim-api/selectors';
+import { settingsSelector } from 'app/d2l-api/selectors';
 import { t } from 'app/i18next-t';
 import { clearStores } from 'app/inventory/actions';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';

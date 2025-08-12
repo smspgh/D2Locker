@@ -6,7 +6,7 @@ import { ItemSortSettings } from 'app/settings/item-sort';
 import { isD1Item } from 'app/utils/item-utils';
 import { DestinyAmmunitionType, DestinyDamageTypeDefinition } from 'bungie-api-ts/destiny2';
 import { BucketHashes, ItemCategoryHashes } from 'data/d2/generated-enums';
-import { TagValue, tagConfig, vaultGroupTagOrder } from '../inventory/dim-item-info';
+import { TagValue, tagConfig, vaultGroupTagOrder } from '../inventory/d2l-item-info';
 import {
   Comparator,
   chainComparator,

@@ -31,18 +31,18 @@
 }
 
 .header {
-  composes: flexRow from '../dim-ui/common.m.scss';
+  composes: flexRow from '../d2l-ui/common.m.scss';
   gap: 0 12px;
 }
 
 .headerDetails {
-  composes: flexColumn from '../dim-ui/common.m.scss';
+  composes: flexColumn from '../d2l-ui/common.m.scss';
   flex: 1;
   gap: 4px;
 }
 
 .classType {
-  composes: flexRow from '../dim-ui/common.m.scss';
+  composes: flexRow from '../d2l-ui/common.m.scss';
   align-items: center;
   gap: 0.25em;
 

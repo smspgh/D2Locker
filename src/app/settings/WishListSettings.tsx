@@ -1,7 +1,7 @@
-import { settingSelector } from 'app/dim-api/selectors';
-import { ConfirmButton } from 'app/dim-ui/ConfirmButton';
-import ExternalLink from 'app/dim-ui/ExternalLink';
-import { PressTip } from 'app/dim-ui/PressTip';
+import { settingSelector } from 'app/d2l-api/selectors';
+import { ConfirmButton } from 'app/d2l-ui/ConfirmButton';
+import ExternalLink from 'app/d2l-ui/ExternalLink';
+import { PressTip } from 'app/d2l-ui/PressTip';
 import { I18nKey, t } from 'app/i18next-t';
 import { showNotification } from 'app/notifications/notifications';
 import { AppIcon, banIcon, deleteIcon, plusIcon, refreshIcon } from 'app/shell/icons';
@@ -14,8 +14,8 @@ import { toWishList } from 'app/wishlists/wishlist-file';
 import { useEffect, useState } from 'react';
 import { DropzoneOptions } from 'react-dropzone';
 import { useSelector } from 'react-redux';
-import FileUpload from '../dim-ui/FileUpload';
-import HelpLink from '../dim-ui/HelpLink';
+import FileUpload from '../d2l-ui/FileUpload';
+import HelpLink from '../d2l-ui/HelpLink';
 import { clearWishLists } from '../wishlists/actions';
 import { wishListsLastFetchedSelector, wishListsSelector } from '../wishlists/selectors';
 import Checkbox from './Checkbox';
@@ -134,11 +134,11 @@ export default function WishListSettings() {
                 num: numWishListRolls,
               })}
             </label>
-            <button type="button" className="dim-button" onClick={clearWishListEvent}>
+            <button type="button" className="d2l-button" onClick={clearWishListEvent}>
               <AppIcon icon={banIcon} /> {t('WishListRoll.Clear')}
             </button>
             {hasRemoteWishList && (
-              <button type="button" className="dim-button" onClick={handleReloadWishlists}>
+              <button type="button" className="d2l-button" onClick={handleReloadWishlists}>
                 <AppIcon icon={refreshIcon} /> {t('WishListRoll.Refresh')}
               </button>
             )}
@@ -314,7 +314,7 @@ function NewUrlWishlist({
         <PressTip tooltip={canAddError !== undefined ? canAddError : undefined}>
           <button
             type="button"
-            className="dim-button"
+            className="d2l-button"
             disabled={disabled}
             onClick={() => {
               onAddWishlist(newWishlistSource);

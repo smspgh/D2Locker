@@ -1,7 +1,7 @@
 import { compact, filterMap } from 'app/utils/collections';
 import { compareBy } from 'app/utils/comparators';
 import { maxBy } from 'es-toolkit';
-import { ItemInfos } from './dim-item-info';
+import { ItemInfos } from './d2l-item-info';
 
 /**
  * An object that can collect usage of hashtags and return their most popular form.

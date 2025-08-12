@@ -1,5 +1,5 @@
-import { languageSelector } from 'app/dim-api/selectors';
-import ExternalLink from 'app/dim-ui/ExternalLink';
+import { languageSelector } from 'app/d2l-api/selectors';
+import ExternalLink from 'app/d2l-ui/ExternalLink';
 import clsx from 'clsx';
 import { useSelector } from 'react-redux';
 /* eslint-disable css-modules/no-unused-class */

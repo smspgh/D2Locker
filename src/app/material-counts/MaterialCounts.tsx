@@ -1,4 +1,4 @@
-import BungieImage from 'app/dim-ui/BungieImage';
+import BungieImage from 'app/d2l-ui/BungieImage';
 import {
   currenciesSelector,
   materialsSelector,

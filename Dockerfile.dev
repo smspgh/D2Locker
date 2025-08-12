@@ -1,0 +1,31 @@
+# Development Dockerfile for D2Locker
+# This is optimized for development with live reloading
+
+FROM node:20-alpine
+
+# Install pnpm
+RUN corepack enable && corepack prepare pnpm@8.8.0 --activate
+
+# Install dependencies for building
+RUN apk add --no-cache python3 make g++ git
+
+WORKDIR /app
+
+# Copy package files
+COPY package.json pnpm-lock.yaml ./
+COPY backend/package.json ./backend/
+
+# Install all dependencies (including devDependencies)
+RUN pnpm install --frozen-lockfile
+
+# Copy source code
+COPY . .
+
+# Create directory for SSL certificates
+RUN mkdir -p /app/certs
+
+# Expose ports
+EXPOSE 443 3000 8080
+
+# Default command (can be overridden in docker-compose)
+CMD ["pnpm", "start"]

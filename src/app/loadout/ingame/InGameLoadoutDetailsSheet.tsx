@@ -1,4 +1,4 @@
-import { ConfirmButton } from 'app/dim-ui/ConfirmButton';
+import { ConfirmButton } from 'app/d2l-ui/ConfirmButton';
 import { t } from 'app/i18next-t';
 import ItemIcon from 'app/inventory/ItemIcon';
 import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
@@ -14,7 +14,7 @@ import { SocketCategoryHashes } from 'data/d2/generated-enums';
 import { keyBy, partition } from 'es-toolkit';
 import React from 'react';
 import { useSelector } from 'react-redux';
-import Sheet from '../../dim-ui/Sheet';
+import Sheet from '../../d2l-ui/Sheet';
 import { allItemsSelector, bucketsSelector } from '../../inventory/selectors';
 import styles from './InGameLoadoutDetailsSheet.m.scss';
 import { InGameLoadoutIconWithIndex } from './InGameLoadoutIcon';
@@ -39,14 +39,14 @@ export function InGameLoadoutDetails({
   const resolvedItems = useItemsFromInGameLoadout(loadout);
   const itemsByBucketHash = keyBy(resolvedItems, (i) => i.item.bucket.hash);
   const allItems = useSelector(allItemsSelector);
-  const handleSaveAsDIM = () => {
-    const dimLoadout = convertInGameLoadoutToDimLoadout(loadout, store.classType, allItems);
-    editLoadout(dimLoadout, store.id);
+  const handleSaveAsD2L = () => {
+    const d2lLoadout = convertInGameLoadoutToDimLoadout(loadout, store.classType, allItems);
+    editLoadout(d2lLoadout, store.id);
   };
 
   const handleShare = () => {
-    const dimLoadout = convertInGameLoadoutToDimLoadout(loadout, store.classType, allItems);
-    onShare(dimLoadout);
+    const d2lLoadout = convertInGameLoadoutToDimLoadout(loadout, store.classType, allItems);
+    onShare(d2lLoadout);
   };
   const header = (
     <div className={styles.header}>
@@ -60,25 +60,25 @@ export function InGameLoadoutDetails({
       <div className={styles.controls}>
         <button
           type="button"
-          className="dim-button"
+          className="d2l-button"
           onClick={() => dispatch(applyInGameLoadout(loadout))}
         >
           {t('LoadoutBuilder.EquipItems')}
         </button>
         <button
           type="button"
-          className="dim-button"
+          className="d2l-button"
           onClick={() => dispatch(applyInGameLoadout(loadout, false))}
         >
           {t('InGameLoadout.PrepareEquip')}
         </button>
-        <button type="button" className="dim-button" onClick={() => onEdit(loadout)}>
+        <button type="button" className="d2l-button" onClick={() => onEdit(loadout)}>
           {t('InGameLoadout.EditIdentifiers')}
         </button>
-        <button type="button" className="dim-button" onClick={handleSaveAsDIM}>
-          {t('Loadouts.SaveAsDIM')}
+        <button type="button" className="d2l-button" onClick={handleSaveAsD2L}>
+          {t('Loadouts.SaveAsD2L')}
         </button>
-        <button type="button" className="dim-button" onClick={handleShare}>
+        <button type="button" className="d2l-button" onClick={handleShare}>
           {t('Loadouts.ShareLoadout')}
         </button>
         <ConfirmButton danger onClick={() => dispatch(deleteInGameLoadout(loadout))}>

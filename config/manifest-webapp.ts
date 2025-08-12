@@ -2,7 +2,7 @@ export default function createWebAppManifest(publicPath: string) {
   return {
     name: 'D2 Locker',
     short_name: 'D2L',
-    description: 'D2 Locker App a fork out of DIMs playbook',
+    description: 'D2 Locker App a fork out of D2Ls playbook',
     icons: [
       {
         src: `${publicPath}android-chrome-192x192-6-2018.png`,
@@ -43,14 +43,14 @@ export default function createWebAppManifest(publicPath: string) {
         sizes: '1902x1080',
         type: 'image/jpeg',
         form_factor: 'wide',
-        label: 'DIM Inventory Screen',
+        label: 'D2L Inventory Screen',
       },
       {
         src: `${publicPath}screenshots/mobile.jpg`,
         sizes: '390x770',
         type: 'image/jpeg',
         form_factor: 'narrow',
-        label: 'DIM on Mobile',
+        label: 'D2L on Mobile',
       },
     ],
     theme_color: '#000000',

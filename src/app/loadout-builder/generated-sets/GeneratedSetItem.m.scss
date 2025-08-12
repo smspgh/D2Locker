@@ -1,7 +1,7 @@
 @use '../../variables.scss' as *;
 
 .item {
-  composes: flexRow from '../../dim-ui/common.m.scss';
+  composes: flexRow from '../../d2l-ui/common.m.scss';
   gap: 6px;
   width: min-content;
   align-items: start;
@@ -19,7 +19,7 @@
 }
 
 .energySwapContainer {
-  composes: flexRow from '../../dim-ui/common.m.scss';
+  composes: flexRow from '../../d2l-ui/common.m.scss';
   justify-content: flex-start;
   align-items: center;
   font-size: 10px;
@@ -30,12 +30,12 @@
 }
 
 .energyValue {
-  composes: flexRow from '../../dim-ui/common.m.scss';
+  composes: flexRow from '../../d2l-ui/common.m.scss';
   align-items: center;
 }
 
 .swapButton {
-  composes: dim-button from global;
+  composes: d2l-button from global;
   justify-self: center;
   margin-top: 4px;
 
@@ -45,7 +45,7 @@
 }
 
 .swapButtonContainer {
-  composes: flexColumn from '../../dim-ui/common.m.scss';
+  composes: flexColumn from '../../d2l-ui/common.m.scss';
   min-height: 24px;
   align-items: center;
 

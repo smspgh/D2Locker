@@ -1,4 +1,4 @@
-import { trackTriumph } from 'app/dim-api/basic-actions';
+import { trackTriumph } from 'app/d2l-api/basic-actions';
 import { useHotkey } from 'app/hotkeys/useHotkey';
 import { t } from 'app/i18next-t';
 import { setItemLockState } from 'app/inventory/item-move-service';

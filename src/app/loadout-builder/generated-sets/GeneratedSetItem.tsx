@@ -1,4 +1,4 @@
-import { EnergyIncrementsWithPresstip } from 'app/dim-ui/EnergyIncrements';
+import { EnergyIncrementsWithPresstip } from 'app/d2l-ui/EnergyIncrements';
 import { t } from 'app/i18next-t';
 import { useItemPicker } from 'app/item-picker/item-picker';
 import Sockets from 'app/loadout/loadout-ui/Sockets';

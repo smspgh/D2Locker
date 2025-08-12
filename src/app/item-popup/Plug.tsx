@@ -1,11 +1,11 @@
-import { bungieNetPath } from 'app/dim-ui/BungieImage';
+import { bungieNetPath } from 'app/d2l-ui/BungieImage';
 import { DefItemIcon } from 'app/inventory/ItemIcon';
 import { isPluggableItem } from 'app/inventory/store/sockets';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { isEnhancedPerk, isWeaponMasterworkSocket } from 'app/utils/socket-utils';
 import WishListPerkThumb from 'app/wishlists/WishListPerkThumb';
 import clsx from 'clsx';
-import { PressTip } from '../dim-ui/PressTip';
+import { PressTip } from '../d2l-ui/PressTip';
 import { DimItem, DimPlug, DimSocket } from '../inventory/item-types';
 import { InventoryWishListRoll, isWishListPlug } from '../wishlists/wishlists';
 import styles from './Plug.m.scss';

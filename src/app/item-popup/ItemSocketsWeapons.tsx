@@ -21,6 +21,7 @@ import SocketDetails from './SocketDetails';
 import { useWeaponRankingData } from 'app/roll-appraiser/useRollAppraiserData';
 import TraitComboIndicator from 'app/roll-appraiser/TraitComboIndicator';
 import ReviewSummaryDisplay from 'app/roll-appraiser/ReviewSummaryDisplay';
+import TopTraitCombos from 'app/roll-appraiser/TopTraitCombos';
 
 export default function ItemSocketsWeapons({
   item,
@@ -38,7 +39,7 @@ export default function ItemSocketsWeapons({
   const defs = useD2Definitions();
   const wishlistRoll = useSelector(wishListSelector(item));
   const [listPerksSetting, setListPerks] = useSetting('perkList');
-  const listPerks = forceGrid === undefined ? listPerksSetting : !forceGrid;
+  const listPerks = forceGrid === undefined ? (listPerksSetting ?? true) : !forceGrid;
   const weaponRankingData = useWeaponRankingData(item);
 
   if (!item.sockets || !defs) {
@@ -99,6 +100,10 @@ export default function ItemSocketsWeapons({
           {mods.length > 0 && <ItemSocketsList>{mods.map(renderSocket)}</ItemSocketsList>}
         </ArchetypeRow>
       )}
+      
+      {/* Top 5 Trait Combinations */}
+      {!minimal && <TopTraitCombos item={item} />}
+      
       {perks &&
         (listPerks ? (
           <div className={styles.perks}>

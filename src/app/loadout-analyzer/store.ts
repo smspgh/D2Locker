@@ -41,7 +41,7 @@ type ResultsForDimStore = WeakMap<
 >;
 
 /**
- * The context and results for a given DIM storeId.
+ * The context and results for a given D2L storeId.
  * Since the context annoyingly contains character-specific things
  * (mostly due to mod cost reductions), each store has its own copy
  * of the context. The generationNumber is incremented whenever a

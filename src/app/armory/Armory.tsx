@@ -2,11 +2,11 @@ import ItemGrid from 'app/armory/ItemGrid';
 import { addCompareItem } from 'app/compare/actions';
 import { stripAdept } from 'app/compare/compare-utils';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
-import { languageSelector } from 'app/dim-api/selectors';
-import BungieImage, { bungieNetPath } from 'app/dim-ui/BungieImage';
-import { DestinyTooltipText } from 'app/dim-ui/DestinyTooltipText';
-import ElementIcon from 'app/dim-ui/ElementIcon';
-import RichDestinyText from 'app/dim-ui/destiny-symbols/RichDestinyText';
+import { languageSelector } from 'app/d2l-api/selectors';
+import BungieImage, { bungieNetPath } from 'app/d2l-ui/BungieImage';
+import { DestinyTooltipText } from 'app/d2l-ui/DestinyTooltipText';
+import ElementIcon from 'app/d2l-ui/ElementIcon';
+import RichDestinyText from 'app/d2l-ui/destiny-symbols/RichDestinyText';
 import { t } from 'app/i18next-t';
 import ItemIcon, { DefItemIcon } from 'app/inventory/ItemIcon';
 import { DimItem } from 'app/inventory/item-types';
@@ -357,7 +357,7 @@ export default function Armory({
             {t('Armory.YourItems')}
             {storeItems[0].comparable && (
               <button
-                className="dim-button"
+                className="d2l-button"
                 type="button"
                 onClick={() => {
                   hideItemPopup();

@@ -1,5 +1,5 @@
 import { CharacterOrder } from '@destinyitemmanager/dim-api-types';
-import { settingsSelector } from 'app/dim-api/selectors';
+import { settingsSelector } from 'app/d2l-api/selectors';
 import { RootState } from 'app/store/types';
 import { compareBy, compareByIndex, reverseComparator } from 'app/utils/comparators';
 import { createSelector } from 'reselect';

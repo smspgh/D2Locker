@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
- 
+
 /* eslint-disable no-alert */
 import type { DestinyVersion, ExportResponse } from '@destinyitemmanager/dim-api-types';
-import type { DimApiState } from 'app/dim-api/reducer';
+import type { DimApiState } from 'app/d2l-api/reducer';
 
 let exportData: ExportResponse;
 
@@ -23,7 +23,7 @@ connection.onsuccess = (event) => {
   ((event.target as any).result as IDBDatabase)
     .transaction('keyval')
     .objectStore('keyval')
-    .get('dim-api-profile').onsuccess = (event) => {
+    .get('d2l-api-profile').onsuccess = (event) => {
     const storedData = (event.target as any)?.result as DimApiState;
     if (storedData?.settings) {
       exportData = {
@@ -94,8 +94,8 @@ connection.onsuccess = (event) => {
         .filter(Boolean) as number[];
 
       document.getElementById('feedback')!.textContent =
-        `Stored DIM data was found in the browser's storage.
-It looks like it was last downloaded from DIM Sync ${stringifyLatestDate(profileTimestamps)}.
+        `Stored D2L data was found in the browser's storage.
+It looks like it was last downloaded from d2l sync ${stringifyLatestDate(profileTimestamps)}.
 It appears to contain:
 - ${Object.keys(exportData.settings ?? {}).length} settings
 - ${exportData.loadouts.length} loadouts, last updated ${stringifyLatestDate(loadoutTimestamps)}
@@ -115,7 +115,7 @@ function downloadBackup() {
   const stringified = encodeURIComponent(JSON.stringify(exportData));
   const a = document.createElement('a');
   a.setAttribute('href', `data:application/json;charset=utf-8,${stringified}`);
-  a.setAttribute('download', 'dim-data-emergency-backup.json');
+  a.setAttribute('download', 'd2l-data-emergency-backup.json');
   document.body.appendChild(a);
   a.click();
 }

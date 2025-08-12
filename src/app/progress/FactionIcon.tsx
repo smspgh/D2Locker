@@ -3,8 +3,8 @@ import {
   DestinyProgression,
   DestinyVendorComponent,
 } from 'bungie-api-ts/destiny2';
-import { bungieNetPath } from '../dim-ui/BungieImage';
-import DiamondProgress from '../dim-ui/DiamondProgress';
+import { bungieNetPath } from '../d2l-ui/BungieImage';
+import DiamondProgress from '../d2l-ui/DiamondProgress';
 import styles from './FactionIcon.m.scss';
 
 export default function FactionIcon({

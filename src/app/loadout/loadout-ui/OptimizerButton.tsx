@@ -28,7 +28,7 @@ export function OptimizerButton({
   }
   return (
     <Link
-      className="dim-button"
+      className="d2l-button"
       to={`/${account.membershipId}/d${account.destinyVersion}/optimizer`}
       state={{ loadout, storeId, strictUpgradeStatConstraints }}
     >

@@ -1,5 +1,5 @@
 import { DestinyVersion } from '@destinyitemmanager/dim-api-types';
-import BucketIcon from 'app/dim-ui/svgs/BucketIcon';
+import BucketIcon from 'app/d2l-ui/svgs/BucketIcon';
 import { useDefinitions } from 'app/manifest/selectors';
 import { filteredItemsSelector } from 'app/search/items/item-search-filter';
 import { count } from 'app/utils/collections';

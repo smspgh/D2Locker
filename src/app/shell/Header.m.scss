@@ -115,7 +115,7 @@ $header-height: 44px;
 }
 
 .menu {
-  composes: resetButton from '../dim-ui/common.m.scss';
+  composes: resetButton from '../d2l-ui/common.m.scss';
   position: relative;
   margin-left: 16px !important;
 }
@@ -258,7 +258,7 @@ $header-height: 44px;
 }
 
 .searchButton {
-  composes: resetButton from '../dim-ui/common.m.scss';
+  composes: resetButton from '../d2l-ui/common.m.scss';
   display: none;
 
   @include phone-portrait {

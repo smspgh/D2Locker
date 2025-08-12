@@ -1,0 +1,67 @@
+# Dependency directories
+node_modules
+backend/node_modules
+
+# Build output
+dist/
+build/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Documentation
+docs/
+*.md
+!CLAUDE.md
+
+# Version control
+.git/
+.gitignore
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Environment files (we'll copy specific ones)
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Test coverage
+coverage/
+.nyc_output/
+
+# Cache directories
+.eslintcache
+.stylelintcache
+.cache/
+
+# Temporary files
+tmp/
+temp/
+
+# Docker files (prevent recursion)
+Dockerfile*
+docker-compose*.yml
+!Dockerfile
+!Dockerfile.dev
+
+# SSL certificates (will be mounted)
+certs/
+
+# Database files (will be in volume)
+*.db
+*.sqlite

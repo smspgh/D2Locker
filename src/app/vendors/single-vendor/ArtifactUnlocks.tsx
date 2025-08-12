@@ -1,5 +1,5 @@
 import { BasicItemTrigger, PopupState } from 'app/armory/ItemGrid';
-import { bungieBackgroundStyle } from 'app/dim-ui/BungieImage';
+import { bungieBackgroundStyle } from 'app/d2l-ui/BungieImage';
 import { t } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
 import { createItemContextSelector, profileResponseSelector } from 'app/inventory/selectors';

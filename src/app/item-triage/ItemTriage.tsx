@@ -1,15 +1,15 @@
 import { currentAccountSelector } from 'app/accounts/selectors';
 import { compareFilteredItems } from 'app/compare/actions';
-import { collapsedSelector, settingSelector } from 'app/dim-api/selectors';
-import BungieImage from 'app/dim-ui/BungieImage';
-import ClassIcon from 'app/dim-ui/ClassIcon';
-import CollapsibleTitle from 'app/dim-ui/CollapsibleTitle';
-import { ExpandableTextBlock } from 'app/dim-ui/ExpandableTextBlock';
-import { PressTip } from 'app/dim-ui/PressTip';
-import { SetFilterButton } from 'app/dim-ui/SetFilterButton';
-import filterButtonStyles from 'app/dim-ui/SetFilterButton.m.scss';
-import ColorDestinySymbols from 'app/dim-ui/destiny-symbols/ColorDestinySymbols';
-import BucketIcon from 'app/dim-ui/svgs/BucketIcon';
+import { collapsedSelector, settingSelector } from 'app/d2l-api/selectors';
+import BungieImage from 'app/d2l-ui/BungieImage';
+import ClassIcon from 'app/d2l-ui/ClassIcon';
+import CollapsibleTitle from 'app/d2l-ui/CollapsibleTitle';
+import { ExpandableTextBlock } from 'app/d2l-ui/ExpandableTextBlock';
+import { PressTip } from 'app/d2l-ui/PressTip';
+import { SetFilterButton } from 'app/d2l-ui/SetFilterButton';
+import filterButtonStyles from 'app/d2l-ui/SetFilterButton.m.scss';
+import ColorDestinySymbols from 'app/d2l-ui/destiny-symbols/ColorDestinySymbols';
+import BucketIcon from 'app/d2l-ui/svgs/BucketIcon';
 import { I18nKey, t, tl } from 'app/i18next-t';
 import { allItemsSelector } from 'app/inventory/selectors';
 import { hideItemPopup } from 'app/item-popup/item-popup';
@@ -396,7 +396,7 @@ function ArmorStatsTriageSection({ item }: { item: DimItem }) {
                   ' '}
               </span>
               <span className={styles.statValue}>{best}</span>
-              <span className={styles.dimmed}>{stat.displayProperties.name}</span>
+              <span className={styles.d2lmed}>{stat.displayProperties.name}</span>
               <span className={styles.statValue}>{stat.base}</span>
               <span>
                 (<span style={{ color: getValueColors(quality)[1] }}>{percent}%</span>)

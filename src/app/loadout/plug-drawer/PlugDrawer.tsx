@@ -1,4 +1,4 @@
-import { languageSelector } from 'app/dim-api/selectors';
+import { languageSelector } from 'app/d2l-api/selectors';
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { SearchInput } from 'app/search/SearchInput';
@@ -10,7 +10,7 @@ import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { produce } from 'immer';
 import React, { useCallback, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
-import Sheet from '../../dim-ui/Sheet';
+import Sheet from '../../d2l-ui/Sheet';
 import Footer from './Footer';
 import PlugSection from './PlugSection';
 import { PlugSelectionType, PlugSet } from './types';

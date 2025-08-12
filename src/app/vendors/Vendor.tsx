@@ -1,8 +1,8 @@
-import RichDestinyText from 'app/dim-ui/destiny-symbols/RichDestinyText';
+import RichDestinyText from 'app/d2l-ui/destiny-symbols/RichDestinyText';
 import React from 'react';
-import BungieImage from '../dim-ui/BungieImage';
-import CollapsibleTitle from '../dim-ui/CollapsibleTitle';
-import Countdown from '../dim-ui/Countdown';
+import BungieImage from '../d2l-ui/BungieImage';
+import CollapsibleTitle from '../d2l-ui/CollapsibleTitle';
+import Countdown from '../d2l-ui/Countdown';
 import styles from './Vendor.m.scss';
 import VendorItems from './VendorItems';
 import { D2Vendor } from './d2-vendors';

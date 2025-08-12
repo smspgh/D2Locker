@@ -1,6 +1,6 @@
-import { AlertIcon } from 'app/dim-ui/AlertIcon';
-import ClosableContainer from 'app/dim-ui/ClosableContainer';
-import Sheet from 'app/dim-ui/Sheet';
+import { AlertIcon } from 'app/d2l-ui/AlertIcon';
+import ClosableContainer from 'app/d2l-ui/ClosableContainer';
+import Sheet from 'app/d2l-ui/Sheet';
 import { t } from 'app/i18next-t';
 import ItemIcon from 'app/inventory/ItemIcon';
 import { DimItem } from 'app/inventory/item-types';

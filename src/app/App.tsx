@@ -1,4 +1,4 @@
-import { settingSelector } from 'app/dim-api/selectors';
+import { settingSelector } from 'app/d2l-api/selectors';
 import { RootState } from 'app/store/types';
 import clsx from 'clsx';
 import { Suspense, lazy, useEffect } from 'react';
@@ -6,11 +6,11 @@ import { useSelector } from 'react-redux';
 import { Navigate, Route, Routes, useLocation } from 'react-router';
 import { preloadRollAppraiserData } from 'app/roll-appraiser/rollAppraiserService';
 import styles from './App.m.scss';
-import AutoRefresh from './dim-ui/AutoRefresh';
-import ClickOutsideRoot from './dim-ui/ClickOutsideRoot';
-import ErrorBoundary from './dim-ui/ErrorBoundary';
-import PageLoading from './dim-ui/PageLoading';
-import ShowPageLoading from './dim-ui/ShowPageLoading';
+import AutoRefresh from './d2l-ui/AutoRefresh';
+import ClickOutsideRoot from './d2l-ui/ClickOutsideRoot';
+import ErrorBoundary from './d2l-ui/ErrorBoundary';
+import PageLoading from './d2l-ui/PageLoading';
+import ShowPageLoading from './d2l-ui/ShowPageLoading';
 import HotkeysCheatSheet from './hotkeys/HotkeysCheatSheet';
 import { t } from './i18next-t';
 import Login from './login/Login';
@@ -36,6 +36,9 @@ const Privacy = lazy(
 );
 const About = lazy(
   () => import(/* webpackChunkName: "about-whatsnew-privacy-debug" */ './shell/About'),
+);
+const SharedLoadoutRedirect = lazy(
+  () => import(/* webpackChunkName: "loadout-share" */ './loadout/loadout-share/SharedLoadoutRedirect'),
 );
 
 export default function App() {
@@ -65,7 +68,7 @@ export default function App() {
       <ClickOutsideRoot>
         <Header />
         <PageLoading />
-        <ErrorBoundary name="DIM Code">
+        <ErrorBoundary name="D2L Code">
           <Suspense fallback={<ShowPageLoading message={t('Loading.Code')} />}>
             <Routes>
               <Route
@@ -128,6 +131,14 @@ export default function App() {
                 <>
                   <Route path="armory/*" element={<DefaultAccount />} />
                   <Route path=":membershipId/:destinyVersion/*" element={<Destiny />} />
+                  <Route
+                    path="loadout/:shareId"
+                    element={
+                      <ErrorBoundary name="sharedLoadout" key="sharedLoadout">
+                        <SharedLoadoutRedirect />
+                      </ErrorBoundary>
+                    }
+                  />
                   <Route path="*" element={<DefaultAccount />} />
                 </>
               )}

@@ -1,7 +1,7 @@
 @use '../variables' as *;
 
 .buttons {
-  composes: flexColumn from '../dim-ui/common.m.scss';
+  composes: flexColumn from '../d2l-ui/common.m.scss';
   margin: 8px 0;
   gap: 8px;
 

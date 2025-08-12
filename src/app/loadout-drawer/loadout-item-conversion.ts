@@ -13,7 +13,7 @@ let missingLoadoutItemId = 1;
 /*
  * We don't save consumables in D2 loadouts, but we may omit ids in shared
  * loadouts (because they'll never match someone else's inventory). So instead,
- * pick an ID. The ID ought to be numeric, or it will fail when sent to the DIM
+ * pick an ID. The ID ought to be numeric, or it will fail when sent to the D2L
  * API.
  */
 export function generateMissingLoadoutItemId() {
@@ -21,7 +21,7 @@ export function generateMissingLoadoutItemId() {
 }
 
 /**
- * Turn the loadout's items into real DIM items. Any that don't exist in inventory anymore
+ * Turn the loadout's items into real D2L items. Any that don't exist in inventory anymore
  * are returned as warnitems.
  */
 export function getItemsFromLoadoutItems(

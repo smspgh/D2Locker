@@ -1,12 +1,12 @@
-import { languageSelector } from 'app/dim-api/selectors';
-import ExternalLink from 'app/dim-ui/ExternalLink';
+import { languageSelector } from 'app/d2l-api/selectors';
+import ExternalLink from 'app/d2l-ui/ExternalLink';
 import { DimItem } from 'app/inventory/item-types';
 import { compact } from 'app/utils/collections';
 import { isKillTrackerSocket } from 'app/utils/item-utils';
 import { getSocketsWithStyle, isWeaponMasterworkSocket } from 'app/utils/socket-utils';
 import { DestinySocketCategoryStyle } from 'bungie-api-ts/destiny2';
 import { ItemCategoryHashes, PlugCategoryHashes } from 'data/d2/generated-enums';
-import logo from 'images/dimlogo.svg';
+import logo from 'images/d2llogo.svg';
 import lightgg from 'images/lightgg.png';
 import { useSelector } from 'react-redux';
 import styles from './Links.m.scss';
@@ -16,7 +16,7 @@ export default function Links({ item }: { item: DimItem }) {
 
   const links = [
     {
-      name: 'DIM',
+      name: 'D2L',
       icon: logo,
       link: `/armory/${item.hash}?perks=${buildSocketParam(item)}`,
     },

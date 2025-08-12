@@ -1,6 +1,6 @@
-import ClassIcon from 'app/dim-ui/ClassIcon';
-import { PressTip } from 'app/dim-ui/PressTip';
-import ColorDestinySymbols from 'app/dim-ui/destiny-symbols/ColorDestinySymbols';
+import ClassIcon from 'app/d2l-ui/ClassIcon';
+import { PressTip } from 'app/d2l-ui/PressTip';
+import ColorDestinySymbols from 'app/d2l-ui/destiny-symbols/ColorDestinySymbols';
 import { t } from 'app/i18next-t';
 import type { BucketSortType } from 'app/inventory/inventory-buckets';
 import { DimItem } from 'app/inventory/item-types';

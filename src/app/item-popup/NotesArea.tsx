@@ -1,5 +1,5 @@
-import { WithSymbolsPicker } from 'app/dim-ui/destiny-symbols/SymbolsPicker';
-import { useAutocomplete } from 'app/dim-ui/text-complete/text-complete';
+import { WithSymbolsPicker } from 'app/d2l-ui/destiny-symbols/SymbolsPicker';
+import { useAutocomplete } from 'app/d2l-ui/text-complete/text-complete';
 import { useHotkey } from 'app/hotkeys/useHotkey';
 import { t } from 'app/i18next-t';
 import { setNote } from 'app/inventory/actions';

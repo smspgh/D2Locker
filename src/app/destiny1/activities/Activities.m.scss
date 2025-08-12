@@ -1,7 +1,7 @@
 @use '../../variables.scss' as *;
 
 .activities {
-  composes: dim-page from global;
+  composes: d2l-page from global;
 
   width: calc(
     (40px + var(--item-size) + (3 * (var(--item-size) + 8px))) * var(--num-characters) +
@@ -15,7 +15,7 @@
 }
 
 .characters {
-  composes: flexRow from '../../dim-ui/common.m.scss';
+  composes: flexRow from '../../d2l-ui/common.m.scss';
   justify-content: space-between;
   margin-top: 12px;
   margin-bottom: 12px;
@@ -65,12 +65,12 @@
 }
 
 .tierCharacters {
-  composes: flexRow from '../../dim-ui/common.m.scss';
+  composes: flexRow from '../../d2l-ui/common.m.scss';
   justify-content: space-around;
 }
 
 .steps {
-  composes: flexRow from '../../dim-ui/common.m.scss';
+  composes: flexRow from '../../d2l-ui/common.m.scss';
 }
 
 .stepIcon {
@@ -88,7 +88,7 @@
 }
 
 .skulls {
-  composes: flexColumn from '../../dim-ui/common.m.scss';
+  composes: flexColumn from '../../d2l-ui/common.m.scss';
   gap: 8px;
   max-width: 350px;
   margin: 0 auto;

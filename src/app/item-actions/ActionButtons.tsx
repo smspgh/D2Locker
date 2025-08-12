@@ -1,11 +1,11 @@
 import { addCompareItem } from 'app/compare/actions';
-import { settingSelector } from 'app/dim-api/selectors';
+import { settingSelector } from 'app/d2l-api/selectors';
 import { t } from 'app/i18next-t';
 import { showInfuse } from 'app/infuse/infuse';
 import { canSyncLockState } from 'app/inventory/SyncTagLock';
 import { DimItem } from 'app/inventory/item-types';
 import { consolidate, distribute } from 'app/inventory/move-item';
-import { sortedStoresSelector, tagSelector } from 'app/inventory/selectors';
+import { allItemsSelector, sortedStoresSelector, tagSelector } from 'app/inventory/selectors';
 import { getStore } from 'app/inventory/stores-helpers';
 import ActionButton from 'app/item-actions/ActionButton';
 import LockButton from 'app/item-actions/LockButton';
@@ -13,10 +13,12 @@ import ItemTagSelector from 'app/item-popup/ItemTagSelector';
 import { hideItemPopup } from 'app/item-popup/item-popup';
 import { ItemActionsModel } from 'app/item-popup/item-popup-actions';
 import { addItemToLoadout } from 'app/loadout-drawer/loadout-events';
+import { makeDupeID, makeArmorClassTypeTierDupeID } from 'app/search/items/search-filters/dupes';
 import { AppIcon, addIcon, compareIcon } from 'app/shell/icons';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import clsx from 'clsx';
 import { useDispatch, useSelector } from 'react-redux';
+import { useMemo } from 'react';
 import arrowsIn from '../../images/arrows-in.png';
 import arrowsOut from '../../images/arrows-out.png';
 import d2Infuse from '../../images/d2infuse.png';
@@ -29,6 +31,52 @@ interface ActionButtonProps {
 
 export function CompareActionButton({ item, label }: ActionButtonProps) {
   const dispatch = useDispatch();
+  const allItems = useSelector(allItemsSelector);
+
+  // Calculate duplicate count
+  const dupeCount = useMemo(() => {
+    if (!item.comparable) return 1;
+    
+    // For exotic armor, use perks to determine true duplicates
+    // For other items, use the standard dupe ID
+    let count = 0;
+    
+    if (item.bucket.inArmor && item.isExotic && item.sockets?.allSockets) {
+      // For exotic armor, count items with same hash and same perk combination
+      const itemPerkHashes = item.sockets.allSockets
+        .filter(socket => socket.isPerk && socket.plugged?.plugDef.hash)
+        .map(socket => socket.plugged!.plugDef.hash)
+        .sort((a, b) => a - b);
+      
+      for (const i of allItems) {
+        if (!i.comparable || i.hash !== item.hash) continue;
+        
+        if (i.bucket.inArmor && i.isExotic && i.sockets?.allSockets) {
+          const otherPerkHashes = i.sockets.allSockets
+            .filter(socket => socket.isPerk && socket.plugged?.plugDef.hash)
+            .map(socket => socket.plugged!.plugDef.hash)
+            .sort((a, b) => a - b);
+          
+          // Check if perk arrays are equal
+          if (itemPerkHashes.length === otherPerkHashes.length &&
+              itemPerkHashes.every((hash, index) => hash === otherPerkHashes[index])) {
+            count++;
+          }
+        }
+      }
+    } else {
+      // Standard duplicate counting for non-exotic armor and all other items
+      const dupeID = makeDupeID(item);
+      
+      for (const i of allItems) {
+        if (i.comparable && makeDupeID(i) === dupeID) {
+          count++;
+        }
+      }
+    }
+    
+    return count;
+  }, [allItems, item]);
 
   const openCompare = () => {
     hideItemPopup();
@@ -41,6 +89,7 @@ export function CompareActionButton({ item, label }: ActionButtonProps) {
 
   return (
     <ActionButton onClick={openCompare} hotkey="c" hotkeyDescription={t('Compare.ButtonHelp')}>
+      <span className={styles.dupeCount}>{dupeCount}</span>
       <AppIcon icon={compareIcon} />
       {label && <span className={styles.label}>{t('Compare.Button')}</span>}
     </ActionButton>

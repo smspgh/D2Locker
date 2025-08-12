@@ -1,8 +1,8 @@
 import { DestinyAccount } from 'app/accounts/destiny-account';
-import ClosableContainer from 'app/dim-ui/ClosableContainer';
-import PageWithMenu from 'app/dim-ui/PageWithMenu';
-import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
-import Switch from 'app/dim-ui/Switch';
+import ClosableContainer from 'app/d2l-ui/ClosableContainer';
+import PageWithMenu from 'app/d2l-ui/PageWithMenu';
+import ShowPageLoading from 'app/d2l-ui/ShowPageLoading';
+import Switch from 'app/d2l-ui/Switch';
 import { t } from 'app/i18next-t';
 import { useLoadStores } from 'app/inventory/store/hooks';
 import { getCurrentStore } from 'app/inventory/stores-helpers';
@@ -20,9 +20,9 @@ import { BucketHashes, ItemCategoryHashes } from 'data/d2/generated-enums';
 import { produce } from 'immer';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
-import CharacterSelect from '../../dim-ui/CharacterSelect';
-import CollapsibleTitle from '../../dim-ui/CollapsibleTitle';
-import ErrorBoundary from '../../dim-ui/ErrorBoundary';
+import CharacterSelect from '../../d2l-ui/CharacterSelect';
+import CollapsibleTitle from '../../d2l-ui/CollapsibleTitle';
+import ErrorBoundary from '../../d2l-ui/ErrorBoundary';
 import { D1GridNode, D1Item, DimItem } from '../../inventory/item-types';
 import { bucketsSelector, sortedStoresSelector } from '../../inventory/selectors';
 import { D1Store } from '../../inventory/store-types';
@@ -426,10 +426,10 @@ export default function D1LoadoutBuilder({ account }: { account: DestinyAccount 
         </CollapsibleTitle>
         <div className={styles.section}>
           <div className={styles.controls}>
-            <button type="button" className="dim-button" onClick={lockEquipped}>
+            <button type="button" className="d2l-button" onClick={lockEquipped}>
               {t('LB.LockEquipped')}
             </button>
-            <button type="button" className="dim-button" onClick={clearLocked}>
+            <button type="button" className="d2l-button" onClick={clearLocked}>
               {t('LB.ClearLocked')}
             </button>
             <span>
@@ -552,10 +552,10 @@ function SetControls({
             ))}
           </select>
         </div>
-        <button type="button" className="dim-button" onClick={toggleShowAdvanced}>
+        <button type="button" className="d2l-button" onClick={toggleShowAdvanced}>
           {t('LB.AdvancedOptions')}
         </button>
-        <button type="button" className="dim-button" onClick={toggleShowHelp}>
+        <button type="button" className="d2l-button" onClick={toggleShowHelp}>
           {t('LB.Help.Help')}
         </button>
       </div>

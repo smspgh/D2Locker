@@ -320,7 +320,7 @@ function buildDefinedSocket(
       const plugSetItems = [...craftingPlugSetItems, ...randomizedPlugSetItems];
       if (plugSetItems.length) {
         // Unique the plugs by hash, but also consider the perk rollable if there's a copy with currentlyCanRoll = true
-        // See https://github.com/DestinyItemManager/DIM/issues/7272
+        // See https://github.com/DestinyItemManager/D2L/issues/7272
         // We use a Map to preserve insertion order - an object would return its values sorted by hash!
         const plugs = new Map<number, DestinyItemSocketEntryPlugItemRandomizedDefinition>();
         for (const randomPlug of plugSetItems) {
@@ -565,7 +565,7 @@ const noDefaultPlugIdentifiers: (string | number)[] = [
 ];
 
 /**
- * DIM sometimes wants to know whether a plug is the "empty" plug so that
+ * D2L sometimes wants to know whether a plug is the "empty" plug so that
  * it knows not to record an override, or it may choose to reset a socket
  * back to empty to free up mod space, or it may wish to distinguish the
  * empty plug in UI sorting. However there's no easy, manifest-driven way
@@ -819,7 +819,7 @@ function buildCachedDimPlugSet(defs: D2ManifestDefinitions, plugSetHash: number)
     }
   }
   const [cant, can] = partition(plugs, (p) => plugCannotCurrentlyRoll(plugs, p.plugDef.hash));
-  const dimPlugSet: DimPlugSet = {
+  const d2lPlugSet: DimPlugSet = {
     plugs,
     hash: plugSetHash,
     precomputedEmptyPlugItemHash: defPlugSet.reusablePlugItems.find((p) =>
@@ -829,9 +829,9 @@ function buildCachedDimPlugSet(defs: D2ManifestDefinitions, plugSetHash: number)
     plugHashesThatCanRoll: can.map((p) => p.plugDef.hash),
     craftingData: craftingData,
   };
-  reusablePlugSetCache[plugSetHash] = dimPlugSet;
+  reusablePlugSetCache[plugSetHash] = d2lPlugSet;
 
-  return dimPlugSet;
+  return d2lPlugSet;
 }
 
 /**

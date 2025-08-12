@@ -55,7 +55,7 @@ export default function LoadoutDrawerOptions({
     <div className={styles.loadoutOptions}>
       <div className={clsx(styles.inputGroup, styles.loadoutName)}>
         <input
-          className={styles.dimInput}
+          className={styles.d2lInput}
           name="name"
           onChange={handleSetName}
           minLength={1}
@@ -78,7 +78,7 @@ export default function LoadoutDrawerOptions({
       {loadout.notes === undefined && (
         <div className={styles.inputGroup}>
           <button
-            className="dim-button"
+            className="d2l-button"
             onClick={addNotes}
             type="button"
             title={t('Loadouts.AddNotes')}

@@ -49,24 +49,24 @@ export function mapArmor2ModToProcessMod(mod: PluggableInventoryItemDefinition):
  * before.
  */
 export function mapDimItemToProcessItem({
-  dimItem,
+  d2lItem,
   armorEnergyRules,
   modsForSlot,
 }: {
-  dimItem: DimItem;
+  d2lItem: DimItem;
   armorEnergyRules: ArmorEnergyRules;
   modsForSlot?: PluggableInventoryItemDefinition[];
 }): ProcessItem {
-  const { id, hash, name, isExotic, power } = dimItem;
+  const { id, hash, name, isExotic, power } = d2lItem;
 
-  const stats = calculateAssumedMasterworkStats(dimItem, armorEnergyRules);
-  const capacity = calculateAssumedItemEnergy(dimItem, armorEnergyRules);
-  const modMetadatas = getSpecialtySocketMetadatas(dimItem);
+  const stats = calculateAssumedMasterworkStats(d2lItem, armorEnergyRules);
+  const capacity = calculateAssumedItemEnergy(d2lItem, armorEnergyRules);
+  const modMetadatas = getSpecialtySocketMetadatas(d2lItem);
   const modsCost = modsForSlot
     ? sumBy(modsForSlot, (mod) => mod.plug.energyCost?.energyCost ?? 0)
     : 0;
 
-  const assumeArtifice = isAssumedArtifice(dimItem, armorEnergyRules);
+  const assumeArtifice = isAssumedArtifice(d2lItem, armorEnergyRules);
 
   return {
     id,

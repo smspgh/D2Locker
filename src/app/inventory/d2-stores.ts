@@ -4,7 +4,7 @@ import { compareAccounts, DestinyAccount } from 'app/accounts/destiny-account';
 import { getPlatforms } from 'app/accounts/platforms';
 import { currentAccountSelector } from 'app/accounts/selectors';
 import { loadClarity } from 'app/clarity/descriptions/loadDescriptions';
-import { customStatsSelector } from 'app/dim-api/selectors';
+import { customStatsSelector } from 'app/d2l-api/selectors';
 import { t } from 'app/i18next-t';
 import { inGameLoadoutLoaded } from 'app/loadout/ingame/actions';
 import { processInGameLoadouts } from 'app/loadout/loadout-type-converters';
@@ -14,7 +14,7 @@ import { d2ManifestSelector, manifestSelector } from 'app/manifest/selectors';
 import { loadingTracker } from 'app/shell/loading-tracker';
 import { get, set } from 'app/storage/idb-keyval';
 import { ThunkResult } from 'app/store/types';
-import { DimError } from 'app/utils/dim-error';
+import { DimError } from 'app/utils/d2l-error';
 import { convertToError, errorMessage } from 'app/utils/errors';
 import { errorLog, infoLog, timer, warnLog } from 'app/utils/log';
 import { DestinyProfileResponse } from 'bungie-api-ts/destiny2';
@@ -22,7 +22,7 @@ import { getCharacters as d1GetCharacters } from '../bungie-api/destiny1-api';
 import { getCharacters, getStores } from '../bungie-api/destiny2-api';
 import { bungieErrorToaster } from '../bungie-api/error-toaster';
 import { D2ManifestDefinitions, getDefinitions } from '../destiny2/d2-definitions';
-import { bungieNetPath } from '../dim-ui/BungieImage';
+import { bungieNetPath } from '../d2l-ui/BungieImage';
 import { showNotification } from '../notifications/notifications';
 import { reportException } from '../utils/sentry';
 import {
@@ -35,7 +35,7 @@ import {
   update,
 } from './actions';
 import { notifyOtherTabsStoreUpdated } from './cross-tab';
-import { cleanInfos } from './dim-item-info';
+import { cleanInfos } from './d2l-item-info';
 import { d2BucketsSelector, storesLoadedSelector } from './selectors';
 import { DimStore } from './store-types';
 import { getCharacterStatsData as getD1CharacterStatsData } from './store/character-utils';

@@ -1,5 +1,5 @@
 import { InGameLoadoutIdentifiers } from '@destinyitemmanager/dim-api-types';
-import BungieImage, { bungieBackgroundStyle } from 'app/dim-ui/BungieImage';
+import BungieImage, { bungieBackgroundStyle } from 'app/d2l-ui/BungieImage';
 import { resolveInGameLoadoutIdentifiers } from 'app/loadout/loadout-type-converters';
 import { InGameLoadout } from 'app/loadout/loadout-types';
 import { useD2Definitions } from 'app/manifest/selectors';

@@ -1,6 +1,6 @@
 import { currentAccountSelector } from 'app/accounts/selectors';
 import { getStores } from 'app/bungie-api/destiny2-api';
-import FileUpload from 'app/dim-ui/FileUpload';
+import FileUpload from 'app/d2l-ui/FileUpload';
 import { t } from 'app/i18next-t';
 import { setMockProfileResponse } from 'app/inventory/actions';
 import { loadStores } from 'app/inventory/d2-stores';
@@ -51,11 +51,11 @@ export function TroubleshootingSettings() {
 
   return (
     <>
-      <button type="button" className="dim-button" onClick={saveProfileResponse}>
+      <button type="button" className="d2l-button" onClick={saveProfileResponse}>
         {t('Settings.ExportProfile')}
       </button>
 
-      {($DIM_FLAVOR === 'dev' || window.enableMockProfile) && (
+      {($D2L_FLAVOR === 'dev' || window.enableMockProfile) && (
         <FileUpload
           title="Upload Profile Response JSON"
           accept={{ 'application/json': ['.json'] }}

@@ -15,39 +15,39 @@ export const supportedLanguages = [
 ];
 
 export const unsupported = {
-  de: 'Das DIM-Team unterstützt diesen Browser nicht. Einige oder alle DIM-Funktionen funktionieren möglicherweise nicht.',
-  es: 'El equipo de DIM no soporta usar este navegador. Algunas o todas las características de DIM podrían no funcionar.',
+  de: 'Das D2L-Team unterstützt diesen Browser nicht. Einige oder alle D2L-Funktionen funktionieren möglicherweise nicht.',
+  es: 'El equipo de D2L no soporta usar este navegador. Algunas o todas las características de D2L podrían no funcionar.',
   'es-mx':
-    'El equipo de DIM no soporta usar este navegador. Algunas o todas las características de DIM podrían no funcionar.',
-  fr: "L'équipe DIM ne prend pas en charge ce navigateur. Certaines ou toutes les fonctionnalités de DIM peuvent ne pas fonctionner.",
-  it: "Il team di DIM non supporta l'utilizzo di questo browser. Alcune o tutte le funzioni di DIM potrebbero non funzionare.",
-  ja: 'DIM チームはこのブラウザの利用をサポートしていません。DIM の一部または全ての機能が動作しない可能性があります。',
-  ko: 'DIM 팀은 이 브라우저를 지원하지 않습니다. DIM의 일부나 전체 기능이 동작하지 않을 수 있습니다.',
-  pl: 'Zespół DIM nie obsługuje tej przeglądarki. Niektóre lub wszystkie funkcje DIM mogą nie działać.',
+    'El equipo de D2L no soporta usar este navegador. Algunas o todas las características de D2L podrían no funcionar.',
+  fr: "L'équipe D2L ne prend pas en charge ce navigateur. Certaines ou toutes les fonctionnalités de D2L peuvent ne pas fonctionner.",
+  it: "Il team di D2L non supporta l'utilizzo di questo browser. Alcune o tutte le funzioni di D2L potrebbero non funzionare.",
+  ja: 'D2L チームはこのブラウザの利用をサポートしていません。D2L の一部または全ての機能が動作しない可能性があります。',
+  ko: 'D2L 팀은 이 브라우저를 지원하지 않습니다. D2L의 일부나 전체 기능이 동작하지 않을 수 있습니다.',
+  pl: 'Zespół D2L nie obsługuje tej przeglądarki. Niektóre lub wszystkie funkcje D2L mogą nie działać.',
   'pt-br':
-    'A equipe do DIM não oferece suporte a este navegador. Alguns recursos do DIM podem não funcionar.',
-  ru: 'Команда DIM не поддерживает использование этого браузера. Некоторые или все функции DIM могут не работать.',
-  'zh-chs': 'DIM 团队未对当前浏览器作出支持。DIM 可能部分或完全不可用。',
-  'zh-cht': 'DIM團隊不支持使用此瀏覽器。 DIM可能部分或完全不可用。',
+    'A equipe do D2L não oferece suporte a este navegador. Alguns recursos do D2L podem não funcionar.',
+  ru: 'Команда D2L не поддерживает использование этого браузера. Некоторые или все функции D2L могут не работать.',
+  'zh-chs': 'D2L 团队未对当前浏览器作出支持。D2L 可能部分或完全不可用。',
+  'zh-cht': 'D2L團隊不支持使用此瀏覽器。 D2L可能部分或完全不可用。',
 };
 
 export const steamBrowser = {
-  en: 'The Steam overlay browser is very old and some or all DIM features may not work. We cannot provide support for it.',
-  de: 'Der Steam-Overlay-Browser ist sehr alt und einige oder alle DIM-Funktionen funktionieren möglicherweise nicht. Wir können dies nicht unterstützen.',
-  es: 'El navegador de la interfaz de Steam es muy antiguo y podría hacer que algunas o todas las características de DIM no funcionen. No podemos proveer de soporte para ello.',
+  en: 'The Steam overlay browser is very old and some or all D2L features may not work. We cannot provide support for it.',
+  de: 'Der Steam-Overlay-Browser ist sehr alt und einige oder alle D2L-Funktionen funktionieren möglicherweise nicht. Wir können dies nicht unterstützen.',
+  es: 'El navegador de la interfaz de Steam es muy antiguo y podría hacer que algunas o todas las características de D2L no funcionen. No podemos proveer de soporte para ello.',
   'es-mx':
-    'El navegador de Steam es muy antiguo y podría hacer que algunas o todas las características de DIM no funcionen. No podemos proveer de soporte para ello.',
-  fr: "Le navigateur de l'overlay Steam est très vieux et certaines des fonctionnalitées de DIM peuvent ne pas fonctionner. Nous ne pouvons pas fournir de support pour ce navigateur.",
-  it: "Il browser dell'overlay di Steam è molto vecchio e alcune o tutte le funzionalità di DIM potrebbero non funzionare. Non possiamo fornire supporto.",
-  ja: 'Steam オーバーレイ ブラウザは非常に古いため、DIMの一部の機能もしくは全て動作しない可能性があることからサポート対象外とします。',
-  ko: '스팀 오버레이의 브라우저는 매우 오래되어 DIM의 일부 혹은 모든 기능이 동작하지 않을 수 있습니다. 이에 대한 지원은 제공되지 않습니다.',
-  pl: 'Przeglądarka nakładki Steam jest bardzo stara i część funkcji lub wszystkie funkcje DIM mogą nie działać. Nie możemy zapewnić wsparcia w tym zakresie.',
+    'El navegador de Steam es muy antiguo y podría hacer que algunas o todas las características de D2L no funcionen. No podemos proveer de soporte para ello.',
+  fr: "Le navigateur de l'overlay Steam est très vieux et certaines des fonctionnalitées de D2L peuvent ne pas fonctionner. Nous ne pouvons pas fournir de support pour ce navigateur.",
+  it: "Il browser dell'overlay di Steam è molto vecchio e alcune o tutte le funzionalità di D2L potrebbero non funzionare. Non possiamo fornire supporto.",
+  ja: 'Steam オーバーレイ ブラウザは非常に古いため、D2Lの一部の機能もしくは全て動作しない可能性があることからサポート対象外とします。',
+  ko: '스팀 오버레이의 브라우저는 매우 오래되어 D2L의 일부 혹은 모든 기능이 동작하지 않을 수 있습니다. 이에 대한 지원은 제공되지 않습니다.',
+  pl: 'Przeglądarka nakładki Steam jest bardzo stara i część funkcji lub wszystkie funkcje D2L mogą nie działać. Nie możemy zapewnić wsparcia w tym zakresie.',
   'pt-br':
-    'O navegador do Painel Steam é muito antigo e alguns recursos do DIM podem não funcionar. Não podemos oferecer suporte para isso.',
-  ru: 'Браузер оверлея Steam очень старый, и некоторые или все функции DIM могут не работать. Мы не можем предоставить для него поддержку.',
+    'O navegador do Painel Steam é muito antigo e alguns recursos do D2L podem não funcionar. Não podemos oferecer suporte para isso.',
+  ru: 'Браузер оверлея Steam очень старый, и некоторые или все функции D2L могут не работать. Мы не можем предоставить для него поддержку.',
   'zh-chs':
-    'Steam 游戏内叠加浏览器版本较老，DIM 的部分或全部功能可能无法正常工作，且我们无法为其提供支持。',
-  'zh-cht': 'Steam覆蓋層的瀏覽器已經非常老了，可能無法使用一些DIM的功能，我們無法提供相關支援。',
+    'Steam 游戏内叠加浏览器版本较老，D2L 的部分或全部功能可能无法正常工作，且我们无法为其提供支持。',
+  'zh-cht': 'Steam覆蓋層的瀏覽器已經非常老了，可能無法使用一些D2L的功能，我們無法提供相關支援。',
 };
 
 export const samsungInternet = {

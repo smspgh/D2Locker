@@ -46,7 +46,7 @@ export function buildFiltersMap<I, FilterCtx, SuggestionsCtx>(
 
       for (const keyword of filterKeywords) {
         if (hasSimple) {
-          if ($DIM_FLAVOR === 'test' && isFilters[keyword]) {
+          if ($D2L_FLAVOR === 'test' && isFilters[keyword]) {
             throw new Error(
               `Conflicting is:${keyword} filter -- only the last inserted filter will work.`,
             );
@@ -54,7 +54,7 @@ export function buildFiltersMap<I, FilterCtx, SuggestionsCtx>(
           isFilters[keyword] = filter;
         }
         if (hasKv) {
-          if ($DIM_FLAVOR === 'test' && kvFilters[keyword]) {
+          if ($D2L_FLAVOR === 'test' && kvFilters[keyword]) {
             throw new Error(
               `Conflicting ${keyword}:value filter -- only the last inserted filter will work.`,
             );

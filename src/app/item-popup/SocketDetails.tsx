@@ -1,8 +1,8 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
-import { languageSelector } from 'app/dim-api/selectors';
-import BungieImage from 'app/dim-ui/BungieImage';
-import { EnergyCostIcon } from 'app/dim-ui/ElementIcon';
-import Sheet from 'app/dim-ui/Sheet';
+import { languageSelector } from 'app/d2l-api/selectors';
+import BungieImage from 'app/d2l-ui/BungieImage';
+import { EnergyCostIcon } from 'app/d2l-ui/ElementIcon';
+import Sheet from 'app/d2l-ui/Sheet';
 import { t } from 'app/i18next-t';
 import { DefItemIcon } from 'app/inventory/ItemIcon';
 import { DimItem, DimSocket, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
@@ -180,8 +180,8 @@ export default function SocketDetails({
   }
 
   if (socket.plugSet?.plugs) {
-    for (const dimPlug of socket.plugSet.plugs) {
-      modHashes.add(dimPlug.plugDef.hash);
+    for (const d2lPlug of socket.plugSet.plugs) {
+      modHashes.add(d2lPlug.plugDef.hash);
     }
   }
   if (socket.socketDefinition.randomizedPlugSetHash) {

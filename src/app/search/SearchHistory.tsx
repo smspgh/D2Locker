@@ -1,8 +1,8 @@
 import { Search, SearchType } from '@destinyitemmanager/dim-api-types';
-import { saveSearch, searchDeleted } from 'app/dim-api/basic-actions';
-import { recentSearchesSelector } from 'app/dim-api/selectors';
-import RadioButtons, { Option } from 'app/dim-ui/RadioButtons';
-import { ColumnSort, SortDirection, useTableColumnSorts } from 'app/dim-ui/table-columns';
+import { saveSearch, searchDeleted } from 'app/d2l-api/basic-actions';
+import { recentSearchesSelector } from 'app/d2l-api/selectors';
+import RadioButtons, { Option } from 'app/d2l-ui/RadioButtons';
+import { ColumnSort, SortDirection, useTableColumnSorts } from 'app/d2l-ui/table-columns';
 import { t } from 'app/i18next-t';
 import {
   AppIcon,
@@ -88,7 +88,7 @@ export default function SearchHistory() {
     <div className={styles.searchHistory}>
       <p className={styles.instructions}>
         {t('SearchHistory.Description')}
-        <button type="button" className="dim-button" onClick={onDeleteAll}>
+        <button type="button" className="d2l-button" onClick={onDeleteAll}>
           {t('SearchHistory.DeleteAll')}
         </button>
         <RadioButtons

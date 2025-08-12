@@ -1,4 +1,4 @@
-import { itemPop, scrollToPosition } from 'app/dim-ui/scroll';
+import { itemPop, scrollToPosition } from 'app/d2l-ui/scroll';
 import { t } from 'app/i18next-t';
 import { locateItem$ } from 'app/inventory/locate-item';
 import { DimStore } from 'app/inventory/store-types';

@@ -1,7 +1,7 @@
 import { Vendor } from 'app/destiny1/vendors/vendor.service';
 import { t } from 'app/i18next-t';
 import { compareBy } from 'app/utils/comparators';
-import { DimError } from 'app/utils/dim-error';
+import { DimError } from 'app/utils/d2l-error';
 import { errorLog } from 'app/utils/log';
 import {
   DestinyEquipItemResults,
@@ -184,7 +184,7 @@ export async function equipItems(
   store: DimStore,
   items: DimItem[],
 ): Promise<{ [itemInstanceId: string]: PlatformErrorCodes }> {
-  // Sort exotics to the end. See https://github.com/DestinyItemManager/DIM/issues/323
+  // Sort exotics to the end. See https://github.com/DestinyItemManager/D2L/issues/323
   const itemIds = items.toSorted(compareBy((i) => i.isExotic)).map((i) => i.id);
 
   const response = await authenticatedHttpClient<ServerResponse<DestinyEquipItemResults>>(

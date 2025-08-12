@@ -3,7 +3,7 @@
 interface CssExports {
   'complete': string;
   'currentScore': string;
-  'dimTrackedIcon': string;
+  'd2lTrackedIcon': string;
   'gildingText': string;
   'gildingTriumph': string;
   'glow': string;

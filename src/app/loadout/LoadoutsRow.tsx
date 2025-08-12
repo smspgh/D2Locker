@@ -1,4 +1,4 @@
-import { ConfirmButton } from 'app/dim-ui/ConfirmButton';
+import { ConfirmButton } from 'app/d2l-ui/ConfirmButton';
 import { t } from 'app/i18next-t';
 import { DimStore } from 'app/inventory/store-types';
 import { applyLoadout } from 'app/loadout-drawer/loadout-apply';
@@ -53,14 +53,14 @@ export default memo(function LoadoutRow({
 
     if (equippable) {
       actionButtons.push(
-        <button key="apply" type="button" className="dim-button" onClick={handleApply}>
+        <button key="apply" type="button" className="d2l-button" onClick={handleApply}>
           {t('Loadouts.Apply')}
         </button>,
       );
     }
 
     actionButtons.push(
-      <button key="edit" type="button" className="dim-button" onClick={handleEdit}>
+      <button key="edit" type="button" className="d2l-button" onClick={handleEdit}>
         {saved ? t('Loadouts.EditBrief') : t('Loadouts.SaveLoadout')}
       </button>,
     );
@@ -68,14 +68,14 @@ export default memo(function LoadoutRow({
     if (equippable) {
       // add button here to copy and edit the loadout
       actionButtons.push(
-        <button key="copyAndEdit" type="button" className="dim-button" onClick={handleCopyAndEdit}>
+        <button key="copyAndEdit" type="button" className="d2l-button" onClick={handleCopyAndEdit}>
           {t('Loadouts.CopyAndEdit')}
         </button>,
       );
     }
 
     actionButtons.push(
-      <button key="share" type="button" className="dim-button" onClick={handleShare}>
+      <button key="share" type="button" className="d2l-button" onClick={handleShare}>
         {t('Loadouts.ShareLoadout')}
       </button>,
     );
@@ -83,7 +83,7 @@ export default memo(function LoadoutRow({
     if (streamDeckDeepLink) {
       actionButtons.push(
         <a href={streamDeckDeepLink} target="_blank">
-          <button key="open-on-stream-deck" type="button" className="dim-button">
+          <button key="open-on-stream-deck" type="button" className="d2l-button">
             {t('Loadouts.OpenOnStreamDeck')}
           </button>
         </a>,
@@ -101,7 +101,7 @@ export default memo(function LoadoutRow({
         <button
           key="snapshot"
           type="button"
-          className="dim-button"
+          className="d2l-button"
           onClick={onSnapshotInGameLoadout}
         >
           {t('Loadouts.Snapshot')}

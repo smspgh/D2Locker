@@ -1,0 +1,74 @@
+@use '../variables.scss' as *;
+
+.button {
+  composes: d2l-button from global;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.menu {
+  background: var(--theme-dropdown-menu-bg);
+  color: var(--theme-text);
+  font-size: 12px;
+  z-index: 100;
+  position: absolute;
+  &.open {
+    box-shadow:
+      0 0 0 1px var(--theme-item-popup-border),
+      var(--theme-drop-shadow);
+  }
+}
+
+.menuItem {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  min-width: 10em;
+  padding: 6px 9px;
+
+  @include phone-portrait {
+    padding: 10px 16px;
+    font-size: 14px;
+  }
+
+  :global(.app-icon) {
+    color: var(--theme-text) !important;
+    width: 16px;
+    text-align: center;
+    margin-right: 4px;
+    font-size: 12px !important;
+    height: 12px;
+  }
+}
+
+.highlighted {
+  background-color: var(--theme-accent-primary);
+  color: var(--theme-text-invert);
+  cursor: pointer;
+  & :global(.app-icon) {
+    color: var(--theme-text-inverted) !important;
+  }
+  // Maintain legibility of keyHelp
+  & span {
+    color: var(--theme-text-invert);
+    border-color: var(--theme-text-invert);
+  }
+}
+
+.disabled {
+  color: #999 !important;
+  :global(.app-icon) {
+    color: #999 !important;
+  }
+  &.highlighted {
+    background-color: transparent;
+  }
+}
+
+.arrow {
+  font-size: 10px !important;
+  width: 10px !important;
+  height: 10px !important;
+  margin-left: 10px;
+}

@@ -185,7 +185,7 @@ function getPlugInvestmentStats(
  * that more explicitly contains the plug stat activation rules and
  * fixes some data errors/problems.
  *
- * TODO: If/when https://github.com/DestinyItemManager/DIM/issues/9076
+ * TODO: If/when https://github.com/DestinyItemManager/D2L/issues/9076
  * happens and we use DimPlug everywhere, we store the return value in
  * DimPlug instead of caching here.
  */

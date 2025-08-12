@@ -21,10 +21,10 @@ import { createSelector } from 'reselect';
 
 /**
  * Returns two bits of information:
- *  - for each armor slot, a real DIM item that either corresponds to the
+ *  - for each armor slot, a real D2L item that either corresponds to the
  *    equipped item from the loadout, or the currently equipped armor item if
  *    the loadout didn't have one in that bucket
- *  - a loadout item (a real DIM item plus some other info?) representing the
+ *  - a loadout item (a real D2L item plus some other info?) representing the
  *    selected subclass for the loadout
  */
 // TODO: Why are these in the same selector? Why isn't it memoized?

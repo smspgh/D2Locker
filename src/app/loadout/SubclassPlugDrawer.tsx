@@ -180,17 +180,17 @@ function getPlugsForSubclass(
           // for characters other than the aforementioned primary character doesn't even return them as `enabled`, so this
           // is why we just take the raw data from the plugSet and there's no kind of unlock check here.
           // See https://github.com/Bungie-net/api/issues/1572
-          for (const dimPlug of firstSocket.plugSet.plugs) {
+          for (const d2lPlug of firstSocket.plugSet.plugs) {
             const isEmptySocket =
-              (isAspect || isFragment) && dimPlug.plugDef.hash === defaultPlugHash;
+              (isAspect || isFragment) && d2lPlug.plugDef.hash === defaultPlugHash;
 
             if (!isEmptySocket) {
-              plugSet.plugs.push(dimPlug.plugDef);
+              plugSet.plugs.push(d2lPlug.plugDef);
 
               if (isAspect) {
-                aspects.add(dimPlug.plugDef);
+                aspects.add(d2lPlug.plugDef);
               } else if (isFragment) {
-                fragments.add(dimPlug.plugDef);
+                fragments.add(d2lPlug.plugDef);
               }
             }
           }

@@ -1,9 +1,9 @@
 import { compareNameQuery } from 'app/compare/compare-utils';
-import BungieImage from 'app/dim-ui/BungieImage';
-import ElementIcon from 'app/dim-ui/ElementIcon';
-import { ArmorSlotIcon, WeaponTypeIcon } from 'app/dim-ui/ItemCategoryIcon';
-import { PressTip } from 'app/dim-ui/PressTip';
-import { SpecialtyModSlotIcon } from 'app/dim-ui/SpecialtyModSlotIcon';
+import BungieImage from 'app/d2l-ui/BungieImage';
+import ElementIcon from 'app/d2l-ui/ElementIcon';
+import { ArmorSlotIcon, WeaponTypeIcon } from 'app/d2l-ui/ItemCategoryIcon';
+import { PressTip } from 'app/d2l-ui/PressTip';
+import { SpecialtyModSlotIcon } from 'app/d2l-ui/SpecialtyModSlotIcon';
 import { DefItemIcon } from 'app/inventory/ItemIcon';
 import { DimItem } from 'app/inventory/item-types';
 import { DimPlugTooltip } from 'app/item-popup/PlugTooltip';
@@ -154,7 +154,7 @@ const itemFactors: Record<string, Factor> = {
   },
 };
 
-// which factors to check, for which DIM buckets.
+// which factors to check, for which D2L buckets.
 // keyed by DimItem.bucket.sort (InventoryBucket.sort)
 export const factorCombos = {
   Weapons: [

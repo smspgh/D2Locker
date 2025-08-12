@@ -10,6 +10,14 @@
   aspect-ratio: 16/9;
   user-select: text;
 
+  // Make the item grid show 5 items per row on mobile
+  @include phone-portrait {
+    :global(.sub-bucket) {
+      grid-template-columns: repeat(5, 1fr);
+      gap: 4px;
+    }
+  }
+
   :global(.item-details) {
     margin-left: 0;
     margin-right: 0;
@@ -119,12 +127,12 @@
 }
 
 .list {
-  composes: flexColumn from '../dim-ui/common.m.scss';
+  composes: flexColumn from '../d2l-ui/common.m.scss';
   gap: 16px;
 }
 
 .alternate {
-  composes: flexRow from '../dim-ui/common.m.scss';
+  composes: flexRow from '../d2l-ui/common.m.scss';
   gap: 8px;
   text-align: left;
   width: max-content;
@@ -143,7 +151,7 @@
 }
 
 .alternateButton {
-  composes: resetButton from '../dim-ui/common.m.scss';
+  composes: resetButton from '../d2l-ui/common.m.scss';
   composes: item from global;
 }
 

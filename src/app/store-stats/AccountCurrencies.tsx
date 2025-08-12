@@ -1,4 +1,4 @@
-import BungieImage from 'app/dim-ui/BungieImage';
+import BungieImage from 'app/d2l-ui/BungieImage';
 import { currenciesSelector } from 'app/inventory/selectors';
 import React, { memo } from 'react';
 import { useSelector } from 'react-redux';

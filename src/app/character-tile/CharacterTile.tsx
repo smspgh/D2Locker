@@ -1,4 +1,4 @@
-import FractionalPowerLevel from 'app/dim-ui/FractionalPowerLevel';
+import FractionalPowerLevel from 'app/d2l-ui/FractionalPowerLevel';
 import type { DimStore, DimTitle } from 'app/inventory/store-types';
 import { allPowerLevelsSelector, powerLevelSelector } from 'app/inventory/store/selectors';
 import { AppIcon, powerActionIcon } from 'app/shell/icons';

@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__serena__activate_project",
+      "mcp__serena__find_file",
+      "Bash(grep:*)",
+      "Bash(ls:*)",
+      "Bash(pnpm start:*)",
+      "mcp__powershell__execute_command",
+      "mcp__playwright__browser_snapshot",
+      "mcp__playwright__browser_click",
+      "mcp__playwright__browser_take_screenshot",
+      "Bash(rm:*)"
+    ],
+    "deny": []
+  }
+}

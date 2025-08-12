@@ -1,7 +1,7 @@
 import { LoadoutParameters } from '@destinyitemmanager/dim-api-types';
 import { D1ManifestDefinitions } from 'app/destiny1/d1-definitions';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
-import CheckButton from 'app/dim-ui/CheckButton';
+import CheckButton from 'app/d2l-ui/CheckButton';
 import { t } from 'app/i18next-t';
 import { D2BucketCategory, InventoryBucket } from 'app/inventory/inventory-buckets';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
@@ -225,7 +225,7 @@ export function LoadoutEditSubclassSection({
       {subclass && (
         <div className={styles.buttons}>
           {subclass.item.sockets ? (
-            <button type="button" className="dim-button" onClick={handleOpenPlugDrawer}>
+            <button type="button" className="d2l-button" onClick={handleOpenPlugDrawer}>
               {t('LB.SelectSubclassOptions')}
             </button>
           ) : (

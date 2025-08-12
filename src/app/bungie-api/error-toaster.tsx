@@ -1,11 +1,11 @@
 import { t } from 'app/i18next-t';
 import { bungieHelpAccount, bungieHelpLink } from 'app/shell/links';
-import ExternalLink from '../dim-ui/ExternalLink';
+import ExternalLink from '../d2l-ui/ExternalLink';
 import { NotifyInput } from '../notifications/notifications';
 import { AppIcon, mastodonIcon } from '../shell/icons';
 
 /**
- * Generates parameters for a toaster based on an error, including DIM and Bungie social links.
+ * Generates parameters for a toaster based on an error, including D2L and Bungie social links.
  *
  * Use this for when you suspect Bungie.net is down.
  */
@@ -30,7 +30,7 @@ export function bungieErrorToaster(errorMessage: string | undefined): NotifyInpu
   };
 }
 
-export function dimErrorToaster(title: string, message: string, errorMessage: string): NotifyInput {
+export function d2lErrorToaster(title: string, message: string, errorMessage: string): NotifyInput {
   return {
     type: 'error',
     title,

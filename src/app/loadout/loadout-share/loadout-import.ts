@@ -1,5 +1,5 @@
 import { Loadout as DimApiLoadout, LoadoutParameters } from '@destinyitemmanager/dim-api-types';
-import { getSharedLoadout } from 'app/dim-api/dim-api';
+import { getSharedLoadout } from 'app/d2l-api/d2l-api';
 import { generateMissingLoadoutItemId } from 'app/loadout-drawer/loadout-item-conversion';
 import { newLoadout } from 'app/loadout-drawer/loadout-utils';
 import { convertDimApiLoadoutToLoadout } from 'app/loadout/loadout-type-converters';
@@ -11,7 +11,7 @@ import { MAX_STAT, MAX_TIER } from '../known-values';
 // people might type it manually (such as a URL-like string with a missing protocol or just the share ID)
 // Hardcoding the lower limit of 7 characters so that a user typing the characters manually doesn't call
 // the API 7 times.
-const dimGGLoadoutShare = /^(?:(?:https?:\/\/)?dim.gg\/)?([a-z0-9]{7,})(?:\/.*)?$/;
+const d2lGGLoadoutShare = /^(?:(?:https?:\/\/)?d2l.gg\/)?([a-z0-9]{7,})(?:\/.*)?$/;
 
 export interface UrlLoadoutParameters {
   parameters?: LoadoutParameters;
@@ -22,7 +22,7 @@ export interface UrlLoadoutParameters {
 
 export type DecodedShareLink =
   | {
-      tag: 'dimGGShare';
+      tag: 'd2lGGShare';
       shareId: string;
     }
   | {
@@ -36,7 +36,7 @@ export type DecodedShareLink =
 
 export async function getDecodedLoadout(decodedUrl: DecodedShareLink): Promise<Loadout> {
   switch (decodedUrl.tag) {
-    case 'dimGGShare': {
+    case 'd2lGGShare': {
       const loadout = await getDimSharedLoadout(decodedUrl.shareId);
       return loadout;
     }
@@ -53,12 +53,12 @@ export async function getDecodedLoadout(decodedUrl: DecodedShareLink): Promise<L
 }
 
 /**
- * Decode any URL that could be used to share a loadout with DIM.
+ * Decode any URL that could be used to share a loadout with D2L.
  */
 export function decodeShareUrl(shareUrl: string): DecodedShareLink | undefined {
-  const dimGGMatch = shareUrl.match(dimGGLoadoutShare);
-  if (dimGGMatch) {
-    return { tag: 'dimGGShare', shareId: dimGGMatch[1] };
+  const d2lGGMatch = shareUrl.match(d2lGGLoadoutShare);
+  if (d2lGGMatch) {
+    return { tag: 'd2lGGShare', shareId: d2lGGMatch[1] };
   }
   try {
     const { pathname, search } = new URL(shareUrl);

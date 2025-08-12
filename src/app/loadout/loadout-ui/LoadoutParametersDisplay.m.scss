@@ -2,21 +2,21 @@
 @use '../../variables.scss' as *;
 
 .loParams {
-  composes: flexColumn from '../../dim-ui/common.m.scss';
+  composes: flexColumn from '../../d2l-ui/common.m.scss';
   max-width: 100%;
   gap: 4px;
   align-items: center;
 }
 
 .loStats {
-  composes: flexRow from '../../dim-ui/common.m.scss';
+  composes: flexRow from '../../d2l-ui/common.m.scss';
   align-items: center;
   width: 100%;
   gap: 8px;
 }
 
 .loStat {
-  composes: flexRow from '../../dim-ui/common.m.scss';
+  composes: flexRow from '../../d2l-ui/common.m.scss';
   align-items: center;
   font-weight: bold;
   font-size: 11px;
@@ -53,7 +53,7 @@
 }
 
 .constraintRange {
-  composes: flexRow from '../../dim-ui/common.m.scss';
+  composes: flexRow from '../../d2l-ui/common.m.scss';
   align-items: center;
   gap: math.div(2, 11) * 1em;
   :global(.app-icon) {

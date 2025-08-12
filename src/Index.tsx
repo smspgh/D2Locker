@@ -2,7 +2,7 @@
 // We want our main CSS to load before all other CSS.
 import './app/main.scss';
 // Pull the sheet CSS up so it is at the top of the stylesheet and can be easily overridden.
-import './app/dim-ui/Sheet.m.scss';
+import './app/d2l-ui/Sheet.m.scss';
 import './app/utils/sentry';
 import { createSaveAccountsObserver } from 'app/accounts/observers';
 import {
@@ -11,7 +11,7 @@ import {
   createTilesPerCharColumnObserver,
   setCssVariableEventListeners,
 } from 'app/css-variables';
-import { loadDimApiData } from 'app/dim-api/actions';
+import { loadDimApiData } from 'app/d2l-api/actions';
 import { createSaveItemInfosObserver } from 'app/inventory/observers';
 import store from 'app/store/store';
 import { lazyLoadStreamDeck, startStreamDeckConnection } from 'app/stream-deck/stream-deck';
@@ -27,16 +27,16 @@ import registerServiceWorker from './app/register-service-worker';
 import { safariTouchFix } from './app/safari-touch-fix';
 import { createWishlistObserver } from './app/wishlists/observers';
 import { observe } from 'app/store/observerMiddleware';
-import { setHardcodedApiKeys } from 'app/developer/developer-utils'; // Import the new utility
+import { setEnvironmentApiKeys } from 'app/developer/developer-utils'; // Import the new utility
 infoLog(
   'app',
-  `DIM v${$DIM_VERSION} (${$DIM_FLAVOR}) - Please report any errors to https://www.github.com/DestinyItemManager/DIM/issues`,
+  `D2L v${$D2L_VERSION} (${$D2L_FLAVOR}) - The Shire`,
 );
 
 initGoogleAnalytics();
 safariTouchFix();
 
-if ($DIM_FLAVOR !== 'dev') {
+if ($D2L_FLAVOR !== 'dev') {
   registerServiceWorker();
 }
 
@@ -60,9 +60,9 @@ const i18nPromise = initi18n();
     return;
   }
 
-  // Set hardcoded API keys for development environment
-  if ($DIM_FLAVOR === 'dev') {
-    setHardcodedApiKeys();
+  // Set environment API keys for development environment
+  if ($D2L_FLAVOR === 'dev') {
+    setEnvironmentApiKeys();
   }
 
   if ($featureFlags.wishLists) {
@@ -92,3 +92,15 @@ const i18nPromise = initi18n();
 
   root.render(<Root />);
 })();
+
+// Enable Hot Module Replacement
+if (module.hot) {
+  module.hot.accept('./app/Root', () => {
+    const NextRoot = require('./app/Root').default;
+    const root = createRoot(document.getElementById('app')!);
+    root.render(<NextRoot />);
+  });
+
+  // Accept the module itself
+  module.hot.accept();
+}

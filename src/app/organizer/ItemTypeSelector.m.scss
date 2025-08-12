@@ -24,7 +24,7 @@
 }
 
 .button {
-  composes: dim-button from global;
+  composes: d2l-button from global;
   margin: 2px;
 
   @include interactive($hover: true, $active: true) {

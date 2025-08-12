@@ -3,7 +3,7 @@ import { bungieHelpAccount, bungieHelpLink } from 'app/shell/links';
 import { bungieAlertsSelector } from 'app/shell/selectors';
 import { GlobalAlertLevel } from 'bungie-api-ts/core';
 import { useSelector } from 'react-redux';
-import ExternalLink from '../dim-ui/ExternalLink';
+import ExternalLink from '../d2l-ui/ExternalLink';
 import styles from './BungieAlerts.m.scss';
 
 // http://destinydevs.github.io/BungieNetPlatform/docs/Enums

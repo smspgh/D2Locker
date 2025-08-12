@@ -15,13 +15,13 @@ import ru from 'locale/ru.json';
 import zhCHS from 'locale/zhCHS.json';
 import zhCHT from 'locale/zhCHT.json';
 import enSrc from '../../config/i18n.json';
-import { languageSelector } from './dim-api/selectors';
+import { languageSelector } from './d2l-api/selectors';
 import { humanBytes } from './storage/human-bytes';
 import { StoreObserver } from './store/observerMiddleware';
 import { invert } from './utils/collections';
 import { infoLog } from './utils/log';
 
-export const DIM_LANG_INFOS = {
+export const D2L_LANG_INFOS = {
   de: { latinBased: true },
   en: { latinBased: true },
   es: { latinBased: true },
@@ -37,9 +37,9 @@ export const DIM_LANG_INFOS = {
   'zh-cht': { latinBased: false },
 };
 
-export type DimLanguage = keyof typeof DIM_LANG_INFOS;
+export type DimLanguage = keyof typeof D2L_LANG_INFOS;
 
-export const DIM_LANGS = Object.keys(DIM_LANG_INFOS) as DimLanguage[];
+export const D2L_LANGS = Object.keys(D2L_LANG_INFOS) as DimLanguage[];
 
 // Our locale names don't line up with the BCP 47 tags for Chinese
 export const browserLangToDimLang: Record<string, DimLanguage> = {
@@ -47,7 +47,7 @@ export const browserLangToDimLang: Record<string, DimLanguage> = {
   'zh-Hant': 'zh-cht',
 };
 
-const dimLangToBrowserLang = invert(browserLangToDimLang);
+const d2lLangToBrowserLang = invert(browserLangToDimLang);
 
 // Hot-reload translations in dev. You'll still need to get things to re-render when
 // translations change (unless we someday switch to react-i18next)
@@ -67,13 +67,13 @@ function browserLanguage(): DimLanguage {
   if (overriddenLang) {
     return overriddenLang[1];
   }
-  return DIM_LANGS.find((lang) => currentBrowserLang.toLowerCase().startsWith(lang)) || 'en';
+  return D2L_LANGS.find((lang) => currentBrowserLang.toLowerCase().startsWith(lang)) || 'en';
 }
 
 // Try to pick a nice default language
 export function defaultLanguage(): DimLanguage {
-  const storedLanguage = localStorage.getItem('dimLanguage') as DimLanguage;
-  if (storedLanguage && DIM_LANGS.includes(storedLanguage)) {
+  const storedLanguage = localStorage.getItem('d2lLanguage') as DimLanguage;
+  if (storedLanguage && D2L_LANGS.includes(storedLanguage)) {
     return storedLanguage;
   }
   return browserLanguage();
@@ -89,7 +89,7 @@ export function initi18n(): Promise<unknown> {
         lng: lang,
         fallbackLng: 'en',
         lowerCaseLng: true,
-        supportedLngs: DIM_LANGS,
+        supportedLngs: D2L_LANGS,
         load: 'currentOnly',
         interpolation: {
           escapeValue: false,
@@ -113,7 +113,7 @@ export function initi18n(): Promise<unknown> {
               // In development, directly use the source English translations.
               // In production we use a version that's gone through i18n-scanner
               // to remove unused keys.
-              en: $DIM_FLAVOR === 'dev' ? enSrc : en,
+              en: $D2L_FLAVOR === 'dev' ? enSrc : en,
               es,
               'es-mx': esMX,
               fr,
@@ -154,9 +154,9 @@ export function createLanguageObserver(): StoreObserver<DimLanguage> {
     runInitially: true,
     sideEffect: ({ current }) => {
       if (current === browserLanguage()) {
-        localStorage.removeItem('dimLanguage');
+        localStorage.removeItem('d2lLanguage');
       } else {
-        localStorage.setItem('dimLanguage', current);
+        localStorage.setItem('d2lLanguage', current);
       }
       if (current !== i18next.language) {
         i18next.changeLanguage(current);
@@ -164,7 +164,7 @@ export function createLanguageObserver(): StoreObserver<DimLanguage> {
       setTag('lang', current);
       document
         .querySelector('html')!
-        .setAttribute('lang', dimLangToBrowserLang[current] ?? current);
+        .setAttribute('lang', d2lLangToBrowserLang[current] ?? current);
     },
   };
 }
