@@ -24,10 +24,11 @@ logs/
 *.log
 
 # SSL certificates
-*.pem
-*.key
-*.crt
-certs/
+# Note: We're tracking certs for this project
+# *.pem
+# *.key
+# *.crt
+# certs/
 
 # Development files
 webpack-stats.json*
