@@ -170,8 +170,12 @@ app.use((req, res, next) => {
 // Create and start server
 let server;
 if (isRailway) {
-  // HTTP server for Railway
-  const port = process.env.PORT || 80;
+  // HTTP server for Railway - use Railway's assigned PORT
+  const port = process.env.PORT;
+  if (!port) {
+    console.error('ERROR: PORT environment variable not set by Railway');
+    process.exit(1);
+  }
   server = app.listen(port, () => {
     console.log(`HTTP Server with Simple HMR running on port ${port} (Railway provides HTTPS)`);
     console.log('Proxying /api requests to http://localhost:3000');
