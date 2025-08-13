@@ -78,6 +78,9 @@ COPY simple-hmr-server.js ./
 COPY proxy-server.js ./
 COPY docker-hmr-server.js ./
 
+# Copy SSL certificates
+COPY certs ./certs
+
 # Copy TypeScript and other config files that exist
 COPY tsconfig.json ./
 COPY babel.config.cjs ./
