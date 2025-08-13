@@ -551,13 +551,10 @@ apiRouter.get('/loadout_share', (req, res) => {
 // Create and start server
 if (isRailway) {
   // HTTP server for Railway (HTTPS termination handled by Railway)
-  const httpPort = process.env.PORT;
-  if (!httpPort) {
-    console.error('ERROR: PORT environment variable not set by Railway');
-    process.exit(1);
-  }
-  app.listen(httpPort, () => {
-    console.log(`HTTP Server running on port ${httpPort} (Railway provides HTTPS)`);
+  // Use fixed port 3000 for backend when running alongside frontend
+  const httpPort = 3000;
+  app.listen(httpPort, '127.0.0.1', () => {
+    console.log(`Backend HTTP Server running on localhost:${httpPort} (Railway provides HTTPS)`);
   });
 } else {
   // HTTPS server for local development
