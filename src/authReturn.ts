@@ -6,9 +6,22 @@ import { setToken } from './app/bungie-api/oauth-tokens';
 import { reportException } from './app/utils/sentry';
 
 async function handleAuthReturn() {
-  const queryParams = new URL(window.location.href).searchParams;
+  const currentUrl = window.location.href;
+  console.log('🔗 Full callback URL:', currentUrl);
+  
+  const queryParams = new URL(currentUrl).searchParams;
   const code = queryParams.get('code');
   const state = queryParams.get('state');
+  const error = queryParams.get('error');
+  const errorDescription = queryParams.get('error_description');
+  
+  console.log('📋 OAuth callback parameters:', {
+    code: code ? `${code.substring(0, 10)}...` : 'MISSING',
+    state: state ? `${state.substring(0, 10)}...` : 'MISSING',
+    error: error,
+    errorDescription: errorDescription,
+    allParams: Object.fromEntries(queryParams.entries())
+  });
 
   // Detect when we're in the iOS app's auth popup (but not in the app itself)
   const iOSApp = state?.startsWith('d2lauth-') && !navigator.userAgent.includes('D2L AppStore');
