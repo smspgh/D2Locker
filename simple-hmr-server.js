@@ -13,10 +13,28 @@ const __dirname = path.dirname(__filename);
 const app = express();
 
 // Load SSL certificates
-const options = {
-  key: fs.readFileSync(path.join(__dirname, 'certs', 'shirezaks_com.key')),
-  cert: fs.readFileSync(path.join(__dirname, 'certs', 'shirezaks_com.pem')),
-};
+let options;
+
+// First try to load from environment variables (for Railway)
+if (process.env.SSL_KEY && process.env.SSL_CERT) {
+  console.log('Loading SSL certificates from environment variables');
+  options = {
+    key: process.env.SSL_KEY,
+    cert: process.env.SSL_CERT,
+  };
+} else {
+  // Fall back to file system (for local development)
+  try {
+    options = {
+      key: fs.readFileSync(path.join(__dirname, 'certs', 'shirezaks_com.key')),
+      cert: fs.readFileSync(path.join(__dirname, 'certs', 'shirezaks_com.pem')),
+    };
+    console.log('SSL certificates loaded from file system');
+  } catch (error) {
+    console.error('Error loading SSL certificates:', error.message);
+    throw new Error('SSL certificates are required for HMR server');
+  }
+}
 
 // Inject HMR client script
 const hmrScript = `
