@@ -18,10 +18,19 @@ export interface BungieAccount {
  */
 export function getBungieAccount(): BungieAccount | undefined {
   const token = getToken();
+  
+  console.log('🔍 getBungieAccount called - Token check:', {
+    tokenExists: !!token,
+    bungieMembershipId: token?.bungieMembershipId,
+    hasAccessToken: !!token?.accessToken,
+    hasRefreshToken: !!token?.refreshToken
+  });
 
   if (token?.bungieMembershipId) {
     return {
       membershipId: token.bungieMembershipId,
     };
   }
+  
+  console.log('❌ getBungieAccount returning undefined - no valid token');
 }

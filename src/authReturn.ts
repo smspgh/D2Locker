@@ -36,9 +36,24 @@ async function handleAuthReturn() {
 
   try {
     const token = await getAccessTokenFromCode(code);
+    console.log('🔑 OAuth Success - Token received:', {
+      hasAccessToken: !!token.accessToken,
+      hasRefreshToken: !!token.refreshToken,
+      bungieMembershipId: token.bungieMembershipId,
+      accessTokenExpires: token.accessToken?.expires,
+      refreshTokenExpires: token.refreshToken?.expires
+    });
     setToken(token);
+    console.log('💾 Token stored in localStorage');
+    
+    // Verify token was stored correctly
+    const storedToken = localStorage.getItem('authorization');
+    console.log('🔍 Verification - Token in localStorage:', storedToken ? 'EXISTS' : 'MISSING');
+    
     // If we have a stored path from before we logged in (e.g. a loadout or armory link), send them back to that
-    window.location.href = localStorage.getItem('returnPath') ?? $PUBLIC_PATH;
+    const redirectPath = localStorage.getItem('returnPath') ?? $PUBLIC_PATH;
+    console.log('🔄 Redirecting to:', redirectPath);
+    window.location.href = redirectPath;
   } catch (error) {
     if (error instanceof TypeError || (error instanceof HttpStatusError && error.status === -1)) {
       setError(
