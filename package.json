@@ -217,9 +217,6 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.27.6",
-    "better-sqlite3": "^12.2.0",
-    "cors": "^2.8.5",
-    "express": "^5.1.0",
     "express-static-gzip": "^2.1.7",
     "@beyond-js/md5": "^0.0.1",
     "@destinyitemmanager/dim-api-types": "^1.36.0",

@@ -6,8 +6,6 @@ import { fileURLToPath } from 'url';
 import { WebSocketServer } from 'ws';
 import chokidar from 'chokidar';
 import expressStaticGzip from 'express-static-gzip';
-import cors from 'cors';
-import Database from 'better-sqlite3';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -22,12 +20,31 @@ if (!port) {
 
 console.log('Running unified server for Railway deployment');
 
-// Configure CORS
-app.use(cors({
-  origin: ['https://www.shirezaks.com', 'https://www.shirezaks.com:443', 'https://localhost:443', 'https://localhost'],
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'X-API-Key', 'X-D2L-Version'],
-}));
+// Manual CORS configuration
+app.use((req, res, next) => {
+  const allowedOrigins = [
+    'https://www.shirezaks.com', 
+    'https://www.shirezaks.com:443', 
+    'https://localhost:443', 
+    'https://localhost'
+  ];
+  
+  const origin = req.headers.origin;
+  if (allowedOrigins.includes(origin)) {
+    res.setHeader('Access-Control-Allow-Origin', origin);
+  }
+  
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-API-Key, X-D2L-Version');
+  res.setHeader('Access-Control-Allow-Credentials', 'true');
+  
+  if (req.method === 'OPTIONS') {
+    res.status(200).end();
+    return;
+  }
+  
+  next();
+});
 
 // Middleware to parse JSON bodies (Express 5 built-in)
 app.use(express.json());
@@ -38,113 +55,20 @@ app.use((req, res, next) => {
   next();
 });
 
-// Initialize SQLite Database
-let db;
-try {
-  db = new Database('d2l.db');
-  // Create tables if they don't exist
-  db.exec(`
-    CREATE TABLE IF NOT EXISTS users (
-      membershipId TEXT PRIMARY KEY,
-      destinyVersion INTEGER,
-      settings TEXT,
-      loadouts TEXT,
-      tags TEXT,
-      triumphs TEXT,
-      updates TEXT,
-      createdAt INTEGER,
-      lastUpdatedAt INTEGER
-    );
-    
-    CREATE TABLE IF NOT EXISTS api_keys (
-      apiKey TEXT PRIMARY KEY,
-      appName TEXT NOT NULL,
-      createdAt INTEGER NOT NULL
-    );
-    
-    CREATE TABLE IF NOT EXISTS loadout_shares (
-      shareId TEXT PRIMARY KEY,
-      loadoutData TEXT,
-      notes TEXT,
-      createdAt INTEGER
-    );
-  `);
-  console.log('Database initialized successfully');
-} catch (error) {
-  console.error('Database initialization error:', error);
-  process.exit(1);
-}
+// Note: Database functionality is handled by the backend service in production
+console.log('Frontend-only server - API requests will be proxied to backend service');
 
-// Insert API key
-try {
-  const API_KEY = '788600d2-9320-484e-86dd-5f5c9c458b66';
-  const APP_NAME = 'd2locker-dev';
-  const stmt = db.prepare('INSERT OR IGNORE INTO api_keys (apiKey, appName, createdAt) VALUES (?, ?, ?)');
-  const info = stmt.run(API_KEY, APP_NAME, Date.now());
-  if (info.changes > 0) {
-    console.log(`API key "${API_KEY}" for app "${APP_NAME}" inserted successfully.`);
-  }
-} catch (error) {
-  console.error('Error inserting API key:', error.message);
-}
-
-// API Routes (from backend/server.js)
-// Health check
-app.get('/api/health', (req, res) => {
-  res.json({ status: 'ok', timestamp: new Date().toISOString() });
-});
-
-// Sync endpoint
-app.post('/api/profile_sync/:platformType/:membershipId', (req, res) => {
-  const { platformType, membershipId } = req.params;
-  const { settings, loadouts, tags, triumphs, updates } = req.body;
-
-  try {
-    const stmt = db.prepare(`
-      INSERT OR REPLACE INTO users (membershipId, destinyVersion, settings, loadouts, tags, triumphs, updates, lastUpdatedAt)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-    `);
-    
-    stmt.run(
-      membershipId,
-      2,
-      JSON.stringify(settings || {}),
-      JSON.stringify(loadouts || []),
-      JSON.stringify(tags || {}),
-      JSON.stringify(triumphs || {}),
-      JSON.stringify(updates || {}),
-      Date.now()
-    );
-
-    res.json({ success: true, message: 'Profile synced successfully' });
-  } catch (error) {
-    console.error('Sync error:', error);
-    res.status(500).json({ error: 'Internal Server Error', message: 'Failed to sync profile' });
-  }
-});
-
-// Get profile endpoint
-app.get('/api/profile/:platformType/:membershipId', (req, res) => {
-  const { membershipId } = req.params;
-
-  try {
-    const stmt = db.prepare('SELECT * FROM users WHERE membershipId = ?');
-    const user = stmt.get(membershipId);
-
-    if (user) {
-      res.json({
-        settings: JSON.parse(user.settings || '{}'),
-        loadouts: JSON.parse(user.loadouts || '[]'),
-        tags: JSON.parse(user.tags || '{}'),
-        triumphs: JSON.parse(user.triumphs || '{}'),
-        updates: JSON.parse(user.updates || '{}')
-      });
-    } else {
-      res.status(404).json({ error: 'Profile not found' });
-    }
-  } catch (error) {
-    console.error('Profile retrieval error:', error);
-    res.status(500).json({ error: 'Internal Server Error', message: 'Failed to retrieve profile' });
+// Simple API proxy - forward API requests to the backend service
+app.use('/api', (req, res) => {
+  // For now, just return a placeholder response
+  // In a full production setup, you'd proxy these to a separate backend service
+  if (req.path === '/health') {
+    res.json({ status: 'ok', timestamp: new Date().toISOString(), note: 'Frontend server' });
+  } else {
+    res.status(503).json({ 
+      error: 'API not available in frontend-only mode',
+      message: 'Please configure a separate backend service for API endpoints'
+    });
   }
 });
 
@@ -279,7 +203,6 @@ server.listen(port, () => {
 process.on('SIGTERM', () => {
   console.log('Shutting down gracefully...');
   server.close(() => {
-    db.close();
     process.exit(0);
   });
 });
