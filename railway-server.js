@@ -58,18 +58,18 @@ app.use((req, res, next) => {
 // Note: Database functionality is handled by the backend service in production
 console.log('Frontend-only server - API requests will be proxied to backend service');
 
-// Simple API proxy - forward API requests to the backend service
-app.use('/api', (req, res) => {
-  // For now, just return a placeholder response
-  // In a full production setup, you'd proxy these to a separate backend service
-  if (req.path === '/health') {
-    res.json({ status: 'ok', timestamp: new Date().toISOString(), note: 'Frontend server' });
-  } else {
-    res.status(503).json({ 
-      error: 'API not available in frontend-only mode',
-      message: 'Please configure a separate backend service for API endpoints'
-    });
-  }
+// Simple API endpoints
+app.get('/api/health', (req, res) => {
+  res.json({ status: 'ok', timestamp: new Date().toISOString(), note: 'Frontend server' });
+});
+
+// Handle all other API requests
+app.all('/api/*', (req, res) => {
+  res.status(503).json({ 
+    error: 'API not available in frontend-only mode',
+    message: 'Please configure a separate backend service for API endpoints',
+    path: req.path
+  });
 });
 
 // HMR client script injection
