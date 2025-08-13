@@ -6,7 +6,7 @@ import { dedupePromise } from 'app/utils/promises';
 import { HttpClientConfig } from 'bungie-api-ts/http';
 
 const D2L_API_HOST =
-  $D2L_FLAVOR === 'dev' ? 'https://localhost:8443/api' : 'https://shirezaks.com/api';
+  $D2L_FLAVOR === 'dev' ? 'https://localhost:8443/api' : 'https://www.shirezaks.com/api';
 export const API_KEY = '788600d2-9320-484e-86dd-5f5c9c458b66'; // Hardcoded for private use - This is our D2L API Key
 
 const localStorageKey = 'd2lApiToken';

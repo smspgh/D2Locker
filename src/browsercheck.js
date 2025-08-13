@@ -132,7 +132,7 @@ if ($BROWSERS.length && lang) {
 
   // Steam is never supported
   if (navigator.userAgent.includes('Steam')) {
-    // https://shirezaks.com/Figuring-out-why-D2L-doesn't-work-in-Steam
+    // https://www.shirezaks.com/Figuring-out-why-D2L-doesn't-work-in-Steam
     // t(`Browsercheck.Steam`)
     document.getElementById('browser-warning').textContent = steamBrowser[lang];
     document.getElementById('browser-warning').style.display = 'block';

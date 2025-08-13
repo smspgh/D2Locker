@@ -22,11 +22,11 @@ const options = {
 const hmrScript = `
 <script>
 (function() {
-  const ws = new WebSocket('wss://shirezaks.com:443');
+  const ws = new WebSocket('wss://www.shirezaks.com:443');
   let reconnectInterval;
 
   function connect() {
-    const ws = new WebSocket('wss://shirezaks.com:443');
+    const ws = new WebSocket('wss://www.shirezaks.com:443');
 
     ws.onopen = () => {
       console.log('HMR Connected');
@@ -153,7 +153,7 @@ app.use((req, res, next) => {
 const server = https.createServer(options, app);
 
 server.listen(443, () => {
-  console.log('HTTPS Server with Simple HMR running on https://shirezaks.com:443');
+  console.log('HTTPS Server with Simple HMR running on https://www.shirezaks.com:443');
   console.log('Proxying /api requests to https://localhost:8443');
   console.log('Watching dist/ directory for changes...');
 });
