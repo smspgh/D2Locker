@@ -12,28 +12,24 @@ const __dirname = path.dirname(__filename);
 
 const app = express();
 
-// Load SSL certificates
+// Load SSL certificates (only for local development)
 let options;
+const isRailway = process.env.RAILWAY_ENVIRONMENT_NAME || process.env.RAILWAY_DEPLOYMENT_ID;
 
-// First try to load from environment variables (for Railway)
-if (process.env.SSL_KEY && process.env.SSL_CERT) {
-  console.log('Loading SSL certificates from environment variables');
-  options = {
-    key: process.env.SSL_KEY,
-    cert: process.env.SSL_CERT,
-  };
-} else {
-  // Fall back to file system (for local development)
+if (!isRailway) {
+  // Local development - use SSL certificates
   try {
     options = {
       key: fs.readFileSync(path.join(__dirname, 'certs', 'shirezaks_com.key')),
       cert: fs.readFileSync(path.join(__dirname, 'certs', 'shirezaks_com.pem')),
     };
-    console.log('SSL certificates loaded from file system');
+    console.log('SSL certificates loaded for local development');
   } catch (error) {
     console.error('Error loading SSL certificates:', error.message);
-    throw new Error('SSL certificates are required for HMR server');
+    throw new Error('SSL certificates are required for local development');
   }
+} else {
+  console.log('Running on Railway - using HTTP (Railway provides HTTPS termination)');
 }
 
 // Inject HMR client script
@@ -87,10 +83,13 @@ app.use((req, res, next) => {
 app.use('/api', (req, res) => {
   console.log(`Manual proxy handling: ${req.method} ${req.originalUrl}`);
 
-  const targetUrl = `https://localhost:8443${req.originalUrl}`;
+  const targetUrl = isRailway 
+    ? `http://localhost:3000${req.originalUrl}`
+    : `https://localhost:8443${req.originalUrl}`;
   console.log(`Forwarding to: ${targetUrl}`);
 
   const url = new URL(targetUrl);
+  const httpModule = isRailway ? require('http') : https;
 
   const proxyOptions = {
     hostname: url.hostname,
@@ -103,7 +102,7 @@ app.use('/api', (req, res) => {
 
   delete proxyOptions.headers.host; // Remove host header
 
-  const proxyReq = https.request(proxyOptions, (proxyRes) => {
+  const proxyReq = httpModule.request(proxyOptions, (proxyRes) => {
     console.log(`Backend response: ${proxyRes.statusCode} for ${req.originalUrl}`);
 
     // Copy response headers
@@ -168,13 +167,25 @@ app.use((req, res, next) => {
   res.send(html);
 });
 
-const server = https.createServer(options, app);
-
-server.listen(443, () => {
-  console.log('HTTPS Server with Simple HMR running on https://www.shirezaks.com:443');
-  console.log('Proxying /api requests to https://localhost:8443');
-  console.log('Watching dist/ directory for changes...');
-});
+// Create and start server
+let server;
+if (isRailway) {
+  // HTTP server for Railway
+  const port = process.env.PORT || 80;
+  server = app.listen(port, () => {
+    console.log(`HTTP Server with Simple HMR running on port ${port} (Railway provides HTTPS)`);
+    console.log('Proxying /api requests to http://localhost:3000');
+    console.log('Watching dist/ directory for changes...');
+  });
+} else {
+  // HTTPS server for local development
+  server = https.createServer(options, app);
+  server.listen(443, () => {
+    console.log('HTTPS Server with Simple HMR running on https://www.shirezaks.com:443');
+    console.log('Proxying /api requests to https://localhost:8443');
+    console.log('Watching dist/ directory for changes...');
+  });
+}
 
 // Create WebSocket server for HMR
 const wss = new WebSocketServer({

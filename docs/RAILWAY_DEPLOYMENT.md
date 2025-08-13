@@ -1,7 +1,7 @@
 # Railway Deployment Guide
 
 ## Overview
-This application is configured to run on Railway with custom domain SSL certificates for https://www.shirezaks.com.
+This application is configured to run on Railway with automatic HTTPS termination. Railway handles SSL certificates and HTTPS traffic at their edge, so the application runs on HTTP internally.
 
 ## Environment Variables
 
@@ -9,71 +9,67 @@ Set these environment variables in your Railway project:
 
 ### Required Variables
 - `NODE_ENV`: Set to `production`
-- `SSL_KEY`: Your SSL private key content (the contents of shirezaks_com.key file)
-- `SSL_CERT`: Your SSL certificate content (the contents of shirezaks_com.pem file)
 
-### How to Add SSL Certificates to Railway
+### Automatically Set by Railway
+- `RAILWAY_ENVIRONMENT_NAME`: Railway sets this automatically
+- `RAILWAY_DEPLOYMENT_ID`: Railway sets this automatically
+- `PORT`: Railway assigns a port automatically
 
-1. **Copy the certificate contents**:
-   ```bash
-   # Copy the private key
-   cat certs/shirezaks_com.key
-   
-   # Copy the certificate
-   cat certs/shirezaks_com.pem
-   ```
+### Custom Domain Setup
 
-2. **Add to Railway environment variables**:
+1. **Configure your custom domain in Railway**:
    - Go to your Railway project settings
-   - Navigate to Variables
-   - Add `SSL_KEY` with the entire content of shirezaks_com.key (including BEGIN/END lines)
-   - Add `SSL_CERT` with the entire content of shirezaks_com.pem (including BEGIN/END lines)
+   - Navigate to Settings > Domains
+   - Add your custom domain (e.g., www.shirezaks.com)
+   - Configure your DNS to point to Railway's servers
+
+2. **Railway handles SSL automatically**:
+   - Railway provides automatic SSL certificates via Let's Encrypt
+   - No need to upload your own certificates
+   - HTTPS is handled at Railway's edge
 
 ## Deployment Steps
 
 1. Set up environment variables in Railway as described above
-2. Push your changes to GitHub
-3. Railway will automatically detect changes and rebuild
-4. The application will:
-   - Load SSL certificates from environment variables
-   - Run HTTPS server on port 443
-   - Serve your application securely on https://www.shirezaks.com
+2. Configure your custom domain in Railway
+3. Push your changes to GitHub
+4. Railway will automatically detect changes and rebuild
+5. The application will:
+   - Detect Railway environment
+   - Run HTTP servers internally
+   - Railway provides HTTPS termination at the edge
+   - Your site is accessible via https://www.shirezaks.com
 
 ## Local Development vs Railway
 
-- **Local Development**: Uses SSL certificates from `/certs` directory
-- **Railway Production**: Uses SSL certificates from environment variables
+- **Local Development**: 
+  - Uses SSL certificates from `/certs` directory
+  - Runs HTTPS servers directly
+  - Backend API: https://localhost:8443
+  - Frontend: https://localhost:443
 
-## Port Configuration
-
-The application uses these ports:
-- Backend API: 8443 (HTTPS)
-- Frontend HMR: 443 (HTTPS)
+- **Railway Production**: 
+  - No SSL certificates needed (Railway handles HTTPS)
+  - Runs HTTP servers internally
+  - Railway provides HTTPS termination
+  - Accessible via your custom domain with HTTPS
 
 ## Troubleshooting
 
-If you see SSL certificate errors:
-1. Ensure `SSL_KEY` and `SSL_CERT` environment variables are properly set
-2. Verify the certificate content includes the full PEM format with BEGIN/END lines
-3. Check Railway logs for specific error messages
-4. Ensure your custom domain is properly configured in Railway
+If you see 502 errors:
+1. Check that your application is running on the PORT provided by Railway
+2. Ensure the application is using HTTP (not HTTPS) internally
+3. Check Railway logs for startup errors
+4. Verify your custom domain is properly configured in Railway
 
-### Certificate Format Example
+If you see connection errors:
+1. The application should detect Railway environment automatically
+2. Check logs for "Running on Railway - using HTTP"
+3. Ensure no SSL certificate errors are preventing startup
 
-Your environment variables should look like this:
+### How It Works
 
-**SSL_KEY**:
-```
------BEGIN PRIVATE KEY-----
-MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQC...
-[rest of key content]
------END PRIVATE KEY-----
-```
-
-**SSL_CERT**:
-```
------BEGIN CERTIFICATE-----
-MIIFazCCA1OgAwIBAgIUJZkM1s9rp1L2C0Z8qNLcMKC5QiYwDQYJ...
-[rest of certificate content]
------END CERTIFICATE-----
-```
+1. **Your Domain** → **Railway Edge (HTTPS)** → **Your App (HTTP)**
+2. Railway handles all SSL/TLS termination
+3. Your app runs on HTTP internally on the PORT Railway provides
+4. Users always see HTTPS in their browser

@@ -24,26 +24,23 @@ app.use(cors({
 // Middleware to parse JSON bodies
 app.use(bodyParser.json());
 
-// Load SSL certificates
+// Load SSL certificates (only for local development)
 let privateKey, certificate, credentials;
+const isRailway = process.env.RAILWAY_ENVIRONMENT_NAME || process.env.RAILWAY_DEPLOYMENT_ID;
 
-// First try to load from environment variables (for Railway)
-if (process.env.SSL_KEY && process.env.SSL_CERT) {
-  console.log('Loading SSL certificates from environment variables');
-  privateKey = process.env.SSL_KEY;
-  certificate = process.env.SSL_CERT;
-  credentials = { key: privateKey, cert: certificate };
-} else {
-  // Fall back to file system (for local development)
+if (!isRailway) {
+  // Local development - use SSL certificates
   try {
     privateKey = fs.readFileSync(path.join(__dirname, '..', 'certs', 'shirezaks_com.key'), 'utf8');
     certificate = fs.readFileSync(path.join(__dirname, '..', 'certs', 'shirezaks_com.pem'), 'utf8');
     credentials = { key: privateKey, cert: certificate };
-    console.log('SSL certificates loaded from file system');
+    console.log('SSL certificates loaded for local development');
   } catch (error) {
     console.error('Error loading SSL certificates:', error.message);
-    throw new Error('SSL certificates are required. Please provide SSL_KEY and SSL_CERT environment variables or place certificates in /certs directory');
+    throw new Error('SSL certificates are required for local development. Please place certificates in /certs directory');
   }
+} else {
+  console.log('Running on Railway - using HTTP (Railway provides HTTPS termination)');
 }
 
 // Initialize SQLite Database
@@ -551,9 +548,17 @@ apiRouter.get('/loadout_share', (req, res) => {
   }
 });
 
-// Create HTTPS server
-const httpsServer = https.createServer(credentials, app);
-
-httpsServer.listen(PORT, () => {
-  console.log(`HTTPS Server running on port ${PORT}`);
-});
+// Create and start server
+if (isRailway) {
+  // HTTP server for Railway (HTTPS termination handled by Railway)
+  const httpPort = process.env.PORT || 3000;
+  app.listen(httpPort, () => {
+    console.log(`HTTP Server running on port ${httpPort} (Railway provides HTTPS)`);
+  });
+} else {
+  // HTTPS server for local development
+  const httpsServer = https.createServer(credentials, app);
+  httpsServer.listen(PORT, () => {
+    console.log(`HTTPS Server running on port ${PORT}`);
+  });
+}
