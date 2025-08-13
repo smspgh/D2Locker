@@ -77,6 +77,7 @@ COPY scripts ./scripts
 COPY simple-hmr-server.js ./
 COPY proxy-server.js ./
 COPY docker-hmr-server.js ./
+COPY railway-server.js ./
 
 # Copy SSL certificates if they exist
 # For Railway deployment, certificates should be provided via environment variables
