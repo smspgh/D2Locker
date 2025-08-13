@@ -6,22 +6,9 @@ import { setToken } from './app/bungie-api/oauth-tokens';
 import { reportException } from './app/utils/sentry';
 
 async function handleAuthReturn() {
-  const currentUrl = window.location.href;
-  console.log('🔗 Full callback URL:', currentUrl);
-  
-  const queryParams = new URL(currentUrl).searchParams;
+  const queryParams = new URL(window.location.href).searchParams;
   const code = queryParams.get('code');
   const state = queryParams.get('state');
-  const error = queryParams.get('error');
-  const errorDescription = queryParams.get('error_description');
-  
-  console.log('📋 OAuth callback parameters:', {
-    code: code ? `${code.substring(0, 10)}...` : 'MISSING',
-    state: state ? `${state.substring(0, 10)}...` : 'MISSING',
-    error: error,
-    errorDescription: errorDescription,
-    allParams: Object.fromEntries(queryParams.entries())
-  });
 
   // Detect when we're in the iOS app's auth popup (but not in the app itself)
   const iOSApp = state?.startsWith('d2lauth-') && !navigator.userAgent.includes('D2L AppStore');
@@ -49,24 +36,9 @@ async function handleAuthReturn() {
 
   try {
     const token = await getAccessTokenFromCode(code);
-    console.log('🔑 OAuth Success - Token received:', {
-      hasAccessToken: !!token.accessToken,
-      hasRefreshToken: !!token.refreshToken,
-      bungieMembershipId: token.bungieMembershipId,
-      accessTokenExpires: token.accessToken?.expires,
-      refreshTokenExpires: token.refreshToken?.expires
-    });
     setToken(token);
-    console.log('💾 Token stored in localStorage');
-    
-    // Verify token was stored correctly
-    const storedToken = localStorage.getItem('authorization');
-    console.log('🔍 Verification - Token in localStorage:', storedToken ? 'EXISTS' : 'MISSING');
-    
     // If we have a stored path from before we logged in (e.g. a loadout or armory link), send them back to that
-    const redirectPath = localStorage.getItem('returnPath') ?? $PUBLIC_PATH;
-    console.log('🔄 Redirecting to:', redirectPath);
-    window.location.href = redirectPath;
+    window.location.href = localStorage.getItem('returnPath') ?? $PUBLIC_PATH;
   } catch (error) {
     if (error instanceof TypeError || (error instanceof HttpStatusError && error.status === -1)) {
       setError(
