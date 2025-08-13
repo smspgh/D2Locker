@@ -45,6 +45,14 @@ export async function getAccessTokenFromCode(code: string): Promise<Tokens> {
     client_id: oauthClientId(),
     client_secret: oauthClientSecret(),
   });
+  
+  console.log('🔄 Token exchange request:', {
+    client_id: oauthClientId(),
+    grant_type: 'authorization_code',
+    code: code.substring(0, 10) + '...',
+    client_secret: oauthClientSecret() ? 'SET' : 'MISSING'
+  });
+  
   const response = await fetch(TOKEN_URL, {
     method: 'POST',
     body,
@@ -53,9 +61,23 @@ export async function getAccessTokenFromCode(code: string): Promise<Tokens> {
     },
   });
 
+  console.log('📡 Token response status:', response.status, response.statusText);
+  
   if (response.ok) {
-    return handleAccessToken((await response.json()) as OauthTokenResponse);
+    const tokenData = (await response.json()) as OauthTokenResponse;
+    console.log('🎯 Raw token response from Bungie:', {
+      has_access_token: !!tokenData.access_token,
+      has_membership_id: !!tokenData.membership_id,
+      membership_id: tokenData.membership_id,
+      expires_in: tokenData.expires_in,
+      has_refresh_token: !!tokenData.refresh_token,
+      refresh_expires_in: tokenData.refresh_expires_in,
+      full_response: tokenData
+    });
+    return handleAccessToken(tokenData);
   } else {
+    const errorText = await response.text();
+    console.error('❌ Token exchange failed:', response.status, response.statusText, errorText);
     throw await toHttpStatusError(response);
   }
 }

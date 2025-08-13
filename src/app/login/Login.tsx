@@ -42,6 +42,7 @@ export default function Login() {
       client_id: clientId,
       response_type: 'code',
       redirect_uri: redirectUri,
+      scope: 'ReadBasicUserProfile ReadUserData MoveEquipDestinyItems',
       state: authorizationState,
       ...(reauth && { reauth }),
     });
@@ -51,6 +52,7 @@ export default function Login() {
       client_id: clientId,
       response_type: 'code',
       redirect_uri: redirectUri,
+      scope: 'ReadBasicUserProfile ReadUserData MoveEquipDestinyItems',
       state: authorizationState,
       reauth: reauth
     });
