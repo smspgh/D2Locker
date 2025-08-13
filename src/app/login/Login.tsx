@@ -37,13 +37,24 @@ export default function Login() {
   }, [dispatch]);
 
   const authorizationURL = (reauth?: string) => {
+    const redirectUri = `${window.location.origin}/return.html`;
     const queryParams = new URLSearchParams({
       client_id: clientId,
       response_type: 'code',
+      redirect_uri: redirectUri,
       state: authorizationState,
       ...(reauth && { reauth }),
     });
-    return `https://www.bungie.net/en/OAuth/Authorize?${queryParams.toString()}`;
+    const url = `https://www.bungie.net/en/OAuth/Authorize?${queryParams.toString()}`;
+    console.log('🔗 Generated OAuth URL:', url);
+    console.log('🔑 OAuth Parameters:', {
+      client_id: clientId,
+      response_type: 'code',
+      redirect_uri: redirectUri,
+      state: authorizationState,
+      reauth: reauth
+    });
+    return url;
   };
 
   // d2l sync is always enabled by default
