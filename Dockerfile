@@ -106,8 +106,5 @@ RUN if [ -f /app/backend/d2l.db ]; then \
 # Expose ports
 EXPOSE 443 3000
 
-# Make setup script executable
-RUN chmod +x /app/scripts/setup-certs.sh
-
-# Start the application with certificate setup
-CMD ["/bin/sh", "-c", "/app/scripts/setup-certs.sh && pnpm prod"]
+# Start the application
+CMD ["pnpm", "prod"]

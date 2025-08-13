@@ -26,19 +26,23 @@ app.use(bodyParser.json());
 
 // Load SSL certificates
 let privateKey, certificate, credentials;
-const isRailway = process.env.RAILWAY_ENVIRONMENT === 'production';
 
-if (isRailway) {
-  console.log('Running on Railway - certificates should be provided via environment');
-  // Railway provides HTTPS termination, so we can run HTTP internally
+// First try to load from environment variables (for Railway)
+if (process.env.SSL_KEY && process.env.SSL_CERT) {
+  console.log('Loading SSL certificates from environment variables');
+  privateKey = process.env.SSL_KEY;
+  certificate = process.env.SSL_CERT;
+  credentials = { key: privateKey, cert: certificate };
 } else {
+  // Fall back to file system (for local development)
   try {
     privateKey = fs.readFileSync(path.join(__dirname, '..', 'certs', 'shirezaks_com.key'), 'utf8');
     certificate = fs.readFileSync(path.join(__dirname, '..', 'certs', 'shirezaks_com.pem'), 'utf8');
     credentials = { key: privateKey, cert: certificate };
+    console.log('SSL certificates loaded from file system');
   } catch (error) {
     console.error('Error loading SSL certificates:', error.message);
-    console.error('Running in HTTP mode - SSL certificates not found');
+    throw new Error('SSL certificates are required. Please provide SSL_KEY and SSL_CERT environment variables or place certificates in /certs directory');
   }
 }
 
@@ -547,17 +551,9 @@ apiRouter.get('/loadout_share', (req, res) => {
   }
 });
 
-// Create and start server
-if (credentials) {
-  // HTTPS server for local development
-  const httpsServer = https.createServer(credentials, app);
-  httpsServer.listen(PORT, () => {
-    console.log(`HTTPS Server running on https://localhost:${PORT}`);
-  });
-} else {
-  // HTTP server for Railway (HTTPS termination handled by Railway)
-  const httpPort = process.env.PORT || 3000;
-  app.listen(httpPort, () => {
-    console.log(`HTTP Server running on port ${httpPort}`);
-  });
-}
+// Create HTTPS server
+const httpsServer = https.createServer(credentials, app);
+
+httpsServer.listen(PORT, () => {
+  console.log(`HTTPS Server running on port ${PORT}`);
+});

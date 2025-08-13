@@ -14,16 +14,25 @@ const app = express();
 
 // Load SSL certificates
 let options;
-const isRailway = process.env.RAILWAY_ENVIRONMENT === 'production';
 
-if (!isRailway) {
+// First try to load from environment variables (for Railway)
+if (process.env.SSL_KEY && process.env.SSL_CERT) {
+  console.log('Loading SSL certificates from environment variables');
+  options = {
+    key: process.env.SSL_KEY,
+    cert: process.env.SSL_CERT,
+  };
+} else {
+  // Fall back to file system (for local development)
   try {
     options = {
       key: fs.readFileSync(path.join(__dirname, 'certs', 'shirezaks_com.key')),
       cert: fs.readFileSync(path.join(__dirname, 'certs', 'shirezaks_com.pem')),
     };
+    console.log('SSL certificates loaded from file system');
   } catch (error) {
-    console.error('SSL certificates not found, running in HTTP mode');
+    console.error('Error loading SSL certificates:', error.message);
+    throw new Error('SSL certificates are required for HMR server');
   }
 }
 
@@ -102,18 +111,12 @@ app.use(expressStaticGzip(path.join(__dirname, 'dist'), {
   }
 }));
 
-// Create server (HTTPS or HTTP based on certificates)
-let server;
+// Create HTTPS server
+const server = https.createServer(options, app);
 const port = process.env.PORT || 443;
 
-if (options) {
-  server = https.createServer(options, app);
-} else {
-  server = app;
-}
-
 // Create WebSocket server
-const wss = new WebSocketServer({ server: options ? server : undefined, port: options ? undefined : port });
+const wss = new WebSocketServer({ server });
 
 // Track connected clients
 const clients = new Set();
@@ -144,12 +147,6 @@ watcher.on('change', (filePath) => {
   });
 });
 
-if (options) {
-  server.listen(port, () => {
-    console.log(`HMR server with WebSocket running on https://localhost:${port}`);
-  });
-} else {
-  app.listen(port, () => {
-    console.log(`HMR server with WebSocket running on http://localhost:${port}`);
-  });
-}
+server.listen(port, () => {
+  console.log(`HMR server with WebSocket running on https://localhost:${port}`);
+});
