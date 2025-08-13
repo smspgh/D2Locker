@@ -58,18 +58,20 @@ app.use((req, res, next) => {
 // Note: Database functionality is handled by the backend service in production
 console.log('Frontend-only server - API requests will be proxied to backend service');
 
-// Simple API endpoints
-app.get('/api/health', (req, res) => {
-  res.json({ status: 'ok', timestamp: new Date().toISOString(), note: 'Frontend server' });
-});
-
-// Handle all other API requests
-app.all('/api/*', (req, res) => {
-  res.status(503).json({ 
-    error: 'API not available in frontend-only mode',
-    message: 'Please configure a separate backend service for API endpoints',
-    path: req.path
-  });
+// Simple middleware to handle API requests
+app.use((req, res, next) => {
+  if (req.path.startsWith('/api/')) {
+    if (req.path === '/api/health') {
+      return res.json({ status: 'ok', timestamp: new Date().toISOString(), note: 'Frontend server' });
+    } else {
+      return res.status(503).json({ 
+        error: 'API not available in frontend-only mode',
+        message: 'Please configure a separate backend service for API endpoints',
+        path: req.path
+      });
+    }
+  }
+  next();
 });
 
 // HMR client script injection
@@ -117,18 +119,17 @@ const hmrScript = `
 </script>
 `;
 
-// Serve static files from dist with HMR injection
-app.use(expressStaticGzip(path.join(__dirname, 'dist'), {
-  enableBrotli: true,
-  customCompressions: [{
-    encodingName: 'gzip',
-    fileExtension: 'gz'
-  }],
-  orderPreference: ['br', 'gzip']
-}));
+// Serve static files from dist (if it exists)
+const distPath = path.join(__dirname, 'dist');
+if (fs.existsSync(distPath)) {
+  app.use(express.static(distPath));
+  console.log('Static files served from dist directory');
+} else {
+  console.log('Dist directory not found - static serving disabled until build completes');
+}
 
-// Catch-all handler for SPA routing with HMR
-app.get('*', (req, res) => {
+// Fallback handler for SPA routing
+app.use((req, res) => {
   const filePath = path.join(__dirname, 'dist', 'index.html');
   
   if (fs.existsSync(filePath)) {
