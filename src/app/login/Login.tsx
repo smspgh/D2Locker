@@ -42,17 +42,15 @@ export default function Login() {
       client_id: clientId,
       response_type: 'code',
       redirect_uri: redirectUri,
-      scope: 'ReadBasicUserProfile ReadUserData MoveEquipDestinyItems',
       state: authorizationState,
       ...(reauth && { reauth }),
     });
     const url = `https://www.bungie.net/en/OAuth/Authorize?${queryParams.toString()}`;
-    console.log('🔗 Generated OAuth URL:', url);
+    console.log('🔗 Generated OAuth URL (no scope - using Bungie app defaults):', url);
     console.log('🔑 OAuth Parameters:', {
       client_id: clientId,
       response_type: 'code',
       redirect_uri: redirectUri,
-      scope: 'ReadBasicUserProfile ReadUserData MoveEquipDestinyItems',
       state: authorizationState,
       reauth: reauth
     });
