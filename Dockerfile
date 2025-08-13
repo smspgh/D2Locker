@@ -78,8 +78,9 @@ COPY simple-hmr-server.js ./
 COPY proxy-server.js ./
 COPY docker-hmr-server.js ./
 
-# Copy SSL certificates
-COPY certs ./certs
+# Copy SSL certificates if they exist
+# For Railway deployment, certificates should be provided via environment variables
+RUN mkdir -p /app/certs
 
 # Copy TypeScript and other config files that exist
 COPY tsconfig.json ./
@@ -105,5 +106,8 @@ RUN if [ -f /app/backend/d2l.db ]; then \
 # Expose ports
 EXPOSE 443 3000
 
-# Start the application
-CMD ["pnpm", "prod"]
+# Make setup script executable
+RUN chmod +x /app/scripts/setup-certs.sh
+
+# Start the application with certificate setup
+CMD ["/bin/sh", "-c", "/app/scripts/setup-certs.sh && pnpm prod"]

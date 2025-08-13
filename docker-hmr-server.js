@@ -12,11 +12,20 @@ const __dirname = path.dirname(__filename);
 
 const app = express();
 
-// Load SSL certificates from backend directory where they already exist
-const options = {
-  key: fs.readFileSync(path.join(__dirname, 'backend/shirezaks.com+2-key.pem')),
-  cert: fs.readFileSync(path.join(__dirname, 'backend/shirezaks.com+2.pem')),
-};
+// Load SSL certificates
+let options;
+const isRailway = process.env.RAILWAY_ENVIRONMENT === 'production';
+
+if (!isRailway) {
+  try {
+    options = {
+      key: fs.readFileSync(path.join(__dirname, 'certs', 'shirezaks_com.key')),
+      cert: fs.readFileSync(path.join(__dirname, 'certs', 'shirezaks_com.pem')),
+    };
+  } catch (error) {
+    console.error('SSL certificates not found, running in HTTP mode');
+  }
+}
 
 // Inject HMR client script
 const hmrScript = `
@@ -93,11 +102,18 @@ app.use(expressStaticGzip(path.join(__dirname, 'dist'), {
   }
 }));
 
-// Create HTTPS server
-const server = https.createServer(options, app);
+// Create server (HTTPS or HTTP based on certificates)
+let server;
+const port = process.env.PORT || 443;
+
+if (options) {
+  server = https.createServer(options, app);
+} else {
+  server = app;
+}
 
 // Create WebSocket server
-const wss = new WebSocketServer({ server });
+const wss = new WebSocketServer({ server: options ? server : undefined, port: options ? undefined : port });
 
 // Track connected clients
 const clients = new Set();
@@ -128,6 +144,12 @@ watcher.on('change', (filePath) => {
   });
 });
 
-server.listen(443, () => {
-  console.log('HMR server with WebSocket running on https://localhost:443');
-});
+if (options) {
+  server.listen(port, () => {
+    console.log(`HMR server with WebSocket running on https://localhost:${port}`);
+  });
+} else {
+  app.listen(port, () => {
+    console.log(`HMR server with WebSocket running on http://localhost:${port}`);
+  });
+}

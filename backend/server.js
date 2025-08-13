@@ -26,14 +26,20 @@ app.use(bodyParser.json());
 
 // Load SSL certificates
 let privateKey, certificate, credentials;
-try {
-  privateKey = fs.readFileSync(path.join(__dirname, '..', 'certs', 'shirezaks_com.key'), 'utf8');
-  certificate = fs.readFileSync(path.join(__dirname, '..', 'certs', 'shirezaks_com.pem'), 'utf8');
-  credentials = { key: privateKey, cert: certificate };
-} catch (error) {
+const isRailway = process.env.RAILWAY_ENVIRONMENT === 'production';
 
-  console.error('Error loading SSL certificates:', error.message);
-  throw new Error('Error loading SSL certificates');
+if (isRailway) {
+  console.log('Running on Railway - certificates should be provided via environment');
+  // Railway provides HTTPS termination, so we can run HTTP internally
+} else {
+  try {
+    privateKey = fs.readFileSync(path.join(__dirname, '..', 'certs', 'shirezaks_com.key'), 'utf8');
+    certificate = fs.readFileSync(path.join(__dirname, '..', 'certs', 'shirezaks_com.pem'), 'utf8');
+    credentials = { key: privateKey, cert: certificate };
+  } catch (error) {
+    console.error('Error loading SSL certificates:', error.message);
+    console.error('Running in HTTP mode - SSL certificates not found');
+  }
 }
 
 // Initialize SQLite Database
@@ -541,10 +547,17 @@ apiRouter.get('/loadout_share', (req, res) => {
   }
 });
 
-// Create HTTPS server
-const httpsServer = https.createServer(credentials, app);
-
-httpsServer.listen(PORT, () => {
-
-  console.log(`HTTPS Server running on https://localhost:${PORT}`);
-});
+// Create and start server
+if (credentials) {
+  // HTTPS server for local development
+  const httpsServer = https.createServer(credentials, app);
+  httpsServer.listen(PORT, () => {
+    console.log(`HTTPS Server running on https://localhost:${PORT}`);
+  });
+} else {
+  // HTTP server for Railway (HTTPS termination handled by Railway)
+  const httpPort = process.env.PORT || 3000;
+  app.listen(httpPort, () => {
+    console.log(`HTTP Server running on port ${httpPort}`);
+  });
+}
