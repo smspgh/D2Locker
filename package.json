@@ -12,7 +12,9 @@
   "scripts": {
     "//": "--- MAIN WORKFLOWS ---",
     "dev": "pnpm util:light-data && concurrently --kill-others-on-fail \"pnpm serve:api\" \"pnpm dev:server\"",
-    "prod": "pnpm util:light-data && pnpm build:prod && concurrently \"pnpm build:prod --watch\" \"pnpm serve:railway\"",
+    "prod": "node test-server.js",
+    "prod-original": "concurrently \"pnpm serve:api\" \"pnpm util:light-data && pnpm build:prod --watch\" \"pnpm serve:hmr\"",
+    "prod-full": "pnpm util:light-data && pnpm build:prod && concurrently \"pnpm build:prod --watch\" \"pnpm serve:railway\"",
     "serve:railway": "node simple-railway-server.js",
     "start": "pnpm build:prod && pnpm serve:prod",
     "dev-nf": "pnpm util:light-data-nf && concurrently --kill-others-on-fail \"pnpm serve:api\" \"pnpm dev:server\"",
