@@ -6,10 +6,8 @@ import { fileURLToPath } from 'url';
 import { WebSocketServer } from 'ws';
 import chokidar from 'chokidar';
 import expressStaticGzip from 'express-static-gzip';
-import bodyParser from 'body-parser';
 import cors from 'cors';
 import Database from 'better-sqlite3';
-import crypto from 'crypto';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -31,8 +29,8 @@ app.use(cors({
   allowedHeaders: ['Content-Type', 'Authorization', 'X-API-Key', 'X-D2L-Version'],
 }));
 
-// Middleware to parse JSON bodies
-app.use(bodyParser.json());
+// Middleware to parse JSON bodies (Express 5 built-in)
+app.use(express.json());
 
 // Request logging
 app.use((req, res, next) => {
@@ -245,9 +243,11 @@ wss.on('connection', (ws) => {
   });
 });
 
-// Watch dist directory for changes
-if (fs.existsSync(path.join(__dirname, 'dist'))) {
-  const watcher = chokidar.watch(path.join(__dirname, 'dist'), {
+// Watch dist directory for changes (only if it exists)
+const distPath = path.join(__dirname, 'dist');
+if (fs.existsSync(distPath)) {
+  console.log('Setting up file watcher for HMR...');
+  const watcher = chokidar.watch(distPath, {
     ignored: /(^|[\/\\])\../, 
     persistent: true,
     ignoreInitial: true
@@ -261,6 +261,12 @@ if (fs.existsSync(path.join(__dirname, 'dist'))) {
       }
     });
   });
+
+  watcher.on('error', error => {
+    console.error('File watcher error:', error);
+  });
+} else {
+  console.log('Dist directory not found - HMR disabled until build completes');
 }
 
 // Start server
