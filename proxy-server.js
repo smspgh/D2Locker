@@ -25,12 +25,12 @@ app.use((req, res, next) => {
 // Manual proxy for API requests
 app.use('/api', (req, res) => {
   console.log(`Manual proxy handling: ${req.method} ${req.originalUrl}`);
-  
+
   const targetUrl = `https://localhost:8443${req.originalUrl}`;
   console.log(`Forwarding to: ${targetUrl}`);
-  
+
   const url = new URL(targetUrl);
-  
+
   const options = {
     hostname: url.hostname,
     port: url.port,
@@ -39,28 +39,28 @@ app.use('/api', (req, res) => {
     headers: { ...req.headers },
     rejectUnauthorized: false // Accept self-signed certificates
   };
-  
+
   delete options.headers.host; // Remove host header
-  
+
   const proxyReq = https.request(options, (proxyRes) => {
     console.log(`Backend response: ${proxyRes.statusCode} for ${req.originalUrl}`);
-    
+
     // Copy response headers
     Object.keys(proxyRes.headers).forEach(key => {
       res.setHeader(key, proxyRes.headers[key]);
     });
-    
+
     res.status(proxyRes.statusCode);
     proxyRes.pipe(res);
   });
-  
+
   proxyReq.on('error', (error) => {
     console.error('Manual proxy error:', error.message);
     if (!res.headersSent) {
       res.status(500).send('Proxy error: ' + error.message);
     }
   });
-  
+
   // Forward request body for POST/PUT requests
   if (req.method !== 'GET' && req.method !== 'HEAD') {
     req.pipe(proxyReq);
@@ -89,7 +89,7 @@ app.use((req, res, next) => {
 const server = https.createServer(options, app);
 
 server.listen(443, () => {
-  console.log('HTTPS Server running on https://shirezaks.com:443');
+  console.log('HTTPS Server running on https://www.shirezaks.com:443');
   console.log('Proxying /api requests to https://localhost:8443');
   console.log('Serving static files from dist/');
 });

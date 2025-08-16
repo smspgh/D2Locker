@@ -1,0 +1,507 @@
+{
+	"Weapons":
+		{
+        "424291879": {
+            "ItemHash": 424291879,
+            "Class": 3,
+            "Name": "Age-Old Bond",
+            "Description": "",
+            "ItemTypeDisplayName": "Auto Rifle",
+            "IconPath": "/common/destiny2_content/icons/f6bea329c6f50d716e6385d59de7bd4c.jpg",
+            "ScreenshotPath": "/common/destiny2_content/screenshots/424291879.jpg",
+            "HasIcon": false,
+            "Tier": 5,
+            "CurrentVersion": 0,
+            "PowerCaps": [
+                999990
+            ],
+            "RandomRolls": [
+                [
+                    {
+                        "ItemHash": 3048246338,
+                        "Name": "Arrowhead Brake",
+                        "EnhancedItemHash": null,
+                        "EnhancedVersionOfItemHash": null,
+                        "Tier": 3,
+                        "ImageURL": "https://www.bungie.net/common/destiny2_content/icons/8f7fb54687aa52a9c2595d90ce9c9417.png",
+                        "PrefMode": null
+                    },
+                    {
+                        "ItemHash": 1482024992,
+                        "Name": "Smallbore",
+                        "EnhancedItemHash": null,
+                        "EnhancedVersionOfItemHash": null,
+                        "Tier": 2,
+                        "ImageURL": "https://www.bungie.net/common/destiny2_content/icons/7d1bb6a623f14959a47156ee71acfc3a.png",
+                        "PrefMode": "pvp"
+                    },
+                    {
+                        "ItemHash": 1392496348,
+                        "Name": "Polygonal Rifling",
+                        "EnhancedItemHash": null,
+                        "EnhancedVersionOfItemHash": null,
+                        "Tier": 2,
+                        "ImageURL": "https://www.bungie.net/common/destiny2_content/icons/7d7aaccee29cf450d4057a9de871cdc8.png",
+                        "PrefMode": "pve"
+                    },
+                    {
+                        "ItemHash": 3250034553,
+                        "Name": "Hammer-Forged Rifling",
+                        "EnhancedItemHash": null,
+                        "EnhancedVersionOfItemHash": null,
+                        "Tier": 2,
+                        "ImageURL": "https://www.bungie.net/common/destiny2_content/icons/2b9eb6d4489cffc18c10223279198bcc.png",
+                        "PrefMode": null
+                    },
+                    {
+                        "ItemHash": 202670084,
+                        "Name": "Full Bore",
+                        "EnhancedItemHash": null,
+                        "EnhancedVersionOfItemHash": null,
+                        "Tier": 2,
+                        "ImageURL": "https://www.bungie.net/common/destiny2_content/icons/40a4bdcf0f5a4e492927f9569eaf529d.png",
+                        "PrefMode": null
+                    },
+                    {
+                        "ItemHash": 1840239774,
+                        "Name": "Fluted Barrel",
+                        "EnhancedItemHash": null,
+                        "EnhancedVersionOfItemHash": null,
+                        "Tier": 2,
+                        "ImageURL": "https://www.bungie.net/common/destiny2_content/icons/260eba9dd149dbb94b1306c9ed4dd8db.png",
+                        "PrefMode": null
+                    },
+                    {
+                        "ItemHash": 1467527085,
+                        "Name": "Extended Barrel",
+                        "EnhancedItemHash": null,
+                        "EnhancedVersionOfItemHash": null,
+                        "Tier": 2,
+                        "ImageURL": "https://www.bungie.net/common/destiny2_content/icons/d9e5e8fa07a84c29252b78b0e7b3106d.png",
+                        "PrefMode": "pvp"
+                    },
+                    {
+                        "ItemHash": 4090651448,
+                        "Name": "Corkscrew Rifling",
+                        "EnhancedItemHash": null,
+                        "EnhancedVersionOfItemHash": null,
+                        "Tier": 2,
+                        "ImageURL": "https://www.bungie.net/common/destiny2_content/icons/7730e1732ed7ef91afce50277639c493.png",
+                        "PrefMode": ""
+                    },
+                    {
+                        "ItemHash": 3661387068,
+                        "Name": "Chambered Compensator",
+                        "EnhancedItemHash": null,
+                        "EnhancedVersionOfItemHash": null,
+                        "Tier": 2,
+                        "ImageURL": "https://www.bungie.net/common/destiny2_content/icons/0b451cbccc7f11f6aec9c153e59474cb.png",
+                        "PrefMode": "pvp"
+                    },
+                    {
+                        "ItemHash": 839105230,
+                        "Name": "Arrowhead Brake",
+                        "EnhancedItemHash": null,
+                        "EnhancedVersionOfItemHash": null,
+                        "Tier": 2,
+                        "ImageURL": "https://www.bungie.net/common/destiny2_content/icons/8f7fb54687aa52a9c2595d90ce9c9417.png",
+                        "PrefMode": ""
+                    }
+                ],
+                [
+                    {
+                        "ItemHash": 1709045111,
+                        "Name": "Flared Magwell",
+                        "EnhancedItemHash": null,
+                        "EnhancedVersionOfItemHash": null,
+                        "Tier": 3,
+                        "ImageURL": "https://www.bungie.net/common/destiny2_content/icons/f95e67e4ff37466505d66d3fa1030782.png",
+                        "PrefMode": null
+                    },
+                    {
+                        "ItemHash": 550838496,
+                        "Name": "Alloy Magazine",
+                        "EnhancedItemHash": null,
+                        "EnhancedVersionOfItemHash": null,
+                        "Tier": 3,
+                        "ImageURL": "https://www.bungie.net/common/destiny2_content/icons/069170916c98748b7b3e33b80bd7d689.png",
+                        "PrefMode": null
+                    },
+                    {
+                        "ItemHash": 1002206008,
+                        "Name": "Steady Rounds",
+                        "EnhancedItemHash": null,
+                        "EnhancedVersionOfItemHash": null,
+                        "Tier": 3,
+                        "ImageURL": "https://www.bungie.net/common/destiny2_content/icons/6c6e1cc341487a8afd0b0c714a229255.png",
+                        "PrefMode": null
+                    },
+                    {
+                        "ItemHash": 1890997540,
+                        "Name": "Extended Mag",
+                        "EnhancedItemHash": null,
+                        "EnhancedVersionOfItemHash": null,
+                        "Tier": 3,
+                        "ImageURL": "https://www.bungie.net/common/destiny2_content/icons/66cfea124e24e73cca1ce6370b44ca7e.png",
+                        "PrefMode": null
+                    },
+                    {
+                        "ItemHash": 1783397184,
+                        "Name": "Tactical Mag",
+                        "EnhancedItemHash": null,
+                        "EnhancedVersionOfItemHash": null,
+                        "Tier": 3,
+                        "ImageURL": "https://www.bungie.net/common/destiny2_content/icons/f0e309a267b25279a871d182f8910bcc.png",
+                        "PrefMode": null
+                    },
+                    {
+                        "ItemHash": 1065371964,
+                        "Name": "Appended Mag",
+                        "EnhancedItemHash": null,
+                        "EnhancedVersionOfItemHash": null,
+                        "Tier": 3,
+                        "ImageURL": "https://www.bungie.net/common/destiny2_content/icons/d9f468cce26fe35d9db413e2f8451127.png",
+                        "PrefMode": null
+                    },
+                    {
+                        "ItemHash": 3267421167,
+                        "Name": "Accurized Rounds",
+                        "EnhancedItemHash": null,
+                        "EnhancedVersionOfItemHash": null,
+                        "Tier": 3,
+                        "ImageURL": "https://www.bungie.net/common/destiny2_content/icons/d85024478504205359c7fb52dbc4f6b6.png",
+                        "PrefMode": null
+                    },
+                    {
+                        "ItemHash": 3230963543,
+                        "Name": "Flared Magwell",
+                        "EnhancedItemHash": null,
+                        "EnhancedVersionOfItemHash": null,
+                        "Tier": 2,
+                        "ImageURL": "https://www.bungie.net/common/destiny2_content/icons/f95e67e4ff37466505d66d3fa1030782.png",
+                        "PrefMode": "pve"
+                    },
+                    {
+                        "ItemHash": 1431678320,
+                        "Name": "Alloy Magazine",
+                        "EnhancedItemHash": null,
+                        "EnhancedVersionOfItemHash": null,
+                        "Tier": 2,
+                        "ImageURL": "https://www.bungie.net/common/destiny2_content/icons/069170916c98748b7b3e33b80bd7d689.png",
+                        "PrefMode": null
+                    },
+                    {
+                        "ItemHash": 3177308360,
+                        "Name": "Steady Rounds",
+                        "EnhancedItemHash": null,
+                        "EnhancedVersionOfItemHash": null,
+                        "Tier": 2,
+                        "ImageURL": "https://www.bungie.net/common/destiny2_content/icons/6c6e1cc341487a8afd0b0c714a229255.png",
+                        "PrefMode": null
+                    },
+                    {
+                        "ItemHash": 2420895100,
+                        "Name": "Extended Mag",
+                        "EnhancedItemHash": null,
+                        "EnhancedVersionOfItemHash": null,
+                        "Tier": 2,
+                        "ImageURL": "https://www.bungie.net/common/destiny2_content/icons/66cfea124e24e73cca1ce6370b44ca7e.png",
+                        "PrefMode": "pvp"
+                    },
+                    {
+                        "ItemHash": 106909392,
+                        "Name": "Tactical Mag",
+                        "EnhancedItemHash": null,
+                        "EnhancedVersionOfItemHash": null,
+                        "Tier": 2,
+                        "ImageURL": "https://www.bungie.net/common/destiny2_content/icons/f0e309a267b25279a871d182f8910bcc.png",
+                        "PrefMode": "pve"
+                    },
+                    {
+                        "ItemHash": 1087426260,
+                        "Name": "Appended Mag",
+                        "EnhancedItemHash": null,
+                        "EnhancedVersionOfItemHash": null,
+                        "Tier": 2,
+                        "ImageURL": "https://www.bungie.net/common/destiny2_content/icons/d9f468cce26fe35d9db413e2f8451127.png",
+                        "PrefMode": "pve"
+                    },
+                    {
+                        "ItemHash": 3142289711,
+                        "Name": "Accurized Rounds",
+                        "EnhancedItemHash": null,
+                        "EnhancedVersionOfItemHash": null,
+                        "Tier": 2,
+                        "ImageURL": "https://www.bungie.net/common/destiny2_content/icons/d85024478504205359c7fb52dbc4f6b6.png",
+                        "PrefMode": "pvp"
+                    }
+                ],
+                [
+                    {
+                        "ItemHash": 1409206216,
+                        "Name": "Stats for All",
+                        "EnhancedItemHash": null,
+                        "EnhancedVersionOfItemHash": 1583705720,
+                        "Tier": 3,
+                        "ImageURL": "https://www.bungie.net/common/destiny2_content/icons/8aadd7fd25c2b1e9f3fc7f4411a97ea4.png",
+                        "PrefMode": "pve"
+                    },
+                    {
+                        "ItemHash": 2541826827,
+                        "Name": "Repulsor Brace",
+                        "EnhancedItemHash": null,
+                        "EnhancedVersionOfItemHash": 776531651,
+                        "Tier": 3,
+                        "ImageURL": "https://www.bungie.net/common/destiny2_content/icons/cfcbde3872d34c5258fd8227640a020e.png",
+                        "PrefMode": "pve"
+                    },
+                    {
+                        "ItemHash": 169755979,
+                        "Name": "Dragonfly",
+                        "EnhancedItemHash": null,
+                        "EnhancedVersionOfItemHash": 2848615171,
+                        "Tier": 3,
+                        "ImageURL": "https://www.bungie.net/common/destiny2_content/icons/c87b03bb6d56b393f8582e128b337332.png",
+                        "PrefMode": "pve"
+                    },
+                    {
+                        "ItemHash": 906981559,
+                        "Name": "Discord",
+                        "EnhancedItemHash": null,
+                        "EnhancedVersionOfItemHash": 3978468247,
+                        "Tier": 3,
+                        "ImageURL": "https://www.bungie.net/common/destiny2_content/icons/3112a65a875b759a21ab94b832d04279.png",
+                        "PrefMode": "pve"
+                    },
+                    {
+                        "ItemHash": 3060983774,
+                        "Name": "Dynamic Sway Reduction",
+                        "EnhancedItemHash": null,
+                        "EnhancedVersionOfItemHash": 1359896290,
+                        "Tier": 3,
+                        "ImageURL": "https://www.bungie.net/common/destiny2_content/icons/36091de4dd029fb6e6ab95dbc612ff05.png",
+                        "PrefMode": "pvp"
+                    },
+                    {
+                        "ItemHash": 848860060,
+                        "Name": "Fourth Time's the Charm",
+                        "EnhancedItemHash": null,
+                        "EnhancedVersionOfItemHash": 1354429876,
+                        "Tier": 3,
+                        "ImageURL": "https://www.bungie.net/common/destiny2_content/icons/a5edd4e751e1aa34bf8328a63b121e71.png",
+                        "PrefMode": null
+                    },
+                    {
+                        "ItemHash": 1523649716,
+                        "Name": "Tap the Trigger",
+                        "EnhancedItemHash": null,
+                        "EnhancedVersionOfItemHash": 1890422124,
+                        "Tier": 3,
+                        "ImageURL": "https://www.bungie.net/common/destiny2_content/icons/a7840da2970b4137a333fb187477dfe0.png",
+                        "PrefMode": "pvp"
+                    },
+                    {
+                        "ItemHash": 1583705720,
+                        "Name": "Stats for All",
+                        "EnhancedItemHash": 1409206216,
+                        "EnhancedVersionOfItemHash": null,
+                        "Tier": 2,
+                        "ImageURL": "https://www.bungie.net/common/destiny2_content/icons/8aadd7fd25c2b1e9f3fc7f4411a97ea4.png",
+                        "PrefMode": "pve"
+                    },
+                    {
+                        "ItemHash": 776531651,
+                        "Name": "Repulsor Brace",
+                        "EnhancedItemHash": 2541826827,
+                        "EnhancedVersionOfItemHash": null,
+                        "Tier": 2,
+                        "ImageURL": "https://www.bungie.net/common/destiny2_content/icons/cfcbde3872d34c5258fd8227640a020e.png",
+                        "PrefMode": "pve"
+                    },
+                    {
+                        "ItemHash": 2848615171,
+                        "Name": "Dragonfly",
+                        "EnhancedItemHash": 169755979,
+                        "EnhancedVersionOfItemHash": null,
+                        "Tier": 2,
+                        "ImageURL": "https://www.bungie.net/common/destiny2_content/icons/c87b03bb6d56b393f8582e128b337332.png",
+                        "PrefMode": "pve"
+                    },
+                    {
+                        "ItemHash": 3978468247,
+                        "Name": "Discord",
+                        "EnhancedItemHash": 906981559,
+                        "EnhancedVersionOfItemHash": null,
+                        "Tier": 2,
+                        "ImageURL": "https://www.bungie.net/common/destiny2_content/icons/3112a65a875b759a21ab94b832d04279.png",
+                        "PrefMode": "pve"
+                    },
+                    {
+                        "ItemHash": 1359896290,
+                        "Name": "Dynamic Sway Reduction",
+                        "EnhancedItemHash": 3060983774,
+                        "EnhancedVersionOfItemHash": null,
+                        "Tier": 2,
+                        "ImageURL": "https://www.bungie.net/common/destiny2_content/icons/36091de4dd029fb6e6ab95dbc612ff05.png",
+                        "PrefMode": "pvp"
+                    },
+                    {
+                        "ItemHash": 1354429876,
+                        "Name": "Fourth Time's the Charm",
+                        "EnhancedItemHash": 848860060,
+                        "EnhancedVersionOfItemHash": null,
+                        "Tier": 2,
+                        "ImageURL": "https://www.bungie.net/common/destiny2_content/icons/a5edd4e751e1aa34bf8328a63b121e71.png",
+                        "PrefMode": null
+                    },
+                    {
+                        "ItemHash": 1890422124,
+                        "Name": "Tap the Trigger",
+                        "EnhancedItemHash": 1523649716,
+                        "EnhancedVersionOfItemHash": null,
+                        "Tier": 2,
+                        "ImageURL": "https://www.bungie.net/common/destiny2_content/icons/a7840da2970b4137a333fb187477dfe0.png",
+                        "PrefMode": "pvp"
+                    }
+                ],
+                [
+                    {
+                        "ItemHash": 2939589096,
+                        "Name": "Target Lock",
+                        "EnhancedItemHash": null,
+                        "EnhancedVersionOfItemHash": 365154968,
+                        "Tier": 3,
+                        "ImageURL": "https://www.bungie.net/common/destiny2_content/icons/72be46e05195a95ae1307a684f68456b.png",
+                        "PrefMode": ""
+                    },
+                    {
+                        "ItemHash": 1926441324,
+                        "Name": "Destabilizing Rounds",
+                        "EnhancedItemHash": null,
+                        "EnhancedVersionOfItemHash": 2048641572,
+                        "Tier": 3,
+                        "ImageURL": "https://www.bungie.net/common/destiny2_content/icons/30edf77113d7d1d996fcc37b7ef2050b.png",
+                        "PrefMode": "pve"
+                    },
+                    {
+                        "ItemHash": 2923251173,
+                        "Name": "Kill Clip",
+                        "EnhancedItemHash": null,
+                        "EnhancedVersionOfItemHash": 1015611457,
+                        "Tier": 3,
+                        "ImageURL": "https://www.bungie.net/common/destiny2_content/icons/0afd4799427004b2d8170ab213a2ef0c.png",
+                        "PrefMode": "pvp"
+                    },
+                    {
+                        "ItemHash": 4290541820,
+                        "Name": "Golden Tricorn Enhanced",
+                        "EnhancedItemHash": null,
+                        "EnhancedVersionOfItemHash": 2610012052,
+                        "Tier": 3,
+                        "ImageURL": "https://www.bungie.net/common/destiny2_content/icons/8ad63f37f2513f56892e0ed20621f5dc.png",
+                        "PrefMode": "pve"
+                    },
+                    {
+                        "ItemHash": 2562668800,
+                        "Name": "Collective Action",
+                        "EnhancedItemHash": null,
+                        "EnhancedVersionOfItemHash": 3324494224,
+                        "Tier": 3,
+                        "ImageURL": "https://www.bungie.net/common/destiny2_content/icons/901c6420954a4e60fc8a521960f556a8.png",
+                        "PrefMode": "pve"
+                    },
+                    {
+                        "ItemHash": 2402480669,
+                        "Name": "Focused Fury",
+                        "EnhancedItemHash": null,
+                        "EnhancedVersionOfItemHash": 2896038713,
+                        "Tier": 3,
+                        "ImageURL": "https://www.bungie.net/common/destiny2_content/icons/15fb47018719c99ae37d10f794bc957e.png",
+                        "PrefMode": null
+                    },
+                    {
+                        "ItemHash": 2748801589,
+                        "Name": "Harmony",
+                        "EnhancedItemHash": null,
+                        "EnhancedVersionOfItemHash": 438098033,
+                        "Tier": 3,
+                        "ImageURL": "https://www.bungie.net/common/destiny2_content/icons/0a3c1c5e1cb05adef7cf6af6602a0da0.png",
+                        "PrefMode": null
+                    },
+                    {
+                        "ItemHash": 365154968,
+                        "Name": "Target Lock",
+                        "EnhancedItemHash": 2939589096,
+                        "EnhancedVersionOfItemHash": null,
+                        "Tier": 2,
+                        "ImageURL": "https://www.bungie.net/common/destiny2_content/icons/72be46e05195a95ae1307a684f68456b.png",
+                        "PrefMode": ""
+                    },
+                    {
+                        "ItemHash": 2048641572,
+                        "Name": "Destabilizing Rounds",
+                        "EnhancedItemHash": 1926441324,
+                        "EnhancedVersionOfItemHash": null,
+                        "Tier": 2,
+                        "ImageURL": "https://www.bungie.net/common/destiny2_content/icons/30edf77113d7d1d996fcc37b7ef2050b.png",
+                        "PrefMode": "pve"
+                    },
+                    {
+                        "ItemHash": 1015611457,
+                        "Name": "Kill Clip",
+                        "EnhancedItemHash": 2923251173,
+                        "EnhancedVersionOfItemHash": null,
+                        "Tier": 2,
+                        "ImageURL": "https://www.bungie.net/common/destiny2_content/icons/0afd4799427004b2d8170ab213a2ef0c.png",
+                        "PrefMode": "pvp"
+                    },
+                    {
+                        "ItemHash": 2610012052,
+                        "Name": "Golden Tricorn",
+                        "EnhancedItemHash": 4290541820,
+                        "EnhancedVersionOfItemHash": null,
+                        "Tier": 2,
+                        "ImageURL": "https://www.bungie.net/common/destiny2_content/icons/8ad63f37f2513f56892e0ed20621f5dc.png",
+                        "PrefMode": "pve"
+                    },
+                    {
+                        "ItemHash": 3324494224,
+                        "Name": "Collective Action",
+                        "EnhancedItemHash": 2562668800,
+                        "EnhancedVersionOfItemHash": null,
+                        "Tier": 2,
+                        "ImageURL": "https://www.bungie.net/common/destiny2_content/icons/901c6420954a4e60fc8a521960f556a8.png",
+                        "PrefMode": "pve"
+                    },
+                    {
+                        "ItemHash": 2896038713,
+                        "Name": "Focused Fury",
+                        "EnhancedItemHash": 2402480669,
+                        "EnhancedVersionOfItemHash": null,
+                        "Tier": 2,
+                        "ImageURL": "https://www.bungie.net/common/destiny2_content/icons/15fb47018719c99ae37d10f794bc957e.png",
+                        "PrefMode": null
+                    },
+                    {
+                        "ItemHash": 438098033,
+                        "Name": "Harmony",
+                        "EnhancedItemHash": 2748801589,
+                        "EnhancedVersionOfItemHash": null,
+                        "Tier": 2,
+                        "ImageURL": "https://www.bungie.net/common/destiny2_content/icons/0a3c1c5e1cb05adef7cf6af6602a0da0.png",
+                        "PrefMode": null
+                    }
+                ],
+                [
+                    {
+                        "ItemHash": 1489048135,
+                        "Name": "Explosive Pact",
+                        "EnhancedItemHash": null,
+                        "EnhancedVersionOfItemHash": null,
+                        "Tier": 2,
+                        "ImageURL": "https://www.bungie.net/common/destiny2_content/icons/1dbfce413bb144936a3f4a5f83cf623b.png",
+                        "PrefMode": null
+                    }
+                ]
+            ]
+          }}}

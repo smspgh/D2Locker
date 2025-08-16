@@ -16,7 +16,7 @@ const __dirname = path.dirname(__filename);
 
 // Configure CORS
 app.use(cors({
-  origin: ['https://shirezaks.com', 'https://www.shirezaks.com', 'https://shirezaks.com:8443', 'https://localhost:8443', 'https://localhost:443', 'https://localhost'],
+  origin: ['https://www.shirezaks.com', 'https://www.shirezaks.com', 'https://www.shirezaks.com:8443', 'https://localhost:8443', 'https://localhost:443', 'https://localhost'],
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization', 'X-API-Key', 'X-D2L-Version'],
 }));
@@ -24,16 +24,23 @@ app.use(cors({
 // Middleware to parse JSON bodies
 app.use(bodyParser.json());
 
-// Load SSL certificates
+// Load SSL certificates (only for local development)
 let privateKey, certificate, credentials;
-try {
-  privateKey = fs.readFileSync(path.join(__dirname, '..', 'certs', 'shirezaks_com.key'), 'utf8');
-  certificate = fs.readFileSync(path.join(__dirname, '..', 'certs', 'shirezaks_com.pem'), 'utf8');
-  credentials = { key: privateKey, cert: certificate };
-} catch (error) {
+const isRailway = process.env.RAILWAY_ENVIRONMENT_NAME || process.env.RAILWAY_DEPLOYMENT_ID;
 
-  console.error('Error loading SSL certificates:', error.message);
-  throw new Error('Error loading SSL certificates');
+if (!isRailway) {
+  // Local development - use SSL certificates
+  try {
+    privateKey = fs.readFileSync(path.join(__dirname, '..', 'certs', 'shirezaks_com.key'), 'utf8');
+    certificate = fs.readFileSync(path.join(__dirname, '..', 'certs', 'shirezaks_com.pem'), 'utf8');
+    credentials = { key: privateKey, cert: certificate };
+    console.log('SSL certificates loaded for local development');
+  } catch (error) {
+    console.error('Error loading SSL certificates:', error.message);
+    throw new Error('SSL certificates are required for local development. Please place certificates in /certs directory');
+  }
+} else {
+  console.log('Running on Railway - using HTTP (Railway provides HTTPS termination)');
 }
 
 // Initialize SQLite Database
@@ -65,7 +72,7 @@ try {
       expiresAt INTEGER
     );
   `);
-  
+
   // Add new columns if they don't exist (migration)
   try {
     db.exec(`ALTER TABLE users ADD COLUMN lastModified INTEGER DEFAULT (strftime('%s', 'now'))`);
@@ -77,13 +84,13 @@ try {
   } catch (e) {
     // Column already exists, ignore
   }
-  
+
   // Update existing records that don't have lastModified timestamps
   try {
     const existingUsers = db.prepare('SELECT * FROM users WHERE lastModified IS NULL').all();
     if (existingUsers.length > 0) {
       const updateExistingRecords = db.prepare(`
-        UPDATE users 
+        UPDATE users
         SET lastModified = ?
         WHERE lastModified IS NULL
       `);
@@ -160,7 +167,7 @@ function getUserData(membershipId, destinyVersion) {
   const loadoutsArray = JSON.parse(data.loadouts);
   const tags = JSON.parse(data.tags);
   const searchesArray = JSON.parse(data.searches);
-  
+
   // Convert loadouts from array to object keyed by loadout ID
   const loadoutsObject = {};
   if (Array.isArray(loadoutsArray)) {
@@ -170,7 +177,7 @@ function getUserData(membershipId, destinyVersion) {
       }
     });
   }
-  
+
   // Convert searches from array to object keyed by destinyVersion
   const searchesObject = {
     "1": [], // Destiny 1
@@ -274,7 +281,7 @@ function updateUserData(membershipId, destinyVersion, updates) {
   // Convert data back to database format before storing
   // Convert loadouts object back to array for database storage
   const loadoutsArray = Object.values(updatedData.loadouts);
-  
+
   // Convert searches object back to array for database storage
   const searchesArray = [];
   Object.entries(updatedData.searches).forEach(([destinyVersion, searches]) => {
@@ -309,7 +316,7 @@ function updateUserData(membershipId, destinyVersion, updates) {
     existingData.membershipId, // Use existingData's ID and version
     existingData.destinyVersion
   );
-  
+
   updatedData.lastModified = currentTime;
   return updatedData;
 }
@@ -388,12 +395,12 @@ apiRouter.get('/profile', validateApiKey, (req, res) => {
 
   // Create the profile structure that matches IndexedDB format
   const profileKey = `${userData.membershipId}-d${userData.destinyVersion}`;
-  
+
   // Convert loadouts object to array for ProfileResponse format
   const loadoutsArray = Object.values(userData.loadouts);
   const tagsArray = Object.values(userData.tags);
-  
-  // Convert searches object to array for ProfileResponse format  
+
+  // Convert searches object to array for ProfileResponse format
   const searchesArray = [];
   Object.entries(userData.searches).forEach(([destinyVersion, searches]) => {
     if (Array.isArray(searches)) {
@@ -422,23 +429,23 @@ apiRouter.get('/profile', validateApiKey, (req, res) => {
       syncToken: profileResponse.syncToken,
       lastModified: profileResponse.lastModified
     };
-    
-    if (componentsArray.includes('settings')) { 
-      filteredResponse.settings = profileResponse.settings; 
+
+    if (componentsArray.includes('settings')) {
+      filteredResponse.settings = profileResponse.settings;
     }
-    if (componentsArray.includes('loadouts')) { 
+    if (componentsArray.includes('loadouts')) {
       filteredResponse.loadouts = profileResponse.loadouts;
     }
-    if (componentsArray.includes('tags')) { 
+    if (componentsArray.includes('tags')) {
       filteredResponse.tags = profileResponse.tags;
     }
-    if (componentsArray.includes('searches')) { 
-      filteredResponse.searches = profileResponse.searches; 
+    if (componentsArray.includes('searches')) {
+      filteredResponse.searches = profileResponse.searches;
     }
-    
+
     return res.json(filteredResponse);
   }
-  
+
   res.json(profileResponse);
 });
 
@@ -504,7 +511,7 @@ apiRouter.post('/loadout_share', validateApiKey, (req, res) => {
     stmt.run(shareId, platformMembershipId, JSON.stringify(loadout), createdAt, expiresAt);
 
     // Return the share URL
-    const shareUrl = `https://shirezaks.com/loadout/${shareId}`;
+    const shareUrl = `https://www.shirezaks.com/loadout/${shareId}`;
     res.json({ shareUrl });
   } catch (error) {
     console.error('Error creating loadout share:', error);
@@ -522,7 +529,7 @@ apiRouter.get('/loadout_share', (req, res) => {
 
   try {
     const stmt = db.prepare(`
-      SELECT * FROM loadout_shares 
+      SELECT * FROM loadout_shares
       WHERE shareId = ? AND (expiresAt IS NULL OR expiresAt > ?)
     `);
     const share = stmt.get(shareId, Date.now());
@@ -541,10 +548,18 @@ apiRouter.get('/loadout_share', (req, res) => {
   }
 });
 
-// Create HTTPS server
-const httpsServer = https.createServer(credentials, app);
-
-httpsServer.listen(PORT, () => {
-
-  console.log(`HTTPS Server running on https://localhost:${PORT}`);
-});
+// Create and start server
+if (isRailway) {
+  // HTTP server for Railway (HTTPS termination handled by Railway)
+  // Use fixed port 3000 for backend when running alongside frontend
+  const httpPort = 3000;
+  app.listen(httpPort, '127.0.0.1', () => {
+    console.log(`Backend HTTP Server running on localhost:${httpPort} (Railway provides HTTPS)`);
+  });
+} else {
+  // HTTPS server for local development
+  const httpsServer = https.createServer(credentials, app);
+  httpsServer.listen(PORT, () => {
+    console.log(`HTTPS Server running on port ${PORT}`);
+  });
+}

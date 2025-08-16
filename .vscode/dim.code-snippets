@@ -1,0 +1,54 @@
+{
+  // Place your global snippets here. Each snippet is defined under a snippet name and has a scope, prefix, body and
+  // description. Add comma separated ids of the languages where the snippet is applicable in the scope field. If scope
+  // is left empty or omitted, the snippet gets applied to all languages. The prefix is what is
+  // used to trigger the snippet and the body will be expanded and inserted. Possible variables are:
+  // $1, $2 for tab stops, $0 for the final cursor position, and ${1:label}, ${2:another} for placeholders.
+  // Placeholders with the same ids are connected.
+  // Example:
+  // "Print to console": {
+  // 	"scope": "javascript,typescript",
+  // 	"prefix": "log",
+  // 	"body": [
+  // 		"console.log('$1');",
+  // 		"$2"
+  // 	],
+  // 	"description": "Log output to console"
+  // }
+  "SFC Component": {
+    "prefix": "sfc",
+    "body": [
+      "export default function ${1:ClassName}({",
+      "}: {",
+      "}) {",
+      "\treturn (",
+      "\t\t$0",
+      "\t);",
+      "}",
+      ""
+    ],
+    "description": "TypeScript Stateless Functional Component",
+    "scope": "javascriptreact,typescriptreact"
+  },
+
+  "import i18next": {
+    "prefix": "imt",
+    "body": ["import { t } from 'app/i18next-t';"],
+    "description": "Import t helper from i18next",
+    "scope": "javascriptreact,typescriptreact"
+  },
+
+  "import clsx": {
+    "prefix": "imc",
+    "body": ["import clsx from 'clsx';"],
+    "description": "Import clsx",
+    "scope": "javascriptreact,typescriptreact"
+  },
+
+  "import styles": {
+    "prefix": "ims",
+    "body": ["import styles from './$TM_FILENAME_BASE.m.scss';"],
+    "description": "Import CSS module",
+    "scope": "javascriptreact,typescriptreact"
+  },
+}

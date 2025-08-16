@@ -77,6 +77,14 @@ COPY scripts ./scripts
 COPY simple-hmr-server.js ./
 COPY proxy-server.js ./
 COPY docker-hmr-server.js ./
+COPY railway-server.js ./
+COPY simple-railway-server.js ./
+COPY test-server.js ./
+COPY production-server.js ./
+
+# Copy SSL certificates if they exist
+# For Railway deployment, certificates should be provided via environment variables
+RUN mkdir -p /app/certs
 
 # Copy TypeScript and other config files that exist
 COPY tsconfig.json ./
