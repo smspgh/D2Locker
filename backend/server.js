@@ -16,7 +16,7 @@ const __dirname = path.dirname(__filename);
 
 // Configure CORS
 app.use(cors({
-  origin: ['https://www.shirezaks.com', 'https://www.shirezaks.com', 'https://www.shirezaks.com:8443', 'https://localhost:8443', 'https://localhost:443', 'https://localhost'],
+  origin: ['https://shirezaks.com', 'https://shirezaks.com', 'https://shirezaks.com:8443', 'https://localhost:8443', 'https://localhost:443', 'https://localhost'],
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization', 'X-API-Key', 'X-D2L-Version'],
 }));
@@ -24,23 +24,17 @@ app.use(cors({
 // Middleware to parse JSON bodies
 app.use(bodyParser.json());
 
-// Load SSL certificates (only for local development)
+// Load SSL certificates
 let privateKey, certificate, credentials;
-const isRailway = process.env.RAILWAY_ENVIRONMENT_NAME || process.env.RAILWAY_DEPLOYMENT_ID;
 
-if (!isRailway) {
-  // Local development - use SSL certificates
-  try {
-    privateKey = fs.readFileSync(path.join(__dirname, '..', 'certs', 'shirezaks_com.key'), 'utf8');
-    certificate = fs.readFileSync(path.join(__dirname, '..', 'certs', 'shirezaks_com.pem'), 'utf8');
-    credentials = { key: privateKey, cert: certificate };
-    console.log('SSL certificates loaded for local development');
-  } catch (error) {
-    console.error('Error loading SSL certificates:', error.message);
-    throw new Error('SSL certificates are required for local development. Please place certificates in /certs directory');
-  }
-} else {
-  console.log('Running on Railway - using HTTP (Railway provides HTTPS termination)');
+try {
+  privateKey = fs.readFileSync(path.join(__dirname, '..', 'certs', 'shirezaks_com.key'), 'utf8');
+  certificate = fs.readFileSync(path.join(__dirname, '..', 'certs', 'shirezaks_com.pem'), 'utf8');
+  credentials = { key: privateKey, cert: certificate };
+  console.log('SSL certificates loaded');
+} catch (error) {
+  console.error('Error loading SSL certificates:', error.message);
+  throw new Error('SSL certificates are required. Please place certificates in /certs directory');
 }
 
 // Initialize SQLite Database
@@ -511,7 +505,7 @@ apiRouter.post('/loadout_share', validateApiKey, (req, res) => {
     stmt.run(shareId, platformMembershipId, JSON.stringify(loadout), createdAt, expiresAt);
 
     // Return the share URL
-    const shareUrl = `https://www.shirezaks.com/loadout/${shareId}`;
+    const shareUrl = `https://shirezaks.com/loadout/${shareId}`;
     res.json({ shareUrl });
   } catch (error) {
     console.error('Error creating loadout share:', error);
@@ -548,18 +542,8 @@ apiRouter.get('/loadout_share', (req, res) => {
   }
 });
 
-// Create and start server
-if (isRailway) {
-  // HTTP server for Railway (HTTPS termination handled by Railway)
-  // Use fixed port 3000 for backend when running alongside frontend
-  const httpPort = 3000;
-  app.listen(httpPort, '127.0.0.1', () => {
-    console.log(`Backend HTTP Server running on localhost:${httpPort} (Railway provides HTTPS)`);
-  });
-} else {
-  // HTTPS server for local development
-  const httpsServer = https.createServer(credentials, app);
-  httpsServer.listen(PORT, () => {
-    console.log(`HTTPS Server running on port ${PORT}`);
-  });
-}
+// Create and start HTTPS server
+const httpsServer = https.createServer(credentials, app);
+httpsServer.listen(PORT, () => {
+  console.log(`HTTPS Server running on port ${PORT}`);
+});

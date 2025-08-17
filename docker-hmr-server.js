@@ -12,24 +12,18 @@ const __dirname = path.dirname(__filename);
 
 const app = express();
 
-// Load SSL certificates (only for local development)
+// Load SSL certificates
 let options;
-const isRailway = process.env.RAILWAY_ENVIRONMENT_NAME || process.env.RAILWAY_DEPLOYMENT_ID;
 
-if (!isRailway) {
-  // Local development - use SSL certificates
-  try {
-    options = {
-      key: fs.readFileSync(path.join(__dirname, 'certs', 'shirezaks_com.key')),
-      cert: fs.readFileSync(path.join(__dirname, 'certs', 'shirezaks_com.pem')),
-    };
-    console.log('SSL certificates loaded for local development');
-  } catch (error) {
-    console.error('Error loading SSL certificates:', error.message);
-    throw new Error('SSL certificates are required for local development');
-  }
-} else {
-  console.log('Running on Railway - using HTTP (Railway provides HTTPS termination)');
+try {
+  options = {
+    key: fs.readFileSync(path.join(__dirname, 'certs', 'shirezaks_com.key')),
+    cert: fs.readFileSync(path.join(__dirname, 'certs', 'shirezaks_com.pem')),
+  };
+  console.log('SSL certificates loaded');
+} catch (error) {
+  console.error('Error loading SSL certificates:', error.message);
+  throw new Error('SSL certificates are required');
 }
 
 // Inject HMR client script
@@ -107,20 +101,12 @@ app.use(expressStaticGzip(path.join(__dirname, 'dist'), {
   }
 }));
 
-// Create server
-let server;
-const port = process.env.PORT || (isRailway ? 80 : 443);
-
-if (isRailway) {
-  // HTTP server for Railway
-  server = app;
-} else {
-  // HTTPS server for local development
-  server = https.createServer(options, app);
-}
+// Create HTTPS server
+const port = 443;
+const server = https.createServer(options, app);
 
 // Create WebSocket server
-const wss = new WebSocketServer({ server: isRailway ? undefined : server, port: isRailway ? port : undefined });
+const wss = new WebSocketServer({ server: server });
 
 // Track connected clients
 const clients = new Set();
@@ -151,12 +137,6 @@ watcher.on('change', (filePath) => {
   });
 });
 
-if (isRailway) {
-  app.listen(port, () => {
-    console.log(`HTTP HMR server with WebSocket running on port ${port} (Railway provides HTTPS)`);
-  });
-} else {
-  server.listen(port, () => {
-    console.log(`HTTPS HMR server with WebSocket running on port ${port}`);
-  });
-}
+server.listen(port, () => {
+  console.log(`HTTPS HMR server with WebSocket running on port ${port}`);
+});

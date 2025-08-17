@@ -9,7 +9,7 @@
       "request": "launch",
       "preLaunchTask": "start",
       "name": "Launch Chrome against localhost",
-      "url": "https://www.shirezaks.com/",
+      "url": "https://shirezaks.com/",
       "webRoot": "${workspaceFolder}"
     },
     {

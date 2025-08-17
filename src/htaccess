@@ -689,7 +689,7 @@ AddEncoding br .br
     <IfModule mod_headers.c>
         # s-maxage tells CloudFlare how long it can cache (max-age is for browsers)
         # We set our html to a low cache lifetime (5 min) because *many* paths map to this - our other files like service-worker.js get
-        # manually invalidated as part of the deploy, but we can't invalidate every path e.g. https://www.shirezaks.com/4611686018433092312/d2/inventory
+        # manually invalidated as part of the deploy, but we can't invalidate every path e.g. https://shirezaks.com/4611686018433092312/d2/inventory
         Header set Cache-Control "max-age=0, s-maxage=300, must-revalidate"
         Header unset Expires
     </IfModule>
