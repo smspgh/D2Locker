@@ -18,7 +18,6 @@ import { buildArmoryIndex } from 'app/search/armory-search';
 import searchBarStyles from 'app/search/SearchBar.m.scss';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { setSearchQuery, toggleSearchResults } from 'app/shell/actions';
-import { useNavigate } from 'react-router';
 
 // Autocomplete component moved outside to prevent re-creation
 const AutocompleteSearchInput = React.memo(({ 
@@ -168,7 +167,6 @@ const AutocompleteSearchInput = React.memo(({
 export default function SearchSettings({ settings }: { settings: Settings }) {
   const setSetting = useSetSetting();
   const dispatch = useThunkDispatch();
-  const navigate = useNavigate();
   // No separate state needed - we'll add rows directly to the table
   
   // Search configuration and autocomplete
@@ -274,8 +272,6 @@ export default function SearchSettings({ settings }: { settings: Settings }) {
       
       // Set the search query in the main search bar
       dispatch(setSearchQuery(combinedQuery));
-      // Navigate to inventory to ensure search results show properly
-      navigate('/inventory');
       // Open the search results
       dispatch(toggleSearchResults(true));
     }
