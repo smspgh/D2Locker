@@ -1,11 +1,128 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo, useCallback } from 'react';
 import { t } from 'app/i18next-t';
 import { Settings } from './initial-settings';
 import { useSetSetting } from './hooks';
 import Checkbox from './Checkbox';
 import Select from './Select';
 import styles from './SettingsPage.m.scss';
-import { AppIcon, deleteIcon, plusIcon } from 'app/shell/icons';
+import { AppIcon, deleteIcon, plusIcon, editIcon } from 'app/shell/icons';
+import { useSelector } from 'react-redux';
+import { searchConfigSelector, filterFactorySelector } from 'app/search/items/item-search-filter';
+import { allItemsSelector } from 'app/inventory/selectors';
+import createAutocompleter from 'app/search/autocomplete';
+import { useCombobox } from 'downshift';
+import { parseQuery } from 'app/search/query-parser';
+import { languageSelector } from 'app/d2l-api/selectors';
+import { d2ManifestSelector } from 'app/manifest/selectors';
+import { buildArmoryIndex } from 'app/search/armory-search';
+
+// Autocomplete component moved outside to prevent re-creation
+const AutocompleteSearchInput = React.memo(({ 
+  value, 
+  onChange, 
+  onSelect, 
+  placeholder, 
+  resultCount,
+  autocompleter 
+}: {
+  value: string;
+  onChange: (value: string) => void;
+  onSelect: (value: string) => void;
+  placeholder: string;
+  resultCount: number;
+  autocompleter: any;
+}) => {
+  const suggestions = useMemo(() => {
+    if (!value.trim()) return [];
+    try {
+      const result = autocompleter(
+        value,           // query
+        value.length,    // caretIndex (cursor at end)
+        [],              // recentSearches (empty for now)
+        false            // includeArmory
+      ).slice(0, 5); // Limit to 5 suggestions
+      return result;
+    } catch (error) {
+      console.warn('Autocomplete error:', error);
+      return [];
+    }
+  }, [value, autocompleter]);
+
+  const {
+    isOpen,
+    getMenuProps,
+    getInputProps,
+    getItemProps,
+    highlightedIndex,
+  } = useCombobox({
+    inputValue: value,
+    items: suggestions,
+    onInputValueChange: ({ inputValue }) => onChange(inputValue || ''),
+    onSelectedItemChange: ({ selectedItem }) => {
+      if (selectedItem) {
+        onSelect(selectedItem.query.body || selectedItem.query.fullText);
+      }
+    },
+    itemToString: (item) => item?.query.body || item?.query.fullText || '',
+  });
+
+  return (
+    <div style={{ position: 'relative' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+        <input
+          {...getInputProps({
+            type: 'text',
+            placeholder,
+            onKeyDown: (e: React.KeyboardEvent) => {
+              if (e.key === 'Enter' && !isOpen) {
+                onSelect(value);
+              }
+            },
+          })}
+          style={{ flex: 1 }}
+        />
+        {value.trim() && (
+          <span style={{ fontSize: '0.9em', color: '#888' }}>
+            ({resultCount} results)
+          </span>
+        )}
+      </div>
+      <div {...getMenuProps()}>
+        {isOpen && suggestions.length > 0 && (
+          <div
+            style={{
+              position: 'absolute',
+              top: '100%',
+              left: 0,
+              right: 0,
+              backgroundColor: 'var(--theme-surface-2)',
+              border: '1px solid var(--theme-accent-border)',
+              borderRadius: '4px',
+              zIndex: 1000,
+              maxHeight: '200px',
+              overflowY: 'auto',
+            }}
+          >
+            {suggestions.map((item, index) => (
+              <div
+                {...getItemProps({ item, index })}
+                key={index}
+                style={{
+                  padding: '8px 12px',
+                  cursor: 'pointer',
+                  backgroundColor: highlightedIndex === index ? 'var(--theme-accent-primary)' : 'transparent',
+                  color: highlightedIndex === index ? 'var(--theme-text-primary)' : 'inherit',
+                }}
+              >
+                {item.query.body || item.query.fullText}
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+});
 
 export default function SearchSettings({ settings }: { settings: Settings }) {
   const setSetting = useSetSetting();
@@ -13,6 +130,50 @@ export default function SearchSettings({ settings }: { settings: Settings }) {
   const [newWeaponSearchLogic, setNewWeaponSearchLogic] = useState<'AND' | 'OR'>('AND');
   const [newArmorSearchTerm, setNewArmorSearchTerm] = useState('');
   const [newArmorSearchLogic, setNewArmorSearchLogic] = useState<'AND' | 'OR'>('AND');
+  
+  // Search configuration and autocomplete
+  const searchConfig = useSelector(searchConfigSelector);
+  const filterFactory = useSelector(filterFactorySelector);
+  const allItems = useSelector(allItemsSelector);
+  const language = useSelector(languageSelector);
+  const d2Manifest = useSelector(d2ManifestSelector);
+  
+  const armoryIndex = useMemo(() => buildArmoryIndex(d2Manifest, language), [d2Manifest, language]);
+  
+  const autocompleter = useMemo(() => {
+    return createAutocompleter(searchConfig, armoryIndex);
+  }, [searchConfig, armoryIndex]);
+  
+  // Get weapon/armor counts for search terms
+  const getWeaponCount = useCallback((searchTerm: string) => {
+    if (!searchTerm.trim()) return 0;
+    try {
+      const searchFilter = filterFactory(searchTerm);
+      return allItems.filter(item => item.bucket?.sort === 'Weapons' && searchFilter(item)).length;
+    } catch {
+      return 0;
+    }
+  }, [filterFactory, allItems]);
+  
+  const getArmorCount = useCallback((searchTerm: string) => {
+    if (!searchTerm.trim()) return 0;
+    try {
+      const searchFilter = filterFactory(searchTerm);
+      return allItems.filter(item => item.bucket.inArmor && searchFilter(item)).length;
+    } catch {
+      return 0;
+    }
+  }, [filterFactory, allItems]);
+  
+  // Edit state for weapon terms
+  const [editingWeaponIndex, setEditingWeaponIndex] = useState<number | null>(null);
+  const [editWeaponTerm, setEditWeaponTerm] = useState('');
+  const [editWeaponLogic, setEditWeaponLogic] = useState<'AND' | 'OR'>('AND');
+  
+  // Edit state for armor terms  
+  const [editingArmorIndex, setEditingArmorIndex] = useState<number | null>(null);
+  const [editArmorTerm, setEditArmorTerm] = useState('');
+  const [editArmorLogic, setEditArmorLogic] = useState<'AND' | 'OR'>('AND');
 
   const handleWeaponSettingChange = (key: keyof NonNullable<Settings['searchFilterSettings']>['keepWeapon'], value: any) => {
     setSetting('searchFilterSettings', {
@@ -60,6 +221,35 @@ export default function SearchSettings({ settings }: { settings: Settings }) {
     handleWeaponSettingChange('additionalSearchTerms', updatedTerms);
   };
 
+  const startEditingWeaponTerm = (index: number) => {
+    const currentTerms = weaponSettings.additionalSearchTerms || [];
+    const termToEdit = currentTerms[index];
+    if (termToEdit) {
+      setEditingWeaponIndex(index);
+      setEditWeaponTerm(termToEdit.term);
+      setEditWeaponLogic(termToEdit.logic);
+    }
+  };
+
+  const saveWeaponTermEdit = () => {
+    if (editingWeaponIndex !== null && editWeaponTerm.trim()) {
+      const currentTerms = weaponSettings.additionalSearchTerms || [];
+      const updatedTerms = currentTerms.map((termObj, i) => 
+        i === editingWeaponIndex ? { term: editWeaponTerm.trim(), logic: editWeaponLogic } : termObj
+      );
+      handleWeaponSettingChange('additionalSearchTerms', updatedTerms);
+      setEditingWeaponIndex(null);
+      setEditWeaponTerm('');
+      setEditWeaponLogic('AND');
+    }
+  };
+
+  const cancelWeaponTermEdit = () => {
+    setEditingWeaponIndex(null);
+    setEditWeaponTerm('');
+    setEditWeaponLogic('AND');
+  };
+
   const addArmorSearchTerm = () => {
     if (newArmorSearchTerm.trim()) {
       const currentTerms = armorSettings.additionalSearchTerms || [];
@@ -83,6 +273,35 @@ export default function SearchSettings({ settings }: { settings: Settings }) {
       i === index ? { ...termObj, logic } : termObj
     );
     handleArmorSettingChange('additionalSearchTerms', updatedTerms);
+  };
+
+  const startEditingArmorTerm = (index: number) => {
+    const currentTerms = armorSettings.additionalSearchTerms || [];
+    const termToEdit = currentTerms[index];
+    if (termToEdit) {
+      setEditingArmorIndex(index);
+      setEditArmorTerm(termToEdit.term);
+      setEditArmorLogic(termToEdit.logic);
+    }
+  };
+
+  const saveArmorTermEdit = () => {
+    if (editingArmorIndex !== null && editArmorTerm.trim()) {
+      const currentTerms = armorSettings.additionalSearchTerms || [];
+      const updatedTerms = currentTerms.map((termObj, i) => 
+        i === editingArmorIndex ? { term: editArmorTerm.trim(), logic: editArmorLogic } : termObj
+      );
+      handleArmorSettingChange('additionalSearchTerms', updatedTerms);
+      setEditingArmorIndex(null);
+      setEditArmorTerm('');
+      setEditArmorLogic('AND');
+    }
+  };
+
+  const cancelArmorTermEdit = () => {
+    setEditingArmorIndex(null);
+    setEditArmorTerm('');
+    setEditArmorLogic('AND');
   };
 
 
@@ -122,21 +341,72 @@ export default function SearchSettings({ settings }: { settings: Settings }) {
                   <strong>{t('Settings.CurrentSearchTerms')}:</strong>
                   {(weaponSettings.additionalSearchTerms || []).map((termObj, index) => (
                     <div key={index} className={styles.horizontal}>
-                      <span>{termObj.term}</span>
-                      <Select
-                        value={termObj.logic}
-                        name={`weaponTerm${index}` as keyof Settings}
-                        options={logicOptions}
-                        onChange={(e) => updateWeaponSearchTermLogic(index, e.target.value as 'AND' | 'OR')}
-                      />
-                      <button
-                        type="button"
-                        className="d2l-button"
-                        onClick={() => removeWeaponSearchTerm(index)}
-                        title={t('Settings.RemoveSearchTerm')}
-                      >
-                        <AppIcon icon={deleteIcon} />
-                      </button>
+                      {editingWeaponIndex === index ? (
+                        <>
+                          <AutocompleteSearchInput
+                            value={editWeaponTerm}
+                            onChange={setEditWeaponTerm}
+                            onSelect={(value) => {
+                              setEditWeaponTerm(value);
+                              setTimeout(saveWeaponTermEdit, 100);
+                            }}
+                            placeholder="Edit search term"
+                            resultCount={getWeaponCount(editWeaponTerm)}
+                            autocompleter={autocompleter}
+                          />
+                          <Select
+                            value={editWeaponLogic}
+                            name={`editWeaponTerm${index}` as keyof Settings}
+                            options={logicOptions}
+                            onChange={(e) => setEditWeaponLogic(e.target.value as 'AND' | 'OR')}
+                          />
+                          <button
+                            type="button"
+                            className="d2l-button"
+                            onClick={saveWeaponTermEdit}
+                            title="Save"
+                          >
+                            ✓
+                          </button>
+                          <button
+                            type="button"
+                            className="d2l-button"
+                            onClick={cancelWeaponTermEdit}
+                            title="Cancel"
+                          >
+                            ✕
+                          </button>
+                        </>
+                      ) : (
+                        <>
+                          <span>{termObj.term}</span>
+                          <span style={{ fontSize: '0.9em', color: '#888', marginLeft: '8px' }}>
+                            ({getWeaponCount(termObj.term)} results)
+                          </span>
+                          <Select
+                            value={termObj.logic}
+                            name={`weaponTerm${index}` as keyof Settings}
+                            options={logicOptions}
+                            onChange={(e) => updateWeaponSearchTermLogic(index, e.target.value as 'AND' | 'OR')}
+                          />
+                          <button
+                            type="button"
+                            className="d2l-button"
+                            onClick={() => startEditingWeaponTerm(index)}
+                            title="Edit"
+                          >
+                            <AppIcon icon={editIcon} />
+                          </button>
+                          <button
+                            type="button"
+                            className="d2l-button"
+                            onClick={() => removeWeaponSearchTerm(index)}
+                            title={t('Settings.RemoveSearchTerm')}
+                          >
+                            <AppIcon icon={deleteIcon} />
+                          </button>
+                        </>
+                      )}
                     </div>
                   ))}
                 </div>
@@ -145,12 +415,19 @@ export default function SearchSettings({ settings }: { settings: Settings }) {
               <div>
                 <strong>{t('Settings.AddNewSearchTerm')}:</strong>
                 <div className={styles.horizontal}>
-                  <input
-                    type="text"
+                  <AutocompleteSearchInput
                     value={newWeaponSearchTerm}
-                    onChange={(e) => setNewWeaponSearchTerm(e.target.value)}
+                    onChange={setNewWeaponSearchTerm}
+                    onSelect={(value) => {
+                      setNewWeaponSearchTerm(value);
+                      // Auto-add if it's a valid search term
+                      if (value.trim()) {
+                        setTimeout(addWeaponSearchTerm, 100);
+                      }
+                    }}
                     placeholder={t('Settings.AdditionalSearchPlaceholder')}
-                    onKeyPress={(e) => e.key === 'Enter' && addWeaponSearchTerm()}
+                    resultCount={getWeaponCount(newWeaponSearchTerm)}
+                    autocompleter={autocompleter}
                   />
                   <Select
                     label={t('Settings.SearchLogic')}
@@ -197,21 +474,72 @@ export default function SearchSettings({ settings }: { settings: Settings }) {
                   <strong>{t('Settings.CurrentSearchTerms')}:</strong>
                   {(armorSettings.additionalSearchTerms || []).map((termObj, index) => (
                     <div key={index} className={styles.horizontal}>
-                      <span>{termObj.term}</span>
-                      <Select
-                        value={termObj.logic}
-                        name={`armorTerm${index}` as keyof Settings}
-                        options={logicOptions}
-                        onChange={(e) => updateArmorSearchTermLogic(index, e.target.value as 'AND' | 'OR')}
-                      />
-                      <button
-                        type="button"
-                        className="d2l-button"
-                        onClick={() => removeArmorSearchTerm(index)}
-                        title={t('Settings.RemoveSearchTerm')}
-                      >
-                        <AppIcon icon={deleteIcon} />
-                      </button>
+                      {editingArmorIndex === index ? (
+                        <>
+                          <AutocompleteSearchInput
+                            value={editArmorTerm}
+                            onChange={setEditArmorTerm}
+                            onSelect={(value) => {
+                              setEditArmorTerm(value);
+                              setTimeout(saveArmorTermEdit, 100);
+                            }}
+                            placeholder="Edit search term"
+                            resultCount={getArmorCount(editArmorTerm)}
+                            autocompleter={autocompleter}
+                          />
+                          <Select
+                            value={editArmorLogic}
+                            name={`editArmorTerm${index}` as keyof Settings}
+                            options={logicOptions}
+                            onChange={(e) => setEditArmorLogic(e.target.value as 'AND' | 'OR')}
+                          />
+                          <button
+                            type="button"
+                            className="d2l-button"
+                            onClick={saveArmorTermEdit}
+                            title="Save"
+                          >
+                            ✓
+                          </button>
+                          <button
+                            type="button"
+                            className="d2l-button"
+                            onClick={cancelArmorTermEdit}
+                            title="Cancel"
+                          >
+                            ✕
+                          </button>
+                        </>
+                      ) : (
+                        <>
+                          <span>{termObj.term}</span>
+                          <span style={{ fontSize: '0.9em', color: '#888', marginLeft: '8px' }}>
+                            ({getArmorCount(termObj.term)} results)
+                          </span>
+                          <Select
+                            value={termObj.logic}
+                            name={`armorTerm${index}` as keyof Settings}
+                            options={logicOptions}
+                            onChange={(e) => updateArmorSearchTermLogic(index, e.target.value as 'AND' | 'OR')}
+                          />
+                          <button
+                            type="button"
+                            className="d2l-button"
+                            onClick={() => startEditingArmorTerm(index)}
+                            title="Edit"
+                          >
+                            <AppIcon icon={editIcon} />
+                          </button>
+                          <button
+                            type="button"
+                            className="d2l-button"
+                            onClick={() => removeArmorSearchTerm(index)}
+                            title={t('Settings.RemoveSearchTerm')}
+                          >
+                            <AppIcon icon={deleteIcon} />
+                          </button>
+                        </>
+                      )}
                     </div>
                   ))}
                 </div>
@@ -220,12 +548,19 @@ export default function SearchSettings({ settings }: { settings: Settings }) {
               <div>
                 <strong>{t('Settings.AddNewSearchTerm')}:</strong>
                 <div className={styles.horizontal}>
-                  <input
-                    type="text"
+                  <AutocompleteSearchInput
                     value={newArmorSearchTerm}
-                    onChange={(e) => setNewArmorSearchTerm(e.target.value)}
+                    onChange={setNewArmorSearchTerm}
+                    onSelect={(value) => {
+                      setNewArmorSearchTerm(value);
+                      // Auto-add if it's a valid search term
+                      if (value.trim()) {
+                        setTimeout(addArmorSearchTerm, 100);
+                      }
+                    }}
                     placeholder={t('Settings.AdditionalSearchPlaceholder')}
-                    onKeyPress={(e) => e.key === 'Enter' && addArmorSearchTerm()}
+                    resultCount={getArmorCount(newArmorSearchTerm)}
+                    autocompleter={autocompleter}
                   />
                   <Select
                     label={t('Settings.SearchLogic')}

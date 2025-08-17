@@ -6,7 +6,6 @@ import { initialSettingsState } from 'app/settings/initial-settings';
 import { computeDupes, sortDupesBest, computeArmorDupesByClassTypeTier, makeArmorClassTypeTierDupeID, makeDupeID } from './dupes';
 import { getRollAppraiserUtilsSync } from 'app/roll-appraiser/rollAppraiserService';
 import { getSocketsByType } from 'app/utils/socket-utils';
-import { parseQuery } from 'app/search/query-parser';
 import { makeSearchFilterFactory } from 'app/search/search-filter';
 import { buildItemSearchConfig } from '../item-search-filter';
 
@@ -121,7 +120,8 @@ const simpleFilters: ItemFilterDefinition[] = [
     keywords: 'keepweapon',
     description: tl('Filter.KeepWeapon'),
     destinyVersion: 2,
-    filter: ({ settings }) => {
+    filter: (filterContext) => {
+      const { settings, allItems, getTag, customStats, d2Definitions, stores, getNotes, newItems, loadoutsByItem, wishListsByHash, wishListFunction, language, currentStore } = filterContext;
       const searchSettings = settings?.searchFilterSettings?.keepWeapon || initialSettingsState.searchFilterSettings?.keepWeapon;
       
       // If the filter is disabled, return false for all items
@@ -141,15 +141,50 @@ const simpleFilters: ItemFilterDefinition[] = [
       
       // If there are additional search terms, use them to determine what to keep
       if (searchSettings?.additionalSearchTerms && searchSettings.additionalSearchTerms.length > 0) {
-        // Use the existing search system to parse and apply search terms
-        const searchQuery = searchSettings.additionalSearchTerms
-          .map(termObj => termObj.term)
-          .join(' ');
+        // Build query respecting AND/OR logic between terms
+        let searchQuery = '';
+        for (let i = 0; i < searchSettings.additionalSearchTerms.length; i++) {
+          const termObj = searchSettings.additionalSearchTerms[i];
+          if (i === 0) {
+            // First term doesn't need a logical operator
+            searchQuery = termObj.term;
+          } else {
+            // Add logical operator before subsequent terms
+            const operator = termObj.logic === 'OR' ? ' or ' : ' ';
+            searchQuery += `${operator}${termObj.term}`;
+          }
+        }
         
         try {
-          const parsedQuery = parseQuery(searchQuery);
-          const searchFilterFactory = makeSearchFilterFactory(buildItemSearchConfig);
-          const searchFilter = searchFilterFactory(parsedQuery);
+          // Build the search config with the same context as the main search
+          const suggestionsContext = {
+            allItems,
+            loadouts: [], // We don't have loadouts in this context
+            d2Definitions,
+            getTag,
+            getNotes,
+            allNotesHashtags: [], // We don't need hashtags for this internal search
+            customStats,
+          };
+          const searchConfig = buildItemSearchConfig(2, language || 'en', suggestionsContext);
+          
+          // Create search filter factory with proper config structure  
+          const searchFilterFactory = makeSearchFilterFactory(searchConfig, {
+            stores,
+            allItems,
+            currentStore,
+            loadoutsByItem,
+            wishListFunction,
+            wishListsByHash,
+            newItems,
+            getTag,
+            getNotes,
+            language,
+            customStats,
+            d2Definitions,
+            settings,
+          });
+          const searchFilter = searchFilterFactory(searchQuery);
           
           return (item: DimItem) => {
             // Only apply to weapons
@@ -160,7 +195,7 @@ const simpleFilters: ItemFilterDefinition[] = [
             return searchFilter(item);
           };
         } catch (error) {
-          console.warn('Error parsing keepweapon search terms:', error);
+          console.warn('Error parsing keepweapon search terms:', error, 'Query was:', searchQuery);
           return baseFilter;
         }
       }
@@ -172,7 +207,8 @@ const simpleFilters: ItemFilterDefinition[] = [
     keywords: 'keeparmor',
     description: tl('Filter.KeepArmor'),
     destinyVersion: 2,
-    filter: ({ settings }) => {
+    filter: (filterContext) => {
+      const { settings, allItems, getTag, customStats, d2Definitions, stores, getNotes, newItems, loadoutsByItem, wishListsByHash, wishListFunction, language, currentStore } = filterContext;
       const searchSettings = settings?.searchFilterSettings?.keepArmor || initialSettingsState.searchFilterSettings?.keepArmor;
       
       // If the filter is disabled, return false for all items
@@ -192,15 +228,50 @@ const simpleFilters: ItemFilterDefinition[] = [
       
       // If there are additional search terms, use them to determine what to keep
       if (searchSettings?.additionalSearchTerms && searchSettings.additionalSearchTerms.length > 0) {
-        // Use the existing search system to parse and apply search terms
-        const searchQuery = searchSettings.additionalSearchTerms
-          .map(termObj => termObj.term)
-          .join(' ');
+        // Build query respecting AND/OR logic between terms
+        let searchQuery = '';
+        for (let i = 0; i < searchSettings.additionalSearchTerms.length; i++) {
+          const termObj = searchSettings.additionalSearchTerms[i];
+          if (i === 0) {
+            // First term doesn't need a logical operator
+            searchQuery = termObj.term;
+          } else {
+            // Add logical operator before subsequent terms
+            const operator = termObj.logic === 'OR' ? ' or ' : ' ';
+            searchQuery += `${operator}${termObj.term}`;
+          }
+        }
         
         try {
-          const parsedQuery = parseQuery(searchQuery);
-          const searchFilterFactory = makeSearchFilterFactory(buildItemSearchConfig);
-          const searchFilter = searchFilterFactory(parsedQuery);
+          // Build the search config with the same context as the main search
+          const suggestionsContext = {
+            allItems,
+            loadouts: [], // We don't have loadouts in this context
+            d2Definitions,
+            getTag,
+            getNotes,
+            allNotesHashtags: [], // We don't need hashtags for this internal search
+            customStats,
+          };
+          const searchConfig = buildItemSearchConfig(2, language || 'en', suggestionsContext);
+          
+          // Create search filter factory with proper config structure  
+          const searchFilterFactory = makeSearchFilterFactory(searchConfig, {
+            stores,
+            allItems,
+            currentStore,
+            loadoutsByItem,
+            wishListFunction,
+            wishListsByHash,
+            newItems,
+            getTag,
+            getNotes,
+            language,
+            customStats,
+            d2Definitions,
+            settings,
+          });
+          const searchFilter = searchFilterFactory(searchQuery);
           
           return (item: DimItem) => {
             // Only apply to armor
@@ -211,7 +282,7 @@ const simpleFilters: ItemFilterDefinition[] = [
             return searchFilter(item);
           };
         } catch (error) {
-          console.warn('Error parsing keeparmor search terms:', error);
+          console.warn('Error parsing keeparmor search terms:', error, 'Query was:', searchQuery);
           return baseFilter;
         }
       }
