@@ -13,6 +13,7 @@ export interface Settings extends DimApiSettings {
       additionalSearchTerms?: {
         term: string;
         logic: 'AND' | 'OR';
+        group?: number; // Optional group number for precedence control
       }[];
     };
     keepArmor?: {
@@ -20,6 +21,7 @@ export interface Settings extends DimApiSettings {
       additionalSearchTerms?: {
         term: string;
         logic: 'AND' | 'OR';
+        group?: number; // Optional group number for precedence control
       }[];
     };
   };

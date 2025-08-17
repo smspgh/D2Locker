@@ -13,6 +13,10 @@ import '../inventory-page/StoreBucket.scss';
 import { DimItem } from '../inventory/item-types';
 import { itemSorterSelector } from '../settings/item-sort';
 import styles from './SearchResults.m.scss';
+import ItemActionsDropdown from 'app/item-actions/ItemActionsDropdown';
+import useBulkNote from 'app/d2l-ui/useBulkNote';
+import { querySelector } from 'app/shell/selectors';
+import { useIsPhonePortrait } from 'app/shell/selectors';
 
 /**
  * This displays all the items that match the given search - it is shown by default when a search is active

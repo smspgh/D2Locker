@@ -141,19 +141,42 @@ const simpleFilters: ItemFilterDefinition[] = [
       
       // If there are additional search terms, use them to determine what to keep
       if (searchSettings?.additionalSearchTerms && searchSettings.additionalSearchTerms.length > 0) {
-        // Build query respecting AND/OR logic between terms
+        // Build query respecting AND/OR logic between terms with proper grouping
         let searchQuery = '';
-        for (let i = 0; i < searchSettings.additionalSearchTerms.length; i++) {
-          const termObj = searchSettings.additionalSearchTerms[i];
-          if (i === 0) {
-            // First term doesn't need a logical operator
-            searchQuery = termObj.term;
-          } else {
-            // Add logical operator before subsequent terms
-            const operator = termObj.logic === 'OR' ? ' or ' : ' ';
-            searchQuery += `${operator}${termObj.term}`;
+        const terms = searchSettings.additionalSearchTerms;
+        
+        if (terms.length === 1) {
+          // Single term, no grouping needed
+          searchQuery = terms[0].term;
+        } else {
+          // Group terms by their group number (default to group 0 if not specified)
+          const groupedTerms = new Map<number, typeof terms>();
+          terms.forEach(term => {
+            const groupNum = term.group ?? 0;
+            if (!groupedTerms.has(groupNum)) {
+              groupedTerms.set(groupNum, []);
+            }
+            groupedTerms.get(groupNum)!.push(term);
+          });
+          
+          // Build query with proper grouping
+          const groupParts = [];
+          for (const [groupNum, groupTerms] of groupedTerms) {
+            if (groupTerms.length === 1) {
+              // Single term in group, no inner parentheses needed
+              groupParts.push(groupTerms[0].term);
+            } else {
+              // Multiple terms in group, combine with AND within the group
+              const innerTerms = groupTerms.map(term => term.term).join(' and ');
+              groupParts.push(`(${innerTerms})`);
+            }
           }
+          
+          // Join groups with OR (assuming groups represent alternative conditions)
+          searchQuery = groupParts.join(' or ');
         }
+        
+        console.log('KeepWeapon formed query:', searchQuery);
         
         try {
           // Build the search config with the same context as the main search
@@ -228,19 +251,42 @@ const simpleFilters: ItemFilterDefinition[] = [
       
       // If there are additional search terms, use them to determine what to keep
       if (searchSettings?.additionalSearchTerms && searchSettings.additionalSearchTerms.length > 0) {
-        // Build query respecting AND/OR logic between terms
+        // Build query respecting AND/OR logic between terms with proper grouping
         let searchQuery = '';
-        for (let i = 0; i < searchSettings.additionalSearchTerms.length; i++) {
-          const termObj = searchSettings.additionalSearchTerms[i];
-          if (i === 0) {
-            // First term doesn't need a logical operator
-            searchQuery = termObj.term;
-          } else {
-            // Add logical operator before subsequent terms
-            const operator = termObj.logic === 'OR' ? ' or ' : ' ';
-            searchQuery += `${operator}${termObj.term}`;
+        const terms = searchSettings.additionalSearchTerms;
+        
+        if (terms.length === 1) {
+          // Single term, no grouping needed
+          searchQuery = terms[0].term;
+        } else {
+          // Group terms by their group number (default to group 0 if not specified)
+          const groupedTerms = new Map<number, typeof terms>();
+          terms.forEach(term => {
+            const groupNum = term.group ?? 0;
+            if (!groupedTerms.has(groupNum)) {
+              groupedTerms.set(groupNum, []);
+            }
+            groupedTerms.get(groupNum)!.push(term);
+          });
+          
+          // Build query with proper grouping
+          const groupParts = [];
+          for (const [groupNum, groupTerms] of groupedTerms) {
+            if (groupTerms.length === 1) {
+              // Single term in group, no inner parentheses needed
+              groupParts.push(groupTerms[0].term);
+            } else {
+              // Multiple terms in group, combine with AND within the group
+              const innerTerms = groupTerms.map(term => term.term).join(' and ');
+              groupParts.push(`(${innerTerms})`);
+            }
           }
+          
+          // Join groups with OR (assuming groups represent alternative conditions)
+          searchQuery = groupParts.join(' or ');
         }
+        
+        console.log('KeepArmor formed query:', searchQuery);
         
         try {
           // Build the search config with the same context as the main search
