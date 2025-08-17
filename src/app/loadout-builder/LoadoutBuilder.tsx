@@ -49,6 +49,7 @@ import styles from './LoadoutBuilder.m.scss';
 import NoBuildsFoundExplainer from './NoBuildsFoundExplainer';
 import EnergyOptions from './filter/EnergyOptions';
 import LoadoutOptimizerExotic from './filter/LoadoutOptimizerExotic';
+import LoadoutOptimizerSetBonus from './filter/LoadoutOptimizerSetBonus';
 import {
   LoadoutOptimizerExcludedItems,
   LoadoutOptimizerPinnedItems,
@@ -341,6 +342,14 @@ export default memo(function LoadoutBuilder({
         lbDispatch={lbDispatch}
         storeId={selectedStore.id}
         className={styles.loadoutEditSection}
+      />
+      <LoadoutOptimizerSetBonus
+        storeId={selectedStore.id}
+        setBonuses={loadoutParameters.setBonuses || {}}
+        lbDispatch={lbDispatch}
+        className={styles.loadoutEditSection}
+        classType={selectedStore.classType}
+        vendorItems={vendorItems}
       />
       <LoadoutEditModsSection
         loadout={loadout}
