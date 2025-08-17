@@ -78,7 +78,7 @@ export default function Armor3Chart({
         label: benefit.name, // Simplified label since legend is disabled
         data: values,
         borderColor: color,
-        backgroundColor: color + '20',
+        backgroundColor: `${color  }20`,
         borderWidth: 2,
         borderDash: isDashed ? [5, 5] : [],
         pointRadius: 0,
@@ -123,10 +123,10 @@ export default function Armor3Chart({
     onClick: (event, elements) => {
       if (elements.length > 0 && onPointClick) {
         const element = elements[0];
-        const statValue = parseInt(chartData.labels[element.index] as string);
+        const statValue = parseInt(chartData.labels[element.index]);
         
         // Find breakpoint at this stat value
-        const breakpoint = stat.breakpoints && stat.breakpoints.find(bp => bp.statValue === statValue);
+        const breakpoint = stat.breakpoints?.find(bp => bp.statValue === statValue);
         if (breakpoint) {
           onPointClick({
             statValue,
@@ -160,7 +160,7 @@ export default function Armor3Chart({
             const statValue = parseInt(items[0].label || '0');
             const activeBreakpoints = stat.breakpoints ? stat.breakpoints.filter(bp => bp.statValue === statValue) : [];
             if (activeBreakpoints.length > 0) {
-              return '\nBreakpoint: ' + activeBreakpoints.map(bp => bp.description).join('\n');
+              return `\nBreakpoint: ${  activeBreakpoints.map(bp => bp.description).join('\n')}`;
             }
             return '';
           }
@@ -200,10 +200,10 @@ export default function Armor3Chart({
           callback: function(value: any, index: any, ticks: any) {
             const num = parseInt(value);
             // Always show current stat value and tier boundary
-            if (currentStatValue !== undefined && num === currentStatValue) return num;
-            if (num === 100) return num;
+            if (currentStatValue !== undefined && num === currentStatValue) {return num;}
+            if (num === 100) {return num;}
             // Show major intervals
-            if (num % 20 === 0) return num;
+            if (num % 20 === 0) {return num;}
             return '';
           },
           color: (context) => {
@@ -260,7 +260,7 @@ export default function Armor3Chart({
               const benefit = [...stat.primaryEffects, ...stat.enhancedEffects]
                 .find(b => visibleDataset.label?.includes(b.name));
               if (benefit?.unit === '%') {
-                return value + '%';
+                return `${value  }%`;
               }
             }
             return value;

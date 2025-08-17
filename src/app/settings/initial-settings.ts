@@ -10,28 +10,17 @@ export interface Settings extends DimApiSettings {
   searchFilterSettings?: {
     keepWeapon?: {
       enabled: boolean;
-      includeCrafted: boolean;
-      includeDupeBest: boolean;
-      includeExotics: boolean;
-      comboRankEnabled: boolean;
-      comboRankThreshold: number;
-      maxPowerEnabled: boolean;
-      maxPowerCount: number;
-      additionalSearchTerms?: Array<{
+      additionalSearchTerms?: {
         term: string;
         logic: 'AND' | 'OR';
-      }>;
+      }[];
     };
     keepArmor?: {
       enabled: boolean;
-      includeMaxStatTotal: boolean;
-      includeBestArmor: boolean;
-      maxPowerEnabled: boolean;
-      maxPowerCount: number;
-      additionalSearchTerms?: Array<{
+      additionalSearchTerms?: {
         term: string;
         logic: 'AND' | 'OR';
-      }>;
+      }[];
     };
   };
 }
@@ -42,21 +31,10 @@ export const initialSettingsState: Settings = {
   searchFilterSettings: {
     keepWeapon: {
       enabled: true,
-      includeCrafted: true,
-      includeDupeBest: true,
-      includeExotics: true,
-      comboRankEnabled: true,
-      comboRankThreshold: 3,
-      maxPowerEnabled: true,
-      maxPowerCount: 4,
       additionalSearchTerms: [],
     },
     keepArmor: {
       enabled: true,
-      includeMaxStatTotal: true,
-      includeBestArmor: true,
-      maxPowerEnabled: true,
-      maxPowerCount: 4,
       additionalSearchTerms: [],
     },
   },

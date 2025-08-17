@@ -166,12 +166,12 @@ window.updateChart = function updateChart() {
     const selectedStat = document.getElementById('statFilter').value;
     const selectedOption = document.getElementById('statFilter').selectedOptions[0];
 
-    if (!selectedStat || !selectedOption) return;
+    if (!selectedStat || !selectedOption) {return;}
 
     const type = selectedOption.dataset.type;
     const data = jsonData[type][selectedStat];
 
-    if (!data) return;
+    if (!data) {return;}
 
     createChart(data, selectedStat);
 }

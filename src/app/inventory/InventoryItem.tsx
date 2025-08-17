@@ -149,18 +149,18 @@ export default function InventoryItem({
  */
 function ComboRankDisplay({ item }: { item: DimItem }) {
   const utils = getRollAppraiserUtilsSync();
-  if (!utils) return null;
+  if (!utils) {return null;}
 
   const traitPerks = getSocketsByType(item, 'traits');
-  if (traitPerks.length < 2) return null;
+  if (traitPerks.length < 2) {return null;}
   
   const perk4Hash = traitPerks[0]?.plugged?.plugDef.hash;
   const perk5Hash = traitPerks[1]?.plugged?.plugDef.hash;
   
-  if (!perk4Hash || !perk5Hash) return null;
+  if (!perk4Hash || !perk5Hash) {return null;}
 
   const comboRankData = utils.getTraitComboRank(item.hash.toString(), perk4Hash, perk5Hash);
-  if (!comboRankData) return null;
+  if (!comboRankData) {return null;}
 
   const getRankColor = (rank: number) => {
     switch (rank) {

@@ -81,25 +81,25 @@ export default function TierChart({ stats, options }: Props) {
         pointRadius: slicedData.map((_, i) => {
           const actualIdx = startIdx + i;
           // Highlight critical points
-          if (actualIdx === stat.maxDifferenceIndex) return 10;
-          if (actualIdx === stat.plateauIndex) return 8;
-          if (actualIdx === stat.firstNonZeroIndex) return 6;
+          if (actualIdx === stat.maxDifferenceIndex) {return 10;}
+          if (actualIdx === stat.plateauIndex) {return 8;}
+          if (actualIdx === stat.firstNonZeroIndex) {return 6;}
           // Show points every 10 for clarity
-          if (actualIdx % 10 === 0) return 3;
+          if (actualIdx % 10 === 0) {return 3;}
           return 0;
         }),
         pointBackgroundColor: slicedData.map((_, i) => {
           const actualIdx = startIdx + i;
-          if (actualIdx === stat.maxDifferenceIndex) return '#ff00ff'; // Magenta for max change
-          if (actualIdx === stat.plateauIndex) return '#ffff00'; // Yellow for plateau
-          if (actualIdx === stat.firstNonZeroIndex) return '#00ff00'; // Green for start
+          if (actualIdx === stat.maxDifferenceIndex) {return '#ff00ff';} // Magenta for max change
+          if (actualIdx === stat.plateauIndex) {return '#ffff00';} // Yellow for plateau
+          if (actualIdx === stat.firstNonZeroIndex) {return '#00ff00';} // Green for start
           return color;
         }),
         pointBorderColor: slicedData.map((_, i) => {
           const actualIdx = startIdx + i;
-          if (actualIdx === stat.maxDifferenceIndex) return '#ff00ff';
-          if (actualIdx === stat.plateauIndex) return '#ffff00';
-          if (actualIdx === stat.firstNonZeroIndex) return '#00ff00';
+          if (actualIdx === stat.maxDifferenceIndex) {return '#ff00ff';}
+          if (actualIdx === stat.plateauIndex) {return '#ffff00';}
+          if (actualIdx === stat.firstNonZeroIndex) {return '#00ff00';}
           return color;
         }),
         pointBorderWidth: 2,
@@ -138,7 +138,7 @@ export default function TierChart({ stats, options }: Props) {
         callbacks: {
           label: (context: any) => {
             const stat = stats[context.datasetIndex];
-            if (!stat) return '';
+            if (!stat) {return '';}
 
             let label = context.dataset.label || '';
             const actualIdx = options.startValue + context.dataIndex;
@@ -149,9 +149,9 @@ export default function TierChart({ stats, options }: Props) {
 
             const value = context.parsed.y;
             if (stat.isPercentage && !options.showDifferences) {
-              label += value.toFixed(2) + '%';
+              label += `${value.toFixed(2)  }%`;
             } else if (stat.unit && !options.showDifferences) {
-              label += value.toFixed(2) + ' ' + stat.unit;
+              label += `${value.toFixed(2)  } ${  stat.unit}`;
             } else {
               label += value.toFixed(2);
             }
@@ -161,25 +161,23 @@ export default function TierChart({ stats, options }: Props) {
               const prevValue = context.dataset.data[context.dataIndex - 1];
               const diff = value - prevValue;
               if (diff !== 0) {
-                label += ' (' + (diff > 0 ? '+' : '') + diff.toFixed(2) + ')';
+                label += ` (${  diff > 0 ? '+' : ''  }${diff.toFixed(2)  })`;
               }
             }
 
             // Add special markers
             if (actualIdx === stat.maxDifferenceIndex) {
-              label += ' 🔥 ' + (t as any)('ArmorAnalysis.MaxIncrease', 'MAX INCREASE');
+              label += ` 🔥 ${  (t as any)('ArmorAnalysis.MaxIncrease', 'MAX INCREASE')}`;
             }
             if (actualIdx === stat.plateauIndex) {
-              label += ' 📊 ' + (t as any)('ArmorAnalysis.Plateau', 'PLATEAU');
+              label += ` 📊 ${  (t as any)('ArmorAnalysis.Plateau', 'PLATEAU')}`;
             }
 
             return label;
           },
-          title: (tooltipItems: any) => {
-            return (t as any)('ArmorAnalysis.StatValue', {
+          title: (tooltipItems: any) => (t as any)('ArmorAnalysis.StatValue', {
               value: tooltipItems[0].label
-            });
-          }
+            })
         },
         backgroundColor: 'rgba(0, 0, 0, 0.9)',
         titleColor: '#fff',
@@ -210,7 +208,7 @@ export default function TierChart({ stats, options }: Props) {
           },
           callback: function(value: any) {
             if (stats.length > 0 && stats[0].isPercentage && !options.showDifferences) {
-              return value.toFixed(1) + '%';
+              return `${value.toFixed(1)  }%`;
             }
             return value.toFixed(1);
           },

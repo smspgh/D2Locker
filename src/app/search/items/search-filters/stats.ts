@@ -229,7 +229,7 @@ const statFilters: ItemFilterDefinition[] = [
       }
 
       return (item: DimItem) => {
-        if (!Boolean(item.power)) {
+        if (!item.power) {
           return false;
         }
 
@@ -314,7 +314,7 @@ const statFilters: ItemFilterDefinition[] = [
       }
 
       return (item: DimItem) => {
-        if (!Boolean(item.power) || item.rarity !== rarity) {
+        if (!item.power || item.rarity !== rarity) {
           return false;
         }
 

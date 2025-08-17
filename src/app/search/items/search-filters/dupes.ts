@@ -47,7 +47,7 @@ export const sortDupes = (
         compareBy((item) => {
           if (item.bucket.inWeapons && item.sockets) {
             const utils = getRollAppraiserUtilsSync();
-            if (!utils) return Number.MAX_SAFE_INTEGER; // No data = worst
+            if (!utils) {return Number.MAX_SAFE_INTEGER;} // No data = worst
 
             const traitPerks = getSocketsByType(item, 'traits');
             if (traitPerks.length >= 2) {
@@ -70,7 +70,7 @@ export const sortDupes = (
         // 3. Tag priority - true (has tag) is better, so negate
         compareBy((item) => {
           const tag = getTag(item);
-          return !Boolean(tag && notableTags.includes(tag));
+          return !(tag && notableTags.includes(tag));
         }),
         // 4. Masterwork status - true is better, so negate
         compareBy((item) => !item.masterwork),
@@ -87,7 +87,7 @@ export const sortDupes = (
                 // For weapons, use combo rank (lower rank number = better, so higher rank numbers should be "dupelower")
                 if (item.bucket.inWeapons && item.sockets) {
                   const utils = getRollAppraiserUtilsSync();
-                  if (!utils) return -item.power; // Fallback to power if no roll appraiser data
+                  if (!utils) {return -item.power;} // Fallback to power if no roll appraiser data
 
                   const traitPerks = getSocketsByType(item, 'traits');
                   if (traitPerks.length >= 2) {
@@ -162,7 +162,7 @@ export const sortDupesBest = (
     compareBy((item) => {
       if (item.bucket.inWeapons && item.sockets) {
         const utils = getRollAppraiserUtilsSync();
-        if (!utils) return Number.MAX_SAFE_INTEGER;
+        if (!utils) {return Number.MAX_SAFE_INTEGER;}
 
         const traitPerks = getSocketsByType(item, 'traits');
         if (traitPerks.length >= 2) {
@@ -183,17 +183,17 @@ export const sortDupesBest = (
     compareBy((item) => {
       if (item.bucket.inWeapons && item.sockets) {
         const utils = getRollAppraiserUtilsSync();
-        if (!utils) return Number.MAX_SAFE_INTEGER;
+        if (!utils) {return Number.MAX_SAFE_INTEGER;}
 
         // Get weapon sockets properly categorized
         const weaponSockets = getWeaponSockets(item, { excludeEmptySockets: false });
-        if (!weaponSockets) return 0;
+        if (!weaponSockets) {return 0;}
 
         // Get the first two perk sockets with multiple options (like Compare.tsx does)
         const allPerkSockets = item.sockets.allSockets
           .filter((s) => {
             // Must be a perk socket with multiple options
-            if (!s.isPerk || s.plugOptions.length <= 1) return false;
+            if (!s.isPerk || s.plugOptions.length <= 1) {return false;}
 
             // Exclude intrinsic socket
             if (weaponSockets.intrinsicSocket && s.socketIndex === weaponSockets.intrinsicSocket.socketIndex) {
@@ -253,7 +253,7 @@ export const sortDupesBest = (
     // 5. Tag priority
     compareBy((item) => {
       const tag = getTag(item);
-      return !Boolean(tag && notableTags.includes(tag));
+      return !(tag && notableTags.includes(tag));
     }),
     // 6. Masterwork status
     compareBy((item) => !item.masterwork),

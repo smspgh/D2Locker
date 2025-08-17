@@ -16,7 +16,7 @@ window.parseExcelToJSON = function parseExcelToJSON(rawData) {
 
     for (let i = 1; i < lines.length; i++) {
         const parts = lines[i].split('\t');
-        if (parts.length < 4) continue;
+        if (parts.length < 4) {continue;}
 
         const synergy = parts[synergyIdx];
         const statType = parts[typeIdx];

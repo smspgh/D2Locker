@@ -27,7 +27,7 @@ export function parseArmor3Data(data: Armor3Data): ProcessedArmor3Stat[] {
   
   for (const statId of statIds) {
     const stat = data.stats[statId];
-    if (!stat) continue;
+    if (!stat) {continue;}
     
     const processed = processArmor3Stat(statId, stat);
     processedStats.push(processed);
@@ -218,17 +218,17 @@ function extractEffectName(description: string): string {
 }
 
 function determineBreakpointImportance(breakpoint: any): 'critical' | 'major' | 'minor' {
-  if (breakpoint.points === 100) return 'critical';
-  if (breakpoint.points === 70 || breakpoint.points === 80) return 'major';
-  if (breakpoint.points === 30) return 'major';
+  if (breakpoint.points === 100) {return 'critical';}
+  if (breakpoint.points === 70 || breakpoint.points === 80) {return 'major';}
+  if (breakpoint.points === 30) {return 'major';}
   return 'minor';
 }
 
 function determineBreakpointCategory(breakpoint: any): 'soft-cap' | 'hard-cap' | 'threshold' | 'optimal' {
-  if (breakpoint.unit === 'soft-cap') return 'soft-cap';
-  if (breakpoint.unit === 'threshold') return 'threshold';
-  if (breakpoint.points === 70 || breakpoint.points === 80) return 'soft-cap';
-  if (breakpoint.points === 100) return 'threshold';
+  if (breakpoint.unit === 'soft-cap') {return 'soft-cap';}
+  if (breakpoint.unit === 'threshold') {return 'threshold';}
+  if (breakpoint.points === 70 || breakpoint.points === 80) {return 'soft-cap';}
+  if (breakpoint.points === 100) {return 'threshold';}
   return 'optimal';
 }
 
@@ -242,7 +242,7 @@ export function analyzeStatDistribution(distribution: { [statId: string]: number
   suggestions: string[];
 } {
   let totalPoints = 0;
-  let totalEfficiency = 0;
+  const totalEfficiency = 0;
   const warnings: string[] = [];
   const suggestions: string[] = [];
   

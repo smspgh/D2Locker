@@ -14,17 +14,17 @@ import { filteredItemsSelector } from './items/item-search-filter';
 export const contextAwareFilteredItemsSelector = createSelector(
   (state: RootState) => state.shell.searchQuery,
   filteredItemsSelector,
-  (_state: RootState) => {
+  (_state: RootState) => 
     // Get current pathname from the router state
     // This is a simplified approach - in a real implementation we'd
     // need to integrate with the router or use a different approach
-    return typeof window !== 'undefined' ? window.location.pathname : '';
-  },
-  (_searchQuery, inventoryFilteredItems, _pathname) => {
+     typeof window !== 'undefined' ? window.location.pathname : ''
+  ,
+  (_searchQuery, inventoryFilteredItems, _pathname) => 
     // const _onArmorySearch = pathname.endsWith('armory-search');
     
     // For now, just return inventory items
     // The armory search count will be handled by the component directly
-    return inventoryFilteredItems;
-  }
+     inventoryFilteredItems
+  
 );

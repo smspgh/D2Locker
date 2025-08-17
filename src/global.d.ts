@@ -42,17 +42,17 @@ interface Navigator {
 // Hot Module Replacement types
 interface NodeModule {
   hot?: {
-    accept(path?: string | string[], callback?: () => void): void;
-    decline(path?: string | string[]): void;
-    dispose(callback: (data: any) => void): void;
-    addDisposeHandler(callback: (data: any) => void): void;
-    removeDisposeHandler(callback: (data: any) => void): void;
-    invalidate(): void;
-    addStatusHandler(callback: (status: string) => void): void;
-    removeStatusHandler(callback: (status: string) => void): void;
-    status(): string;
-    check(autoApply?: boolean): Promise<any>;
-    apply(options?: any): Promise<any>;
+    accept: (path?: string | string[], callback?: () => void) => void;
+    decline: (path?: string | string[]) => void;
+    dispose: (callback: (data: any) => void) => void;
+    addDisposeHandler: (callback: (data: any) => void) => void;
+    removeDisposeHandler: (callback: (data: any) => void) => void;
+    invalidate: () => void;
+    addStatusHandler: (callback: (status: string) => void) => void;
+    removeStatusHandler: (callback: (status: string) => void) => void;
+    status: () => string;
+    check: (autoApply?: boolean) => Promise<any>;
+    apply: (options?: any) => Promise<any>;
     data: any;
   };
 }

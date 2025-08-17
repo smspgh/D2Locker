@@ -161,7 +161,7 @@ function Armor3AnalysisInner() {
                 {[...selectedStat.primaryEffects, ...selectedStat.enhancedEffects]
                   .filter(benefit => {
                     const currentVal = currentStatValues[selectedStat.id];
-                    return benefit.breakpoints && benefit.breakpoints.some(bp => currentVal >= bp.statValue);
+                    return benefit.breakpoints?.some(bp => currentVal >= bp.statValue);
                   })
                   .length}
               </div>

@@ -4,13 +4,11 @@ import { ItemFilterDefinition } from '../item-filter-types';
 import { DimItem } from 'app/inventory/item-types';
 import { initialSettingsState } from 'app/settings/initial-settings';
 import { computeDupes, sortDupesBest, computeArmorDupesByClassTypeTier, makeArmorClassTypeTierDupeID, makeDupeID } from './dupes';
-import { gatherHighestStats, checkIfStatMatchesMaxValue } from './stats';
 import { getRollAppraiserUtilsSync } from 'app/roll-appraiser/rollAppraiserService';
 import { getSocketsByType } from 'app/utils/socket-utils';
 import { parseQuery } from 'app/search/query-parser';
 import { makeSearchFilterFactory } from 'app/search/search-filter';
 import { buildItemSearchConfig } from '../item-search-filter';
-import { TOTAL_STAT_HASH } from 'app/search/d2-known-values';
 
 // simple checks against check an attribute found on DimItem
 const simpleFilters: ItemFilterDefinition[] = [
@@ -123,223 +121,48 @@ const simpleFilters: ItemFilterDefinition[] = [
     keywords: 'keepweapon',
     description: tl('Filter.KeepWeapon'),
     destinyVersion: 2,
-    filter: ({ allItems, getTag, customStats, settings }) => {
+    filter: ({ settings }) => {
       const searchSettings = settings?.searchFilterSettings?.keepWeapon || initialSettingsState.searchFilterSettings?.keepWeapon;
       
       // If the filter is disabled, return false for all items
       if (!searchSettings?.enabled) {
         return () => false;
       }
-      // Pre-compute dupebest for weapons
-      const weaponItems = allItems.filter(item => item.bucket?.sort === 'Weapons');
-      const weaponDupes = computeDupes(weaponItems);
-      const weaponDupesSorted = sortDupesBest(weaponDupes, getTag, customStats);
 
-      // Pre-compute maxpowertier:legendary:4 for weapons by equipping slot (Kinetic/Energy/Power)
-      const legendaryWeaponsBySlot: Record<string, DimItem[]> = {};
-      for (const item of weaponItems) {
-        if (item.rarity === 'Legendary' && Boolean(item.power)) {
-          // Only consider Kinetic, Energy, and Power weapons
-          if (item.bucket.hash === BucketHashes.KineticWeapons || 
-              item.bucket.hash === BucketHashes.EnergyWeapons || 
-              item.bucket.hash === BucketHashes.PowerWeapons) {
-            const key = `${item.bucket.hash}`;
-            if (!legendaryWeaponsBySlot[key]) {
-              legendaryWeaponsBySlot[key] = [];
-            }
-            legendaryWeaponsBySlot[key].push(item);
-          }
-        }
-      }
-
-      // Sort each slot by power
-      const sortedLegendaryWeaponSlots: Record<string, DimItem[]> = {};
-      for (const [key, items] of Object.entries(legendaryWeaponsBySlot)) {
-        sortedLegendaryWeaponSlots[key] = items.sort((a, b) => b.power - a.power);
-      }
-
+      // Baseline filter that returns false (nothing kept by default)
       const baseFilter = (item: DimItem) => {
         // Only apply to weapons
         if (item.bucket?.sort !== 'Weapons') {
           return false;
         }
-
-        // is:crafted is:weapon
-        if (searchSettings?.includeCrafted && item.crafted === 'crafted') {
-          return true;
-        }
-
-        // is:dupebest is:weapon (includes best exotic)
-        if (searchSettings?.includeDupeBest) {
-          const dupeId = makeDupeID(item);
-          const dupes = weaponDupesSorted[dupeId];
-          if (dupes?.length > 1) {
-            const bestDupe = dupes[0];
-            if (item === bestDupe) {
-              return true;
-            }
-          }
-        }
-        
-        // Keep exotics - if no dupes, keep it; if dupes exist, the dupebest logic above handles it
-        if (searchSettings?.includeExotics && item.isExotic) {
-          const dupeId = makeDupeID(item);
-          const dupes = weaponDupesSorted[dupeId];
-          if (dupes?.length === 1) {
-            return true;
-          }
-        }
-
-        // comborank:<=threshold
-        if (searchSettings?.comboRankEnabled && item.sockets) {
-          const utils = getRollAppraiserUtilsSync();
-          if (utils) {
-            const traitPerks = getSocketsByType(item, 'traits');
-            if (traitPerks.length >= 2) {
-              // Check all available perk combinations, not just currently equipped
-              const perkToEnhanced = require('data/d2/trait-to-enhanced-trait.json');
-              const column3Perks: number[] = [];
-              const column4Perks: number[] = [];
-              
-              // Get all available perks for trait column 1
-              if (traitPerks[0]) {
-                traitPerks[0].plugOptions?.forEach(plug => {
-                  column3Perks.push(plug.plugDef.hash);
-                  const enhancedHash = perkToEnhanced[plug.plugDef.hash.toString()];
-                  if (enhancedHash) {
-                    column3Perks.push(parseInt(enhancedHash));
-                  }
-                });
-                if (traitPerks[0].plugged && !column3Perks.includes(traitPerks[0].plugged.plugDef.hash)) {
-                  column3Perks.push(traitPerks[0].plugged.plugDef.hash);
-                }
-              }
-              
-              // Get all available perks for trait column 2
-              if (traitPerks[1]) {
-                traitPerks[1].plugOptions?.forEach(plug => {
-                  column4Perks.push(plug.plugDef.hash);
-                  const enhancedHash = perkToEnhanced[plug.plugDef.hash.toString()];
-                  if (enhancedHash) {
-                    column4Perks.push(parseInt(enhancedHash));
-                  }
-                });
-                if (traitPerks[1].plugged && !column4Perks.includes(traitPerks[1].plugged.plugDef.hash)) {
-                  column4Perks.push(traitPerks[1].plugged.plugDef.hash);
-                }
-              }
-              
-              // Check all combinations to find the best (lowest) combo rank
-              let bestRank = Infinity;
-              for (const perk3 of column3Perks) {
-                for (const perk4 of column4Perks) {
-                  const comboRank = utils.getTraitComboRank(item.hash.toString(), perk3.toString(), perk4.toString());
-                  if (comboRank && comboRank.rank < bestRank) {
-                    bestRank = comboRank.rank;
-                  }
-                }
-              }
-              
-              if (bestRank <= (searchSettings.comboRankThreshold || 3)) {
-                return true;
-              }
-            }
-          }
-        }
-
-        // maxpowertier:legendary:N
-        if (searchSettings?.maxPowerEnabled && item.rarity === 'Legendary' && Boolean(item.power)) {
-          const bucketKey = `${item.bucket.hash}`;
-          const sortedItems = sortedLegendaryWeaponSlots[bucketKey];
-          if (sortedItems && sortedItems.length > 0) {
-            const rank = sortedItems.findIndex((i) => i.id === item.id) + 1;
-            if (rank > 0 && rank <= (searchSettings.maxPowerCount || 4)) {
-              return true;
-            }
-          }
-        }
-
+        // Default baseline: keep nothing
         return false;
       };
       
-      // If there are additional search terms, create a wrapper filter
+      // If there are additional search terms, use them to determine what to keep
       if (searchSettings?.additionalSearchTerms && searchSettings.additionalSearchTerms.length > 0) {
-        return (item: DimItem) => {
-          const baseResult = baseFilter(item);
+        // Use the existing search system to parse and apply search terms
+        const searchQuery = searchSettings.additionalSearchTerms
+          .map(termObj => termObj.term)
+          .join(' ');
+        
+        try {
+          const parsedQuery = parseQuery(searchQuery);
+          const searchFilterFactory = makeSearchFilterFactory(buildItemSearchConfig);
+          const searchFilter = searchFilterFactory(parsedQuery);
           
-          // For additional search terms, we need to implement actual search logic
-          // For now, implement basic matching for "is:power" and other common terms
-          const additionalResults = searchSettings.additionalSearchTerms.map(termObj => {
-            const searchTerm = termObj.term.toLowerCase().trim();
-            let termMatch = false;
-            
-            // Handle specific search terms
-            if (searchTerm === 'is:power') {
-              // Match items with power > 0 (items that contribute to power level)
-              termMatch = item.power > 0;
-            } else if (searchTerm.startsWith('is:')) {
-              // Handle other "is:" filters by checking item properties
-              const filterType = searchTerm.substring(3);
-              switch (filterType) {
-                case 'weapon':
-                  termMatch = item.bucket?.sort === 'Weapons';
-                  break;
-                case 'armor':
-                  termMatch = item.bucket?.sort === 'Armor';
-                  break;
-                case 'kinetic':
-                  termMatch = item.bucket.hash === BucketHashes.KineticWeapons;
-                  break;
-                case 'energy':
-                  termMatch = item.bucket.hash === BucketHashes.EnergyWeapons;
-                  break;
-                case 'heavy':
-                  termMatch = item.bucket.hash === BucketHashes.PowerWeapons;
-                  break;
-                case 'exotic':
-                  termMatch = item.isExotic;
-                  break;
-                case 'legendary':
-                  termMatch = item.rarity === 'Legendary';
-                  break;
-                case 'masterwork':
-                  termMatch = item.masterwork;
-                  break;
-                case 'crafted':
-                  termMatch = item.crafted === 'crafted';
-                  break;
-                default:
-                  // Fallback to name/type matching
-                  termMatch = item.name.toLowerCase().includes(filterType) ||
-                             item.typeName.toLowerCase().includes(filterType);
-                  break;
-              }
-            } else if (searchTerm.startsWith('tag:')) {
-              // Handle tag filters (would need getTag function for full implementation)
-              const tagName = searchTerm.substring(4);
-              termMatch = item.name.toLowerCase().includes(tagName); // Basic fallback
-            } else {
-              // Default name/type matching
-              termMatch = item.name.toLowerCase().includes(searchTerm) ||
-                         item.typeName.toLowerCase().includes(searchTerm);
+          return (item: DimItem) => {
+            // Only apply to weapons
+            if (item.bucket?.sort !== 'Weapons') {
+              return false;
             }
-            
-            return { match: termMatch, logic: termObj.logic };
-          });
-          
-          // Combine base result with additional terms
-          let finalResult = baseResult;
-          
-          for (const { match, logic } of additionalResults) {
-            if (logic === 'AND') {
-              finalResult = finalResult && match;
-            } else { // OR
-              finalResult = finalResult || match;
-            }
-          }
-          
-          return finalResult;
-        };
+            // Apply the user-defined search terms
+            return searchFilter(item);
+          };
+        } catch (error) {
+          console.warn('Error parsing keepweapon search terms:', error);
+          return baseFilter;
+        }
       }
       
       return baseFilter;
@@ -349,162 +172,48 @@ const simpleFilters: ItemFilterDefinition[] = [
     keywords: 'keeparmor',
     description: tl('Filter.KeepArmor'),
     destinyVersion: 2,
-    filter: ({ allItems, getTag, customStats, settings }) => {
+    filter: ({ settings }) => {
       const searchSettings = settings?.searchFilterSettings?.keepArmor || initialSettingsState.searchFilterSettings?.keepArmor;
       
       // If the filter is disabled, return false for all items
       if (!searchSettings?.enabled) {
         return () => false;
       }
-      // Pre-compute bestarmor for all classes
-      const armorItems = allItems.filter(item => item.bucket.inArmor);
-      const armorDupes = computeArmorDupesByClassTypeTier(armorItems);
-      const armorDupesSorted = sortDupesBest(armorDupes, getTag, customStats);
 
-      // Pre-compute maxbasestatvalue:total for each class
-      const highestStatsPerSlotPerTier = gatherHighestStats(allItems);
-
-      // Pre-compute maxpowertier:legendary:4 for armor
-      const legendaryArmorBySlotClass: Record<string, DimItem[]> = {};
-      for (const item of armorItems) {
-        if (item.rarity === 'Legendary' && Boolean(item.power)) {
-          const key = `${item.bucket.hash}-${item.classType}`;
-          if (!legendaryArmorBySlotClass[key]) {
-            legendaryArmorBySlotClass[key] = [];
-          }
-          legendaryArmorBySlotClass[key].push(item);
-        }
-      }
-
-      // Sort each slot/class combo by power
-      const sortedLegendaryArmorSlots: Record<string, DimItem[]> = {};
-      for (const [key, items] of Object.entries(legendaryArmorBySlotClass)) {
-        sortedLegendaryArmorSlots[key] = items.sort((a, b) => b.power - a.power);
-      }
-
+      // Baseline filter that returns false (nothing kept by default)
       const baseFilter = (item: DimItem) => {
         // Only apply to armor
         if (!item.bucket.inArmor) {
           return false;
         }
-
-        // For each class, check both maxbasestatvalue:total and is:bestarmor
-        const classTypes = [0, 1, 2]; // Titan, Hunter, Warlock
-
-        for (const classType of classTypes) {
-          if (item.classType === classType) {
-            // maxbasestatvalue:total for this class
-            if (searchSettings?.includeMaxStatTotal && checkIfStatMatchesMaxValue(highestStatsPerSlotPerTier, item, 'total', true)) {
-              return true;
-            }
-
-            // is:bestarmor for this class
-            if (searchSettings?.includeBestArmor) {
-              const dupeId = makeArmorClassTypeTierDupeID(item);
-              const dupes = armorDupesSorted[dupeId];
-              if (dupes && dupes.length >= 1) {
-                const bestDupe = dupes[0];
-                if (item === bestDupe) {
-                  return true;
-                }
-              }
-            }
-          }
-        }
-
-        // maxpowertier:legendary:N for armor
-        if (searchSettings?.maxPowerEnabled && item.rarity === 'Legendary' && Boolean(item.power)) {
-          const bucketKey = `${item.bucket.hash}-${item.classType}`;
-          const sortedItems = sortedLegendaryArmorSlots[bucketKey];
-          if (sortedItems && sortedItems.length > 0) {
-            const rank = sortedItems.findIndex((i) => i.id === item.id) + 1;
-            if (rank > 0 && rank <= (searchSettings.maxPowerCount || 4)) {
-              return true;
-            }
-          }
-        }
-
+        // Default baseline: keep nothing
         return false;
       };
       
-      // If there are additional search terms, create a wrapper filter
+      // If there are additional search terms, use them to determine what to keep
       if (searchSettings?.additionalSearchTerms && searchSettings.additionalSearchTerms.length > 0) {
-        return (item: DimItem) => {
-          const baseResult = baseFilter(item);
+        // Use the existing search system to parse and apply search terms
+        const searchQuery = searchSettings.additionalSearchTerms
+          .map(termObj => termObj.term)
+          .join(' ');
+        
+        try {
+          const parsedQuery = parseQuery(searchQuery);
+          const searchFilterFactory = makeSearchFilterFactory(buildItemSearchConfig);
+          const searchFilter = searchFilterFactory(parsedQuery);
           
-          // For additional search terms, we need to implement actual search logic
-          // For now, implement basic matching for "is:power" and other common terms
-          const additionalResults = searchSettings.additionalSearchTerms.map(termObj => {
-            const searchTerm = termObj.term.toLowerCase().trim();
-            let termMatch = false;
-            
-            // Handle specific search terms
-            if (searchTerm === 'is:power') {
-              // Match items with power > 0 (items that contribute to power level)
-              termMatch = item.power > 0;
-            } else if (searchTerm.startsWith('is:')) {
-              // Handle other "is:" filters by checking item properties
-              const filterType = searchTerm.substring(3);
-              switch (filterType) {
-                case 'weapon':
-                  termMatch = item.bucket?.sort === 'Weapons';
-                  break;
-                case 'armor':
-                  termMatch = item.bucket?.sort === 'Armor';
-                  break;
-                case 'kinetic':
-                  termMatch = item.bucket.hash === BucketHashes.KineticWeapons;
-                  break;
-                case 'energy':
-                  termMatch = item.bucket.hash === BucketHashes.EnergyWeapons;
-                  break;
-                case 'heavy':
-                  termMatch = item.bucket.hash === BucketHashes.PowerWeapons;
-                  break;
-                case 'exotic':
-                  termMatch = item.isExotic;
-                  break;
-                case 'legendary':
-                  termMatch = item.rarity === 'Legendary';
-                  break;
-                case 'masterwork':
-                  termMatch = item.masterwork;
-                  break;
-                case 'crafted':
-                  termMatch = item.crafted === 'crafted';
-                  break;
-                default:
-                  // Fallback to name/type matching
-                  termMatch = item.name.toLowerCase().includes(filterType) ||
-                             item.typeName.toLowerCase().includes(filterType);
-                  break;
-              }
-            } else if (searchTerm.startsWith('tag:')) {
-              // Handle tag filters (would need getTag function for full implementation)
-              const tagName = searchTerm.substring(4);
-              termMatch = item.name.toLowerCase().includes(tagName); // Basic fallback
-            } else {
-              // Default name/type matching
-              termMatch = item.name.toLowerCase().includes(searchTerm) ||
-                         item.typeName.toLowerCase().includes(searchTerm);
+          return (item: DimItem) => {
+            // Only apply to armor
+            if (!item.bucket.inArmor) {
+              return false;
             }
-            
-            return { match: termMatch, logic: termObj.logic };
-          });
-          
-          // Combine base result with additional terms
-          let finalResult = baseResult;
-          
-          for (const { match, logic } of additionalResults) {
-            if (logic === 'AND') {
-              finalResult = finalResult && match;
-            } else { // OR
-              finalResult = finalResult || match;
-            }
-          }
-          
-          return finalResult;
-        };
+            // Apply the user-defined search terms
+            return searchFilter(item);
+          };
+        } catch (error) {
+          console.warn('Error parsing keeparmor search terms:', error);
+          return baseFilter;
+        }
       }
       
       return baseFilter;
@@ -546,7 +255,7 @@ const simpleFilters: ItemFilterDefinition[] = [
                 traitPerks[0].plugOptions?.forEach(plug => {
                   column3Perks.push(plug.plugDef.hash);
                   const enhancedHash = perkToEnhanced[plug.plugDef.hash.toString()];
-                  if (enhancedHash) column3Perks.push(parseInt(enhancedHash));
+                  if (enhancedHash) {column3Perks.push(parseInt(enhancedHash));}
                 });
                 if (traitPerks[0].plugged && !column3Perks.includes(traitPerks[0].plugged.plugDef.hash)) {
                   column3Perks.push(traitPerks[0].plugged.plugDef.hash);
@@ -557,7 +266,7 @@ const simpleFilters: ItemFilterDefinition[] = [
                 traitPerks[1].plugOptions?.forEach(plug => {
                   column4Perks.push(plug.plugDef.hash);
                   const enhancedHash = perkToEnhanced[plug.plugDef.hash.toString()];
-                  if (enhancedHash) column4Perks.push(parseInt(enhancedHash));
+                  if (enhancedHash) {column4Perks.push(parseInt(enhancedHash));}
                 });
                 if (traitPerks[1].plugged && !column4Perks.includes(traitPerks[1].plugged.plugDef.hash)) {
                   column4Perks.push(traitPerks[1].plugged.plugDef.hash);
@@ -668,7 +377,7 @@ const simpleFilters: ItemFilterDefinition[] = [
       // Helper function to check if an item would be kept for non-power reasons
       const wouldBeKeptForOtherReasons = (item: DimItem): boolean => {
         // 1. is:crafted
-        if (item.crafted === 'crafted') return true;
+        if (item.crafted === 'crafted') {return true;}
         
         // 2. (is:weapon is:legendary comborank:<=3)
         if (item.bucket?.sort === 'Weapons' && item.rarity === 'Legendary' && item.sockets) {
@@ -684,7 +393,7 @@ const simpleFilters: ItemFilterDefinition[] = [
                 traitPerks[0].plugOptions?.forEach(plug => {
                   column3Perks.push(plug.plugDef.hash);
                   const enhancedHash = perkToEnhanced[plug.plugDef.hash.toString()];
-                  if (enhancedHash) column3Perks.push(parseInt(enhancedHash));
+                  if (enhancedHash) {column3Perks.push(parseInt(enhancedHash));}
                 });
                 if (traitPerks[0].plugged && !column3Perks.includes(traitPerks[0].plugged.plugDef.hash)) {
                   column3Perks.push(traitPerks[0].plugged.plugDef.hash);
@@ -695,7 +404,7 @@ const simpleFilters: ItemFilterDefinition[] = [
                 traitPerks[1].plugOptions?.forEach(plug => {
                   column4Perks.push(plug.plugDef.hash);
                   const enhancedHash = perkToEnhanced[plug.plugDef.hash.toString()];
-                  if (enhancedHash) column4Perks.push(parseInt(enhancedHash));
+                  if (enhancedHash) {column4Perks.push(parseInt(enhancedHash));}
                 });
                 if (traitPerks[1].plugged && !column4Perks.includes(traitPerks[1].plugged.plugDef.hash)) {
                   column4Perks.push(traitPerks[1].plugged.plugDef.hash);
@@ -711,7 +420,7 @@ const simpleFilters: ItemFilterDefinition[] = [
                   }
                 }
               }
-              if (bestRank <= 3) return true;
+              if (bestRank <= 3) {return true;}
             }
           }
         }
@@ -720,14 +429,14 @@ const simpleFilters: ItemFilterDefinition[] = [
         if (item.bucket?.sort === 'Weapons' && item.isExotic) {
           const dupeId = makeDupeID(item);
           const dupes = weaponDupesSorted[dupeId];
-          if (!dupes || dupes.length <= 1 || item === dupes[0]) return true;
+          if (!dupes || dupes.length <= 1 || item === dupes[0]) {return true;}
         }
         
         // 4. is:bestarmor
         if (item.bucket.inArmor) {
           const dupeId = makeArmorClassTypeTierDupeID(item);
           const dupes = armorDupesSorted[dupeId];
-          if (dupes && dupes.length >= 1 && item === dupes[0]) return true;
+          if (dupes && dupes.length >= 1 && item === dupes[0]) {return true;}
         }
         
         return false;
@@ -979,7 +688,7 @@ const simpleFilters: ItemFilterDefinition[] = [
       // Helper function to check if an item would be kept for non-power reasons
       const wouldBeKeptForOtherReasons = (item: DimItem): boolean => {
         // 1. is:crafted
-        if (item.crafted === 'crafted') return true;
+        if (item.crafted === 'crafted') {return true;}
         
         // 2. (is:weapon is:legendary comborank:<=3)
         if (item.bucket?.sort === 'Weapons' && item.rarity === 'Legendary' && item.sockets) {
@@ -995,7 +704,7 @@ const simpleFilters: ItemFilterDefinition[] = [
                 traitPerks[0].plugOptions?.forEach(plug => {
                   column3Perks.push(plug.plugDef.hash);
                   const enhancedHash = perkToEnhanced[plug.plugDef.hash.toString()];
-                  if (enhancedHash) column3Perks.push(parseInt(enhancedHash));
+                  if (enhancedHash) {column3Perks.push(parseInt(enhancedHash));}
                 });
                 if (traitPerks[0].plugged && !column3Perks.includes(traitPerks[0].plugged.plugDef.hash)) {
                   column3Perks.push(traitPerks[0].plugged.plugDef.hash);
@@ -1006,7 +715,7 @@ const simpleFilters: ItemFilterDefinition[] = [
                 traitPerks[1].plugOptions?.forEach(plug => {
                   column4Perks.push(plug.plugDef.hash);
                   const enhancedHash = perkToEnhanced[plug.plugDef.hash.toString()];
-                  if (enhancedHash) column4Perks.push(parseInt(enhancedHash));
+                  if (enhancedHash) {column4Perks.push(parseInt(enhancedHash));}
                 });
                 if (traitPerks[1].plugged && !column4Perks.includes(traitPerks[1].plugged.plugDef.hash)) {
                   column4Perks.push(traitPerks[1].plugged.plugDef.hash);
@@ -1022,7 +731,7 @@ const simpleFilters: ItemFilterDefinition[] = [
                   }
                 }
               }
-              if (bestRank <= 3) return true;
+              if (bestRank <= 3) {return true;}
             }
           }
         }
@@ -1031,14 +740,14 @@ const simpleFilters: ItemFilterDefinition[] = [
         if (item.bucket?.sort === 'Weapons' && item.isExotic) {
           const dupeId = makeDupeID(item);
           const dupes = weaponDupesSorted[dupeId];
-          if (!dupes || dupes.length <= 1 || item === dupes[0]) return true;
+          if (!dupes || dupes.length <= 1 || item === dupes[0]) {return true;}
         }
         
         // 4. is:bestarmor
         if (item.bucket.inArmor) {
           const dupeId = makeArmorClassTypeTierDupeID(item);
           const dupes = armorDupesSorted[dupeId];
-          if (dupes && dupes.length >= 1 && item === dupes[0]) return true;
+          if (dupes && dupes.length >= 1 && item === dupes[0]) {return true;}
         }
         
         return false;

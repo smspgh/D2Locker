@@ -94,13 +94,13 @@ export default function BuildOptimizer({ stats, currentValues, onStatChange }: P
     // Distribute remaining points based on priorities
     while (remainingPoints > 0 && currentPreset.priorities.length > 0) {
       for (const priorityStat of currentPreset.priorities) {
-        if (remainingPoints <= 0) break;
+        if (remainingPoints <= 0) {break;}
         
         const currentValue = result[priorityStat] || 0;
         
         // Find next valuable breakpoint for this stat
         const stat = stats.find(s => s.id === priorityStat);
-        if (!stat) continue;
+        if (!stat) {continue;}
         
         // Determine optimal investment
         let targetValue = currentValue;

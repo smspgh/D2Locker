@@ -79,7 +79,7 @@ export default function Compare({ session }: { session: CompareSession }) {
             .sort((a, b) => a - b);
 
           return rawCompareItems.filter(item => {
-            if (item.hash !== initialItem.hash) return false;
+            if (item.hash !== initialItem.hash) {return false;}
 
             if (item.isExotic && item.sockets?.allSockets) {
               const itemPerkHashes = item.sockets.allSockets
@@ -238,18 +238,18 @@ export default function Compare({ session }: { session: CompareSession }) {
 
   // Identify the best item based on dupebest criteria
   const bestItem = useMemo(() => {
-    if (rows.length <= 1) return undefined;
+    if (rows.length <= 1) {return undefined;}
 
     // Sort a copy of the items using dupebest criteria
     const itemsCopy = [...rows.map(r => r.item)];
 
     // Sort directly using the dupebest comparator
-    const getTag = (item: DimItem) => {
+    const getTag = (item: DimItem) => 
       // Use the tag selector to get the item's tag
-      return (item.taggable && typeof item.taggable === 'object' && 'tag' in item.taggable)
+       (item.taggable && typeof item.taggable === 'object' && 'tag' in item.taggable)
         ? (item.taggable as any).tag
-        : undefined;
-    };
+        : undefined
+    ;
 
     // Create the comparator for dupebest
     const dupebestComparator = chainComparator<DimItem>(
@@ -273,7 +273,7 @@ export default function Compare({ session }: { session: CompareSession }) {
       compareBy((item) => {
         if (item.bucket.inWeapons && item.sockets) {
           const utils = getRollAppraiserUtilsSync();
-          if (!utils) return Number.MAX_SAFE_INTEGER;
+          if (!utils) {return Number.MAX_SAFE_INTEGER;}
 
           const traitPerks = getSocketsByType(item, 'traits');
           if (traitPerks.length >= 2) {
@@ -294,17 +294,17 @@ export default function Compare({ session }: { session: CompareSession }) {
       compareBy((item) => {
         if (item.bucket.inWeapons && item.sockets) {
           const utils = getRollAppraiserUtilsSync();
-          if (!utils) return Number.MAX_SAFE_INTEGER;
+          if (!utils) {return Number.MAX_SAFE_INTEGER;}
 
           // Get weapon sockets properly categorized
           const weaponSockets = getWeaponSockets(item, { excludeEmptySockets: false });
-          if (!weaponSockets) return 0;
+          if (!weaponSockets) {return 0;}
 
           // Get the first two perk sockets with multiple options (like dupes.ts does)
           const allPerkSockets = item.sockets.allSockets
             .filter((s) => {
               // Must be a perk socket with multiple options
-              if (!s.isPerk || s.plugOptions.length <= 1) return false;
+              if (!s.isPerk || s.plugOptions.length <= 1) {return false;}
 
               // Exclude intrinsic socket
               if (weaponSockets.intrinsicSocket && s.socketIndex === weaponSockets.intrinsicSocket.socketIndex) {
@@ -364,7 +364,7 @@ export default function Compare({ session }: { session: CompareSession }) {
       // 5. Tag priority
       compareBy((item) => {
         const tag = getTag(item);
-        return !Boolean(tag && ['favorite', 'keep'].includes(tag));
+        return !(tag && ['favorite', 'keep'].includes(tag));
       }),
       // 6. Masterwork status
       compareBy((item) => !item.masterwork),

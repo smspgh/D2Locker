@@ -112,81 +112,6 @@ export default function SearchSettings({ settings }: { settings: Settings }) {
 
         {weaponSettings.enabled && (
           <>
-            <div className={styles.setting}>
-              <Checkbox
-                label={t('Settings.IncludeCrafted')}
-                name="includeCrafted"
-                value={weaponSettings.includeCrafted ?? true}
-                onChange={(checked) => handleWeaponSettingChange('includeCrafted', checked)}
-              />
-              <div className={styles.fineprint}>{t('Settings.IncludeCraftedDesc')}</div>
-            </div>
-
-            <div className={styles.setting}>
-              <Checkbox
-                label={t('Settings.IncludeDupeBest')}
-                name="includeDupeBest"
-                value={weaponSettings.includeDupeBest ?? true}
-                onChange={(checked) => handleWeaponSettingChange('includeDupeBest', checked)}
-              />
-              <div className={styles.fineprint}>{t('Settings.IncludeDupeBestDesc')}</div>
-            </div>
-
-            <div className={styles.setting}>
-              <Checkbox
-                label={t('Settings.IncludeExotics')}
-                name="includeExotics"
-                value={weaponSettings.includeExotics ?? true}
-                onChange={(checked) => handleWeaponSettingChange('includeExotics', checked)}
-              />
-              <div className={styles.fineprint}>{t('Settings.IncludeExoticsDesc')}</div>
-            </div>
-
-            <div className={styles.setting}>
-              <Checkbox
-                label={t('Settings.ComboRankEnabled')}
-                name="comboRankEnabled"
-                value={weaponSettings.comboRankEnabled ?? true}
-                onChange={(checked) => handleWeaponSettingChange('comboRankEnabled', checked)}
-              />
-              {weaponSettings.comboRankEnabled && (
-                <div className={styles.horizontal}>
-                  <label htmlFor="comboRankThreshold">{t('Settings.ComboRankThreshold')}</label>
-                  <input
-                    type="number"
-                    id="comboRankThreshold"
-                    min="1"
-                    max="10"
-                    value={weaponSettings.comboRankThreshold ?? 3}
-                    onChange={(e) => handleWeaponSettingChange('comboRankThreshold', parseInt(e.target.value))}
-                  />
-                </div>
-              )}
-              <div className={styles.fineprint}>{t('Settings.ComboRankDesc')}</div>
-            </div>
-
-            <div className={styles.setting}>
-              <Checkbox
-                label={t('Settings.MaxPowerWeaponsEnabled')}
-                name="maxPowerWeaponsEnabled"
-                value={weaponSettings.maxPowerEnabled ?? true}
-                onChange={(checked) => handleWeaponSettingChange('maxPowerEnabled', checked)}
-              />
-              {weaponSettings.maxPowerEnabled && (
-                <div className={styles.horizontal}>
-                  <label htmlFor="maxPowerWeaponCount">{t('Settings.MaxPowerCount')}</label>
-                  <input
-                    type="number"
-                    id="maxPowerWeaponCount"
-                    min="1"
-                    max="20"
-                    value={weaponSettings.maxPowerCount ?? 4}
-                    onChange={(e) => handleWeaponSettingChange('maxPowerCount', parseInt(e.target.value))}
-                  />
-                </div>
-              )}
-              <div className={styles.fineprint}>{t('Settings.MaxPowerWeaponsDesc')}</div>
-            </div>
 
             <div className={styles.setting}>
               <label>{t('Settings.AdditionalSearchTerms')}</label>
@@ -262,48 +187,6 @@ export default function SearchSettings({ settings }: { settings: Settings }) {
 
         {armorSettings.enabled && (
           <>
-            <div className={styles.setting}>
-              <Checkbox
-                label={t('Settings.IncludeMaxStatTotal')}
-                name="includeMaxStatTotal"
-                value={armorSettings.includeMaxStatTotal ?? true}
-                onChange={(checked) => handleArmorSettingChange('includeMaxStatTotal', checked)}
-              />
-              <div className={styles.fineprint}>{t('Settings.IncludeMaxStatTotalDesc')}</div>
-            </div>
-
-            <div className={styles.setting}>
-              <Checkbox
-                label={t('Settings.IncludeBestArmor')}
-                name="includeBestArmor"
-                value={armorSettings.includeBestArmor ?? true}
-                onChange={(checked) => handleArmorSettingChange('includeBestArmor', checked)}
-              />
-              <div className={styles.fineprint}>{t('Settings.IncludeBestArmorDesc')}</div>
-            </div>
-
-            <div className={styles.setting}>
-              <Checkbox
-                label={t('Settings.MaxPowerArmorEnabled')}
-                name="maxPowerArmorEnabled"
-                value={armorSettings.maxPowerEnabled ?? true}
-                onChange={(checked) => handleArmorSettingChange('maxPowerEnabled', checked)}
-              />
-              {armorSettings.maxPowerEnabled && (
-                <div className={styles.horizontal}>
-                  <label htmlFor="maxPowerArmorCount">{t('Settings.MaxPowerCount')}</label>
-                  <input
-                    type="number"
-                    id="maxPowerArmorCount"
-                    min="1"
-                    max="20"
-                    value={armorSettings.maxPowerCount ?? 4}
-                    onChange={(e) => handleArmorSettingChange('maxPowerCount', parseInt(e.target.value))}
-                  />
-                </div>
-              )}
-              <div className={styles.fineprint}>{t('Settings.MaxPowerArmorDesc')}</div>
-            </div>
 
             <div className={styles.setting}>
               <label>{t('Settings.AdditionalSearchTerms')}</label>

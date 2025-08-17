@@ -35,7 +35,7 @@ export function CompareActionButton({ item, label }: ActionButtonProps) {
 
   // Calculate duplicate count
   const dupeCount = useMemo(() => {
-    if (!item.comparable) return 1;
+    if (!item.comparable) {return 1;}
     
     // For exotic armor, use perks to determine true duplicates
     // For other items, use the standard dupe ID
@@ -49,7 +49,7 @@ export function CompareActionButton({ item, label }: ActionButtonProps) {
         .sort((a, b) => a - b);
       
       for (const i of allItems) {
-        if (!i.comparable || i.hash !== item.hash) continue;
+        if (!i.comparable || i.hash !== item.hash) {continue;}
         
         if (i.bucket.inArmor && i.isExotic && i.sockets?.allSockets) {
           const otherPerkHashes = i.sockets.allSockets

@@ -36,11 +36,11 @@ export interface ScalingFormula {
   // For non-linear: custom function or lookup table
   lookupTable?: { [key: number]: number };
   // For stepped: different rates at different ranges
-  steps?: Array<{
+  steps?: {
     min: number;
     max: number;
     rate: number;
-  }>;
+  }[];
 }
 
 export interface Armor3Data {
@@ -133,10 +133,10 @@ export interface StatComparisonData {
 // Build optimization types
 export interface BuildConstraints {
   totalStatPoints: number; // Usually 550-600 with mods
-  requiredBreakpoints: Array<{
+  requiredBreakpoints: {
     statId: string;
     minValue: number;
-  }>;
+  }[];
   priorityOrder: string[];
   buildType: 'pve-dps' | 'pve-survivability' | 'pvp-aggressive' | 'pvp-defensive' | 'hybrid';
 }

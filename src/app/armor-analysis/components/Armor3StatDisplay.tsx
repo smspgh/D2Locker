@@ -143,7 +143,7 @@ function BenefitDisplay({
   
   const showBenefit = (!benefit.isPvE || !showPvP) || (benefit.isPvE && !benefit.isPvP);
   
-  if (!showBenefit && !showPvP) return null;
+  if (!showBenefit && !showPvP) {return null;}
   
   return (
     <div className={`${styles.benefit} ${!isActive ? styles.inactive : ''}`}>

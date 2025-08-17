@@ -8,7 +8,7 @@ export function parseArmorData(data: ArmorData): ProcessedStatData[] {
 
   for (const category of categories) {
     const categoryData = data[category];
-    if (!categoryData) continue;
+    if (!categoryData) {continue;}
 
     for (const [benefitKey, benefit] of Object.entries(categoryData)) {
       const processed = processStatBenefit(benefitKey, category, benefit);

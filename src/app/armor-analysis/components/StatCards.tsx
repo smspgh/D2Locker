@@ -8,13 +8,13 @@ interface Props {
 }
 
 export default function StatCards({ stats, viewMode }: Props) {
-  if (stats.length === 0) return null;
+  if (stats.length === 0) {return null;}
 
   const formatValue = (value: number, stat: ProcessedStatData) => {
     if (stat.isPercentage) {
-      return value.toFixed(2) + '%';
+      return `${value.toFixed(2)  }%`;
     } else if (stat.unit) {
-      return value.toFixed(1) + ' ' + stat.unit;
+      return `${value.toFixed(1)  } ${  stat.unit}`;
     }
     return value.toFixed(1);
   };
@@ -31,7 +31,7 @@ export default function StatCards({ stats, viewMode }: Props) {
       },
       {
         label: (t as any)('ArmorAnalysis.MaxBenefitValue', 'Max Tier Change'),
-        value: '+' + formatValue(stat.maxDifference, stat),
+        value: `+${  formatValue(stat.maxDifference, stat)}`,
         highlight: true,
       },
       {
@@ -40,7 +40,7 @@ export default function StatCards({ stats, viewMode }: Props) {
       },
       {
         label: (t as any)('ArmorAnalysis.AveragePerTier', 'Average per Tier'),
-        value: '+' + formatValue(avgIncrease, stat),
+        value: `+${  formatValue(avgIncrease, stat)}`,
       },
     ];
 

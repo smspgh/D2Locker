@@ -291,7 +291,7 @@ const rollAppraiserFilters: ItemFilterDefinition[] = [
       console.log('perk3rank filter created');
       return (item) => {
         const info = getWeaponRankingInfo(item);
-        if (!info || !info.perkRankings) return false;
+        if (!info?.perkRankings) {return false;}
         
         // Debug logging for DED GRAMARYE IV
         if (item.name.toLowerCase().includes('ded gramarye')) {

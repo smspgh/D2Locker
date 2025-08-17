@@ -53,7 +53,7 @@ window.createChart = function createChart(data, statName) {
                             }
 
                             if (data.isPercentage) {
-                                label += context.parsed.y.toFixed(2) + '%';
+                                label += `${context.parsed.y.toFixed(2)  }%`;
                             } else {
                                 label += context.parsed.y.toFixed(0);
                             }
@@ -61,9 +61,9 @@ window.createChart = function createChart(data, statName) {
                             if (context.dataIndex > 0) {
                                 const diff = context.parsed.y - context.dataset.data[context.dataIndex - 1];
                                 if (data.isPercentage) {
-                                    label += ' (+' + diff.toFixed(2) + '%)';
+                                    label += ` (+${  diff.toFixed(2)  }%)`;
                                 } else {
-                                    label += ' (+' + diff.toFixed(0) + ')';
+                                    label += ` (+${  diff.toFixed(0)  })`;
                                 }
                             }
 
@@ -89,7 +89,7 @@ window.createChart = function createChart(data, statName) {
                     ticks: {
                         callback: function(value) {
                             if (data.isPercentage) {
-                                return value.toFixed(1) + '%';
+                                return `${value.toFixed(1)  }%`;
                             } else {
                                 return value.toFixed(0);
                             }
@@ -132,7 +132,7 @@ window.updateStats = function updateStats(data, differences, maxDiffIndex, maxDi
 
     const formatValue = (val) => {
         if (data.isPercentage) {
-            return val.toFixed(2) + '%';
+            return `${val.toFixed(2)  }%`;
         } else {
             return val.toFixed(0);
         }
