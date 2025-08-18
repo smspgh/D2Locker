@@ -203,7 +203,7 @@ function testStringsFromRewards(
 }
 
 /** includes name and description unless you set the arg2 flag */
-function testStringsFromAllSockets(
+export function testStringsFromAllSockets(
   test: (str: string) => boolean,
   item: DimItem,
   defs: D2ManifestDefinitions | undefined,

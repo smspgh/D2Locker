@@ -20,6 +20,9 @@ import { getStatValuesByHash, isClassCompatible } from 'app/utils/item-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { once } from 'es-toolkit';
 import { ItemFilterDefinition } from '../item-filter-types';
+import { perkStatMappings, getPerkStatHashes, isValidPerkName, PerkName, displayStatToHashMap } from './perk-stat-mappings';
+import { testStringsFromAllSockets } from './freeform';
+import { matchText } from 'app/search/text-utils';
 
 const validateStat: ItemFilterDefinition['validateStat'] = (filterContext) => {
   const customStatLabels = filterContext?.customStats?.map((c) => c.shortLabel) ?? [];
@@ -332,7 +335,219 @@ const statFilters: ItemFilterDefinition[] = [
       };
     },
   },
+  {
+    keywords: 'bestperkstat',
+    description: tl('Filter.BestPerkStat'),
+    format: 'query',
+    suggestions: Object.keys(perkStatMappings),
+    destinyVersion: 2,
+    filter: ({ filterValue, allItems }) => {
+      if (!isValidPerkName(filterValue)) {
+        return () => false;
+      }
+
+      // Get the stat hashes for this perk
+      const { primary: primaryStatHash, secondary: secondaryStatHash } = getPerkStatHashes(filterValue);
+
+      // Find all armor items that could potentially match
+      const armorItems = allItems.filter(item => 
+        item.bucket.inArmor && 
+        item.stats && 
+        item.stats.some(s => s.statHash === primaryStatHash || s.statHash === secondaryStatHash)
+      );
+
+      // Group items by slot and class
+      const itemsBySlotClass: Record<string, DimItem[]> = {};
+      for (const item of armorItems) {
+        const key = `${item.bucket.hash}-${item.classType}`;
+        if (!itemsBySlotClass[key]) {
+          itemsBySlotClass[key] = [];
+        }
+        itemsBySlotClass[key].push(item);
+      }
+
+      // For each slot+class group, find the best item(s) based on primary stat, then secondary stat
+      const bestItemIds = new Set<string>();
+
+      for (const [slotClass, items] of Object.entries(itemsBySlotClass)) {
+        if (items.length === 0) continue;
+
+        // Sort by primary stat (descending), then by secondary stat (descending)
+        const sortedItems = items.sort((a, b) => {
+          const aPrimaryStat = a.stats?.find(s => s.statHash === primaryStatHash)?.base || 0;
+          const bPrimaryStat = b.stats?.find(s => s.statHash === primaryStatHash)?.base || 0;
+          
+          if (aPrimaryStat !== bPrimaryStat) {
+            return bPrimaryStat - aPrimaryStat; // Higher primary stat wins
+          }
+          
+          // If primary stats are tied, compare secondary stats
+          const aSecondaryStat = a.stats?.find(s => s.statHash === secondaryStatHash)?.base || 0;
+          const bSecondaryStat = b.stats?.find(s => s.statHash === secondaryStatHash)?.base || 0;
+          
+          return bSecondaryStat - aSecondaryStat; // Higher secondary stat wins
+        });
+
+        // Add all items that tie for the best stats
+        const bestItem = sortedItems[0];
+        const bestPrimaryStat = bestItem.stats?.find(s => s.statHash === primaryStatHash)?.base || 0;
+        const bestSecondaryStat = bestItem.stats?.find(s => s.statHash === secondaryStatHash)?.base || 0;
+
+        for (const item of sortedItems) {
+          const itemPrimaryStat = item.stats?.find(s => s.statHash === primaryStatHash)?.base || 0;
+          const itemSecondaryStat = item.stats?.find(s => s.statHash === secondaryStatHash)?.base || 0;
+          
+          if (itemPrimaryStat === bestPrimaryStat && itemSecondaryStat === bestSecondaryStat) {
+            bestItemIds.add(item.id);
+          } else {
+            break; // No more ties
+          }
+        }
+      }
+
+      return (item: DimItem) => bestItemIds.has(item.id);
+    },
+  },
+  {
+    keywords: 'bestforperk',
+    description: tl('Filter.BestPerkStat'),
+    format: 'freeform',
+    destinyVersion: 2,
+    filter: ({ filterValue, allItems, language, d2Definitions }) => {
+      console.log('🔥 bestforperk filter called with:', filterValue);
+      
+      // Get the stat hashes for this perk, or use defaults if not in our mapping
+      let primaryStatHash: number;
+      let secondaryStatHash: number;
+      
+      // Normalize the filter value to match our mappings (capitalize first letter)
+      const normalizedPerkName = filterValue.charAt(0).toUpperCase() + filterValue.slice(1).toLowerCase();
+      
+      if (isValidPerkName(normalizedPerkName)) {
+        const statHashes = getPerkStatHashes(normalizedPerkName);
+        primaryStatHash = statHashes.primary;
+        secondaryStatHash = statHashes.secondary;
+        console.log(`Using mapped stats for ${normalizedPerkName}: primary=${primaryStatHash}, secondary=${secondaryStatHash}`);
+      } else {
+        // For perks not in our mapping, use smart defaults based on perk name
+        if (filterValue.toLowerCase().includes('brawler')) {
+          primaryStatHash = displayStatToHashMap['Melee'];
+          secondaryStatHash = displayStatToHashMap['Health'];
+          console.log(`Using Brawler defaults: Melee=${primaryStatHash}, Health=${secondaryStatHash}`);
+        } else {
+          // Default fallback - optimize for Health and Melee
+          primaryStatHash = displayStatToHashMap['Health'];
+          secondaryStatHash = displayStatToHashMap['Melee'];
+          console.log(`Using default stats: Health=${primaryStatHash}, Melee=${secondaryStatHash}`);
+        }
+      }
+
+      // Find all items that have the specified perk
+      const perkTest = matchText(filterValue, language, /* exact */ false);
+      const itemsWithPerk = allItems.filter(item => 
+        item.bucket.inArmor && 
+        item.stats &&
+        testStringsFromAllSockets(perkTest, item, d2Definitions, /* includeDescription */ false)
+      );
+
+      console.log(`Found ${itemsWithPerk.length} items with perk "${filterValue}"`);
+      if (itemsWithPerk.length > 0) {
+        // Get the actual stat names based on the normalized perk name
+        let primaryStatName = 'Primary';
+        let secondaryStatName = 'Secondary';
+        
+        if (isValidPerkName(normalizedPerkName)) {
+          const statNames = getPerkStatNames(normalizedPerkName);
+          primaryStatName = statNames.primary;
+          secondaryStatName = statNames.secondary;
+        }
+        
+        console.log(`All items with this perk (optimizing for ${primaryStatName} primary, ${secondaryStatName} secondary):`);
+        itemsWithPerk.forEach(i => {
+          const primaryStat = i.stats?.find(s => s.statHash === primaryStatHash)?.base || 0;
+          const secondaryStat = i.stats?.find(s => s.statHash === secondaryStatHash)?.base || 0;
+          console.log(`  ${i.name} - ${primaryStatName}: ${primaryStat}, ${secondaryStatName}: ${secondaryStat}, Equipped: ${i.equipped}, Location: ${i.owner}`);
+        });
+      }
+
+      if (itemsWithPerk.length === 0) {
+        return () => false;
+      }
+
+      // Group items by slot, class, and rarity
+      const itemsBySlotClass: Record<string, DimItem[]> = {};
+      for (const item of itemsWithPerk) {
+        const key = `${item.bucket.hash}-${item.classType}-${item.rarity}`;
+        if (!itemsBySlotClass[key]) {
+          itemsBySlotClass[key] = [];
+        }
+        itemsBySlotClass[key].push(item);
+      }
+
+      // For each slot+class group, find the best item(s) based on primary stat, then secondary stat
+      const bestItemIds = new Set<string>();
+
+      for (const [slotClass, items] of Object.entries(itemsBySlotClass)) {
+        if (items.length === 0) continue;
+
+        console.log(`Processing ${items.length} items for slot ${slotClass}`);
+
+        // Sort by primary stat (descending), then by secondary stat (descending)
+        const sortedItems = items.sort((a, b) => {
+          const aPrimaryStat = a.stats?.find(s => s.statHash === primaryStatHash)?.base || 0;
+          const bPrimaryStat = b.stats?.find(s => s.statHash === primaryStatHash)?.base || 0;
+          
+          if (aPrimaryStat !== bPrimaryStat) {
+            return bPrimaryStat - aPrimaryStat; // Higher primary stat wins
+          }
+          
+          // If primary stats are tied, compare secondary stats
+          const aSecondaryStat = a.stats?.find(s => s.statHash === secondaryStatHash)?.base || 0;
+          const bSecondaryStat = b.stats?.find(s => s.statHash === secondaryStatHash)?.base || 0;
+          
+          return bSecondaryStat - aSecondaryStat; // Higher secondary stat wins
+        });
+
+        // Add all items that tie for the best stats
+        if (sortedItems.length > 0) {
+          const bestItem = sortedItems[0];
+          const bestPrimaryStat = bestItem.stats?.find(s => s.statHash === primaryStatHash)?.base || 0;
+          const bestSecondaryStat = bestItem.stats?.find(s => s.statHash === secondaryStatHash)?.base || 0;
+
+          console.log(`Best stats for ${slotClass}: Primary=${bestPrimaryStat}, Secondary=${bestSecondaryStat}`);
+
+          for (const item of sortedItems) {
+            const itemPrimaryStat = item.stats?.find(s => s.statHash === primaryStatHash)?.base || 0;
+            const itemSecondaryStat = item.stats?.find(s => s.statHash === secondaryStatHash)?.base || 0;
+            
+            if (itemPrimaryStat === bestPrimaryStat && itemSecondaryStat === bestSecondaryStat) {
+              bestItemIds.add(item.id);
+              console.log(`Added to best: ${item.name} (${itemPrimaryStat}/${itemSecondaryStat})`);
+            } else {
+              break; // No more ties
+            }
+          }
+        }
+      }
+
+      console.log(`Final result: ${bestItemIds.size} best items selected`);
+      return (item: DimItem) => bestItemIds.has(item.id);
+    },
+  },
+  {
+    keywords: 'testfilter',
+    description: tl('Filter.Stats'),
+    format: 'simple',
+    destinyVersion: 2,
+    filter: () => {
+      console.log('🔥 TEST FILTER CALLED - Registration is working!');
+      return () => true; // Return all items
+    },
+  },
 ];
+
+// Debug: Log all filter keywords to console
+console.log('🔥 STAT FILTERS REGISTERED:', statFilters.map(f => f.keywords));
 
 export default statFilters;
 
