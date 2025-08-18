@@ -83,7 +83,7 @@ const SETTINGS_VISIBILITY = {
   characterSort: {
     mostRecent: true,
     mostRecentReverse: false, // Hide "Most recent character (reversed)"
-    fixed: true,
+    fixed: false, // Hide "Character age (buggy on PC)"
     custom: true,
   },
   inventoryColumns: false, // Hide Character inventory width section
@@ -283,7 +283,6 @@ export default function SettingsPage() {
       ? { id: 'storage', title: t('Storage.MenuTitle') }
       : undefined,
     { id: 'spreadsheets', title: t('Settings.Data') },
-    { id: 'armor-analysis', title: 'Armor Analysis' },
     $featureFlags.elgatoStreamDeck && !isPhonePortrait
       ? { id: 'stream-deck', title: 'Elgato Stream Deck' }
       : undefined,
@@ -487,16 +486,6 @@ export default function SettingsPage() {
                 </ul>
               </div>
             )}
-            {hasD1Account && (
-              <div className={styles.setting}>
-                <Checkbox
-                  label={t('Settings.EnableAdvancedStats')}
-                  name="itemQuality"
-                  value={settings.itemQuality}
-                  onChange={onCheckChange}
-                />
-              </div>
-            )}
             {SETTINGS_VISIBILITY.syncLockState && (
               <div className={styles.setting}>
                 <Checkbox
@@ -671,31 +660,6 @@ export default function SettingsPage() {
                 />
               </div>
             )}
-            <div className={styles.setting}>
-              <label>{t('Settings.LoadoutSort')}</label>
-              <div className={styles.radioOptions}>
-                <label>
-                  <input
-                    type="radio"
-                    name="loadoutSort"
-                    checked={settings.loadoutSort === LoadoutSort.ByEditTime}
-                    value={LoadoutSort.ByEditTime}
-                    onChange={onChangeNumeric}
-                  />
-                  <span>{t('Loadouts.SortByEditTime')}</span>
-                </label>
-                <label>
-                  <input
-                    type="radio"
-                    name="loadoutSort"
-                    checked={settings.loadoutSort === LoadoutSort.ByName}
-                    value={LoadoutSort.ByName}
-                    onChange={onChangeNumeric}
-                  />
-                  <span>{t('Loadouts.SortByName')}</span>
-                </label>
-              </div>
-            </div>
           </section>
 
           <SearchSettings settings={settings} />
@@ -707,20 +671,6 @@ export default function SettingsPage() {
           </ErrorBoundary>
 
           <Spreadsheets />
-
-          <section id="armor-analysis">
-            <h2>Armor Analysis</h2>
-            <div className={styles.setting}>
-              <p>Analyze armor synergy tier benefits and progression patterns.</p>
-              <NavLink
-                to={currentAccount ? `${accountRoute(currentAccount)}/armor-analysis` : '/armor-analysis'}
-                className="d2l-button"
-                style={{ textDecoration: 'none' }}
-              >
-                Open Armor Analysis Tool
-              </NavLink>
-            </div>
-          </section>
 
           {$featureFlags.elgatoStreamDeck && !isPhonePortrait && <StreamDeckSettings />}
 

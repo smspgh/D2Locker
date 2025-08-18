@@ -57,9 +57,6 @@ const LoadoutBuilderContainer = lazy(() => import(/* webpackChunkName: "loadout-
 const SearchHistory = lazy(
   () => import(/* webpackChunkName: "searchHistory" */ '../search/SearchHistory'),
 );
-const ArmorAnalysis = lazy(
-  () => import(/* webpackChunkName: "armorAnalysis" */ '../armor-analysis/ArmorAnalysis'),
-);
 
 /**
  * Base view for pages that show Destiny content.
@@ -245,14 +242,6 @@ export default function Destiny() {
               element={
                 <ErrorBoundary name="searchHistory">
                   <SearchHistory />
-                </ErrorBoundary>
-              }
-            />
-            <Route
-              path="armor-analysis"
-              element={
-                <ErrorBoundary name="armorAnalysis">
-                  <ArmorAnalysis />
                 </ErrorBoundary>
               }
             />

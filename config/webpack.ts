@@ -169,12 +169,7 @@ export default (env: Env) => {
 
             return headers;
           },
-          static: [
-            {
-              directory: path.join(__dirname, '../src/D2ArmorAnalysis'),
-              publicPath: '/D2ArmorAnalysis',
-            },
-          ],
+          static: [],
         } as DevServerConfiguration)
       : undefined,
 
@@ -522,7 +517,6 @@ export default (env: Env) => {
         { from: `./icons/splash`, to: 'splash/' },
         { from: `./icons/screenshots`, to: 'screenshots/' },
         { from: './backend/light', to: 'backend/light/' },
-        { from: './src/D2ArmorAnalysis', to: 'D2ArmorAnalysis/' },
         { from: './src/safari-pinned-tab.svg' },
         { from: './src/nuke.php' },
         { from: './src/robots.txt' },

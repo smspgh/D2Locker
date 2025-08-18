@@ -102,7 +102,6 @@ pnpm serve:api
     - `/loadout` - Loadout creation, management, and application
     - `/loadout-builder` - Automated loadout optimization with stat constraints
     - `/loadout-drawer` - UI for applying and managing loadouts
-    - `/armor-analysis` - Armor stat analysis and visualization
     - `/item-popup` - Detailed item view with sockets, perks, stats
     - `/item-actions` - Move, lock, tag, and other item operations
     - `/bungie-api` - Bungie API integration with rate limiting
