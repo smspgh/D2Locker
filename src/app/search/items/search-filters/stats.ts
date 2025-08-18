@@ -20,9 +20,11 @@ import { getStatValuesByHash, isClassCompatible } from 'app/utils/item-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { once } from 'es-toolkit';
 import { ItemFilterDefinition } from '../item-filter-types';
-import { perkStatMappings, getPerkStatHashes, isValidPerkName, PerkName, displayStatToHashMap } from './perk-stat-mappings';
+import { perkStatMappings, getPerkStatHashes, getPerkStatNames, isValidPerkName, PerkName, displayStatToHashMap } from './perk-stat-mappings';
 import { testStringsFromAllSockets } from './freeform';
 import { matchText } from 'app/search/text-utils';
+import { makeSearchFilterFactory } from 'app/search/search-filter';
+import { buildItemSearchConfig } from '../item-search-filter';
 
 const validateStat: ItemFilterDefinition['validateStat'] = (filterContext) => {
   const customStatLabels = filterContext?.customStats?.map((c) => c.shortLabel) ?? [];
@@ -268,7 +270,9 @@ const statFilters: ItemFilterDefinition[] = [
       'common:1', 'common:2', 'common:3', 'common:4', 'common:5',
       'common:6', 'common:7', 'common:8', 'common:9', 'common:10'
     ],
-    filter: ({ allItems, filterValue }) => {
+    filter: (filterContext) => {
+      const { allItems, filterValue, settings, getTag, customStats, d2Definitions, stores, getNotes, newItems, loadoutsByItem, wishListsByHash, wishListFunction, language, currentStore } = filterContext;
+      
       // Parse the filter value like "legendary:3" or "exotic:2"
       const parts = filterValue.split(':');
       if (parts.length !== 2) {
@@ -295,13 +299,137 @@ const statFilters: ItemFilterDefinition[] = [
         return () => false;
       }
 
+      // Build keep filters to exclude items already marked as keep
+      let keepWeaponFilter: (item: DimItem) => boolean = () => false;
+      let keepArmorFilter: (item: DimItem) => boolean = () => false;
+      
+      try {
+        // Build the search config for keep filters
+        const suggestionsContext = {
+          allItems,
+          loadouts: [],
+          d2Definitions,
+          getTag,
+          getNotes,
+          allNotesHashtags: [],
+          customStats,
+        };
+        
+        const searchConfig = buildItemSearchConfig(2, language || 'en', suggestionsContext);
+        
+        // Build keepweapon filter
+        const keepWeaponSettings = settings?.searchFilterSettings?.keepWeapon;
+        if (keepWeaponSettings?.enabled && keepWeaponSettings?.additionalSearchTerms?.length > 0) {
+          const terms = keepWeaponSettings.additionalSearchTerms;
+          let searchQuery = '';
+          
+          if (terms.length === 1) {
+            searchQuery = terms[0].term;
+          } else {
+            const groupedTerms = new Map<number, typeof terms>();
+            terms.forEach(term => {
+              const groupNum = term.group ?? 0;
+              if (!groupedTerms.has(groupNum)) {
+                groupedTerms.set(groupNum, []);
+              }
+              groupedTerms.get(groupNum)!.push(term);
+            });
+            
+            const groupParts = [];
+            for (const [groupNum, groupTerms] of groupedTerms) {
+              if (groupTerms.length === 1) {
+                groupParts.push(groupTerms[0].term);
+              } else {
+                const innerTerms = groupTerms.map(term => term.term).join(' and ');
+                groupParts.push(`(${innerTerms})`);
+              }
+            }
+            
+            searchQuery = groupParts.join(' or ');
+          }
+          
+          const searchFilterFactory = makeSearchFilterFactory(searchConfig, {
+            stores,
+            allItems,
+            currentStore,
+            loadoutsByItem,
+            wishListFunction,
+            wishListsByHash,
+            newItems,
+            getTag,
+            getNotes,
+            language,
+            customStats,
+            d2Definitions,
+            settings,
+          });
+          const weaponFilter = searchFilterFactory(searchQuery);
+          keepWeaponFilter = (item: DimItem) => item.bucket?.sort === 'Weapons' && weaponFilter(item);
+        }
+        
+        // Build keeparmor filter
+        const keepArmorSettings = settings?.searchFilterSettings?.keepArmor;
+        if (keepArmorSettings?.enabled && keepArmorSettings?.additionalSearchTerms?.length > 0) {
+          const terms = keepArmorSettings.additionalSearchTerms;
+          let searchQuery = '';
+          
+          if (terms.length === 1) {
+            searchQuery = terms[0].term;
+          } else {
+            const groupedTerms = new Map<number, typeof terms>();
+            terms.forEach(term => {
+              const groupNum = term.group ?? 0;
+              if (!groupedTerms.has(groupNum)) {
+                groupedTerms.set(groupNum, []);
+              }
+              groupedTerms.get(groupNum)!.push(term);
+            });
+            
+            const groupParts = [];
+            for (const [groupNum, groupTerms] of groupedTerms) {
+              if (groupTerms.length === 1) {
+                groupParts.push(groupTerms[0].term);
+              } else {
+                const innerTerms = groupTerms.map(term => term.term).join(' and ');
+                groupParts.push(`(${innerTerms})`);
+              }
+            }
+            
+            searchQuery = groupParts.join(' or ');
+          }
+          
+          const searchFilterFactory = makeSearchFilterFactory(searchConfig, {
+            stores,
+            allItems,
+            currentStore,
+            loadoutsByItem,
+            wishListFunction,
+            wishListsByHash,
+            newItems,
+            getTag,
+            getNotes,
+            language,
+            customStats,
+            d2Definitions,
+            settings,
+          });
+          const armorFilter = searchFilterFactory(searchQuery);
+          keepArmorFilter = (item: DimItem) => item.bucket.inArmor && armorFilter(item);
+        }
+      } catch (error) {
+        console.warn('Error building keep filters for maxpowertier:', error);
+      }
+
       // Group items by bucket and class, but only include items of the specified tier
+      // that are NOT marked as keep items
       const tierItemsByBucketClass: Record<string, DimItem[]> = {};
 
       for (const item of allItems) {
         if (item.classType !== DestinyClass.Classified &&
             Boolean(item.power) &&
-            item.rarity === rarity) {
+            item.rarity === rarity &&
+            !keepWeaponFilter(item) &&
+            !keepArmorFilter(item)) {
           const key = maxPowerKey(item, true); // Always consider class for tier-specific
           if (!tierItemsByBucketClass[key]) {
             tierItemsByBucketClass[key] = [];
@@ -321,6 +449,11 @@ const statFilters: ItemFilterDefinition[] = [
           return false;
         }
 
+        // Skip if this item matches keep filters
+        if (keepWeaponFilter(item) || keepArmorFilter(item)) {
+          return false;
+        }
+
         const bucketKey = maxPowerKey(item, true);
         const sortedItems = sortedBuckets[bucketKey];
         if (!sortedItems || sortedItems.length === 0) {
@@ -332,6 +465,195 @@ const statFilters: ItemFilterDefinition[] = [
 
         // Return true if this item is within the top N for its tier
         return rank > 0 && rank <= count;
+      };
+    },
+  },
+  {
+    keywords: 'maxnonexotic',
+    description: tl('Filter.MaxNonExotic'),
+    format: 'query',
+    destinyVersion: 2,
+    suggestions: [
+      '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'
+    ],
+    filter: (filterContext) => {
+      const { allItems, filterValue, settings, getTag, customStats, d2Definitions, stores, getNotes, newItems, loadoutsByItem, wishListsByHash, wishListFunction, language, currentStore } = filterContext;
+      
+      // Parse the count from filterValue (e.g., "3" from "maxnonexotic:3")
+      const count = parseInt(filterValue, 10);
+      if (isNaN(count) || count < 1) {
+        return () => false;
+      }
+
+      // Build keep filters to exclude items already marked as keep
+      let keepWeaponFilter: (item: DimItem) => boolean = () => false;
+      let keepArmorFilter: (item: DimItem) => boolean = () => false;
+      
+      try {
+        // Build the search config for keep filters
+        const suggestionsContext = {
+          allItems,
+          loadouts: [],
+          d2Definitions,
+          getTag,
+          getNotes,
+          allNotesHashtags: [],
+          customStats,
+        };
+        
+        const searchConfig = buildItemSearchConfig(2, language || 'en', suggestionsContext);
+        
+        // Build keepweapon filter
+        const keepWeaponSettings = settings?.searchFilterSettings?.keepWeapon;
+        if (keepWeaponSettings?.enabled && keepWeaponSettings?.additionalSearchTerms?.length > 0) {
+          const terms = keepWeaponSettings.additionalSearchTerms;
+          let searchQuery = '';
+          
+          if (terms.length === 1) {
+            searchQuery = terms[0].term;
+          } else {
+            const groupedTerms = new Map<number, typeof terms>();
+            terms.forEach(term => {
+              const groupNum = term.group ?? 0;
+              if (!groupedTerms.has(groupNum)) {
+                groupedTerms.set(groupNum, []);
+              }
+              groupedTerms.get(groupNum)!.push(term);
+            });
+            
+            const groupParts = [];
+            for (const [groupNum, groupTerms] of groupedTerms) {
+              if (groupTerms.length === 1) {
+                groupParts.push(groupTerms[0].term);
+              } else {
+                const innerTerms = groupTerms.map(term => term.term).join(' and ');
+                groupParts.push(`(${innerTerms})`);
+              }
+            }
+            
+            searchQuery = groupParts.join(' or ');
+          }
+          
+          const searchFilterFactory = makeSearchFilterFactory(searchConfig, {
+            stores,
+            allItems,
+            currentStore,
+            loadoutsByItem,
+            wishListFunction,
+            wishListsByHash,
+            newItems,
+            getTag,
+            getNotes,
+            language,
+            customStats,
+            d2Definitions,
+            settings,
+          });
+          const weaponFilter = searchFilterFactory(searchQuery);
+          keepWeaponFilter = (item: DimItem) => item.bucket?.sort === 'Weapons' && weaponFilter(item);
+        }
+        
+        // Build keeparmor filter
+        const keepArmorSettings = settings?.searchFilterSettings?.keepArmor;
+        if (keepArmorSettings?.enabled && keepArmorSettings?.additionalSearchTerms?.length > 0) {
+          const terms = keepArmorSettings.additionalSearchTerms;
+          let searchQuery = '';
+          
+          if (terms.length === 1) {
+            searchQuery = terms[0].term;
+          } else {
+            const groupedTerms = new Map<number, typeof terms>();
+            terms.forEach(term => {
+              const groupNum = term.group ?? 0;
+              if (!groupedTerms.has(groupNum)) {
+                groupedTerms.set(groupNum, []);
+              }
+              groupedTerms.get(groupNum)!.push(term);
+            });
+            
+            const groupParts = [];
+            for (const [groupNum, groupTerms] of groupedTerms) {
+              if (groupTerms.length === 1) {
+                groupParts.push(groupTerms[0].term);
+              } else {
+                const innerTerms = groupTerms.map(term => term.term).join(' and ');
+                groupParts.push(`(${innerTerms})`);
+              }
+            }
+            
+            searchQuery = groupParts.join(' or ');
+          }
+          
+          const searchFilterFactory = makeSearchFilterFactory(searchConfig, {
+            stores,
+            allItems,
+            currentStore,
+            loadoutsByItem,
+            wishListFunction,
+            wishListsByHash,
+            newItems,
+            getTag,
+            getNotes,
+            language,
+            customStats,
+            d2Definitions,
+            settings,
+          });
+          const armorFilter = searchFilterFactory(searchQuery);
+          keepArmorFilter = (item: DimItem) => item.bucket.inArmor && armorFilter(item);
+        }
+      } catch (error) {
+        console.warn('Error building keep filters for maxnonexotic:', error);
+      }
+
+      // Get all non-exotic items grouped by bucket/class, excluding keep items
+      const nonExoticItemsByBucketClass: Record<string, DimItem[]> = {};
+
+      for (const item of allItems) {
+        if (item.classType !== DestinyClass.Classified &&
+            Boolean(item.power) &&
+            item.rarity !== 'Exotic' &&
+            !keepWeaponFilter(item) &&
+            !keepArmorFilter(item)) {
+          const key = maxPowerKey(item, true); // Always consider class
+          if (!nonExoticItemsByBucketClass[key]) {
+            nonExoticItemsByBucketClass[key] = [];
+          }
+          nonExoticItemsByBucketClass[key].push(item);
+        }
+      }
+
+      // Pre-sort all buckets by power
+      const sortedBuckets: Record<string, DimItem[]> = {};
+      for (const [key, items] of Object.entries(nonExoticItemsByBucketClass)) {
+        sortedBuckets[key] = items.sort((a, b) => b.power - a.power);
+      }
+
+      return (item: DimItem) => {
+        if (!item.power || item.rarity === 'Exotic') {
+          return false;
+        }
+
+        // Skip if this item matches keep filters
+        if (keepWeaponFilter(item) || keepArmorFilter(item)) {
+          return false;
+        }
+
+        const bucketKey = maxPowerKey(item, true);
+        const sortedItems = sortedBuckets[bucketKey];
+        if (!sortedItems || sortedItems.length === 0) {
+          return false;
+        }
+
+        // Find the power level of this item
+        const itemPower = item.power;
+        
+        // Get the unique power levels in descending order
+        const uniquePowerLevels = Array.from(new Set(sortedItems.map(i => i.power))).sort((a, b) => b - a);
+        
+        // Check if this item's power level is among the top N unique power levels
+        const topNPowerLevels = uniquePowerLevels.slice(0, count);
+        return topNPowerLevels.includes(itemPower);
       };
     },
   },

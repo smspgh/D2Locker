@@ -121,7 +121,7 @@ function matchFilter<I, FilterCtx, SuggestionsCtx>(
         break;
       }
       case 'query': {
-        if (filterDef.suggestions!.includes(filterValue)) {
+        if (filterDef.suggestions?.includes(filterValue) || !filterDef.suggestions) {
           return (filterContext) =>
             filterDef.filter({
               lhs,

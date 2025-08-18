@@ -317,6 +317,7 @@
     "MaxPower": "Shows the items at the highest power per slot. Use 'maxpower:<=N' to show the top N items per slot (e.g., 'maxpower:<=3' for top 3).",
     "MaxPowerLoadout": "Shows the items in the loadout that would maximize your Power Level for each character class.",
     "MaxPowerTier": "Shows the top N items per slot within a specific tier (e.g., 'maxpowertier:legendary:3' for top 3 legendary items per slot).",
+    "MaxNonExotic": "Shows the top N non-exotic items per slot across all tiers except exotic (e.g., 'maxnonexotic:<=3' for top 3 non-exotic items per slot).",
     "KeepWeapon": "Shows weapons worth keeping: crafted weapons, best duplicate weapons, weapons with combo rank ≤2, or top 4 legendary weapons per slot.",
     "KeepArmor": "Shows armor worth keeping: best armor per class/type/tier, armor with max total base stats per class, or top 4 legendary armor pieces per slot/class.",
     "Junk": "Shows items that are NOT worth keeping - the inverse of crafted weapons, good combo rank legendaries, non-duplicate exotics, best armor, and top power tier items.",
