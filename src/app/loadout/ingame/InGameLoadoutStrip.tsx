@@ -23,12 +23,10 @@ import { FullyResolvedLoadout, inGameLoadoutsWithMetadataSelector } from './sele
 export function InGameLoadoutStrip({
   store,
   onEdit,
-  onShare,
   onShowDetails,
 }: {
   store: DimStore;
   onEdit: (loadout: InGameLoadout) => void;
-  onShare: (loadout: Loadout) => void;
   onShowDetails: (loadout: InGameLoadout) => void;
 }) {
   const selectedStoreId = store.id;
@@ -53,7 +51,6 @@ export function InGameLoadoutStrip({
             isEquipped={isEquipped}
             matchingLoadouts={matchingLoadouts}
             onEdit={onEdit}
-            onShare={onShare}
             onShowDetails={onShowDetails}
           />
         ))}
@@ -69,7 +66,6 @@ function InGameLoadoutTile({
   isEquipped,
   matchingLoadouts,
   onEdit,
-  onShare,
   onShowDetails,
 }: {
   store: DimStore;
@@ -78,7 +74,6 @@ function InGameLoadoutTile({
   isEquipped: boolean;
   matchingLoadouts: FullyResolvedLoadout[];
   onEdit: (loadout: InGameLoadout) => void;
-  onShare: (loadout: Loadout) => void;
   onShowDetails: (loadout: InGameLoadout) => void;
 }) {
   const dispatch = useThunkDispatch();
@@ -87,10 +82,6 @@ function InGameLoadoutTile({
   const handleSaveAsD2L = () => {
     const d2lLoadout = convertInGameLoadoutToDimLoadout(gameLoadout, store.classType, allItems);
     editLoadout(d2lLoadout, store.id);
-  };
-  const handleShare = () => {
-    const d2lLoadout = convertInGameLoadoutToDimLoadout(gameLoadout, store.classType, allItems);
-    onShare(d2lLoadout);
   };
 
   const streamDeckDeepLink = $featureFlags.elgatoStreamDeck
@@ -129,11 +120,6 @@ function InGameLoadoutTile({
       key: 'saveAs',
       content: t('Loadouts.SaveAsD2L'),
       onSelected: handleSaveAsD2L,
-    },
-    {
-      key: 'share',
-      content: t('Loadouts.ShareLoadout'),
-      onSelected: handleShare,
     },
     streamDeckDeepLink && {
       key: 'open-on-stream-deck',

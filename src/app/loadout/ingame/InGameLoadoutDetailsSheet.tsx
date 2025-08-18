@@ -24,13 +24,11 @@ import { gameLoadoutCompatibleBuckets, useItemsFromInGameLoadout } from './ingam
 export function InGameLoadoutDetails({
   store,
   loadout,
-  onShare,
   onEdit,
   onClose,
 }: {
   store: DimStore;
   loadout: InGameLoadout;
-  onShare: (loadout: Loadout) => void;
   onEdit: (loadout: InGameLoadout) => void;
   onClose: () => void;
 }) {
@@ -44,10 +42,6 @@ export function InGameLoadoutDetails({
     editLoadout(d2lLoadout, store.id);
   };
 
-  const handleShare = () => {
-    const d2lLoadout = convertInGameLoadoutToDimLoadout(loadout, store.classType, allItems);
-    onShare(d2lLoadout);
-  };
   const header = (
     <div className={styles.header}>
       <InGameLoadoutIconWithIndex loadout={loadout} />
@@ -77,9 +71,6 @@ export function InGameLoadoutDetails({
         </button>
         <button type="button" className="d2l-button" onClick={handleSaveAsD2L}>
           {t('Loadouts.SaveAsD2L')}
-        </button>
-        <button type="button" className="d2l-button" onClick={handleShare}>
-          {t('Loadouts.ShareLoadout')}
         </button>
         <ConfirmButton danger onClick={() => dispatch(deleteInGameLoadout(loadout))}>
           {t('InGameLoadout.ClearSlot', { index: loadout.index + 1 })}

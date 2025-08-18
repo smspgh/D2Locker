@@ -1,12 +1,8 @@
-console.log('TOP OF ROLL APPRAISER MODULE');
-
 import { DimItem } from 'app/inventory/item-types';
 import { quoteFilterString } from 'app/search/query-parser';
 import { getRollAppraiserUtilsSync } from 'app/roll-appraiser/rollAppraiserService';
 import { getWeaponSockets, getSocketsByIndexes } from 'app/utils/socket-utils';
 import { ItemFilterDefinition } from '../item-filter-types';
-
-console.log('Roll appraiser filters module loaded');
 
 /**
  * Generate perk name suggestions for a specific perk column
@@ -51,7 +47,6 @@ function getWeaponRankingInfo(item: DimItem) {
   // Log first call to verify utils availability
   if (!(window as any).rollAppraiserDebugLogged) {
     (window as any).rollAppraiserDebugLogged = true;
-    console.log('getWeaponRankingInfo first call - utils available:', Boolean(utils));
   }
   
   if (!utils || item.destinyVersion !== 2 || !item.bucket.inWeapons || !item.sockets) {
@@ -75,14 +70,6 @@ function getWeaponRankingInfo(item: DimItem) {
 
   // Process each perk socket and check ALL available perks for that socket
   perkSockets.forEach((socket, socketIndex) => {
-    // Debug for DED GRAMARYE
-    if (item.name.toLowerCase().includes('ded gramarye') && socketIndex === 2) {
-      console.log(`Socket ${socketIndex} plugged:`, socket.plugged?.plugDef.displayProperties.name, socket.plugged?.plugDef.hash);
-      console.log(`Socket ${socketIndex} plug options:`, socket.plugOptions?.map(p => ({
-        name: p.plugDef.displayProperties.name,
-        hash: p.plugDef.hash
-      })));
-    }
     
     // Check all plug options available for this socket
     if (socket.plugOptions && socket.plugOptions.length > 0) {
@@ -219,12 +206,6 @@ function getWeaponRankingInfo(item: DimItem) {
     );
   }
 
-  // Debug log perk index distribution
-  if (perkRankings.length > 0 && !(window as any).perkIndexLogged) {
-    (window as any).perkIndexLogged = true;
-    console.log('Perk index distribution:', perkRankings.map(p => ({ hash: p.perkHash, index: p.index })));
-    console.log('Unique indexes found:', [...new Set(perkRankings.map(p => p.index))].sort());
-  }
 
   return {
     comboRank: comboRank?.rank || null,
@@ -242,7 +223,6 @@ const rollAppraiserFilters: ItemFilterDefinition[] = [
     format: 'range',
     destinyVersion: 2,
     filter: ({ compare }) => {
-      console.log('comborank filter created');
       return (item) => {
         const info = getWeaponRankingInfo(item);
         // Use bestComboRank which checks all available perk combinations
@@ -258,7 +238,6 @@ const rollAppraiserFilters: ItemFilterDefinition[] = [
     format: 'range',
     destinyVersion: 2,
     filter: ({ compare }) => {
-      console.log('perk1rank filter created');
       return (item) => {
         const info = getWeaponRankingInfo(item);
         const column1Perks = info?.perkRankings.filter(p => p.index === 0) || [];
@@ -273,7 +252,6 @@ const rollAppraiserFilters: ItemFilterDefinition[] = [
     format: 'range',
     destinyVersion: 2,
     filter: ({ compare }) => {
-      console.log('perk2rank filter created');
       return (item) => {
         const info = getWeaponRankingInfo(item);
         const column2Perks = info?.perkRankings.filter(p => p.index === 1) || [];
@@ -288,24 +266,12 @@ const rollAppraiserFilters: ItemFilterDefinition[] = [
     format: 'range',
     destinyVersion: 2,
     filter: ({ compare }) => {
-      console.log('perk3rank filter created');
       return (item) => {
         const info = getWeaponRankingInfo(item);
         if (!info?.perkRankings) {return false;}
         
-        // Debug logging for DED GRAMARYE IV
-        if (item.name.toLowerCase().includes('ded gramarye')) {
-          console.log(`Debugging ${item.name}:`);
-          console.log('All perk rankings:', info.perkRankings);
-          console.log('Perks with index 2:', info.perkRankings.filter(p => p.index === 2));
-        }
-        
         const column3Perks = info.perkRankings.filter(p => p.index === 2);
         const result = column3Perks.some(perk => perk.ranking && compare!(perk.ranking.rank));
-        
-        if (result) {
-          console.log(`MATCH: ${item.name} has perk in column 3 (index 2) matching rank criteria`);
-        }
         
         return result;
       };
@@ -318,7 +284,6 @@ const rollAppraiserFilters: ItemFilterDefinition[] = [
     format: 'range',
     destinyVersion: 2,
     filter: ({ compare }) => {
-      console.log('perk4rank filter created');
       return (item) => {
         const info = getWeaponRankingInfo(item);
         const column4Perks = info?.perkRankings.filter(p => p.index === 3) || [];
@@ -477,9 +442,6 @@ const rollAppraiserFilters: ItemFilterDefinition[] = [
     },
   },
 ];
-
-console.log('Roll appraiser filters created:', rollAppraiserFilters.length, 'filters');
-console.log('Filter keywords:', rollAppraiserFilters.map(f => f.keywords));
 
 // Make filters globally accessible for debugging
 (window as any).rollAppraiserFilters = rollAppraiserFilters;

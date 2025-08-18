@@ -417,7 +417,6 @@ const statFilters: ItemFilterDefinition[] = [
           keepArmorFilter = (item: DimItem) => item.bucket.inArmor && armorFilter(item);
         }
       } catch (error) {
-        console.warn('Error building keep filters for maxpowertier:', error);
       }
 
       // Group items by bucket and class, but only include items of the specified tier
@@ -603,7 +602,6 @@ const statFilters: ItemFilterDefinition[] = [
           keepArmorFilter = (item: DimItem) => item.bucket.inArmor && armorFilter(item);
         }
       } catch (error) {
-        console.warn('Error building keep filters for maxnonexotic:', error);
       }
 
       // Get all non-exotic items grouped by bucket/class, excluding keep items
@@ -736,7 +734,6 @@ const statFilters: ItemFilterDefinition[] = [
     format: 'freeform',
     destinyVersion: 2,
     filter: ({ filterValue, allItems, language, d2Definitions }) => {
-      console.log('🔥 bestforperk filter called with:', filterValue);
       
       // Get the stat hashes for this perk, or use defaults if not in our mapping
       let primaryStatHash: number;
@@ -749,18 +746,15 @@ const statFilters: ItemFilterDefinition[] = [
         const statHashes = getPerkStatHashes(normalizedPerkName);
         primaryStatHash = statHashes.primary;
         secondaryStatHash = statHashes.secondary;
-        console.log(`Using mapped stats for ${normalizedPerkName}: primary=${primaryStatHash}, secondary=${secondaryStatHash}`);
       } else {
         // For perks not in our mapping, use smart defaults based on perk name
         if (filterValue.toLowerCase().includes('brawler')) {
           primaryStatHash = displayStatToHashMap.Melee;
           secondaryStatHash = displayStatToHashMap.Health;
-          console.log(`Using Brawler defaults: Melee=${primaryStatHash}, Health=${secondaryStatHash}`);
         } else {
           // Default fallback - optimize for Health and Melee
           primaryStatHash = displayStatToHashMap.Health;
           secondaryStatHash = displayStatToHashMap.Melee;
-          console.log(`Using default stats: Health=${primaryStatHash}, Melee=${secondaryStatHash}`);
         }
       }
 
@@ -772,7 +766,6 @@ const statFilters: ItemFilterDefinition[] = [
         testStringsFromAllSockets(perkTest, item, d2Definitions, /* includeDescription */ false)
       );
 
-      console.log(`Found ${itemsWithPerk.length} items with perk "${filterValue}"`);
       if (itemsWithPerk.length > 0) {
         // Get the actual stat names based on the normalized perk name
         let primaryStatName = 'Primary';
@@ -784,12 +777,6 @@ const statFilters: ItemFilterDefinition[] = [
           secondaryStatName = statNames.secondary;
         }
         
-        console.log(`All items with this perk (optimizing for ${primaryStatName} primary, ${secondaryStatName} secondary):`);
-        itemsWithPerk.forEach(i => {
-          const primaryStat = i.stats?.find(s => s.statHash === primaryStatHash)?.base || 0;
-          const secondaryStat = i.stats?.find(s => s.statHash === secondaryStatHash)?.base || 0;
-          console.log(`  ${i.name} - ${primaryStatName}: ${primaryStat}, ${secondaryStatName}: ${secondaryStat}, Equipped: ${i.equipped}, Location: ${i.owner}`);
-        });
       }
 
       if (itemsWithPerk.length === 0) {
@@ -812,7 +799,6 @@ const statFilters: ItemFilterDefinition[] = [
       for (const [slotClass, items] of Object.entries(itemsBySlotClass)) {
         if (items.length === 0) {continue;}
 
-        console.log(`Processing ${items.length} items for slot ${slotClass}`);
 
         // Sort by primary stat (descending), then by secondary stat (descending)
         const sortedItems = items.sort((a, b) => {
@@ -836,7 +822,6 @@ const statFilters: ItemFilterDefinition[] = [
           const bestPrimaryStat = bestItem.stats?.find(s => s.statHash === primaryStatHash)?.base || 0;
           const bestSecondaryStat = bestItem.stats?.find(s => s.statHash === secondaryStatHash)?.base || 0;
 
-          console.log(`Best stats for ${slotClass}: Primary=${bestPrimaryStat}, Secondary=${bestSecondaryStat}`);
 
           for (const item of sortedItems) {
             const itemPrimaryStat = item.stats?.find(s => s.statHash === primaryStatHash)?.base || 0;
@@ -844,7 +829,6 @@ const statFilters: ItemFilterDefinition[] = [
             
             if (itemPrimaryStat === bestPrimaryStat && itemSecondaryStat === bestSecondaryStat) {
               bestItemIds.add(item.id);
-              console.log(`Added to best: ${item.name} (${itemPrimaryStat}/${itemSecondaryStat})`);
             } else {
               break; // No more ties
             }
@@ -852,7 +836,6 @@ const statFilters: ItemFilterDefinition[] = [
         }
       }
 
-      console.log(`Final result: ${bestItemIds.size} best items selected`);
       return (item: DimItem) => bestItemIds.has(item.id);
     },
   },
@@ -862,14 +845,10 @@ const statFilters: ItemFilterDefinition[] = [
     format: 'simple',
     destinyVersion: 2,
     filter: () => {
-      console.log('🔥 TEST FILTER CALLED - Registration is working!');
       return () => true; // Return all items
     },
   },
 ];
-
-// Debug: Log all filter keywords to console
-console.log('🔥 STAT FILTERS REGISTERED:', statFilters.map(f => f.keywords));
 
 export default statFilters;
 

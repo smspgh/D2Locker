@@ -41,7 +41,6 @@ import EditInGameLoadout from './ingame/EditInGameLoadout';
 import { InGameLoadoutDetails } from './ingame/InGameLoadoutDetailsSheet';
 import { InGameLoadoutStrip } from './ingame/InGameLoadoutStrip';
 import LoadoutImportSheet from './loadout-share/LoadoutImportSheet';
-import LoadoutShareSheet from './loadout-share/LoadoutShareSheet';
 import { searchAndSortLoadoutsByQuery, useLoadoutFilterPills } from './loadout-ui/menu-hooks';
 
 const sortOptions = [
@@ -100,7 +99,6 @@ function Loadouts({ account }: { account: DestinyAccount }) {
     [dispatch],
   );
 
-  const [sharedLoadout, setSharedLoadout] = useState<Loadout>();
   const [loadoutImportOpen, setLoadoutImportOpen] = useState<boolean>(false);
   const classType = selectedStore.classType;
   const isPhonePortrait = useIsPhonePortrait();
@@ -238,7 +236,6 @@ function Loadouts({ account }: { account: DestinyAccount }) {
           <InGameLoadoutStrip
             store={selectedStore}
             onEdit={setEditingInGameLoadout}
-            onShare={setSharedLoadout}
             onShowDetails={setViewingInGameLoadout}
           />
         )}
@@ -266,8 +263,7 @@ function Loadouts({ account }: { account: DestinyAccount }) {
                   store={selectedStore}
                   saved={savedLoadoutIds.has(loadout.id)}
                   equippable={loadout !== currentLoadout}
-                  onShare={setSharedLoadout}
-                  onSnapshotInGameLoadout={handleSnapshot}
+                        onSnapshotInGameLoadout={handleSnapshot}
                 />
               );
             } else {
@@ -288,13 +284,6 @@ function Loadouts({ account }: { account: DestinyAccount }) {
         </WindowVirtualList>
         {loadouts.length === 0 && <p>{t('Loadouts.NoneMatch', { query })}</p>}
       </PageWithMenu.Contents>
-      {sharedLoadout && (
-        <LoadoutShareSheet
-          account={account}
-          loadout={sharedLoadout}
-          onClose={() => setSharedLoadout(undefined)}
-        />
-      )}
       {loadoutImportOpen && (
         <LoadoutImportSheet
           currentStoreId={selectedStore.id}

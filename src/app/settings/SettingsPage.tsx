@@ -666,9 +666,11 @@ export default function SettingsPage() {
 
           {$featureFlags.wishLists && <WishListSettings />}
 
-          <ErrorBoundary name="StorageSettings">
-            <DimApiSettings />
-          </ErrorBoundary>
+          {(SETTINGS_VISIBILITY.D2LSync || SETTINGS_VISIBILITY.storageInfo || SETTINGS_VISIBILITY.importBackup || SETTINGS_VISIBILITY.exportAPIProfile) && (
+            <ErrorBoundary name="StorageSettings">
+              <DimApiSettings />
+            </ErrorBoundary>
+          )}
 
           <Spreadsheets />
 

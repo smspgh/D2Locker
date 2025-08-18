@@ -423,9 +423,23 @@ function profileLoaded(
         (s) => s.query === search.query && search.type === s.type,
       );
       if (foundSearchIndex >= 0) {
-        newSearches[foundSearchIndex] = search;
+        // Merge with existing search to preserve local data
+        newSearches[foundSearchIndex] = {
+          ...newSearches[foundSearchIndex],
+          ...search,
+          // Ensure required fields have defaults if missing from server
+          usageCount: search.usageCount ?? newSearches[foundSearchIndex].usageCount ?? 0,
+          lastUsage: search.lastUsage ?? newSearches[foundSearchIndex].lastUsage ?? 0,
+          saved: search.saved ?? newSearches[foundSearchIndex].saved ?? false,
+        };
       } else {
-        newSearches.push(search);
+        // Ensure new searches have all required fields
+        newSearches.push({
+          usageCount: 0,
+          lastUsage: 0,
+          saved: false,
+          ...search,
+        });
       }
     }
     for (const searchHash of profileResponse.deletedSearchHashes ?? []) {
@@ -588,6 +602,25 @@ function migrateSettings(state: DimApiState) {
     if (uniqCustomStats.length !== state.settings.customStats.length) {
       state = changeSetting(state, 'customStats', uniqCustomStats);
     }
+  }
+
+  // Migrate search data to ensure all searches have required fields
+  const migratedSearches = { ...state.searches };
+  for (const destinyVersion in migratedSearches) {
+    const searches = migratedSearches[destinyVersion];
+    if (searches && Array.isArray(searches)) {
+      migratedSearches[destinyVersion] = searches.map((search) => ({
+        usageCount: search.usageCount ?? 0,
+        lastUsage: search.lastUsage ?? 0,
+        saved: search.saved ?? false,
+        query: search.query,
+        type: search.type,
+      }));
+    }
+  }
+
+  if (migratedSearches !== state.searches) {
+    state = { ...state, searches: migratedSearches };
   }
 
   return state;

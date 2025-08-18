@@ -96,6 +96,50 @@ try {
     // If the migration fails, it's likely because the columns don't exist yet
     console.log('Migration skipped - likely new database');
   }
+
+  // Migrate existing search data to include tracking fields
+  try {
+    const existingUsers = db.prepare('SELECT membershipId, destinyVersion, searches FROM users').all();
+    let migratedCount = 0;
+    
+    for (const user of existingUsers) {
+      try {
+        const searchesArray = JSON.parse(user.searches || '[]');
+        let needsUpdate = false;
+        
+        const migratedSearches = searchesArray.map(search => {
+          if (search && search.query && search.type !== undefined) {
+            // Check if search is missing tracking fields
+            if (search.usageCount === undefined || search.lastUsage === undefined || search.saved === undefined) {
+              needsUpdate = true;
+              return {
+                query: search.query,
+                type: search.type,
+                usageCount: search.usageCount || 0,
+                lastUsage: search.lastUsage || 0,
+                saved: search.saved || false
+              };
+            }
+          }
+          return search;
+        });
+        
+        if (needsUpdate) {
+          const updateSearches = db.prepare('UPDATE users SET searches = ? WHERE membershipId = ? AND destinyVersion = ?');
+          updateSearches.run(JSON.stringify(migratedSearches), user.membershipId, user.destinyVersion);
+          migratedCount++;
+        }
+      } catch (parseError) {
+        console.warn(`Failed to migrate search data for user ${user.membershipId}-${user.destinyVersion}:`, parseError.message);
+      }
+    }
+    
+    if (migratedCount > 0) {
+      console.log(`Migrated search data for ${migratedCount} users to include tracking fields`);
+    }
+  } catch (migrationError) {
+    console.warn('Search data migration failed:', migrationError.message);
+  }
 } catch (error) {
 
   console.error('Error initializing database:', error.message);
@@ -182,7 +226,15 @@ function getUserData(membershipId, destinyVersion) {
       if (search && search.type) {
         const destinyVersion = search.type.toString();
         if (searchesObject[destinyVersion]) {
-          searchesObject[destinyVersion].push(search);
+          // Migrate old search data to include tracking fields if missing
+          const migratedSearch = {
+            query: search.query,
+            type: search.type,
+            usageCount: search.usageCount || 0,
+            lastUsage: search.lastUsage || 0,
+            saved: search.saved || false
+          };
+          searchesObject[destinyVersion].push(migratedSearch);
         }
       }
     });
@@ -250,10 +302,27 @@ function updateUserData(membershipId, destinyVersion, updates) {
           // Find existing search and update or add new one
           const searchArray = updatedData.searches[destinyVersion];
           const searchIndex = searchArray.findIndex(s => s.query === update.payload.query && s.type === update.payload.type);
+          const currentTime = Date.now();
+          
           if (searchIndex !== -1) {
-            searchArray[searchIndex] = update.payload;
+            // Update existing search - increment usage count and update timestamp
+            const existingSearch = searchArray[searchIndex];
+            searchArray[searchIndex] = {
+              query: update.payload.query,
+              type: update.payload.type,
+              usageCount: (existingSearch.usageCount || 0) + 1,
+              lastUsage: currentTime,
+              saved: existingSearch.saved || false
+            };
           } else {
-            searchArray.push(update.payload);
+            // Add new search with initial tracking data
+            searchArray.push({
+              query: update.payload.query,
+              type: update.payload.type,
+              usageCount: 1,
+              lastUsage: currentTime,
+              saved: false
+            });
           }
         }
         break;
@@ -265,6 +334,36 @@ function updateUserData(membershipId, destinyVersion, updates) {
             updatedData.searches[destinyVersion] = updatedData.searches[destinyVersion].filter(
               s => !(s.query === update.payload.query && s.type === update.payload.type)
             );
+          }
+        }
+        break;
+      case 'save_search':
+        // Handle saving/starring searches
+        if (update.payload && update.payload.type) {
+          const destinyVersion = update.payload.type.toString();
+          if (!updatedData.searches[destinyVersion]) {
+            updatedData.searches[destinyVersion] = [];
+          }
+          const searchArray = updatedData.searches[destinyVersion];
+          const searchIndex = searchArray.findIndex(s => s.query === update.payload.query && s.type === update.payload.type);
+          const currentTime = Date.now();
+          
+          if (searchIndex !== -1) {
+            // Update existing search's saved status
+            const existingSearch = searchArray[searchIndex];
+            searchArray[searchIndex] = {
+              ...existingSearch,
+              saved: update.payload.saved
+            };
+          } else {
+            // Create new search if it doesn't exist (for save_search without prior search action)
+            searchArray.push({
+              query: update.payload.query,
+              type: update.payload.type,
+              usageCount: 1,
+              lastUsage: currentTime,
+              saved: update.payload.saved
+            });
           }
         }
         break;

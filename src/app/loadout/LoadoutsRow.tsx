@@ -26,7 +26,6 @@ export default memo(function LoadoutRow({
   store: DimStore;
   saved: boolean;
   equippable: boolean;
-  onShare: (loadout: Loadout) => void;
   onSnapshotInGameLoadout: () => void;
 }) {
   const dispatch = useThunkDispatch();
@@ -46,7 +45,6 @@ export default memo(function LoadoutRow({
       dispatch(applyLoadout(store, loadout, { allowUndo: true, onlyMatchingClass: true }));
 
     const handleEdit = () => editLoadout(loadout, store.id);
-    const handleShare = () => onShare(loadout);
     const handleCopyAndEdit = () => copyAndEditLoadout(loadout, store.id);
 
     const actionButtons: ReactNode[] = [];
@@ -74,11 +72,6 @@ export default memo(function LoadoutRow({
       );
     }
 
-    actionButtons.push(
-      <button key="share" type="button" className="d2l-button" onClick={handleShare}>
-        {t('Loadouts.ShareLoadout')}
-      </button>,
-    );
 
     if (streamDeckDeepLink) {
       actionButtons.push(
@@ -114,7 +107,6 @@ export default memo(function LoadoutRow({
     dispatch,
     equippable,
     loadout,
-    onShare,
     onSnapshotInGameLoadout,
     saved,
     store,

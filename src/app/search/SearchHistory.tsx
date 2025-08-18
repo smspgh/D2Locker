@@ -116,10 +116,22 @@ export default function SearchHistory() {
           </tr>
         </thead>
         <tbody>
-          {recentSearches
-            .filter((s) => (s.usageCount || 0) > 0 || s.saved)
-            .sort(searchComparator)
-            .map((search) => (
+          {(() => {
+            const filteredSearches = recentSearches
+              .filter((s) => s.query && s.query.trim().length > 0)
+              .sort(searchComparator);
+            
+            if (filteredSearches.length === 0) {
+              return (
+                <tr>
+                  <td colSpan={4} style={{ textAlign: 'center', padding: '2rem', fontStyle: 'italic' }}>
+                    No search history found. Perform some searches to see them here.
+                  </td>
+                </tr>
+              );
+            }
+
+            return filteredSearches.map((search) => (
               <tr key={search.query}>
                 <td>
                   <button
@@ -144,7 +156,8 @@ export default function SearchHistory() {
                 </td>
                 <td>{search.query}</td>
               </tr>
-            ))}
+            ));
+          })()}
         </tbody>
       </table>
     </div>

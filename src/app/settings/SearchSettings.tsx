@@ -18,6 +18,7 @@ import { buildArmoryIndex } from 'app/search/armory-search';
 import searchBarStyles from 'app/search/SearchBar.m.scss';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { setSearchQuery, toggleSearchResults } from 'app/shell/actions';
+import { useNavigate } from 'react-router';
 
 // Autocomplete component moved outside to prevent re-creation
 const AutocompleteSearchInput = React.memo(({ 
@@ -167,6 +168,7 @@ const AutocompleteSearchInput = React.memo(({
 export default function SearchSettings({ settings }: { settings: Settings }) {
   const setSetting = useSetSetting();
   const dispatch = useThunkDispatch();
+  const navigate = useNavigate();
   // No separate state needed - we'll add rows directly to the table
   
   // Search configuration and autocomplete
@@ -275,6 +277,10 @@ export default function SearchSettings({ settings }: { settings: Settings }) {
     }
   };
 
+  const navigateToSearchHistory = () => {
+    navigate('/search-history');
+  };
+
 
   const logicOptions = [
     { value: 'AND', name: 'AND' },
@@ -294,6 +300,24 @@ export default function SearchSettings({ settings }: { settings: Settings }) {
   return (
     <section id="search-settings">
       <h2>{t('Settings.SearchSettings')}</h2>
+      
+      <div className={styles.setting}>
+        <button
+          type="button"
+          className="d2l-button"
+          onClick={navigateToSearchHistory}
+          style={{
+            marginBottom: '1rem',
+            padding: '8px 16px',
+            fontSize: '14px'
+          }}
+        >
+          🔍 View Search History
+        </button>
+        <div className={styles.fineprint}>
+          View and manage your saved searches and search history.
+        </div>
+      </div>
       
       <div className={styles.section}>
         <h3>{t('Settings.KeepWeaponSettings')}</h3>
