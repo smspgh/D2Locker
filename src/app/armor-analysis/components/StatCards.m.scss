@@ -24,7 +24,7 @@
   gap: 4px;
   margin-bottom: 16px;
   padding-bottom: 8px;
-  border-bottom: 1px solid rgba(var(--theme-border-rgb), 0.05);
+  border-bottom: 1px solid rgb(var(--theme-border-rgb), 0.05);
 }
 
 .statTitle {
@@ -64,8 +64,8 @@
 
 .statCard,
 .compactCard {
-  background: rgba(var(--theme-background-secondary-rgb), 0.2);
-  border: 1px solid rgba(var(--theme-border-rgb), 0.08);
+  background: rgb(var(--theme-background-secondary-rgb), 0.2);
+  border: 1px solid rgb(var(--theme-border-rgb), 0.08);
   color: var(--theme-text);
   padding: 16px;
   border-radius: 8px;
@@ -73,8 +73,8 @@
   position: relative;
 
   &:hover {
-    background: rgba(var(--theme-background-secondary-rgb), 0.3);
-    border-color: rgba(var(--theme-border-rgb), 0.12);
+    background: rgb(var(--theme-background-secondary-rgb), 0.3);
+    border-color: rgb(var(--theme-border-rgb), 0.12);
   }
 
   &.highlight {

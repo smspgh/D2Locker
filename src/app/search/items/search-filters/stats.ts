@@ -692,7 +692,7 @@ const statFilters: ItemFilterDefinition[] = [
       const bestItemIds = new Set<string>();
 
       for (const [slotClass, items] of Object.entries(itemsBySlotClass)) {
-        if (items.length === 0) continue;
+        if (items.length === 0) {continue;}
 
         // Sort by primary stat (descending), then by secondary stat (descending)
         const sortedItems = items.sort((a, b) => {
@@ -753,13 +753,13 @@ const statFilters: ItemFilterDefinition[] = [
       } else {
         // For perks not in our mapping, use smart defaults based on perk name
         if (filterValue.toLowerCase().includes('brawler')) {
-          primaryStatHash = displayStatToHashMap['Melee'];
-          secondaryStatHash = displayStatToHashMap['Health'];
+          primaryStatHash = displayStatToHashMap.Melee;
+          secondaryStatHash = displayStatToHashMap.Health;
           console.log(`Using Brawler defaults: Melee=${primaryStatHash}, Health=${secondaryStatHash}`);
         } else {
           // Default fallback - optimize for Health and Melee
-          primaryStatHash = displayStatToHashMap['Health'];
-          secondaryStatHash = displayStatToHashMap['Melee'];
+          primaryStatHash = displayStatToHashMap.Health;
+          secondaryStatHash = displayStatToHashMap.Melee;
           console.log(`Using default stats: Health=${primaryStatHash}, Melee=${secondaryStatHash}`);
         }
       }
@@ -810,7 +810,7 @@ const statFilters: ItemFilterDefinition[] = [
       const bestItemIds = new Set<string>();
 
       for (const [slotClass, items] of Object.entries(itemsBySlotClass)) {
-        if (items.length === 0) continue;
+        if (items.length === 0) {continue;}
 
         console.log(`Processing ${items.length} items for slot ${slotClass}`);
 

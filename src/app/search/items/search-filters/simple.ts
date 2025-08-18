@@ -383,9 +383,7 @@ const simpleFilters: ItemFilterDefinition[] = [
       } catch (error) {
         console.warn('Error building junk filter:', error);
         // Fallback: return items that are weapons or armor
-        return (item: DimItem) => {
-          return item.bucket?.sort === 'Weapons' || item.bucket.inArmor;
-        };
+        return (item: DimItem) => item.bucket?.sort === 'Weapons' || item.bucket.inArmor;
       }
     },
   },
@@ -404,11 +402,11 @@ const simpleFilters: ItemFilterDefinition[] = [
       const armorDupes = computeArmorDupesByClassTypeTier(armorItems);
       const armorDupesSorted = sortDupesBest(armorDupes, getTag, customStats);
 
-      return (item: DimItem) => {
+      return (item: DimItem) => 
         // This is just a placeholder implementation
         // You can add actual keep logic here if needed
-        return false;
-      };
+         false
+      ;
     },
   },
 ];

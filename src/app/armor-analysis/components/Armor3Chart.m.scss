@@ -113,13 +113,13 @@
   height: 400px;
   margin-bottom: 20px;
   
-  canvas {
-    max-height: 100%;
-  }
-  
   @include phone-portrait {
     height: 300px;
     margin-bottom: 12px;
+  }
+  
+  canvas {
+    max-height: 100%;
   }
 }
 

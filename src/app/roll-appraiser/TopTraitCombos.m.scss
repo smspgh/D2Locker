@@ -1,8 +1,8 @@
 .topTraitCombos {
   margin-bottom: 16px;
-  background: rgba(255, 255, 255, 0.03);
+  background: rgb(255, 255, 255, 0.03);
   border-radius: 4px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid rgb(255, 255, 255, 0.1);
   overflow: hidden;
 }
 
@@ -17,11 +17,11 @@
   transition: background-color 0.2s ease;
   
   &:hover {
-    background: rgba(255, 255, 255, 0.05);
+    background: rgb(255, 255, 255, 0.05);
   }
   
   &:focus {
-    outline: 2px solid rgba(255, 255, 255, 0.3);
+    outline: 2px solid rgb(255, 255, 255, 0.3);
     outline-offset: -2px;
   }
 }
@@ -60,7 +60,7 @@
   gap: 12px;
   padding: 8px 12px;
   border-radius: 4px;
-  background: rgba(255, 255, 255, 0.05);
+  background: rgb(255, 255, 255, 0.05);
   border-left: 3px solid;
   font-size: 12px;
 }

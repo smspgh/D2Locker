@@ -12,18 +12,18 @@
   align-items: center;
   margin-bottom: 16px;
 
+  @include phone-portrait {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
   label {
     font-size: 13px;
     font-weight: 500;
     color: var(--theme-text);
     text-transform: none;
     letter-spacing: 0;
-  }
-
-  @include phone-portrait {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 8px;
   }
 }
 
@@ -42,27 +42,27 @@
   overflow-x: auto;
   padding-bottom: 8px;
 
+  @include phone-portrait {
+    flex-direction: column;
+    gap: 16px;
+  }
+
   &::-webkit-scrollbar {
     height: 4px;
   }
 
   &::-webkit-scrollbar-track {
-    background: rgba(var(--theme-border-rgb), 0.05);
+    background: rgb(var(--theme-border-rgb), 0.05);
     border-radius: 2px;
   }
 
   &::-webkit-scrollbar-thumb {
-    background: rgba(var(--theme-border-rgb), 0.2);
+    background: rgb(var(--theme-border-rgb), 0.2);
     border-radius: 2px;
 
     &:hover {
-      background: rgba(var(--theme-border-rgb), 0.3);
+      background: rgb(var(--theme-border-rgb), 0.3);
     }
-  }
-
-  @include phone-portrait {
-    flex-direction: column;
-    gap: 16px;
   }
 }
 
@@ -84,7 +84,7 @@
   text-transform: none;
   letter-spacing: 0;
   padding-bottom: 4px;
-  border-bottom: 1px solid rgba(var(--theme-border-rgb), 0.05);
+  border-bottom: 1px solid rgb(var(--theme-border-rgb), 0.05);
 }
 
 .statButtons {
@@ -95,7 +95,7 @@
 
 .statButton {
   background: transparent;
-  border: 1px solid rgba(var(--theme-border-rgb), 0.1);
+  border: 1px solid rgb(var(--theme-border-rgb), 0.1);
   color: var(--theme-text);
   padding: 10px 12px;
   border-radius: 6px;
@@ -109,9 +109,13 @@
   text-align: left;
   min-height: 48px;
 
+  @include phone-portrait {
+    padding: 10px 12px;
+  }
+
   &:hover {
-    background: rgba(var(--theme-background-secondary-rgb), 0.3);
-    border-color: rgba(var(--theme-border-rgb), 0.2);
+    background: rgb(var(--theme-background-secondary-rgb), 0.3);
+    border-color: rgb(var(--theme-border-rgb), 0.2);
   }
 
   &:active {
@@ -139,10 +143,6 @@
 
   &.absolute {
     border-left: 3px solid rgba($void, 0.5);
-  }
-
-  @include phone-portrait {
-    padding: 10px 12px;
   }
 }
 

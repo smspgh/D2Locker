@@ -1,8 +1,8 @@
 @use '../../variables' as *;
 
 .chartControls {
-  background: rgba(var(--theme-background-secondary-rgb), 0.2);
-  border: 1px solid rgba(var(--theme-border-rgb), 0.08);
+  background: rgb(var(--theme-background-secondary-rgb), 0.2);
+  border: 1px solid rgb(var(--theme-border-rgb), 0.08);
   border-radius: 8px;
   padding: 16px;
   margin-bottom: 16px;
@@ -78,13 +78,13 @@
   input[type="range"] {
     flex: 1;
     height: 4px;
-    background: rgba(var(--theme-border-rgb), 0.1);
+    background: rgb(var(--theme-border-rgb), 0.1);
     border-radius: 2px;
     outline: none;
-    -webkit-appearance: none;
+    appearance: none;
 
     &::-webkit-slider-thumb {
-      -webkit-appearance: none;
+      appearance: none;
       appearance: none;
       width: 16px;
       height: 16px;
@@ -131,7 +131,7 @@
 .toggle,
 .toggleButton {
   background: transparent;
-  border: 1px solid rgba(var(--theme-border-rgb), 0.1);
+  border: 1px solid rgb(var(--theme-border-rgb), 0.1);
   color: var(--theme-text-muted);
   padding: 6px 12px;
   border-radius: 4px;
@@ -141,8 +141,8 @@
   font-weight: 400;
 
   &:hover {
-    background: rgba(var(--theme-background-secondary-rgb), 0.3);
-    border-color: rgba(var(--theme-border-rgb), 0.2);
+    background: rgb(var(--theme-background-secondary-rgb), 0.3);
+    border-color: rgb(var(--theme-border-rgb), 0.2);
     color: var(--theme-text);
   }
 
@@ -161,7 +161,7 @@
 
 .compareToggle {
   background: transparent;
-  border: 1px solid rgba(var(--theme-border-rgb), 0.1);
+  border: 1px solid rgb(var(--theme-border-rgb), 0.1);
   color: var(--theme-text);
   padding: 8px 16px;
   border-radius: 6px;
@@ -174,8 +174,8 @@
   gap: 8px;
 
   &:hover {
-    background: rgba(var(--theme-background-secondary-rgb), 0.3);
-    border-color: rgba(var(--theme-border-rgb), 0.2);
+    background: rgb(var(--theme-background-secondary-rgb), 0.3);
+    border-color: rgb(var(--theme-border-rgb), 0.2);
   }
 
   &.active {

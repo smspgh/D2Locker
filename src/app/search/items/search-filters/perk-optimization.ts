@@ -17,7 +17,7 @@ const perkOptimizationFilter: ItemFilterDefinition = {
   filter: ({ filterValue, allItems, language, d2Definitions }) => {
     console.log('🔥 bestforperk filter called with:', filterValue);
     console.log('🔥 allItems count:', allItems.length);
-    console.log('🔥 d2Definitions:', !!d2Definitions);
+    console.log('🔥 d2Definitions:', Boolean(d2Definitions));
     
     // Get the stat hashes for this perk, or use defaults if not in our mapping
     let primaryStatHash: number;
@@ -32,12 +32,12 @@ const perkOptimizationFilter: ItemFilterDefinition = {
       // You can expand this logic based on actual perk names you discover
       if (filterValue.toLowerCase().includes('brawler')) {
         // Brawler perks should optimize for Melee (primary) and Health (secondary)
-        primaryStatHash = displayStatToHashMap['Melee'];
-        secondaryStatHash = displayStatToHashMap['Health'];
+        primaryStatHash = displayStatToHashMap.Melee;
+        secondaryStatHash = displayStatToHashMap.Health;
       } else {
         // Default fallback - optimize for Health and Melee
-        primaryStatHash = displayStatToHashMap['Health'];
-        secondaryStatHash = displayStatToHashMap['Melee'];
+        primaryStatHash = displayStatToHashMap.Health;
+        secondaryStatHash = displayStatToHashMap.Melee;
       }
     }
 
@@ -76,7 +76,7 @@ const perkOptimizationFilter: ItemFilterDefinition = {
     const bestItemIds = new Set<string>();
 
     for (const [slotClass, items] of Object.entries(itemsBySlotClass)) {
-      if (items.length === 0) continue;
+      if (items.length === 0) {continue;}
 
       // Sort by primary stat (descending), then by secondary stat (descending)
       const sortedItems = items.sort((a, b) => {

@@ -42,7 +42,7 @@ const AutocompleteSearchInput = React.memo(({
   }, [value]);
   
   const suggestions = useMemo(() => {
-    if (!localValue.trim()) return [];
+    if (!localValue.trim()) {return [];}
     try {
       const result = autocompleter(
         localValue,           // query
@@ -178,13 +178,11 @@ export default function SearchSettings({ settings }: { settings: Settings }) {
   
   const armoryIndex = useMemo(() => buildArmoryIndex(d2Manifest, language), [d2Manifest, language]);
   
-  const autocompleter = useMemo(() => {
-    return createAutocompleter(searchConfig, armoryIndex);
-  }, [searchConfig, armoryIndex]);
+  const autocompleter = useMemo(() => createAutocompleter(searchConfig, armoryIndex), [searchConfig, armoryIndex]);
   
   // Get weapon/armor counts for search terms
   const getWeaponCount = useCallback((searchTerm: string) => {
-    if (!searchTerm.trim()) return 0;
+    if (!searchTerm.trim()) {return 0;}
     try {
       const searchFilter = filterFactory(searchTerm);
       return allItems.filter(item => item.bucket?.sort === 'Weapons' && searchFilter(item)).length;
@@ -194,7 +192,7 @@ export default function SearchSettings({ settings }: { settings: Settings }) {
   }, [filterFactory, allItems]);
   
   const getArmorCount = useCallback((searchTerm: string) => {
-    if (!searchTerm.trim()) return 0;
+    if (!searchTerm.trim()) {return 0;}
     try {
       const searchFilter = filterFactory(searchTerm);
       return allItems.filter(item => item.bucket.inArmor && searchFilter(item)).length;
@@ -348,7 +346,7 @@ export default function SearchSettings({ settings }: { settings: Settings }) {
                         <th style={{ textAlign: 'center', padding: '8px 4px', minWidth: '60px' }}>Group</th>
                         <th style={{ textAlign: 'center', padding: '8px 4px', minWidth: '70px' }}>Logic</th>
                         <th style={{ textAlign: 'center', padding: '8px 4px', minWidth: '60px' }}>Results</th>
-                        <th style={{ textAlign: 'center', padding: '8px 4px', minWidth: '30px' }}></th>
+                        <th style={{ textAlign: 'center', padding: '8px 4px', minWidth: '30px' }} />
                       </tr>
                     </thead>
                     <tbody>
@@ -518,7 +516,7 @@ export default function SearchSettings({ settings }: { settings: Settings }) {
                         <th style={{ textAlign: 'center', padding: '8px 4px', minWidth: '60px' }}>Group</th>
                         <th style={{ textAlign: 'center', padding: '8px 4px', minWidth: '70px' }}>Logic</th>
                         <th style={{ textAlign: 'center', padding: '8px 4px', minWidth: '60px' }}>Results</th>
-                        <th style={{ textAlign: 'center', padding: '8px 4px', minWidth: '30px' }}></th>
+                        <th style={{ textAlign: 'center', padding: '8px 4px', minWidth: '30px' }} />
                       </tr>
                     </thead>
                     <tbody>
