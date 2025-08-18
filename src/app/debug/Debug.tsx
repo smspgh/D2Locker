@@ -1,7 +1,7 @@
 import Account from 'app/accounts/Account';
 import { accountsSelector, currentAccountSelector } from 'app/accounts/selectors';
 import { BungieError, HttpStatusError } from 'app/bungie-api/http-client';
-import { Token, getToken } from 'app/bungie-api/oauth-tokens';
+import { getToken, Token } from 'app/bungie-api/oauth-tokens';
 import { clarityCharacterStatsSelector, clarityDescriptionsSelector } from 'app/clarity/selectors';
 import { DimAuthToken, getToken as getDimApiToken } from 'app/d2l-api/d2l-api-helper';
 import {

@@ -438,7 +438,8 @@ function doApplyLoadout(
       // Group dequips per character
       const dequips = Object.entries(Object.groupBy(realItemsToDequip, (i) => i.owner)).map(
         async ([owner, dequipItems]) => {
-          if (!dequipItems) { // Add null check for dequipItems
+          if (!dequipItems) {
+            // Add null check for dequipItems
             return;
           }
           // If there's only one item to remove, we don't need to bulk dequip, it'll be handled
@@ -811,19 +812,20 @@ function clearSpaceAfterLoadout(
     [store.id]: {},
   };
 
-    const itemsToRemove: DimItem[] = [];
+  const itemsToRemove: DimItem[] = [];
 
-    for (const [bucketHash, loadoutItems] of itemsByType.entries()) {
-      if (!loadoutItems) { // Add null check for loadoutItems
-        continue;
-      }
-      // Only clear the buckets that were selected by the user
-      if (
-        !(clearArmor && D2Categories.Armor.includes(bucketHash)) &&
-        !(clearWeapons && D2Categories.Weapons.includes(bucketHash))
-      ) {
-        continue;
-      }
+  for (const [bucketHash, loadoutItems] of itemsByType.entries()) {
+    if (!loadoutItems) {
+      // Add null check for loadoutItems
+      continue;
+    }
+    // Only clear the buckets that were selected by the user
+    if (
+      !(clearArmor && D2Categories.Armor.includes(bucketHash)) &&
+      !(clearWeapons && D2Categories.Weapons.includes(bucketHash))
+    ) {
+      continue;
+    }
 
     let numUnequippedLoadoutItems = 0;
     for (const existingItem of findItemsByBucket(store, bucketHash)) {

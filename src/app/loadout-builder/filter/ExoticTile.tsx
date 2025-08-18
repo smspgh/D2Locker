@@ -1,5 +1,5 @@
-import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { TileGridTile } from 'app/d2l-ui/TileGrid';
+import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { t } from 'app/i18next-t';
 import { DefItemIcon } from 'app/inventory/ItemIcon';
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';

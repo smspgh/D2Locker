@@ -120,11 +120,14 @@ export default function SearchHistory() {
             const filteredSearches = recentSearches
               .filter((s) => s.query && s.query.trim().length > 0)
               .sort(searchComparator);
-            
+
             if (filteredSearches.length === 0) {
               return (
                 <tr>
-                  <td colSpan={4} style={{ textAlign: 'center', padding: '2rem', fontStyle: 'italic' }}>
+                  <td
+                    colSpan={4}
+                    style={{ textAlign: 'center', padding: '2rem', fontStyle: 'italic' }}
+                  >
                     No search history found. Perform some searches to see them here.
                   </td>
                 </tr>

@@ -28,10 +28,7 @@ import { safariTouchFix } from './app/safari-touch-fix';
 import { createWishlistObserver } from './app/wishlists/observers';
 import { observe } from 'app/store/observerMiddleware';
 import { setEnvironmentApiKeys } from 'app/developer/developer-utils'; // Import the new utility
-infoLog(
-  'app',
-  `D2L v${$D2L_VERSION} (${$D2L_FLAVOR}) - The Shire`,
-);
+infoLog('app', `D2L v${$D2L_VERSION} (${$D2L_FLAVOR}) - The Shire`);
 
 initGoogleAnalytics();
 safariTouchFix();
@@ -96,9 +93,12 @@ const i18nPromise = initi18n();
 // Enable Hot Module Replacement
 if (module.hot) {
   module.hot.accept('./app/Root', () => {
-    const NextRoot = require('./app/Root').default;
-    const root = createRoot(document.getElementById('app')!);
-    root.render(<NextRoot />);
+    // Re-import the Root component dynamically
+    import('./app/Root').then((module) => {
+      const NextRoot = module.default;
+      const root = createRoot(document.getElementById('app')!);
+      root.render(<NextRoot />);
+    });
   });
 
   // Accept the module itself

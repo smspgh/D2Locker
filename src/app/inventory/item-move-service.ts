@@ -1,4 +1,3 @@
-import { startSpan } from '../utils/sentry';
 import { handleAuthErrors } from 'app/accounts/actions';
 import { currentAccountSelector } from 'app/accounts/selectors';
 import { t } from 'app/i18next-t';
@@ -37,6 +36,7 @@ import {
   compareByIndex,
   reverseComparator,
 } from '../utils/comparators';
+import { startSpan } from '../utils/sentry';
 import { itemLockStateChanged, itemMoved } from './actions';
 import { notifyOtherTabsItemMoved } from './cross-tab';
 import {

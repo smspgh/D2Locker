@@ -72,7 +72,6 @@ self.addEventListener('message', (event) => {
 
   switch (event.data) {
     case 'skipWaiting':
-
       globalWorker.skipWaiting();
       break;
     default:

@@ -96,7 +96,6 @@ function profileAge(profileMintedDate: Date) {
   return profileMintedDate.getTime() === 0 ? undefined : Date.now() - profileMintedDate.getTime();
 }
 
-
 function RefreshButtonTooltip({ autoRefresh }: { autoRefresh: boolean }) {
   const profileAge = useProfileAge();
   const profileError = useSelector(profileErrorSelector);

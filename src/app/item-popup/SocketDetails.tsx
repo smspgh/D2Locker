@@ -1,8 +1,8 @@
-import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { languageSelector } from 'app/d2l-api/selectors';
 import BungieImage from 'app/d2l-ui/BungieImage';
 import { EnergyCostIcon } from 'app/d2l-ui/ElementIcon';
 import Sheet from 'app/d2l-ui/Sheet';
+import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { t } from 'app/i18next-t';
 import { DefItemIcon } from 'app/inventory/ItemIcon';
 import { DimItem, DimSocket, PluggableInventoryItemDefinition } from 'app/inventory/item-types';

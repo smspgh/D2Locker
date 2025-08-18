@@ -1,4 +1,3 @@
-import { startSpan } from '../utils/sentry';
 import { settingSelector } from 'app/d2l-api/selectors';
 import { t } from 'app/i18next-t';
 import { ShowItemPickerFn } from 'app/item-picker/item-picker';
@@ -15,7 +14,7 @@ import { PlatformErrorCodes } from 'bungie-api-ts/destiny2';
 import { showNotification } from '../notifications/notifications';
 import { loadingTracker } from '../shell/loading-tracker';
 import { queueAction } from '../utils/action-queue';
-import { reportException } from '../utils/sentry';
+import { reportException, startSpan } from '../utils/sentry';
 import { moveItemNotification } from './MoveNotifications';
 import { updateCharacters } from './d2-stores';
 import { InventoryBucket } from './inventory-buckets';

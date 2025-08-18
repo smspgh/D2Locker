@@ -8,8 +8,8 @@ import { getToken } from 'app/bungie-api/oauth-tokens';
 import { t } from 'app/i18next-t';
 import { showNotification } from 'app/notifications/notifications';
 import { readyResolve } from 'app/settings/settings';
-import { refresh$ } from 'app/shell/refresh-events';
 import { loadingTracker } from 'app/shell/loading-tracker';
+import { refresh$ } from 'app/shell/refresh-events';
 import { get, set } from 'app/storage/idb-keyval';
 import { observe } from 'app/store/observerMiddleware';
 import { RootState, ThunkResult } from 'app/store/types';
@@ -85,11 +85,11 @@ const installObservers = once((dispatch: ThunkDispatch<RootState, undefined, Any
         ({ previous, current }: { previous: DimApiState | undefined; current: DimApiState }) => {
           if (
             // Check to make sure one of the fields we care about has changed
-            (!deepEqual(current.settings, previous?.settings) ||
-              !deepEqual(current.profiles, previous?.profiles) ||
-              !deepEqual(current.updateQueue, previous?.updateQueue) ||
-              !deepEqual(current.itemHashTags, previous?.itemHashTags) ||
-              !deepEqual(current.searches, previous?.searches))
+            !deepEqual(current.settings, previous?.settings) ||
+            !deepEqual(current.profiles, previous?.profiles) ||
+            !deepEqual(current.updateQueue, previous?.updateQueue) ||
+            !deepEqual(current.itemHashTags, previous?.itemHashTags) ||
+            !deepEqual(current.searches, previous?.searches)
           ) {
             const savedState: ProfileIndexedDBState = {
               settings: current.settings, // Save the entire current settings object
@@ -150,7 +150,9 @@ const installObservers = once((dispatch: ThunkDispatch<RootState, undefined, Any
 
         if (apiPermissionGranted) {
           // Use different sync intervals based on device type to avoid overwhelming mobile connections
-          const isMobile = /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+          const isMobile = /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+            navigator.userAgent,
+          );
           const syncInterval = isMobile ? 120 * 1000 : 60 * 1000; // 2 minutes on mobile, 1 minute on desktop
 
           periodicSyncInterval = window.setInterval(() => {
@@ -337,9 +339,14 @@ export function loadDimApiData(
 
         // Wait, with exponential backoff - use longer backoff on mobile to avoid overwhelming connections
         getProfileBackoff++;
-        const isMobile = /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+        const isMobile = /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+          navigator.userAgent,
+        );
         const baseBackoff = isMobile ? 60_000 : 30_000; // 1 minute base on mobile, 30 seconds on desktop
-        const waitTime = Math.max(10_000, Math.min(10 * 60 * 1000, Math.random() * Math.pow(2, getProfileBackoff) * baseBackoff));
+        const waitTime = Math.max(
+          10_000,
+          Math.min(10 * 60 * 1000, Math.random() * Math.pow(2, getProfileBackoff) * baseBackoff),
+        );
         infoLog(TAG, 'Waiting', waitTime, 'ms before re-attempting profile fetch');
 
         // Wait, then retry. We don't await this here so we don't stop the finally block from running
@@ -416,7 +423,8 @@ function flushUpdates(): ThunkResult {
 
       const results = await postUpdates(
         firstWithAccount.platformMembershipId,
-        firstWithAccount.destinyVersion || parseInt($DEFAULT_DESTINY_VERSION, 10) as DestinyVersion,
+        firstWithAccount.destinyVersion ||
+          (parseInt($DEFAULT_DESTINY_VERSION, 10) as DestinyVersion),
         updates,
       );
 
@@ -426,7 +434,10 @@ function flushUpdates(): ThunkResult {
       dispatch(finishedUpdates(results));
 
       // Notify other tabs/windows that settings have been updated
-      if (syncChannel && updates.some((update: ProfileUpdateWithRollback) => update.action === 'setting')) {
+      if (
+        syncChannel &&
+        updates.some((update: ProfileUpdateWithRollback) => update.action === 'setting')
+      ) {
         syncChannel.postMessage({ type: 'settings-updated' });
       }
 

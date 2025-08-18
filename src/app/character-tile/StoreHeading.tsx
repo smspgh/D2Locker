@@ -50,7 +50,5 @@ export default function StoreHeading({
     }
   };
 
-  return (
-    <CharacterHeader store={store} onClick={openCharacterTile} />
-  );
+  return <CharacterHeader store={store} onClick={openCharacterTile} />;
 }

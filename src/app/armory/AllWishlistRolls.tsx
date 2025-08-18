@@ -139,7 +139,8 @@ function WishlistRolls({
                 // turns the above into
                 // [[outlaw, enhanced outlaw], [rampage]]
                 const primaryBundles = cr.rolls[0].primarySocketIndices.map((socketIndex) =>
-                  (primariesGroupedByColumn[socketIndex ?? -1] || []).sort( // Added || []
+                  (primariesGroupedByColumn[socketIndex ?? -1] || []).sort(
+                    // Added || []
                     // establish a consistent base -> enhanced perk order
                     compareBy((h) => (h in enhancedToPerk ? 1 : 0)),
                   ),

@@ -1,6 +1,6 @@
-import { D1StatHashes } from 'app/destiny1/d1-manifest-types';
 import BungieImage from 'app/d2l-ui/BungieImage';
 import { PressTip } from 'app/d2l-ui/PressTip';
+import { D1StatHashes } from 'app/destiny1/d1-manifest-types';
 import { t } from 'app/i18next-t';
 import type { DimCharacterStat, DimStore } from 'app/inventory/store-types';
 import { findItemsByBucket } from 'app/inventory/stores-helpers';

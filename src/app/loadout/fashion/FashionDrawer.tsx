@@ -1,8 +1,8 @@
 import { LoadoutParameters } from '@destinyitemmanager/dim-api-types';
-import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import ClosableContainer from 'app/d2l-ui/ClosableContainer';
 import { PressTip } from 'app/d2l-ui/PressTip';
 import Sheet from 'app/d2l-ui/Sheet';
+import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { t } from 'app/i18next-t';
 import ConnectedInventoryItem from 'app/inventory/ConnectedInventoryItem';
 import { DefItemIcon } from 'app/inventory/ItemIcon';
@@ -179,7 +179,10 @@ export default function FashionDrawer({
     const shaders = Object.values(modsByBucket).flat().filter(isShader);
 
     const groupedShaders = Object.groupBy(shaders, (h) => h);
-    const mostCommonShaders = maxBy(Object.values(groupedShaders), (shaders) => shaders?.length || 0);
+    const mostCommonShaders = maxBy(
+      Object.values(groupedShaders),
+      (shaders) => shaders?.length || 0,
+    );
     if (!mostCommonShaders) {
       return;
     }

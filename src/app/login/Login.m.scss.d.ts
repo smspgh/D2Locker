@@ -3,12 +3,6 @@
 interface CssExports {
   'auth': string;
   'billboard': string;
-  'd2lSync': string;
-  'd2lSyncCheckbox': string;
-  'explanation': string;
-  'fineprint': string;
-  'section': string;
-  'warning': string;
 }
 export const cssExports: CssExports;
 export default cssExports;

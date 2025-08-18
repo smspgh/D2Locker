@@ -173,16 +173,17 @@ function ApplyLoadoutProgressBody({
 
       {!isEmpty(groupedItemErrors) && (
         <div className={styles.errorList}>
-          {Object.values(groupedItemErrors).map((errorStates) => (
-            errorStates && (
-              <div key={errorStates[0].item.index}>
-                <b>{t('Loadouts.ItemErrorSummary', { count: errorStates.length })}</b>{' '}
-                {errorStates[0].error instanceof DimError && errorStates[0].error.cause
-                  ? errorStates[0].error.cause.message
-                  : (errorStates[0].error?.message ?? 'Unknown')}
-              </div>
-            )
-          ))}
+          {Object.values(groupedItemErrors).map(
+            (errorStates) =>
+              errorStates && (
+                <div key={errorStates[0].item.index}>
+                  <b>{t('Loadouts.ItemErrorSummary', { count: errorStates.length })}</b>{' '}
+                  {errorStates[0].error instanceof DimError && errorStates[0].error.cause
+                    ? errorStates[0].error.cause.message
+                    : (errorStates[0].error?.message ?? 'Unknown')}
+                </div>
+              ),
+          )}
         </div>
       )}
 
@@ -225,16 +226,17 @@ function ApplyLoadoutProgressBody({
 
       {!isEmpty(groupedModErrors) && (
         <div className={styles.errorList}>
-          {Object.values(groupedModErrors).map((errorStates) => (
-            errorStates && (
-              <div key={errorStates[0].modHash}>
-                <b>{t('Loadouts.ModErrorSummary', { count: errorStates.length })}</b>{' '}
-                {errorStates[0].error instanceof DimError && errorStates[0].error.cause
-                  ? errorStates[0].error.cause.message
-                  : (errorStates[0].error?.message ?? 'Unknown')}
-              </div>
-            )
-          ))}
+          {Object.values(groupedModErrors).map(
+            (errorStates) =>
+              errorStates && (
+                <div key={errorStates[0].modHash}>
+                  <b>{t('Loadouts.ModErrorSummary', { count: errorStates.length })}</b>{' '}
+                  {errorStates[0].error instanceof DimError && errorStates[0].error.cause
+                    ? errorStates[0].error.cause.message
+                    : (errorStates[0].error?.message ?? 'Unknown')}
+                </div>
+              ),
+          )}
         </div>
       )}
     </>

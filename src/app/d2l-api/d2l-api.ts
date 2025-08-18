@@ -18,13 +18,11 @@ import { DestinyAccount } from 'app/accounts/destiny-account';
 import { authenticatedApi, unauthenticatedApi } from './d2l-api-helper';
 
 export async function getGlobalSettings() {
-  const response = await unauthenticatedApi<PlatformInfoResponse>(
-    {
-      // This uses "app" instead of "release" because I misremembered it when implementing the server
-      url: `/platform_info?flavor=${$D2L_FLAVOR === 'release' ? 'app' : $D2L_FLAVOR}`,
-      method: 'GET',
-    },
-  );
+  const response = await unauthenticatedApi<PlatformInfoResponse>({
+    // This uses "app" instead of "release" because I misremembered it when implementing the server
+    url: `/platform_info?flavor=${$D2L_FLAVOR === 'release' ? 'app' : $D2L_FLAVOR}`,
+    method: 'GET',
+  });
   return response.settings;
 }
 

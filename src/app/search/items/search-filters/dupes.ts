@@ -41,82 +41,95 @@ export const sortDupes = (
   sortType: 'power' | 'combo' | 'dupebest' = 'power',
 ) => {
   // The comparator for sorting dupes - the first item will be the "best" and all others are "dupelower".
-  const dupeComparator = sortType === 'dupebest'
-    ? chainComparator<DimItem>(
-        // 1. Best Combo Rank (for weapons) - lower rank numbers are better
-        compareBy((item) => {
-          if (item.bucket.inWeapons && item.sockets) {
-            const utils = getRollAppraiserUtilsSync();
-            if (!utils) {return Number.MAX_SAFE_INTEGER;} // No data = worst
+  const dupeComparator =
+    sortType === 'dupebest'
+      ? chainComparator<DimItem>(
+          // 1. Best Combo Rank (for weapons) - lower rank numbers are better
+          compareBy((item) => {
+            if (item.bucket.inWeapons && item.sockets) {
+              const utils = getRollAppraiserUtilsSync();
+              if (!utils) {
+                return Number.MAX_SAFE_INTEGER;
+              } // No data = worst
 
-            const traitPerks = getSocketsByType(item, 'traits');
-            if (traitPerks.length >= 2) {
-              const perk4Hash = traitPerks[0]?.plugged?.plugDef.hash;
-              const perk5Hash = traitPerks[1]?.plugged?.plugDef.hash;
+              const traitPerks = getSocketsByType(item, 'traits');
+              if (traitPerks.length >= 2) {
+                const perk4Hash = traitPerks[0]?.plugged?.plugDef.hash;
+                const perk5Hash = traitPerks[1]?.plugged?.plugDef.hash;
 
-              if (perk4Hash && perk5Hash) {
-                const comboRank = utils.getTraitComboRank(item.hash.toString(), perk4Hash, perk5Hash);
-                if (comboRank) {
-                  // Return the rank directly - lower numbers are better
-                  return comboRank.rank;
+                if (perk4Hash && perk5Hash) {
+                  const comboRank = utils.getTraitComboRank(
+                    item.hash.toString(),
+                    perk4Hash,
+                    perk5Hash,
+                  );
+                  if (comboRank) {
+                    // Return the rank directly - lower numbers are better
+                    return comboRank.rank;
+                  }
                 }
               }
             }
-          }
-          return Number.MAX_SAFE_INTEGER; // Non-weapons or items without combo data go last
-        }),
-        // 2. Highest Power - higher is better, so negate to sort descending
-        compareBy((item) => -item.power),
-        // 3. Tag priority - true (has tag) is better, so negate
-        compareBy((item) => {
-          const tag = getTag(item);
-          return !(tag && notableTags.includes(tag));
-        }),
-        // 4. Masterwork status - true is better, so negate
-        compareBy((item) => !item.masterwork),
-        // 5. Lock status - true is better, so negate
-        compareBy((item) => !item.locked),
-        // 6. Item ID tiebreaker
-        compareBy((i) => i.id),
-      )
-    : reverseComparator(
-        chainComparator<DimItem>(
-          // primary comparison based on sort type
-          sortType === 'combo'
-            ? compareBy((item) => {
-                // For weapons, use combo rank (lower rank number = better, so higher rank numbers should be "dupelower")
-                if (item.bucket.inWeapons && item.sockets) {
-                  const utils = getRollAppraiserUtilsSync();
-                  if (!utils) {return -item.power;} // Fallback to power if no roll appraiser data
+            return Number.MAX_SAFE_INTEGER; // Non-weapons or items without combo data go last
+          }),
+          // 2. Highest Power - higher is better, so negate to sort descending
+          compareBy((item) => -item.power),
+          // 3. Tag priority - true (has tag) is better, so negate
+          compareBy((item) => {
+            const tag = getTag(item);
+            return !(tag && notableTags.includes(tag));
+          }),
+          // 4. Masterwork status - true is better, so negate
+          compareBy((item) => !item.masterwork),
+          // 5. Lock status - true is better, so negate
+          compareBy((item) => !item.locked),
+          // 6. Item ID tiebreaker
+          compareBy((i) => i.id),
+        )
+      : reverseComparator(
+          chainComparator<DimItem>(
+            // primary comparison based on sort type
+            sortType === 'combo'
+              ? compareBy((item) => {
+                  // For weapons, use combo rank (lower rank number = better, so higher rank numbers should be "dupelower")
+                  if (item.bucket.inWeapons && item.sockets) {
+                    const utils = getRollAppraiserUtilsSync();
+                    if (!utils) {
+                      return -item.power;
+                    } // Fallback to power if no roll appraiser data
 
-                  const traitPerks = getSocketsByType(item, 'traits');
-                  if (traitPerks.length >= 2) {
-                    const perk4Hash = traitPerks[0]?.plugged?.plugDef.hash;
-                    const perk5Hash = traitPerks[1]?.plugged?.plugDef.hash;
+                    const traitPerks = getSocketsByType(item, 'traits');
+                    if (traitPerks.length >= 2) {
+                      const perk4Hash = traitPerks[0]?.plugged?.plugDef.hash;
+                      const perk5Hash = traitPerks[1]?.plugged?.plugDef.hash;
 
-                    if (perk4Hash && perk5Hash) {
-                      const comboRank = utils.getTraitComboRank(item.hash.toString(), perk4Hash, perk5Hash);
-                      if (comboRank) {
-                        // Return negative rank so lower rank numbers (better combos) sort first
-                        // This means higher rank numbers (worse combos) will be considered "dupelower"
-                        return -comboRank.rank;
+                      if (perk4Hash && perk5Hash) {
+                        const comboRank = utils.getTraitComboRank(
+                          item.hash.toString(),
+                          perk4Hash,
+                          perk5Hash,
+                        );
+                        if (comboRank) {
+                          // Return negative rank so lower rank numbers (better combos) sort first
+                          // This means higher rank numbers (worse combos) will be considered "dupelower"
+                          return -comboRank.rank;
+                        }
                       }
                     }
                   }
-                }
-                // Fallback to power for non-weapons or items without combo data
-                return -item.power;
-              })
-            : compareBy((item) => item.power),
-          compareBy((item) => {
-            const tag = getTag(item);
-            return Boolean(tag && notableTags.includes(tag));
-          }),
-          compareBy((item) => item.masterwork),
-          compareBy((item) => item.locked),
-          compareBy((i) => i.id), // tiebreak by ID
-        ),
-      );
+                  // Fallback to power for non-weapons or items without combo data
+                  return -item.power;
+                })
+              : compareBy((item) => item.power),
+            compareBy((item) => {
+              const tag = getTag(item);
+              return Boolean(tag && notableTags.includes(tag));
+            }),
+            compareBy((item) => item.masterwork),
+            compareBy((item) => item.locked),
+            compareBy((i) => i.id), // tiebreak by ID
+          ),
+        );
 
   for (const dupeList of Object.values(dupes)) {
     if (dupeList.length > 1) {
@@ -147,7 +160,7 @@ export const sortDupesBest = (
         let highestCustomStatValue = 0;
         for (const customStat of customStats) {
           if (isClassCompatible(customStat.class, item.classType)) {
-            const stat = item.stats?.find(s => s.statHash === customStat.statHash);
+            const stat = item.stats?.find((s) => s.statHash === customStat.statHash);
             if (stat && stat.value > highestCustomStatValue) {
               highestCustomStatValue = stat.value;
             }
@@ -162,7 +175,9 @@ export const sortDupesBest = (
     compareBy((item) => {
       if (item.bucket.inWeapons && item.sockets) {
         const utils = getRollAppraiserUtilsSync();
-        if (!utils) {return Number.MAX_SAFE_INTEGER;}
+        if (!utils) {
+          return Number.MAX_SAFE_INTEGER;
+        }
 
         const traitPerks = getSocketsByType(item, 'traits');
         if (traitPerks.length >= 2) {
@@ -183,20 +198,29 @@ export const sortDupesBest = (
     compareBy((item) => {
       if (item.bucket.inWeapons && item.sockets) {
         const utils = getRollAppraiserUtilsSync();
-        if (!utils) {return Number.MAX_SAFE_INTEGER;}
+        if (!utils) {
+          return Number.MAX_SAFE_INTEGER;
+        }
 
         // Get weapon sockets properly categorized
         const weaponSockets = getWeaponSockets(item, { excludeEmptySockets: false });
-        if (!weaponSockets) {return 0;}
+        if (!weaponSockets) {
+          return 0;
+        }
 
         // Get the first two perk sockets with multiple options (like Compare.tsx does)
         const allPerkSockets = item.sockets.allSockets
           .filter((s) => {
             // Must be a perk socket with multiple options
-            if (!s.isPerk || s.plugOptions.length <= 1) {return false;}
+            if (!s.isPerk || s.plugOptions.length <= 1) {
+              return false;
+            }
 
             // Exclude intrinsic socket
-            if (weaponSockets.intrinsicSocket && s.socketIndex === weaponSockets.intrinsicSocket.socketIndex) {
+            if (
+              weaponSockets.intrinsicSocket &&
+              s.socketIndex === weaponSockets.intrinsicSocket.socketIndex
+            ) {
               return false;
             }
 
@@ -230,10 +254,14 @@ export const sortDupesBest = (
             // Weight calculation: 1=2.5, 2=2.0, 3=1.5, 4+=1.0
             const getWeight = (rank: number) => {
               switch (rank) {
-                case 1: return 2.5;
-                case 2: return 2.0;
-                case 3: return 1.5;
-                default: return 1.0;
+                case 1:
+                  return 2.5;
+                case 2:
+                  return 2.0;
+                case 3:
+                  return 1.5;
+                default:
+                  return 1.0;
               }
             };
 
@@ -335,7 +363,7 @@ export const makeArmorClassTypeTierDupeID = (item: DimItem) => {
  * This allows finding the best armor piece per class/type/tier combination.
  */
 export const computeArmorDupesByClassTypeTier = (allItems: DimItem[]) => {
-  const armorItems = allItems.filter(item => item.bucket.inArmor);
+  const armorItems = allItems.filter((item) => item.bucket.inArmor);
   return computeDupesByIdFn(armorItems, makeArmorClassTypeTierDupeID);
 };
 
@@ -497,7 +525,7 @@ const dupeFilters: ItemFilterDefinition[] = [
       const armorDupesSorted = sortDupesBest(armorDupes, getTag, customStats);
 
       // For non-armor, use the original itemHash-based grouping
-      const nonArmorItems = allItems.filter(item => !item.bucket.inArmor);
+      const nonArmorItems = allItems.filter((item) => !item.bucket.inArmor);
       const nonArmorDupes = computeDupes(nonArmorItems);
       const nonArmorDupesSorted = sortDupesBest(nonArmorDupes, getTag, customStats);
 
@@ -528,7 +556,7 @@ const dupeFilters: ItemFilterDefinition[] = [
     description: tl('Filter.BestArmor'),
     filter: ({ allItems, getTag, customStats }) => {
       // Only process armor items
-      const armorItems = allItems.filter(item => item.bucket.inArmor);
+      const armorItems = allItems.filter((item) => item.bucket.inArmor);
       const armorDupes = computeArmorDupesByClassTypeTier(armorItems);
       const armorDupesSorted = sortDupesBest(armorDupes, getTag, customStats);
 
@@ -616,7 +644,8 @@ function computeStatDupeLower(allItems: DimItem[], relevantStatHashes: number[] 
 
   // For each group of items that should be compared against each other
   for (const group of grouped) {
-    if (!group) { // Add check for undefined group
+    if (!group) {
+      // Add check for undefined group
       continue;
     }
     const statSet = new StatsSet<DimItem>();

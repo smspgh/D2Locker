@@ -1,6 +1,6 @@
 import { DestinyAccount } from 'app/accounts/destiny-account';
-import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { settingsSelector } from 'app/d2l-api/selectors';
+import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { manifestSelector } from 'app/manifest/selectors';
 import { ThunkResult } from 'app/store/types';
 import { filterMap } from 'app/utils/collections';

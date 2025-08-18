@@ -52,7 +52,9 @@ async function performMeasurement() {
     `D2L is using ${humanBytes(result.bytes)} of memory.`,
     result.breakdown
       .filter((b: { bytes: number }) => b.bytes)
-      .map((b: { types: string[]; bytes: number }) => `${b.types.join('/')}: ${humanBytes(b.bytes)}`)
+      .map(
+        (b: { types: string[]; bytes: number }) => `${b.types.join('/')}: ${humanBytes(b.bytes)}`,
+      )
       .join(', '),
   );
   // 3. Schedule the next measurement.

@@ -111,7 +111,6 @@ export function isSupported(browsersSupported, userAgent) {
     }
   }
   if (!supported) {
-
     console.warn(
       'Browser ' + browser + ' might not be supported.',
       // browsersSupported,

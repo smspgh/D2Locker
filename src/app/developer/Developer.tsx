@@ -56,60 +56,47 @@ export default function Developer(this: never) {
       ) : (
         <form onSubmit={save}>
           <h3>API Configuration</h3>
-          <p><strong>Note:</strong> API keys are loaded from environment variables (.dev.env for development).</p>
+          <p>
+            <strong>Note:</strong> API keys are loaded from environment variables (.dev.env for
+            development).
+          </p>
           <ol>
             <li>
               Bungie.net API Key (from .dev.env):
               <br />
-              <input
-                name="apiKey"
-                type="text"
-                value={apiKey}
-                size={40}
-                readOnly
-              />
+              <input name="apiKey" type="text" value={apiKey} size={40} readOnly />
             </li>
             <li>
               OAuth client_id (from .dev.env):
               <br />
-              <input
-                name="clientId"
-                type="text"
-                value={clientId}
-                size={5}
-                readOnly
-              />
+              <input name="clientId" type="text" value={clientId} size={5} readOnly />
             </li>
             <li>
               OAuth client_secret (from .dev.env):
               <br />
-              <input
-                name="clientSecret"
-                type="text"
-                value={clientSecret}
-                size={50}
-                readOnly
-              />
+              <input name="clientSecret" type="text" value={clientSecret} size={50} readOnly />
             </li>
             <li>
               D2L API Key (from .dev.env):
               <br />
-              <input
-                name="d2lApiKey"
-                type="text"
-                value={d2lApiKey}
-                size={40}
-                readOnly
-              />
+              <input name="d2lApiKey" type="text" value={d2lApiKey} size={40} readOnly />
             </li>
           </ol>
 
           <p>
-            <strong>Setup Instructions:</strong><br />
-            1. Visit <a href={createAppUrl} target="_blank" rel="noreferrer noopener">{createAppUrl}</a><br />
-            2. Use <code>{URLRet}</code> as "Redirect URL"<br />
-            3. Use <code>{URL}</code> as "Origin Header"<br />
-            4. Select "Confidential" OAuth type and all scopes except "Administrate Groups/Clans"<br />
+            <strong>Setup Instructions:</strong>
+            <br />
+            1. Visit{' '}
+            <a href={createAppUrl} target="_blank" rel="noreferrer noopener">
+              {createAppUrl}
+            </a>
+            <br />
+            2. Use <code>{URLRet}</code> as "Redirect URL"
+            <br />
+            3. Use <code>{URL}</code> as "Origin Header"
+            <br />
+            4. Select "Confidential" OAuth type and all scopes except "Administrate Groups/Clans"
+            <br />
             5. Update your .dev.env file with the generated keys
           </p>
           <button

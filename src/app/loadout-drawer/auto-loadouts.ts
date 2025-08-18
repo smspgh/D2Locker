@@ -177,7 +177,8 @@ export function itemMoveLoadout(items: DimItem[], store: DimStore): Loadout {
   for (const bucketHashStr in groupedItems) {
     const bucketHash = Number(bucketHashStr);
     const group = groupedItems[bucketHashStr];
-    if (group) { // Only process if the group is not undefined
+    if (group) {
+      // Only process if the group is not undefined
       itemsByType[bucketHash] = limitToBucketSize(group, store);
     }
   }

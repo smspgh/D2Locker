@@ -263,7 +263,7 @@ function Loadouts({ account }: { account: DestinyAccount }) {
                   store={selectedStore}
                   saved={savedLoadoutIds.has(loadout.id)}
                   equippable={loadout !== currentLoadout}
-                        onSnapshotInGameLoadout={handleSnapshot}
+                  onSnapshotInGameLoadout={handleSnapshot}
                 />
               );
             } else {

@@ -13,8 +13,7 @@ import styles from './TagButtons.m.scss';
  */
 export default function TagButtons({ item, tag }: { item: DimItem; tag: TagValue | undefined }) {
   const dispatch = useThunkDispatch();
-  const tagOptions = Object.values(tagConfig)
-    .sort(compareBy((t) => t.sortOrder));
+  const tagOptions = Object.values(tagConfig).sort(compareBy((t) => t.sortOrder));
 
   const handleSetTag = (tag: TagValue) => {
     dispatch(setTag(item, tag));

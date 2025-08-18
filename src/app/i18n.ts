@@ -1,4 +1,3 @@
-import { setTag } from './utils/sentry';
 import i18next from 'i18next';
 import HttpApi, { HttpBackendOptions } from 'i18next-http-backend';
 import de from 'locale/de.json';
@@ -20,6 +19,7 @@ import { humanBytes } from './storage/human-bytes';
 import { StoreObserver } from './store/observerMiddleware';
 import { invert } from './utils/collections';
 import { infoLog } from './utils/log';
+import { setTag } from './utils/sentry';
 
 export const D2L_LANG_INFOS = {
   de: { latinBased: true },

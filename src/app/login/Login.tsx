@@ -4,8 +4,8 @@ import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { isAppStoreVersion } from 'app/utils/browsers';
 import { useEffect, useMemo } from 'react';
 import { useLocation } from 'react-router';
-import { loadDimApiData } from '../d2l-api/actions';
 import { oauthClientId } from '../bungie-api/bungie-api-utils';
+import { loadDimApiData } from '../d2l-api/actions';
 import styles from './Login.m.scss';
 
 export const d2lApiHelpLink = userGuideUrl('D2L-Sync');
@@ -52,8 +52,6 @@ export default function Login() {
   useEffect(() => {
     localStorage.setItem('d2l-api-enabled', 'true');
   }, []);
-
-
 
   return (
     <div className={styles.billboard}>

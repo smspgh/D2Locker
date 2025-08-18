@@ -114,7 +114,9 @@ const gearSlotOrder: BucketHashes[] = [...D2Categories.Weapons, ...D2Categories.
  */
 export function newLoadout(name: string, items: LoadoutItem[], classType?: DestinyClass): Loadout {
   return {
-    id: globalThis.crypto?.randomUUID?.() ?? `loadout-${Date.now()}-${Math.random().toString(36).substring(2)}`,
+    id:
+      globalThis.crypto?.randomUUID?.() ??
+      `loadout-${Date.now()}-${Math.random().toString(36).substring(2)}`,
     classType:
       classType !== undefined && classType !== DestinyClass.Classified
         ? classType
@@ -431,9 +433,8 @@ export function optimalItemSet(
   bestItemFn: (item: DimItem) => number,
 ): Record<'equippable' | 'equipUnrestricted' | 'classUnrestricted', DimItem[]> {
   const anyClassItemsByBucket = Object.groupBy(applicableItems, (i) => i.bucket.hash);
-  const anyClassBestItemByBucket = mapValues(
-    anyClassItemsByBucket,
-    (thisSlotItems) => maxBy(thisSlotItems, bestItemFn),
+  const anyClassBestItemByBucket = mapValues(anyClassItemsByBucket, (thisSlotItems) =>
+    maxBy(thisSlotItems, bestItemFn),
   );
   const classUnrestricted = Object.values(anyClassBestItemByBucket)
     .filter((item): item is DimItem => item !== undefined)
@@ -443,9 +444,8 @@ export function optimalItemSet(
     applicableItems.filter((i) => itemCanBeEquippedBy(i, store, true)),
     (i) => i.bucket.hash,
   );
-  const thisClassBestItemByBucket = mapValues(
-    thisClassItemsByBucket,
-    (thisSlotItems) => maxBy(thisSlotItems, bestItemFn),
+  const thisClassBestItemByBucket = mapValues(thisClassItemsByBucket, (thisSlotItems) =>
+    maxBy(thisSlotItems, bestItemFn),
   );
   const equipUnrestricted = Object.values(thisClassBestItemByBucket)
     .filter((item): item is DimItem => item !== undefined)
@@ -454,10 +454,13 @@ export function optimalItemSet(
   // Filter out undefined values to create a clean starting point
   const definedItems = Object.entries(thisClassBestItemByBucket)
     .filter((entry): entry is [string, DimItem] => entry[1] !== undefined)
-    .reduce((acc, [key, value]) => {
-      acc[key] = value;
-      return acc;
-    }, {} as { [x: string]: DimItem });
+    .reduce(
+      (acc, [key, value]) => {
+        acc[key] = value;
+        return acc;
+      },
+      {} as { [x: string]: DimItem },
+    );
 
   let equippableBestItemByBucket = { ...definedItems };
 
@@ -732,7 +735,7 @@ export const itemsByItemId = weakMemoize((allItems: DimItem[]) =>
 const itemsByCraftedDate = weakMemoize((allItems: DimItem[]) =>
   keyBy(
     allItems.filter((i): i is DimItem & { craftedInfo: { craftedDate: number } } =>
-      Boolean(i.instanced && i.craftedInfo?.craftedDate)
+      Boolean(i.instanced && i.craftedInfo?.craftedDate),
     ),
     (i) => i.craftedInfo.craftedDate,
   ),

@@ -193,7 +193,8 @@ export async function getSetBucketsStep(
     sumBy(tierString.split('/'), (num) => parseInt(num, 10)),
   );
   for (const tier of Object.values(tiers)) {
-    if (tier) { // Add check for undefined
+    if (tier) {
+      // Add check for undefined
       tier.sort().reverse();
     }
   }
@@ -202,9 +203,11 @@ export async function getSetBucketsStep(
   const tierKeys = Object.keys(tiers);
   for (let t = tierKeys.length; t > tierKeys.length - 3; t--) {
     const key = Number(tierKeys[t]); // Explicitly convert to number
-    if (tiers[key]) { // Use numeric key
+    if (tiers[key]) {
+      // Use numeric key
       allSetTiers.push(`- Tier ${key} -`);
-      for (const set of tiers[key]) { // Use numeric key
+      for (const set of tiers[key]) {
+        // Use numeric key
         allSetTiers.push(set);
       }
     }

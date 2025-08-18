@@ -47,12 +47,12 @@ interface WeaponRankingData {
 }
 
 interface RollAppraiserData {
-  Weapons: Record<string, any>; // Added Weapons key
-  MasterworkMods: Record<string, any[]>;
-  PerkStats: Record<string, any[][]>;
-  TraitStats: Record<string, Record<string, any>>;
-  MWStats: Record<string, any[]>;
-  ReviewSummary: Record<string, any>;
+  Weapons: Record<string, unknown>;
+  MasterworkMods: Record<string, PerkRankData[]>;
+  PerkStats: Record<string, PerkRankData[][]>;
+  TraitStats: Record<string, Record<string, TraitComboRankData[]>>;
+  MWStats: Record<string, PerkRankData[]>;
+  ReviewSummary: Record<string, ReviewSummaryData>;
 }
 
 export class RollAppraiserUtils {
@@ -68,21 +68,23 @@ export class RollAppraiserUtils {
    */
   getPerkRank(itemHash: string, perkHash: string | number): PerkRankData | null {
     const weaponPerks = this.data.PerkStats[itemHash];
-    if (!weaponPerks) {return null;}
+    if (!weaponPerks) {
+      return null;
+    }
 
-    const targetHash = typeof perkHash === 'string' ? parseInt(perkHash) : perkHash;
+    const targetHash = typeof perkHash === 'string' ? parseInt(perkHash, 10) : perkHash;
 
     // First, try direct hash match
     for (const perkArray of weaponPerks) {
       for (const perkData of perkArray) {
         if (perkData.PerkHash === targetHash) {
           return {
-            rank: perkData.Rank,
-            count: perkData.Count,
-            perkHash: perkData.PerkHash,
-            perkEnhancedHash: perkData.PerkEnhancedHash,
-            show: perkData.Show,
-            perkIndex: perkData.PerkIDX,
+            rank: Number(perkData.Rank),
+            count: Number(perkData.Count),
+            perkHash: Number(perkData.PerkHash),
+            perkEnhancedHash: perkData.PerkEnhancedHash ? Number(perkData.PerkEnhancedHash) : null,
+            show: Boolean(perkData.Show),
+            perkIndex: perkData.PerkIDX ? Number(perkData.PerkIDX) : undefined,
           };
         }
       }
@@ -90,10 +92,14 @@ export class RollAppraiserUtils {
 
     // If no direct match, check if this is an enhanced perk and look for its standard version
     // Import the trait mapping here to avoid circular imports
-    const perkToEnhanced = require('data/d2/trait-to-enhanced-trait.json');
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    const perkToEnhanced = require('data/d2/trait-to-enhanced-trait.json') as Record<
+      string,
+      number
+    >;
     const enhancedToPerk: Record<number, number> = {};
     for (const [standard, enhanced] of Object.entries(perkToEnhanced)) {
-      enhancedToPerk[enhanced as number] = parseInt(standard);
+      enhancedToPerk[enhanced] = parseInt(standard, 10);
     }
 
     const standardHash = enhancedToPerk[targetHash];
@@ -123,7 +129,9 @@ export class RollAppraiserUtils {
    */
   getMWRank(itemHash: string, mwPerkHash: string | number): PerkRankData | null {
     const weaponMWs = this.data.MWStats[itemHash];
-    if (!weaponMWs) {return null;}
+    if (!weaponMWs) {
+      return null;
+    }
 
     const targetHash = typeof mwPerkHash === 'string' ? parseInt(mwPerkHash) : mwPerkHash;
 
@@ -151,18 +159,22 @@ export class RollAppraiserUtils {
     perk5Hash: string | number,
   ): TraitComboRankData | null {
     const weaponTraits = this.data.TraitStats[itemHash];
-    if (!weaponTraits) { return null; }
+    if (!weaponTraits) {
+      return null;
+    }
 
-    const targetPerk4 = typeof perk4Hash === 'string' ? parseInt(perk4Hash) : perk4Hash;
-    const targetPerk5 = typeof perk5Hash === 'string' ? parseInt(perk5Hash) : perk5Hash;
+    const targetPerk4 = typeof perk4Hash === 'string' ? parseInt(perk4Hash, 10) : perk4Hash;
+    const targetPerk5 = typeof perk5Hash === 'string' ? parseInt(perk5Hash, 10) : perk5Hash;
 
     let comboRank = 1;
     let indexInRank = 0;
 
     // Iterate through all traits to find the combo and determine its rank by its position
     for (const trait of Object.values(weaponTraits)) {
-      const perk4Matches = trait.Perk4Hash === targetPerk4 || trait.Perk4EnhancedHash === targetPerk4;
-      const perk5Matches = trait.Perk5Hash === targetPerk5 || trait.Perk5EnhancedHash === targetPerk5;
+      const perk4Matches =
+        trait.Perk4Hash === targetPerk4 || trait.Perk4EnhancedHash === targetPerk4;
+      const perk5Matches =
+        trait.Perk5Hash === targetPerk5 || trait.Perk5EnhancedHash === targetPerk5;
 
       if (perk4Matches && perk5Matches) {
         // Found our combo! Return the rank we've calculated based on its position.
@@ -195,7 +207,9 @@ export class RollAppraiserUtils {
    */
   getReviewSummary(itemHash: string): ReviewSummaryData | null {
     const review = this.data.ReviewSummary[itemHash];
-    if (!review) {return null;}
+    if (!review) {
+      return null;
+    }
 
     return {
       reviewCount: review.ReviewCount,
@@ -222,7 +236,7 @@ export class RollAppraiserUtils {
     };
 
     // Get individual perk rankings
-    perkHashes.forEach((perkHash) => {
+    for (const perkHash of perkHashes) {
       const perkRank = this.getPerkRank(itemHash, perkHash);
       if (perkRank) {
         result.perkRankings.push({
@@ -233,7 +247,7 @@ export class RollAppraiserUtils {
           show: perkRank.show,
         });
       }
-    });
+    }
 
     // Get trait combo ranking (assuming last two perks are the trait perks)
     if (perkHashes.length >= 2) {
@@ -254,18 +268,20 @@ export class RollAppraiserUtils {
    * Check if weapon has any ranking data
    */
   hasDataForWeapon(itemHash: string): boolean {
-    return Boolean(this.data.PerkStats[itemHash] ||
-      this.data.TraitStats[itemHash] ||
-      this.data.MWStats[itemHash] ||
-      this.data.ReviewSummary[itemHash]);
+    return Boolean(
+      this.data.PerkStats[itemHash] ||
+        this.data.TraitStats[itemHash] ||
+        this.data.MWStats[itemHash] ||
+        this.data.ReviewSummary[itemHash],
+    );
   }
 }
 
 export type {
   PerkRankData,
-  TraitComboRankData,
   ReviewSummaryData,
+  RollAppraiserData,
+  TraitComboRankData,
   WeaponPerkRankData,
   WeaponRankingData,
-  RollAppraiserData,
 };

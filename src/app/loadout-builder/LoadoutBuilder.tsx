@@ -1,10 +1,10 @@
 import { LoadoutParameters, StatConstraint } from '@destinyitemmanager/dim-api-types';
-import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { savedLoStatConstraintsByClassSelector } from 'app/d2l-api/selectors';
 import CharacterSelect from 'app/d2l-ui/CharacterSelect';
 import CollapsibleTitle from 'app/d2l-ui/CollapsibleTitle';
 import PageWithMenu from 'app/d2l-ui/PageWithMenu';
 import UserGuideLink from 'app/d2l-ui/UserGuideLink';
+import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { t } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
 import { DimStore } from 'app/inventory/store-types';

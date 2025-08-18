@@ -13,12 +13,12 @@ import ItemTagSelector from 'app/item-popup/ItemTagSelector';
 import { hideItemPopup } from 'app/item-popup/item-popup';
 import { ItemActionsModel } from 'app/item-popup/item-popup-actions';
 import { addItemToLoadout } from 'app/loadout-drawer/loadout-events';
-import { makeDupeID, makeArmorClassTypeTierDupeID } from 'app/search/items/search-filters/dupes';
+import { makeDupeID } from 'app/search/items/search-filters/dupes';
 import { AppIcon, addIcon, compareIcon } from 'app/shell/icons';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import clsx from 'clsx';
-import { useDispatch, useSelector } from 'react-redux';
 import { useMemo } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import arrowsIn from '../../images/arrows-in.png';
 import arrowsOut from '../../images/arrows-out.png';
 import d2Infuse from '../../images/d2infuse.png';
@@ -35,31 +35,37 @@ export function CompareActionButton({ item, label }: ActionButtonProps) {
 
   // Calculate duplicate count
   const dupeCount = useMemo(() => {
-    if (!item.comparable) {return 1;}
-    
+    if (!item.comparable) {
+      return 1;
+    }
+
     // For exotic armor, use perks to determine true duplicates
     // For other items, use the standard dupe ID
     let count = 0;
-    
+
     if (item.bucket.inArmor && item.isExotic && item.sockets?.allSockets) {
       // For exotic armor, count items with same hash and same perk combination
       const itemPerkHashes = item.sockets.allSockets
-        .filter(socket => socket.isPerk && socket.plugged?.plugDef.hash)
-        .map(socket => socket.plugged!.plugDef.hash)
+        .filter((socket) => socket.isPerk && socket.plugged?.plugDef.hash)
+        .map((socket) => socket.plugged!.plugDef.hash)
         .sort((a, b) => a - b);
-      
+
       for (const i of allItems) {
-        if (!i.comparable || i.hash !== item.hash) {continue;}
-        
+        if (!i.comparable || i.hash !== item.hash) {
+          continue;
+        }
+
         if (i.bucket.inArmor && i.isExotic && i.sockets?.allSockets) {
           const otherPerkHashes = i.sockets.allSockets
-            .filter(socket => socket.isPerk && socket.plugged?.plugDef.hash)
-            .map(socket => socket.plugged!.plugDef.hash)
+            .filter((socket) => socket.isPerk && socket.plugged?.plugDef.hash)
+            .map((socket) => socket.plugged!.plugDef.hash)
             .sort((a, b) => a - b);
-          
+
           // Check if perk arrays are equal
-          if (itemPerkHashes.length === otherPerkHashes.length &&
-              itemPerkHashes.every((hash, index) => hash === otherPerkHashes[index])) {
+          if (
+            itemPerkHashes.length === otherPerkHashes.length &&
+            itemPerkHashes.every((hash, index) => hash === otherPerkHashes[index])
+          ) {
             count++;
           }
         }
@@ -67,14 +73,14 @@ export function CompareActionButton({ item, label }: ActionButtonProps) {
     } else {
       // Standard duplicate counting for non-exotic armor and all other items
       const dupeID = makeDupeID(item);
-      
+
       for (const i of allItems) {
         if (i.comparable && makeDupeID(i) === dupeID) {
           count++;
         }
       }
     }
-    
+
     return count;
   }, [allItems, item]);
 

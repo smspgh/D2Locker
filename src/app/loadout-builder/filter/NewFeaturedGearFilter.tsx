@@ -1,9 +1,9 @@
+import { faFlag } from '@fortawesome/free-solid-svg-icons';
+import Switch from 'app/d2l-ui/form/Switch';
 import { t } from 'app/i18next-t';
+import { useSetSetting } from 'app/settings/hooks';
 import { AppIcon, faIcon } from 'app/shell/icons';
 import { querySelector } from 'app/shell/selectors';
-import { useSetSetting } from 'app/settings/hooks';
-import Switch from 'app/d2l-ui/form/Switch';
-import { faFlag } from '@fortawesome/free-solid-svg-icons';
 import { memo } from 'react';
 import { useSelector } from 'react-redux';
 import styles from './NewFeaturedGearFilter.m.scss';

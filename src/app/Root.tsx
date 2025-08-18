@@ -1,4 +1,3 @@
-import { withProfiler } from './utils/sentry';
 import { LocationSwitcher } from 'app/shell/LocationSwitcher';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import {
@@ -13,6 +12,7 @@ import { BrowserRouter as Router } from 'react-router';
 import App from './App';
 import store from './store/store';
 import { isNativeDragAndDropSupported } from './utils/browsers';
+import { withProfiler } from './utils/sentry';
 
 // Sentry profiling has been disabled - use stub implementation
 const ProfiledApp = withProfiler(App);

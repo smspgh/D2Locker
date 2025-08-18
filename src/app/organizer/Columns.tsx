@@ -1130,40 +1130,45 @@ function PerksCell({
             [styles.isPerk]: socket.isPerk && socket.plugOptions.length > 1,
           })}
         >
-          {socket.plugOptions.map((p) => (
-            p && // Add null check for p
-            <PressTip key={p.plugDef.hash} tooltip={() => <DimPlugTooltip item={item} plug={p} />}>
-              <div
-                className={clsx(styles.modPerk, {
-                  [styles.perkSelected]:
-                    socket.isPerk && socket.plugOptions.length > 1 && p === socket.plugged,
-                  [styles.perkSelectable]: socket.plugOptions.length > 1,
-                })}
-                data-filter-value={p.plugDef.displayProperties.name}
-                onClick={
-                  onPlugClicked && socket.plugOptions.length > 1
-                    ? (e: React.MouseEvent) => {
-                        if (!e.shiftKey) {
-                          e.stopPropagation();
-                          onPlugClicked({ item, socket, plugHash: p.plugDef.hash });
-                        }
-                      }
-                    : undefined
-                }
-              >
-                <div className={styles.miniPerkContainer}>
-                  <DefItemIcon itemDef={p.plugDef} borderless={true} />
-                </div>
-                <span
-                  className={clsx({
-                    [styles.enhancedArrow]: isEnhancedPerk(p.plugDef),
-                  })}
+          {socket.plugOptions.map(
+            (p) =>
+              p && ( // Add null check for p
+                <PressTip
+                  key={p.plugDef.hash}
+                  tooltip={() => <DimPlugTooltip item={item} plug={p} />}
                 >
-                  {p.plugDef.displayProperties.name}
-                </span>
-              </div>
-            </PressTip>
-          ))}
+                  <div
+                    className={clsx(styles.modPerk, {
+                      [styles.perkSelected]:
+                        socket.isPerk && socket.plugOptions.length > 1 && p === socket.plugged,
+                      [styles.perkSelectable]: socket.plugOptions.length > 1,
+                    })}
+                    data-filter-value={p.plugDef.displayProperties.name}
+                    onClick={
+                      onPlugClicked && socket.plugOptions.length > 1
+                        ? (e: React.MouseEvent) => {
+                            if (!e.shiftKey) {
+                              e.stopPropagation();
+                              onPlugClicked({ item, socket, plugHash: p.plugDef.hash });
+                            }
+                          }
+                        : undefined
+                    }
+                  >
+                    <div className={styles.miniPerkContainer}>
+                      <DefItemIcon itemDef={p.plugDef} borderless={true} />
+                    </div>
+                    <span
+                      className={clsx({
+                        [styles.enhancedArrow]: isEnhancedPerk(p.plugDef),
+                      })}
+                    >
+                      {p.plugDef.displayProperties.name}
+                    </span>
+                  </div>
+                </PressTip>
+              ),
+          )}
         </div>
       ))}
     </>
@@ -1186,41 +1191,43 @@ function D1PerksCell({ item }: { item: D1Item }) {
   }
   return (
     <>
-      {sockets.map((socket) => (
-        socket && // Add null check for socket
-        <div
-          key={socket[0].column}
-          className={clsx(styles.modPerks, {
-            [styles.isPerk]: socket.length > 1 && socket[0].exclusiveInColumn,
-          })}
-        >
-          {socket.map(
-            (p) =>
-              p && // Add null check for p
-              isD1Item(item) && (
-                <PressTip
-                  key={p.hash}
-                  tooltip={
-                    <>
-                      <Tooltip.Header text={p.name} />
-                      <div>{p.description}</div>
-                    </>
-                  }
-                >
-                  <div className={styles.modPerk} data-filter-value={p.name}>
-                    <div className={styles.miniPerkContainer}>
-                      <BungieImage src={p.icon} />
-                    </div>{' '}
-                    {p.name}
-                    {p.xpRequired > 0 && (!p.unlocked || p.xp < p.xpRequired) && (
-                      <> ({percent(p.xp / p.xpRequired)})</>
-                    )}
-                  </div>
-                </PressTip>
-              ),
-          )}
-        </div>
-      ))}
+      {sockets.map(
+        (socket) =>
+          socket && ( // Add null check for socket
+            <div
+              key={socket[0].column}
+              className={clsx(styles.modPerks, {
+                [styles.isPerk]: socket.length > 1 && socket[0].exclusiveInColumn,
+              })}
+            >
+              {socket.map(
+                (p) =>
+                  p && // Add null check for p
+                  isD1Item(item) && (
+                    <PressTip
+                      key={p.hash}
+                      tooltip={
+                        <>
+                          <Tooltip.Header text={p.name} />
+                          <div>{p.description}</div>
+                        </>
+                      }
+                    >
+                      <div className={styles.modPerk} data-filter-value={p.name}>
+                        <div className={styles.miniPerkContainer}>
+                          <BungieImage src={p.icon} />
+                        </div>{' '}
+                        {p.name}
+                        {p.xpRequired > 0 && (!p.unlocked || p.xp < p.xpRequired) && (
+                          <> ({percent(p.xp / p.xpRequired)})</>
+                        )}
+                      </div>
+                    </PressTip>
+                  ),
+              )}
+            </div>
+          ),
+      )}
     </>
   );
 }

@@ -60,7 +60,8 @@ export default function PlugSection({
   return (
     <>
       {Object.entries(plugsGroupedByModType).map(([groupName, plugs]) => {
-        if (!plugs) { // Add null check for plugs
+        if (!plugs) {
+          // Add null check for plugs
           return null;
         }
         // fall back to headerSuffix if no groupName

@@ -3,7 +3,12 @@
 /** Stub for Sentry.io exception reporting - does nothing */
 export const reportException = (name: string, e: any, errorInfo?: Record<string, unknown>) => {
   // Sentry has been removed - this is a no-op stub
-  console.warn('Sentry reporting disabled. Exception would have been reported:', name, e, errorInfo);
+  console.warn(
+    'Sentry reporting disabled. Exception would have been reported:',
+    name,
+    e,
+    errorInfo,
+  );
 };
 
 /** Stub for setTag - does nothing */

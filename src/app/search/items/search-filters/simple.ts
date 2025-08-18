@@ -1,13 +1,11 @@
 import { tl } from 'app/i18next-t';
+import { DimItem } from 'app/inventory/item-types';
+import { makeSearchFilterFactory } from 'app/search/search-filter';
+import { initialSettingsState } from 'app/settings/initial-settings';
 import { BucketHashes } from 'data/d2/generated-enums';
 import { ItemFilterDefinition } from '../item-filter-types';
-import { DimItem } from 'app/inventory/item-types';
-import { initialSettingsState } from 'app/settings/initial-settings';
-import { computeDupes, sortDupesBest, computeArmorDupesByClassTypeTier, makeArmorClassTypeTierDupeID, makeDupeID } from './dupes';
-import { getRollAppraiserUtilsSync } from 'app/roll-appraiser/rollAppraiserService';
-import { getSocketsByType } from 'app/utils/socket-utils';
-import { makeSearchFilterFactory } from 'app/search/search-filter';
 import { buildItemSearchConfig } from '../item-search-filter';
+import { computeArmorDupesByClassTypeTier, computeDupes, sortDupesBest } from './dupes';
 
 // simple checks against check an attribute found on DimItem
 const simpleFilters: ItemFilterDefinition[] = [
@@ -121,9 +119,25 @@ const simpleFilters: ItemFilterDefinition[] = [
     description: tl('Filter.KeepWeapon'),
     destinyVersion: 2,
     filter: (filterContext) => {
-      const { settings, allItems, getTag, customStats, d2Definitions, stores, getNotes, newItems, loadoutsByItem, wishListsByHash, wishListFunction, language, currentStore } = filterContext;
-      const searchSettings = settings?.searchFilterSettings?.keepWeapon || initialSettingsState.searchFilterSettings?.keepWeapon;
-      
+      const {
+        settings,
+        allItems,
+        getTag,
+        customStats,
+        d2Definitions,
+        stores,
+        getNotes,
+        newItems,
+        loadoutsByItem,
+        wishListsByHash,
+        wishListFunction,
+        language,
+        currentStore,
+      } = filterContext;
+      const searchSettings =
+        settings?.searchFilterSettings?.keepWeapon ||
+        initialSettingsState.searchFilterSettings?.keepWeapon;
+
       // If the filter is disabled, return false for all items
       if (!searchSettings?.enabled) {
         return () => false;
@@ -138,27 +152,30 @@ const simpleFilters: ItemFilterDefinition[] = [
         // Default baseline: keep nothing
         return false;
       };
-      
+
       // If there are additional search terms, use them to determine what to keep
-      if (searchSettings?.additionalSearchTerms && searchSettings.additionalSearchTerms.length > 0) {
+      if (
+        searchSettings?.additionalSearchTerms &&
+        searchSettings.additionalSearchTerms.length > 0
+      ) {
         // Build query respecting AND/OR logic between terms with proper grouping
         let searchQuery = '';
         const terms = searchSettings.additionalSearchTerms;
-        
+
         if (terms.length === 1) {
           // Single term, no grouping needed
           searchQuery = terms[0].term;
         } else {
           // Group terms by their group number (default to group 0 if not specified)
           const groupedTerms = new Map<number, typeof terms>();
-          terms.forEach(term => {
+          for (const term of terms) {
             const groupNum = term.group ?? 0;
             if (!groupedTerms.has(groupNum)) {
               groupedTerms.set(groupNum, []);
             }
             groupedTerms.get(groupNum)!.push(term);
-          });
-          
+          }
+
           // Build query with proper grouping
           const groupParts = [];
           for (const [groupNum, groupTerms] of groupedTerms) {
@@ -167,17 +184,17 @@ const simpleFilters: ItemFilterDefinition[] = [
               groupParts.push(groupTerms[0].term);
             } else {
               // Multiple terms in group, combine with AND within the group
-              const innerTerms = groupTerms.map(term => term.term).join(' and ');
+              const innerTerms = groupTerms.map((term) => term.term).join(' and ');
               groupParts.push(`(${innerTerms})`);
             }
           }
-          
+
           // Join groups with OR (assuming groups represent alternative conditions)
           searchQuery = groupParts.join(' or ');
         }
-        
+
         console.log('KeepWeapon formed query:', searchQuery);
-        
+
         try {
           // Build the search config with the same context as the main search
           const suggestionsContext = {
@@ -190,8 +207,8 @@ const simpleFilters: ItemFilterDefinition[] = [
             customStats,
           };
           const searchConfig = buildItemSearchConfig(2, language || 'en', suggestionsContext);
-          
-          // Create search filter factory with proper config structure  
+
+          // Create search filter factory with proper config structure
           const searchFilterFactory = makeSearchFilterFactory(searchConfig, {
             stores,
             allItems,
@@ -208,7 +225,7 @@ const simpleFilters: ItemFilterDefinition[] = [
             settings,
           });
           const searchFilter = searchFilterFactory(searchQuery);
-          
+
           return (item: DimItem) => {
             // Only apply to weapons
             if (item.bucket?.sort !== 'Weapons') {
@@ -222,7 +239,7 @@ const simpleFilters: ItemFilterDefinition[] = [
           return baseFilter;
         }
       }
-      
+
       return baseFilter;
     },
   },
@@ -231,9 +248,25 @@ const simpleFilters: ItemFilterDefinition[] = [
     description: tl('Filter.KeepArmor'),
     destinyVersion: 2,
     filter: (filterContext) => {
-      const { settings, allItems, getTag, customStats, d2Definitions, stores, getNotes, newItems, loadoutsByItem, wishListsByHash, wishListFunction, language, currentStore } = filterContext;
-      const searchSettings = settings?.searchFilterSettings?.keepArmor || initialSettingsState.searchFilterSettings?.keepArmor;
-      
+      const {
+        settings,
+        allItems,
+        getTag,
+        customStats,
+        d2Definitions,
+        stores,
+        getNotes,
+        newItems,
+        loadoutsByItem,
+        wishListsByHash,
+        wishListFunction,
+        language,
+        currentStore,
+      } = filterContext;
+      const searchSettings =
+        settings?.searchFilterSettings?.keepArmor ||
+        initialSettingsState.searchFilterSettings?.keepArmor;
+
       // If the filter is disabled, return false for all items
       if (!searchSettings?.enabled) {
         return () => false;
@@ -248,27 +281,30 @@ const simpleFilters: ItemFilterDefinition[] = [
         // Default baseline: keep nothing
         return false;
       };
-      
+
       // If there are additional search terms, use them to determine what to keep
-      if (searchSettings?.additionalSearchTerms && searchSettings.additionalSearchTerms.length > 0) {
+      if (
+        searchSettings?.additionalSearchTerms &&
+        searchSettings.additionalSearchTerms.length > 0
+      ) {
         // Build query respecting AND/OR logic between terms with proper grouping
         let searchQuery = '';
         const terms = searchSettings.additionalSearchTerms;
-        
+
         if (terms.length === 1) {
           // Single term, no grouping needed
           searchQuery = terms[0].term;
         } else {
           // Group terms by their group number (default to group 0 if not specified)
           const groupedTerms = new Map<number, typeof terms>();
-          terms.forEach(term => {
+          for (const term of terms) {
             const groupNum = term.group ?? 0;
             if (!groupedTerms.has(groupNum)) {
               groupedTerms.set(groupNum, []);
             }
             groupedTerms.get(groupNum)!.push(term);
-          });
-          
+          }
+
           // Build query with proper grouping
           const groupParts = [];
           for (const [groupNum, groupTerms] of groupedTerms) {
@@ -277,17 +313,17 @@ const simpleFilters: ItemFilterDefinition[] = [
               groupParts.push(groupTerms[0].term);
             } else {
               // Multiple terms in group, combine with AND within the group
-              const innerTerms = groupTerms.map(term => term.term).join(' and ');
+              const innerTerms = groupTerms.map((term) => term.term).join(' and ');
               groupParts.push(`(${innerTerms})`);
             }
           }
-          
+
           // Join groups with OR (assuming groups represent alternative conditions)
           searchQuery = groupParts.join(' or ');
         }
-        
+
         console.log('KeepArmor formed query:', searchQuery);
-        
+
         try {
           // Build the search config with the same context as the main search
           const suggestionsContext = {
@@ -300,8 +336,8 @@ const simpleFilters: ItemFilterDefinition[] = [
             customStats,
           };
           const searchConfig = buildItemSearchConfig(2, language || 'en', suggestionsContext);
-          
-          // Create search filter factory with proper config structure  
+
+          // Create search filter factory with proper config structure
           const searchFilterFactory = makeSearchFilterFactory(searchConfig, {
             stores,
             allItems,
@@ -318,7 +354,7 @@ const simpleFilters: ItemFilterDefinition[] = [
             settings,
           });
           const searchFilter = searchFilterFactory(searchQuery);
-          
+
           return (item: DimItem) => {
             // Only apply to armor
             if (!item.bucket.inArmor) {
@@ -332,7 +368,7 @@ const simpleFilters: ItemFilterDefinition[] = [
           return baseFilter;
         }
       }
-      
+
       return baseFilter;
     },
   },
@@ -341,8 +377,22 @@ const simpleFilters: ItemFilterDefinition[] = [
     description: tl('Filter.Junk'),
     destinyVersion: 2,
     filter: (filterContext) => {
-      const { allItems, settings, getTag, customStats, d2Definitions, stores, getNotes, newItems, loadoutsByItem, wishListsByHash, wishListFunction, language, currentStore } = filterContext;
-      
+      const {
+        allItems,
+        settings,
+        getTag,
+        customStats,
+        d2Definitions,
+        stores,
+        getNotes,
+        newItems,
+        loadoutsByItem,
+        wishListsByHash,
+        wishListFunction,
+        language,
+        currentStore,
+      } = filterContext;
+
       // Build the search filter for the junk query: (is:weapon or is:armor) and -(is:keepweapon or is:keeparmor or maxnonexotic:3)
       try {
         // Build the search config
@@ -355,9 +405,9 @@ const simpleFilters: ItemFilterDefinition[] = [
           allNotesHashtags: [],
           customStats,
         };
-        
+
         const searchConfig = buildItemSearchConfig(2, language || 'en', suggestionsContext);
-        
+
         const searchFilterFactory = makeSearchFilterFactory(searchConfig, {
           stores,
           allItems,
@@ -373,13 +423,13 @@ const simpleFilters: ItemFilterDefinition[] = [
           d2Definitions,
           settings,
         });
-        
+
         // Create the junk query filter
-        const junkQuery = '(is:weapon or is:armor) and -(is:keepweapon or is:keeparmor or maxnonexotic:3)';
+        const junkQuery =
+          '(is:weapon or is:armor) and -(is:keepweapon or is:keeparmor or maxnonexotic:3)';
         const junkFilter = searchFilterFactory(junkQuery);
-        
+
         return junkFilter;
-        
       } catch (error) {
         console.warn('Error building junk filter:', error);
         // Fallback: return items that are weapons or armor
@@ -393,20 +443,19 @@ const simpleFilters: ItemFilterDefinition[] = [
     destinyVersion: 2,
     filter: ({ allItems, getTag, customStats }) => {
       // Pre-compute dupebest for weapons
-      const weaponItems = allItems.filter(item => item.bucket?.sort === 'Weapons');
+      const weaponItems = allItems.filter((item) => item.bucket?.sort === 'Weapons');
       const weaponDupes = computeDupes(weaponItems);
       const weaponDupesSorted = sortDupesBest(weaponDupes, getTag, customStats);
 
       // Pre-compute bestarmor for all classes
-      const armorItems = allItems.filter(item => item.bucket.inArmor);
+      const armorItems = allItems.filter((item) => item.bucket.inArmor);
       const armorDupes = computeArmorDupesByClassTypeTier(armorItems);
       const armorDupesSorted = sortDupesBest(armorDupes, getTag, customStats);
 
-      return (item: DimItem) => 
+      return (item: DimItem) =>
         // This is just a placeholder implementation
         // You can add actual keep logic here if needed
-         false
-      ;
+        false;
     },
   },
 ];

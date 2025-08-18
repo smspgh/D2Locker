@@ -11,12 +11,20 @@ interface ReviewSummaryDisplayProps {
  */
 export default function ReviewSummaryDisplay({ reviewData, className }: ReviewSummaryDisplayProps) {
   const formatRating = (rating: number) => rating.toFixed(1);
-  
+
   const getRatingColor = (rating: number) => {
-    if (rating >= 4.5) {return styles.excellent;}
-    if (rating >= 4.0) {return styles.good;}
-    if (rating >= 3.0) {return styles.average;}
-    if (rating >= 2.0) {return styles.poor;}
+    if (rating >= 4.5) {
+      return styles.excellent;
+    }
+    if (rating >= 4.0) {
+      return styles.good;
+    }
+    if (rating >= 3.0) {
+      return styles.average;
+    }
+    if (rating >= 2.0) {
+      return styles.poor;
+    }
     return styles.terrible;
   };
 
@@ -26,7 +34,7 @@ export default function ReviewSummaryDisplay({ reviewData, className }: ReviewSu
         <span className={styles.title}>Community Reviews</span>
         <span className={styles.count}>({reviewData.reviewCount})</span>
       </div>
-      
+
       <div className={styles.ratings}>
         <div className={styles.rating}>
           <span className={styles.label}>PVE:</span>
@@ -34,14 +42,14 @@ export default function ReviewSummaryDisplay({ reviewData, className }: ReviewSu
             {formatRating(reviewData.pveAverage)}
           </span>
         </div>
-        
+
         <div className={styles.rating}>
           <span className={styles.label}>PVP:</span>
           <span className={`${styles.value} ${getRatingColor(reviewData.pvpAverage)}`}>
             {formatRating(reviewData.pvpAverage)}
           </span>
         </div>
-        
+
         <div className={styles.rating}>
           <span className={styles.label}>Overall:</span>
           <span className={`${styles.value} ${getRatingColor(reviewData.overallAverage)}`}>

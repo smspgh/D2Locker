@@ -1,10 +1,10 @@
 import { settingSelector } from 'app/d2l-api/selectors';
+import { preloadRollAppraiserData } from 'app/roll-appraiser/rollAppraiserService';
 import { RootState } from 'app/store/types';
 import clsx from 'clsx';
 import { Suspense, lazy, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { Navigate, Route, Routes, useLocation } from 'react-router';
-import { preloadRollAppraiserData } from 'app/roll-appraiser/rollAppraiserService';
 import styles from './App.m.scss';
 import AutoRefresh from './d2l-ui/AutoRefresh';
 import ClickOutsideRoot from './d2l-ui/ClickOutsideRoot';
@@ -38,7 +38,8 @@ const About = lazy(
   () => import(/* webpackChunkName: "about-whatsnew-privacy-debug" */ './shell/About'),
 );
 const SharedLoadoutRedirect = lazy(
-  () => import(/* webpackChunkName: "loadout-share" */ './loadout/loadout-share/SharedLoadoutRedirect'),
+  () =>
+    import(/* webpackChunkName: "loadout-share" */ './loadout/loadout-share/SharedLoadoutRedirect'),
 );
 
 export default function App() {

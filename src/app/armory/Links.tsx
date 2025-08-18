@@ -74,7 +74,6 @@ function buildLightGGSockets(item: DimItem) {
   return '';
 }
 
-
 /**
  * Gathers general socket information for link generation in D2Gunsmith and Light.gg.
  */

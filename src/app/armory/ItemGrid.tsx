@@ -5,10 +5,10 @@
 import ItemPopup from 'app/item-popup/ItemPopup';
 import React, { JSX, useCallback, useRef, useState } from 'react';
 // import { useNavigate } from 'react-router';
-import ArmorySheet from './ArmorySheet';
 import '../inventory-page/StoreBucket.scss';
 import ConnectedInventoryItem from '../inventory/ConnectedInventoryItem';
 import { DimItem } from '../inventory/item-types';
+import ArmorySheet from './ArmorySheet';
 
 export interface PopupState {
   item: DimItem;
@@ -37,9 +37,9 @@ export default function ItemGrid({
   return (
     <div className="sub-bucket">
       {items.map((i) => (
-        <BasicItemTrigger 
-          item={i} 
-          key={i.index} 
+        <BasicItemTrigger
+          item={i}
+          key={i.index}
           onShowPopup={directToArmory ? undefined : setPopup}
           onDirectClick={directToArmory ? handleDirectClick : undefined}
         >
@@ -54,12 +54,7 @@ export default function ItemGrid({
           noLink={noLink}
         />
       )}
-      {armoryItem && (
-        <ArmorySheet
-          item={armoryItem}
-          onClose={() => setArmoryItem(undefined)}
-        />
-      )}
+      {armoryItem && <ArmorySheet item={armoryItem} onClose={() => setArmoryItem(undefined)} />}
     </div>
   );
 }

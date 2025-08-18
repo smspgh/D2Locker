@@ -2,10 +2,7 @@ import { DestinyVersion, VaultWeaponGroupingStyle } from '@destinyitemmanager/di
 import WeaponGroupingIcon from 'app/d2l-ui/WeaponGroupingIcon';
 import { InventoryBucket } from 'app/inventory/inventory-buckets';
 import { DimItem } from 'app/inventory/item-types';
-import {
-  currentStoreSelector,
-  storesSelector,
-} from 'app/inventory/selectors';
+import { currentStoreSelector, storesSelector } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
 import { findItemsByBucket } from 'app/inventory/stores-helpers';
 import { itemSorterSelector } from 'app/settings/item-sort';
@@ -191,7 +188,6 @@ export default function StoreBucket({
   const stableItems = useStableArray(items);
 
   // TODO: move grouping here?
-
 
   return (
     <StoreBucketInner

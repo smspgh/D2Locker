@@ -1,5 +1,5 @@
-import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { bungieNetPath } from 'app/d2l-ui/BungieImage';
+import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { DimCharacterStatSource } from 'app/inventory/store-types';
 import { hashesToPluggableItems } from 'app/inventory/store/sockets';

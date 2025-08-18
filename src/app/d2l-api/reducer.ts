@@ -324,14 +324,14 @@ export const d2lApi = (
     case getType(inventoryActions.setItemTag): {
       const { itemId, tag, craftedDate } = action.payload;
       return produce(state, (draft) => {
-        setTag(draft, itemId, tag as any, craftedDate, account!);
+        setTag(draft, itemId, tag, craftedDate, account!);
       });
     }
 
     case getType(inventoryActions.setItemTagsBulk):
       return produce(state, (draft) => {
         for (const info of action.payload) {
-          setTag(draft, info.itemId, info.tag as any, info.craftedDate, account!);
+          setTag(draft, info.itemId, info.tag, info.craftedDate, account!);
         }
       });
 
@@ -347,7 +347,7 @@ export const d2lApi = (
 
     case getType(inventoryActions.setItemHashTag):
       return produce(state, (draft) => {
-        setItemHashTag(draft, action.payload.itemHash, action.payload.tag as any, account!);
+        setItemHashTag(draft, action.payload.itemHash, action.payload.tag, account!);
       });
 
     case getType(inventoryActions.setItemHashNote):

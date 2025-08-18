@@ -2,6 +2,8 @@ import { bungieNetPath } from 'app/d2l-ui/BungieImage';
 import { DefItemIcon } from 'app/inventory/ItemIcon';
 import { isPluggableItem } from 'app/inventory/store/sockets';
 import { useD2Definitions } from 'app/manifest/selectors';
+import PerkRankIndicator from 'app/roll-appraiser/PerkRankIndicator';
+import { useRollAppraiserUtils } from 'app/roll-appraiser/useRollAppraiserData';
 import { isEnhancedPerk, isWeaponMasterworkSocket } from 'app/utils/socket-utils';
 import WishListPerkThumb from 'app/wishlists/WishListPerkThumb';
 import clsx from 'clsx';
@@ -10,8 +12,6 @@ import { DimItem, DimPlug, DimSocket } from '../inventory/item-types';
 import { InventoryWishListRoll, isWishListPlug } from '../wishlists/wishlists';
 import styles from './Plug.m.scss';
 import { DimPlugTooltip } from './PlugTooltip';
-import { useRollAppraiserUtils } from 'app/roll-appraiser/useRollAppraiserData';
-import PerkRankIndicator from 'app/roll-appraiser/PerkRankIndicator';
 
 interface PlugStatuses {
   plugged?: boolean;
@@ -138,15 +138,16 @@ export function PerkCircleWithTooltip({
   const { utils } = useRollAppraiserUtils();
 
   // Get perk rank if this is a weapon perk and we have roll appraiser data
-  const perkRank = utils && item.destinyVersion === 2 && item.bucket.inWeapons && socketInfo.isPerk
-    ? utils.getPerkRank(item.hash.toString(), plug.plugDef.hash.toString())
-    : null;
-    
+  const perkRank =
+    utils && item.destinyVersion === 2 && item.bucket.inWeapons && socketInfo.isPerk
+      ? utils.getPerkRank(item.hash.toString(), plug.plugDef.hash.toString())
+      : null;
+
   // Debug logging for armory items
   if (utils && item.destinyVersion === 2 && item.bucket.inWeapons && socketInfo.isPerk) {
     const hasDataForWeapon = utils.hasDataForWeapon(item.hash.toString());
     const isArmoryItem = !item.owner; // Fake items don't have owners
-    
+
     if (isArmoryItem && hasDataForWeapon) {
       console.log('Armory item perk lookup:', {
         itemName: item.name,
@@ -184,13 +185,7 @@ export function PerkCircleWithTooltip({
         />
       </PressTip>
       {isRecommendedPerk && <WishListPerkThumb wishListRoll={wishlistRoll!} floated />}
-      {perkRank && (
-        <PerkRankIndicator 
-          rank={perkRank.rank} 
-          count={perkRank.count}
-          size="small"
-        />
-      )}
+      {perkRank && <PerkRankIndicator rank={perkRank.rank} count={perkRank.count} size="small" />}
     </div>
   );
 }

@@ -213,7 +213,7 @@ function PlugTooltip({
           </Tooltip.Section>
         </>
       ) : (
-        (renderedStats) && (
+        renderedStats && (
           <>
             <Tooltip.Section>
               {renderedStats}

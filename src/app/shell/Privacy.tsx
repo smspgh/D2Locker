@@ -14,9 +14,8 @@ export default function Privacy() {
           <strong>Introduction.</strong>
           <ol>
             <li>
-              D2 Locker ("D2L") is a free, open source, fan made service for the Destiny
-              and Destiny 2 video games. This privacy policy explains how your data is used by this
-              application.
+              D2 Locker ("D2L") is a free, open source, fan made service for the Destiny and Destiny
+              2 video games. This privacy policy explains how your data is used by this application.
             </li>
             <li>
               D2L is constantly improving, and we may modify this Privacy Policy from time to time

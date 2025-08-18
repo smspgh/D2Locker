@@ -12,19 +12,19 @@
   right: -4px;
   z-index: 2;
   pointer-events: none;
-  
+
   &.small {
     width: 16px;
     height: 16px;
     font-size: 9px;
   }
-  
+
   &.medium {
     width: 20px;
     height: 20px;
     font-size: 11px;
   }
-  
+
   &.large {
     width: 24px;
     height: 24px;
@@ -33,38 +33,38 @@
 }
 
 .rank1 {
-  background: linear-gradient(135deg, #FFD700, #FFA500);
-  border: 1px solid #B8860B;
+  background: linear-gradient(135deg, #ffd700, #ffa500);
+  border: 1px solid #b8860b;
 }
 
 .rank2 {
-  background: linear-gradient(135deg, #C0C0C0, #808080);
+  background: linear-gradient(135deg, #c0c0c0, #808080);
   border: 1px solid #696969;
 }
 
 .rank3 {
-  background: linear-gradient(135deg, #CD7F32, #8B4513);
+  background: linear-gradient(135deg, #cd7f32, #8b4513);
   border: 1px solid #654321;
 }
 
 .rank4 {
-  background: linear-gradient(135deg, #708090, #2F4F4F);
-  border: 1px solid #1C1C1C;
+  background: linear-gradient(135deg, #708090, #2f4f4f);
+  border: 1px solid #1c1c1c;
 }
 
 .rank5 {
-  background: linear-gradient(135deg, #DC143C, #8B0000);
-  border: 1px solid #4B0000;
+  background: linear-gradient(135deg, #dc143c, #8b0000);
+  border: 1px solid #4b0000;
 }
 
 .rank6 {
-  background: linear-gradient(135deg, #8B0000, #4B0000);
-  border: 1px solid #2D0000;
+  background: linear-gradient(135deg, #8b0000, #4b0000);
+  border: 1px solid #2d0000;
 }
 
 .rank7 {
-  background: linear-gradient(135deg, #4B0000, #2D0000);
-  border: 1px solid #1A0000;
+  background: linear-gradient(135deg, #4b0000, #2d0000);
+  border: 1px solid #1a0000;
 }
 
 .rankDefault {

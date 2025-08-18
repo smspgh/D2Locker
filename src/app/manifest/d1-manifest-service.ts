@@ -1,7 +1,7 @@
 import { handleErrors } from 'app/bungie-api/bungie-service-helper';
 import { HttpStatusError, toHttpStatusError } from 'app/bungie-api/http-client';
-import { AllD1DestinyManifestComponents } from 'app/destiny1/d1-manifest-types';
 import { settingsSelector } from 'app/d2l-api/selectors';
+import { AllD1DestinyManifestComponents } from 'app/destiny1/d1-manifest-types';
 import { t } from 'app/i18next-t';
 import { loadingEnd, loadingStart } from 'app/shell/actions';
 import { del, get, set } from 'app/storage/idb-keyval';

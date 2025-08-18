@@ -7,7 +7,7 @@ import { useD2Definitions } from 'app/manifest/selectors';
 import { searchFilterSelector } from 'app/search/items/item-search-filter';
 import { querySelector } from 'app/shell/selectors';
 import { BucketHashes } from 'data/d2/generated-enums';
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import styles from './ArmorySearch.m.scss';
 import { ArmorySearchProvider } from './ArmorySearchContext';
@@ -33,14 +33,14 @@ export default function ArmorySearch() {
         isWeaponItem(def) &&
         !isDummyItem(def) &&
         def.displayProperties.name &&
-        def.displayProperties.name.trim() !== ''
+        def.displayProperties.name.trim() !== '',
     );
 
     const weapons: DimItem[] = [];
     for (const weaponDef of weaponDefs) {
       try {
         const fakeItem = makeFakeItem(itemCreationContext, weaponDef.hash, {
-          allowWishList: true
+          allowWishList: true,
         });
         if (fakeItem) {
           weapons.push(fakeItem);
@@ -98,39 +98,39 @@ export default function ArmorySearch() {
   return (
     <ArmorySearchProvider filteredWeapons={filteredWeapons} allWeapons={allManifestWeapons}>
       <PageWithMenu>
-      <PageWithMenu.Menu>
-        <div className={styles.armorySearchControls}>
-          <h1>Weapon Database</h1>
-          <p>Search and explore all weapons in Destiny 2.</p>
+        <PageWithMenu.Menu>
+          <div className={styles.armorySearchControls}>
+            <h1>Weapon Database</h1>
+            <p>Search and explore all weapons in Destiny 2.</p>
 
-          <div className={styles.resultsCount}>
-            Showing {filteredWeapons.length} of {allManifestWeapons.length} weapons
+            <div className={styles.resultsCount}>
+              Showing {filteredWeapons.length} of {allManifestWeapons.length} weapons
+            </div>
           </div>
-        </div>
-      </PageWithMenu.Menu>
+        </PageWithMenu.Menu>
 
-      <PageWithMenu.Contents>
-        <div className={`${styles.armorySearchResults} armory-search-results`}>
-          {Array.from(weaponsByType.entries(), ([typeName, weapons]) => (
-            <div key={typeName} className={styles.weaponTypeSection}>
-              <CollapsibleTitle
-                title={`${typeName} (${weapons.length})`}
-                defaultCollapsed={false}
-                sectionId={`weapon-type-${typeName.toLowerCase().replace(/\s+/g, '-')}`}
-              >
-                <ItemGrid items={weapons} directToArmory />
-              </CollapsibleTitle>
-            </div>
-          ))}
+        <PageWithMenu.Contents>
+          <div className={`${styles.armorySearchResults} armory-search-results`}>
+            {Array.from(weaponsByType.entries(), ([typeName, weapons]) => (
+              <div key={typeName} className={styles.weaponTypeSection}>
+                <CollapsibleTitle
+                  title={`${typeName} (${weapons.length})`}
+                  defaultCollapsed={false}
+                  sectionId={`weapon-type-${typeName.toLowerCase().replace(/\s+/g, '-')}`}
+                >
+                  <ItemGrid items={weapons} directToArmory />
+                </CollapsibleTitle>
+              </div>
+            ))}
 
-          {filteredWeapons.length === 0 && query && (
-            <div className={styles.noResults}>
-              No weapons found matching your search. Try adjusting your search terms.
-            </div>
-          )}
-        </div>
-      </PageWithMenu.Contents>
-    </PageWithMenu>
+            {filteredWeapons.length === 0 && query && (
+              <div className={styles.noResults}>
+                No weapons found matching your search. Try adjusting your search terms.
+              </div>
+            )}
+          </div>
+        </PageWithMenu.Contents>
+      </PageWithMenu>
     </ArmorySearchProvider>
   );
 }
@@ -143,7 +143,7 @@ function isWeaponItem(def: any): boolean {
   const weaponBuckets = [
     BucketHashes.KineticWeapons,
     BucketHashes.EnergyWeapons,
-    BucketHashes.PowerWeapons
+    BucketHashes.PowerWeapons,
   ];
 
   return def.inventory && weaponBuckets.includes(def.inventory.bucketTypeHash);

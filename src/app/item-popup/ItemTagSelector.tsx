@@ -22,7 +22,7 @@ interface Props {
 export default function ItemTagSelector({ item, className, hideKeys, hideButtonLabel }: Props) {
   const dispatch = useThunkDispatch();
   const rawTag = useSelector(tagSelector(item));
-  
+
   // Ensure tag is valid - if it's not in our current tagConfig, treat as undefined
   const tag = rawTag && rawTag in tagConfig ? rawTag : undefined;
 
@@ -30,29 +30,34 @@ export default function ItemTagSelector({ item, className, hideKeys, hideButtonL
 
   // Create options based on whether item has a tag
   const dropdownOptions: Option<TagValue>[] = [];
-  
+
   if (tag) {
     // If item has a tag, show Clear Tag option first
     dropdownOptions.push({
       key: 'clear',
-      content: <TagOption tagOption={{
-        type: undefined,
-        label: tl('Tags.ClearTag'),
-        icon: clearIcon,
-        hotkey: 'shift+0',
-        sortOrder: -1,
-      }} hideKeys={hideKeys} />,
+      content: (
+        <TagOption
+          tagOption={{
+            type: undefined,
+            label: tl('Tags.ClearTag'),
+            icon: clearIcon,
+            hotkey: 'shift+0',
+            sortOrder: -1,
+          }}
+          hideKeys={hideKeys}
+        />
+      ),
       value: undefined,
     });
   }
-  
+
   // Always show Keep and Junk options
   dropdownOptions.push({
     key: 'keep',
     content: <TagOption tagOption={tagConfig.keep} hideKeys={hideKeys} />,
     value: 'keep',
   });
-  
+
   dropdownOptions.push({
     key: 'junk',
     content: <TagOption tagOption={tagConfig.junk} hideKeys={hideKeys} />,

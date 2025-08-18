@@ -181,16 +181,11 @@ function StoresInventory({
   vault,
   singleCharacter,
 }: InventoryContainerProps) {
-  const orderedCategories = [
-    'Engrams',
-    'Postmaster',
-    'Weapons',
-    'Armor',
-  ];
+  const orderedCategories = ['Engrams', 'Postmaster', 'Weapons', 'Armor'];
 
   // Filter out the ordered categories from the rest
   const remainingCategories = Object.keys(buckets.byCategory).filter(
-    (category) => !orderedCategories.includes(category)
+    (category) => !orderedCategories.includes(category),
   );
 
   return (
@@ -207,7 +202,7 @@ function StoresInventory({
             category={category}
             inventoryBucket={buckets.byCategory[category]}
           />
-        ) : null
+        ) : null,
       )}
       {remainingCategories.map((category) => (
         <CollapsibleContainer

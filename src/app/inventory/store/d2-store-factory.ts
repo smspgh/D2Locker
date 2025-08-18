@@ -1,4 +1,3 @@
-import { startSpan } from '../../utils/sentry';
 import { t } from 'app/i18next-t';
 import { armorStats } from 'app/search/d2-known-values';
 import { DimError } from 'app/utils/d2l-error';
@@ -15,8 +14,9 @@ import {
 import { BucketHashes } from 'data/d2/generated-enums';
 import vaultBackground from 'images/vault-background.svg';
 import vaultIcon from 'images/vault.svg';
-import { D2ManifestDefinitions } from '../../destiny2/d2-definitions';
 import { bungieNetPath } from '../../d2l-ui/BungieImage';
+import { D2ManifestDefinitions } from '../../destiny2/d2-definitions';
+import { startSpan } from '../../utils/sentry';
 import { DimCharacterStat, DimStore, DimTitle } from '../store-types';
 import { ItemCreationContext, processItems } from './d2-item-factory';
 

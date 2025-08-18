@@ -1,7 +1,7 @@
-import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { languageSelector } from 'app/d2l-api/selectors';
 import Sheet from 'app/d2l-ui/Sheet';
 import { TileGrid } from 'app/d2l-ui/TileGrid';
+import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { DimLanguage } from 'app/i18n';
 import { t } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';

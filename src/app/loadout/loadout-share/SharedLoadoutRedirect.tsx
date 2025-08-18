@@ -1,15 +1,15 @@
-import { useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router';
-import { editLoadout } from 'app/loadout-drawer/loadout-events';
-import { showNotification } from 'app/notifications/notifications';
-import { t } from 'app/i18next-t';
-import PageLoading from 'app/d2l-ui/PageLoading';
-import { getSharedLoadout } from 'app/d2l-api/d2l-api';
-import { convertDimApiLoadoutToLoadout } from 'app/loadout/loadout-type-converters';
-import { errorMessage } from 'app/utils/errors';
-import { useSelector } from 'react-redux';
 import { currentAccountSelector } from 'app/accounts/selectors';
+import { getSharedLoadout } from 'app/d2l-api/d2l-api';
+import PageLoading from 'app/d2l-ui/PageLoading';
+import { t } from 'app/i18next-t';
 import { currentStoreSelector } from 'app/inventory/selectors';
+import { editLoadout } from 'app/loadout-drawer/loadout-events';
+import { convertDimApiLoadoutToLoadout } from 'app/loadout/loadout-type-converters';
+import { showNotification } from 'app/notifications/notifications';
+import { errorMessage } from 'app/utils/errors';
+import { useEffect } from 'react';
+import { useSelector } from 'react-redux';
+import { useNavigate, useParams } from 'react-router';
 
 export default function SharedLoadoutRedirect() {
   const { shareId } = useParams<{ shareId: string }>();
@@ -42,16 +42,16 @@ export default function SharedLoadoutRedirect() {
         console.log('Got shared loadout:', apiLoadout);
         const loadout = convertDimApiLoadoutToLoadout(apiLoadout);
         console.log('Converted loadout:', loadout);
-        
+
         // Ensure the loadout has a unique ID
         loadout.id = globalThis.crypto.randomUUID();
-        
+
         // Navigate to the account's inventory page
         navigate(`/${account.membershipId}/d${account.destinyVersion}/inventory`);
-        
+
         // Open the loadout drawer with the imported loadout
         editLoadout(loadout, currentStore.id, { fromExternal: true });
-        
+
         showNotification({
           type: 'success',
           title: t('Loadouts.Import.Success'),

@@ -1,12 +1,12 @@
 import ItemGrid from 'app/armory/ItemGrid';
 import { addCompareItem } from 'app/compare/actions';
 import { stripAdept } from 'app/compare/compare-utils';
-import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { languageSelector } from 'app/d2l-api/selectors';
 import BungieImage, { bungieNetPath } from 'app/d2l-ui/BungieImage';
 import { DestinyTooltipText } from 'app/d2l-ui/DestinyTooltipText';
 import ElementIcon from 'app/d2l-ui/ElementIcon';
 import RichDestinyText from 'app/d2l-ui/destiny-symbols/RichDestinyText';
+import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { t } from 'app/i18next-t';
 import ItemIcon, { DefItemIcon } from 'app/inventory/ItemIcon';
 import { DimItem } from 'app/inventory/item-types';
@@ -38,8 +38,8 @@ import { getItemYear, itemTypeName } from 'app/utils/item-utils';
 import { wishListsByHashSelector } from 'app/wishlists/selectors';
 import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
-import { emptyPlugHashes } from 'data/d2/empty-plug-hashes';
 import { D2EventInfo } from 'data/d2/d2-event-info-v2';
+import { emptyPlugHashes } from 'data/d2/empty-plug-hashes';
 import { ItemCategoryHashes } from 'data/d2/generated-enums';
 import perkToEnhanced from 'data/d2/trait-to-enhanced-trait.json';
 import React, { useState } from 'react';
@@ -66,14 +66,14 @@ function filterItemSocketsForArmory(item: DimItem): DimItem {
     ...item,
     sockets: {
       ...item.sockets,
-      allSockets: item.sockets.allSockets.map(socket => {
+      allSockets: item.sockets.allSockets.map((socket) => {
         if (!socket.isPerk || socket.plugOptions.length === 0) {
           return socket;
         }
 
         // Clone the socket and filter its plugOptions
         const filteredPlugOptions = [...socket.plugOptions];
-        
+
         // Filter out empty plugs
         for (let i = filteredPlugOptions.length - 1; i >= 0; i--) {
           const plug = filteredPlugOptions[i];
@@ -88,7 +88,7 @@ function filterItemSocketsForArmory(item: DimItem): DimItem {
           const enhancedVersion = perkToEnhanced[plug.plugDef.hash];
           if (enhancedVersion) {
             // This is a standard perk, check if its enhanced version exists
-            if (filteredPlugOptions.some(p => p.plugDef.hash === enhancedVersion)) {
+            if (filteredPlugOptions.some((p) => p.plugDef.hash === enhancedVersion)) {
               enhancedPerksPresent.add(enhancedVersion);
             }
           }
@@ -119,10 +119,10 @@ function filterItemSocketsForArmory(item: DimItem): DimItem {
 
         return {
           ...socket,
-          plugOptions: filteredPlugOptions
+          plugOptions: filteredPlugOptions,
         };
-      })
-    }
+      }),
+    },
   };
 
   return filteredItem;
@@ -168,7 +168,7 @@ export default function Armory({
     // Then apply whatever the user chose in the Armory UI
     ...socketOverrides,
   });
-  
+
   // Apply Armory-specific filtering to remove unwanted plugs
   const item = filterItemSocketsForArmory(itemWithOverrides);
 

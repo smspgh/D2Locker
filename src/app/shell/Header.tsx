@@ -32,7 +32,6 @@ import { installPrompt$ } from './app-install';
 import { AppIcon, searchIcon } from './icons';
 import { useIsPhonePortrait } from './selectors';
 
-
 const menuAnimateVariants: Variants = {
   open: { x: 0 },
   collapsed: { x: -250 },
@@ -153,7 +152,6 @@ export default function Header() {
     ]);
   }
 
-  
   const linkNodes = links.map((link) => (
     <NavLink className={navLinkClassName} key={link.to} to={link.to}>
       {link.badge}

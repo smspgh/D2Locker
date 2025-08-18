@@ -288,7 +288,8 @@ function mapItemsToGroups(
   // Go through each grouping-by-energy-type, throw out any items with strictly worse properties than
   // another item in that group, then use what's left to build groups by their properties.
   for (const group of Object.values(firstPassGroups)) {
-    if (!group) { // Add check for undefined group
+    if (!group) {
+      // Add check for undefined group
       continue;
     }
     const keepSet: MappedItem[] = [];
@@ -338,7 +339,8 @@ function mapItemsToGroups(
 
     const groupedByEverything = Map.groupBy(keepSet, ({ d2lItem }) => finalGroupingFn(d2lItem));
     for (const group of groupedByEverything.values()) {
-      if (group) { // Add check for undefined group
+      if (group) {
+        // Add check for undefined group
         group.sort(groupComparator(getUserItemTag));
         groups.push({
           canonicalProcessItem: group[0].processItem,

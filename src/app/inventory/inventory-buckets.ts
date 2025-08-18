@@ -1,8 +1,22 @@
 import { BucketCategory } from 'bungie-api-ts/destiny2';
 
 /** The major toplevel sections of the inventory. "Progress" is only in D1. */
-export type D2BucketCategory = 'Postmaster' | 'Weapons' | 'Armor' | 'General' | 'Consumables' | 'Modifications' | 'Inventory';
-export type D1BucketCategory = 'Postmaster' | 'Weapons' | 'Armor' | 'General' | 'Consumables' | 'Modifications' | 'Progress';
+export type D2BucketCategory =
+  | 'Postmaster'
+  | 'Weapons'
+  | 'Armor'
+  | 'General'
+  | 'Consumables'
+  | 'Modifications'
+  | 'Inventory';
+export type D1BucketCategory =
+  | 'Postmaster'
+  | 'Weapons'
+  | 'Armor'
+  | 'General'
+  | 'Consumables'
+  | 'Modifications'
+  | 'Progress';
 export type BucketSortType = D2BucketCategory | D1BucketCategory | 'Unknown';
 
 export type InventoryBucket = {

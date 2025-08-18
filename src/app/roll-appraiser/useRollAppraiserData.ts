@@ -1,8 +1,8 @@
-import { useEffect, useState } from 'react';
-import { RollAppraiserUtils, WeaponRankingData } from 'app/utils/rollAppraiserUtils';
 import { DimItem } from 'app/inventory/item-types';
+import { RollAppraiserUtils, WeaponRankingData } from 'app/utils/rollAppraiserUtils';
+import { getSocketsByIndexes, getWeaponSockets } from 'app/utils/socket-utils';
+import { useEffect, useState } from 'react';
 import { getRollAppraiserUtils, getRollAppraiserUtilsSync } from './rollAppraiserService';
-import { getWeaponSockets, getSocketsByIndexes } from 'app/utils/socket-utils';
 
 /**
  * Hook to get roll appraiser utils
@@ -24,7 +24,7 @@ export function useRollAppraiserUtils() {
           setLoading(false);
         });
     }
-  }, [utils]);
+  }, []);
 
   return { utils, loading, error };
 }
@@ -46,18 +46,18 @@ export function useWeaponRankingData(item: DimItem | null): WeaponRankingData | 
     const perkHashes: number[] = [];
     const traitPerkHashes: number[] = [];
     let masterworkHash: number | undefined = undefined;
-    
+
     if (item.sockets) {
       // Use getWeaponSockets to properly identify weapon perks
       const weaponSockets = getWeaponSockets(item, { excludeEmptySockets: false });
-      
+
       if (weaponSockets?.perks) {
         // Get all perk sockets from the perks category
         const perkSockets = getSocketsByIndexes(item.sockets, weaponSockets.perks.socketIndexes);
-        
+
         // Filter to only plugged perks
-        const pluggedPerks = perkSockets.filter(s => s.plugged && s.isPerk);
-        
+        const pluggedPerks = perkSockets.filter((s) => s.plugged && s.isPerk);
+
         pluggedPerks.forEach((socket, index) => {
           if (socket.plugged) {
             perkHashes.push(socket.plugged.plugDef.hash);
@@ -68,10 +68,13 @@ export function useWeaponRankingData(item: DimItem | null): WeaponRankingData | 
           }
         });
       }
-      
+
       // Check for masterwork
       for (const socket of item.sockets.allSockets) {
-        if (socket.plugged && socket.plugged.plugDef.plug?.plugCategoryIdentifier === 'intrinsics.stat') {
+        if (
+          socket.plugged &&
+          socket.plugged.plugDef.plug?.plugCategoryIdentifier === 'intrinsics.stat'
+        ) {
           masterworkHash = socket.plugged.plugDef.hash;
         }
       }
@@ -80,18 +83,18 @@ export function useWeaponRankingData(item: DimItem | null): WeaponRankingData | 
     const weaponData = utils.getWeaponData(
       item.hash.toString(),
       perkHashes.map(String),
-      masterworkHash?.toString()
+      masterworkHash?.toString(),
     );
-    
+
     // Override trait combo ranking if we have specific trait perks identified
     if (traitPerkHashes.length === 2 && weaponData) {
       const comboRank = utils.getTraitComboRank(
         item.hash.toString(),
         traitPerkHashes[0].toString(),
-        traitPerkHashes[1].toString()
+        traitPerkHashes[1].toString(),
       );
-      if (!comboRank) {
-        // Debug: log what we're looking for
+      // Only log in debug mode
+      if (!comboRank && $D2L_FLAVOR === 'dev') {
         console.log('No combo rank found for weapon:', item.name, {
           itemHash: item.hash,
           perk4: traitPerkHashes[0],
@@ -99,7 +102,7 @@ export function useWeaponRankingData(item: DimItem | null): WeaponRankingData | 
           allPerks: perkHashes,
           hasTraitData: Boolean(utils.hasDataForWeapon(item.hash.toString())),
         });
-      } else {
+      } else if (comboRank && $D2L_FLAVOR === 'dev') {
         console.log('Found combo rank for weapon:', item.name, {
           rank: comboRank.rank,
           perk4: comboRank.perk4Hash,
@@ -111,7 +114,7 @@ export function useWeaponRankingData(item: DimItem | null): WeaponRankingData | 
     }
 
     setRankingData(weaponData);
-  }, [utils, item]);
+  }, [utils, item?.hash, item?.sockets, item?.destinyVersion, item?.bucket?.inWeapons, item?.name]);
 
   return rankingData;
 }

@@ -100,7 +100,10 @@ function getEquippedItemsFromLoadout(
     }
   });
   // Resolve this into an object that tells us what we need to know
-  const groupedItems: Partial<Record<number, DimItem[]>> = Object.groupBy(d2lItems, (item) => item.bucket.hash);
+  const groupedItems: Partial<Record<number, DimItem[]>> = Object.groupBy(
+    d2lItems,
+    (item) => item.bucket.hash,
+  );
   const result: EquippedItemBuckets = {};
   for (const key in groupedItems) {
     if (groupedItems[key]) {

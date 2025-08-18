@@ -1,5 +1,3 @@
- 
-
 // Track how long it's been since the page load started and add that to each
 // log. Most folks who paste us logs won't have timestamps enabled and they can
 // be very useful.

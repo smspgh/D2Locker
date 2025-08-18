@@ -1,6 +1,6 @@
-import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import BungieImage from 'app/d2l-ui/BungieImage';
 import BucketIcon from 'app/d2l-ui/svgs/BucketIcon';
+import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { I18nKey, t, tl } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
 import { moveItemTo } from 'app/inventory/move-item';

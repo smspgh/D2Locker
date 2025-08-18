@@ -19,7 +19,11 @@ export default function CategoryStrip({
     <div className={styles.options}>
       {Object.keys(buckets.byCategory).map(
         (category) =>
-          category !== 'Postmaster' && category !== 'Consumables' && category !== 'Modifications' && category !== 'General' && category !== 'Inventory' && (
+          category !== 'Postmaster' &&
+          category !== 'Consumables' &&
+          category !== 'Modifications' &&
+          category !== 'General' &&
+          category !== 'Inventory' && (
             <div
               key={category}
               onClick={() => onCategorySelected(category)}

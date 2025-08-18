@@ -1,4 +1,8 @@
-import { ItemAnnotation, ItemHashTag, TagValue as ApiTagValue } from '@destinyitemmanager/dim-api-types';
+import {
+  TagValue as ApiTagValue,
+  ItemAnnotation,
+  ItemHashTag,
+} from '@destinyitemmanager/dim-api-types';
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import { I18nKey, tl } from 'app/i18next-t';
 import { ThunkResult } from 'app/store/types';
@@ -42,23 +46,35 @@ export type TagCommand = TagValue | 'clear';
 // Type conversion helpers
 export function toApiTagValue(tag: TagValue | undefined): ApiTagValue | undefined {
   // The API expects different values, so we need to map them
-  if (!tag) {return undefined;}
+  if (!tag) {
+    return undefined;
+  }
   // For now, we'll cast it as the API might accept our values
   return tag as any;
 }
 
 export function fromApiTagValue(tag: ApiTagValue | undefined): TagValue | undefined {
-  if (!tag) {return undefined;}
+  if (!tag) {
+    return undefined;
+  }
   // Map API values back to our values
   if (tag === 'keep' || tag === 'junk') {
     return tag as TagValue;
   }
   // Map API tags to our supported tags
-  if (tag === 'favorite') {return 'keep';} // Map favorite -> keep
-  if (tag === 'archive') {return 'junk';}
-  if (tag === 'infuse') {return 'junk';}
+  if (tag === 'favorite') {
+    return 'keep';
+  } // Map favorite -> keep
+  if (tag === 'archive') {
+    return 'junk';
+  }
+  if (tag === 'infuse') {
+    return 'junk';
+  }
   // Handle any remaining old hotperk tags by converting to keep
-  if (tag === 'hotperk') {return 'keep';}
+  if (tag === 'hotperk') {
+    return 'keep';
+  }
   // Default for unknown tags
   return undefined;
 }
@@ -91,11 +107,7 @@ export const vaultDisplacePriority: (TagValue | 'none')[] = [
  * Priority order for which items should get chosen to replace an equipped item.
  * Tag values earlier in this list are more likely to be chosen.
  */
-export const equipReplacePriority: (TagValue | 'none')[] = [
-  'keep',
-  'none',
-  'junk',
-];
+export const equipReplacePriority: (TagValue | 'none')[] = ['keep', 'none', 'junk'];
 
 export interface ItemInfos {
   [itemId: string]: ItemAnnotation;
@@ -221,7 +233,9 @@ export function getTag(
     [itemHash: string]: ItemHashTag;
   },
 ): TagValue | undefined {
-  if (!item.taggable) {return undefined;}
+  if (!item.taggable) {
+    return undefined;
+  }
 
   const apiTag = item.instanced ? itemInfos[item.id]?.tag : itemHashTags?.[item.hash]?.tag;
 
@@ -230,9 +244,15 @@ export function getTag(
     return apiTag as TagValue;
   }
   // Map API tags to our supported tags
-  if (apiTag === 'favorite') {return 'hotperk';}
-  if (apiTag === 'archive') {return 'junk';}
-  if (apiTag === 'infuse') {return 'junk';}
+  if (apiTag === 'favorite') {
+    return 'hotperk';
+  }
+  if (apiTag === 'archive') {
+    return 'junk';
+  }
+  if (apiTag === 'infuse') {
+    return 'junk';
+  }
 
   return undefined;
 }

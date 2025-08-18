@@ -3,6 +3,7 @@ import { tl } from 'app/i18next-t';
 import { DimItem, DimStat } from 'app/inventory/item-types';
 import { DimStore } from 'app/inventory/store-types';
 import { maxLightItemSet, maxStatLoadout } from 'app/loadout-drawer/auto-loadouts';
+import { makeSearchFilterFactory } from 'app/search/search-filter';
 import {
   allAtomicStats,
   armorAnyStatHashes,
@@ -15,16 +16,21 @@ import {
   weaponStatNames,
 } from 'app/search/search-filter-values';
 import { generateGroupedSuggestionsForFilter } from 'app/search/suggestions-generation';
+import { matchText } from 'app/search/text-utils';
 import { mapValues, maxOf, sumBy } from 'app/utils/collections';
 import { getStatValuesByHash, isClassCompatible } from 'app/utils/item-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { once } from 'es-toolkit';
 import { ItemFilterDefinition } from '../item-filter-types';
-import { perkStatMappings, getPerkStatHashes, getPerkStatNames, isValidPerkName, PerkName, displayStatToHashMap } from './perk-stat-mappings';
-import { testStringsFromAllSockets } from './freeform';
-import { matchText } from 'app/search/text-utils';
-import { makeSearchFilterFactory } from 'app/search/search-filter';
 import { buildItemSearchConfig } from '../item-search-filter';
+import { testStringsFromAllSockets } from './freeform';
+import {
+  displayStatToHashMap,
+  getPerkStatHashes,
+  getPerkStatNames,
+  isValidPerkName,
+  perkStatMappings,
+} from './perk-stat-mappings';
 
 const validateStat: ItemFilterDefinition['validateStat'] = (filterContext) => {
   const customStatLabels = filterContext?.customStats?.map((c) => c.shortLabel) ?? [];
@@ -35,8 +41,10 @@ const validateStat: ItemFilterDefinition['validateStat'] = (filterContext) => {
       const customStatName = stat.replace(':best', '');
       return customStatLabels.includes(customStatName);
     }
-    return possibleStatNames.includes(stat) ||
-      stat.split(/&|\+/).every((s) => s !== 'any' && possibleStatNames.includes(s));
+    return (
+      possibleStatNames.includes(stat) ||
+      stat.split(/&|\+/).every((s) => s !== 'any' && possibleStatNames.includes(s))
+    );
   };
 };
 
@@ -55,7 +63,7 @@ const statFilters: ItemFilterDefinition[] = [
           suggestions: [
             ...allAtomicStats,
             ...(customStats?.map((c) => c.shortLabel) ?? []),
-            ...(customStats?.map((c) => `${c.shortLabel}:best`) ?? [])
+            ...(customStats?.map((c) => `${c.shortLabel}:best`) ?? []),
           ],
         },
         {},
@@ -81,7 +89,7 @@ const statFilters: ItemFilterDefinition[] = [
             ...searchableArmorStatNames,
             ...estStatNames,
             ...(customStats?.map((c) => c.shortLabel) ?? []),
-            ...(customStats?.map((c) => `${c.shortLabel}:best`) ?? [])
+            ...(customStats?.map((c) => `${c.shortLabel}:best`) ?? []),
           ],
         },
         {},
@@ -153,7 +161,13 @@ const statFilters: ItemFilterDefinition[] = [
     filter: ({ filterValue, allItems, customStats }) => {
       const highestCustomStatsPerSlotPerTier = gatherHighestCustomStats(allItems, customStats);
       return (item: DimItem) =>
-        checkIfCustomStatMatchesMaxValue(highestCustomStatsPerSlotPerTier, item, filterValue, customStats, false);
+        checkIfCustomStatMatchesMaxValue(
+          highestCustomStatsPerSlotPerTier,
+          item,
+          filterValue,
+          customStats,
+          false,
+        );
     },
   },
   {
@@ -177,7 +191,13 @@ const statFilters: ItemFilterDefinition[] = [
     filter: ({ filterValue, allItems, customStats }) => {
       const highestCustomStatsPerSlotPerTier = gatherHighestCustomStats(allItems, customStats);
       return (item: DimItem) =>
-        checkIfCustomStatMatchesMaxValue(highestCustomStatsPerSlotPerTier, item, filterValue, customStats, true);
+        checkIfCustomStatMatchesMaxValue(
+          highestCustomStatsPerSlotPerTier,
+          item,
+          filterValue,
+          customStats,
+          true,
+        );
     },
   },
   {
@@ -259,20 +279,75 @@ const statFilters: ItemFilterDefinition[] = [
     destinyVersion: 2,
     suggestions: [
       // Legendary ✨
-      'legendary:1', 'legendary:2', 'legendary:3', 'legendary:4', 'legendary:5',
-      'legendary:6', 'legendary:7', 'legendary:8', 'legendary:9', 'legendary:10',
-      'exotic:1', 'exotic:2', 'exotic:3', 'exotic:4', 'exotic:5',
-      'exotic:6', 'exotic:7', 'exotic:8', 'exotic:9', 'exotic:10',
-      'rare:1', 'rare:2', 'rare:3', 'rare:4', 'rare:5',
-      'rare:6', 'rare:7', 'rare:8', 'rare:9', 'rare:10',
-      'uncommon:1', 'uncommon:2', 'uncommon:3', 'uncommon:4', 'uncommon:5',
-      'uncommon:6', 'uncommon:7', 'uncommon:8', 'uncommon:9', 'uncommon:10',
-      'common:1', 'common:2', 'common:3', 'common:4', 'common:5',
-      'common:6', 'common:7', 'common:8', 'common:9', 'common:10'
+      'legendary:1',
+      'legendary:2',
+      'legendary:3',
+      'legendary:4',
+      'legendary:5',
+      'legendary:6',
+      'legendary:7',
+      'legendary:8',
+      'legendary:9',
+      'legendary:10',
+      'exotic:1',
+      'exotic:2',
+      'exotic:3',
+      'exotic:4',
+      'exotic:5',
+      'exotic:6',
+      'exotic:7',
+      'exotic:8',
+      'exotic:9',
+      'exotic:10',
+      'rare:1',
+      'rare:2',
+      'rare:3',
+      'rare:4',
+      'rare:5',
+      'rare:6',
+      'rare:7',
+      'rare:8',
+      'rare:9',
+      'rare:10',
+      'uncommon:1',
+      'uncommon:2',
+      'uncommon:3',
+      'uncommon:4',
+      'uncommon:5',
+      'uncommon:6',
+      'uncommon:7',
+      'uncommon:8',
+      'uncommon:9',
+      'uncommon:10',
+      'common:1',
+      'common:2',
+      'common:3',
+      'common:4',
+      'common:5',
+      'common:6',
+      'common:7',
+      'common:8',
+      'common:9',
+      'common:10',
     ],
     filter: (filterContext) => {
-      const { allItems, filterValue, settings, getTag, customStats, d2Definitions, stores, getNotes, newItems, loadoutsByItem, wishListsByHash, wishListFunction, language, currentStore } = filterContext;
-      
+      const {
+        allItems,
+        filterValue,
+        settings,
+        getTag,
+        customStats,
+        d2Definitions,
+        stores,
+        getNotes,
+        newItems,
+        loadoutsByItem,
+        wishListsByHash,
+        wishListFunction,
+        language,
+        currentStore,
+      } = filterContext;
+
       // Parse the filter value like "legendary:3" or "exotic:2"
       const parts = filterValue.split(':');
       if (parts.length !== 2) {
@@ -287,11 +362,11 @@ const statFilters: ItemFilterDefinition[] = [
 
       // Map tier names to rarity values
       const tierToRarity: Record<string, string> = {
-        'common': 'Common',
-        'uncommon': 'Uncommon',
-        'rare': 'Rare',
-        'legendary': 'Legendary',
-        'exotic': 'Exotic'
+        common: 'Common',
+        uncommon: 'Uncommon',
+        rare: 'Rare',
+        legendary: 'Legendary',
+        exotic: 'Exotic',
       };
 
       const rarity = tierToRarity[tierName.toLowerCase()];
@@ -302,7 +377,7 @@ const statFilters: ItemFilterDefinition[] = [
       // Build keep filters to exclude items already marked as keep
       let keepWeaponFilter: (item: DimItem) => boolean = () => false;
       let keepArmorFilter: (item: DimItem) => boolean = () => false;
-      
+
       try {
         // Build the search config for keep filters
         const suggestionsContext = {
@@ -314,40 +389,40 @@ const statFilters: ItemFilterDefinition[] = [
           allNotesHashtags: [],
           customStats,
         };
-        
+
         const searchConfig = buildItemSearchConfig(2, language || 'en', suggestionsContext);
-        
+
         // Build keepweapon filter
         const keepWeaponSettings = settings?.searchFilterSettings?.keepWeapon;
         if (keepWeaponSettings?.enabled && keepWeaponSettings?.additionalSearchTerms?.length > 0) {
           const terms = keepWeaponSettings.additionalSearchTerms;
           let searchQuery = '';
-          
+
           if (terms.length === 1) {
             searchQuery = terms[0].term;
           } else {
             const groupedTerms = new Map<number, typeof terms>();
-            terms.forEach(term => {
+            terms.forEach((term) => {
               const groupNum = term.group ?? 0;
               if (!groupedTerms.has(groupNum)) {
                 groupedTerms.set(groupNum, []);
               }
               groupedTerms.get(groupNum)!.push(term);
             });
-            
+
             const groupParts = [];
             for (const [groupNum, groupTerms] of groupedTerms) {
               if (groupTerms.length === 1) {
                 groupParts.push(groupTerms[0].term);
               } else {
-                const innerTerms = groupTerms.map(term => term.term).join(' and ');
+                const innerTerms = groupTerms.map((term) => term.term).join(' and ');
                 groupParts.push(`(${innerTerms})`);
               }
             }
-            
+
             searchQuery = groupParts.join(' or ');
           }
-          
+
           const searchFilterFactory = makeSearchFilterFactory(searchConfig, {
             stores,
             allItems,
@@ -364,40 +439,41 @@ const statFilters: ItemFilterDefinition[] = [
             settings,
           });
           const weaponFilter = searchFilterFactory(searchQuery);
-          keepWeaponFilter = (item: DimItem) => item.bucket?.sort === 'Weapons' && weaponFilter(item);
+          keepWeaponFilter = (item: DimItem) =>
+            item.bucket?.sort === 'Weapons' && weaponFilter(item);
         }
-        
+
         // Build keeparmor filter
         const keepArmorSettings = settings?.searchFilterSettings?.keepArmor;
         if (keepArmorSettings?.enabled && keepArmorSettings?.additionalSearchTerms?.length > 0) {
           const terms = keepArmorSettings.additionalSearchTerms;
           let searchQuery = '';
-          
+
           if (terms.length === 1) {
             searchQuery = terms[0].term;
           } else {
             const groupedTerms = new Map<number, typeof terms>();
-            terms.forEach(term => {
+            terms.forEach((term) => {
               const groupNum = term.group ?? 0;
               if (!groupedTerms.has(groupNum)) {
                 groupedTerms.set(groupNum, []);
               }
               groupedTerms.get(groupNum)!.push(term);
             });
-            
+
             const groupParts = [];
             for (const [groupNum, groupTerms] of groupedTerms) {
               if (groupTerms.length === 1) {
                 groupParts.push(groupTerms[0].term);
               } else {
-                const innerTerms = groupTerms.map(term => term.term).join(' and ');
+                const innerTerms = groupTerms.map((term) => term.term).join(' and ');
                 groupParts.push(`(${innerTerms})`);
               }
             }
-            
+
             searchQuery = groupParts.join(' or ');
           }
-          
+
           const searchFilterFactory = makeSearchFilterFactory(searchConfig, {
             stores,
             allItems,
@@ -416,19 +492,20 @@ const statFilters: ItemFilterDefinition[] = [
           const armorFilter = searchFilterFactory(searchQuery);
           keepArmorFilter = (item: DimItem) => item.bucket.inArmor && armorFilter(item);
         }
-      } catch (error) {
-      }
+      } catch (error) {}
 
       // Group items by bucket and class, but only include items of the specified tier
       // that are NOT marked as keep items
       const tierItemsByBucketClass: Record<string, DimItem[]> = {};
 
       for (const item of allItems) {
-        if (item.classType !== DestinyClass.Classified &&
-            Boolean(item.power) &&
-            item.rarity === rarity &&
-            !keepWeaponFilter(item) &&
-            !keepArmorFilter(item)) {
+        if (
+          item.classType !== DestinyClass.Classified &&
+          Boolean(item.power) &&
+          item.rarity === rarity &&
+          !keepWeaponFilter(item) &&
+          !keepArmorFilter(item)
+        ) {
           const key = maxPowerKey(item, true); // Always consider class for tier-specific
           if (!tierItemsByBucketClass[key]) {
             tierItemsByBucketClass[key] = [];
@@ -472,12 +549,25 @@ const statFilters: ItemFilterDefinition[] = [
     description: tl('Filter.MaxNonExotic'),
     format: 'query',
     destinyVersion: 2,
-    suggestions: [
-      '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'
-    ],
+    suggestions: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'],
     filter: (filterContext) => {
-      const { allItems, filterValue, settings, getTag, customStats, d2Definitions, stores, getNotes, newItems, loadoutsByItem, wishListsByHash, wishListFunction, language, currentStore } = filterContext;
-      
+      const {
+        allItems,
+        filterValue,
+        settings,
+        getTag,
+        customStats,
+        d2Definitions,
+        stores,
+        getNotes,
+        newItems,
+        loadoutsByItem,
+        wishListsByHash,
+        wishListFunction,
+        language,
+        currentStore,
+      } = filterContext;
+
       // Parse the count from filterValue (e.g., "3" from "maxnonexotic:3")
       const count = parseInt(filterValue, 10);
       if (isNaN(count) || count < 1) {
@@ -487,7 +577,7 @@ const statFilters: ItemFilterDefinition[] = [
       // Build keep filters to exclude items already marked as keep
       let keepWeaponFilter: (item: DimItem) => boolean = () => false;
       let keepArmorFilter: (item: DimItem) => boolean = () => false;
-      
+
       try {
         // Build the search config for keep filters
         const suggestionsContext = {
@@ -499,40 +589,40 @@ const statFilters: ItemFilterDefinition[] = [
           allNotesHashtags: [],
           customStats,
         };
-        
+
         const searchConfig = buildItemSearchConfig(2, language || 'en', suggestionsContext);
-        
+
         // Build keepweapon filter
         const keepWeaponSettings = settings?.searchFilterSettings?.keepWeapon;
         if (keepWeaponSettings?.enabled && keepWeaponSettings?.additionalSearchTerms?.length > 0) {
           const terms = keepWeaponSettings.additionalSearchTerms;
           let searchQuery = '';
-          
+
           if (terms.length === 1) {
             searchQuery = terms[0].term;
           } else {
             const groupedTerms = new Map<number, typeof terms>();
-            terms.forEach(term => {
+            terms.forEach((term) => {
               const groupNum = term.group ?? 0;
               if (!groupedTerms.has(groupNum)) {
                 groupedTerms.set(groupNum, []);
               }
               groupedTerms.get(groupNum)!.push(term);
             });
-            
+
             const groupParts = [];
             for (const [groupNum, groupTerms] of groupedTerms) {
               if (groupTerms.length === 1) {
                 groupParts.push(groupTerms[0].term);
               } else {
-                const innerTerms = groupTerms.map(term => term.term).join(' and ');
+                const innerTerms = groupTerms.map((term) => term.term).join(' and ');
                 groupParts.push(`(${innerTerms})`);
               }
             }
-            
+
             searchQuery = groupParts.join(' or ');
           }
-          
+
           const searchFilterFactory = makeSearchFilterFactory(searchConfig, {
             stores,
             allItems,
@@ -549,40 +639,41 @@ const statFilters: ItemFilterDefinition[] = [
             settings,
           });
           const weaponFilter = searchFilterFactory(searchQuery);
-          keepWeaponFilter = (item: DimItem) => item.bucket?.sort === 'Weapons' && weaponFilter(item);
+          keepWeaponFilter = (item: DimItem) =>
+            item.bucket?.sort === 'Weapons' && weaponFilter(item);
         }
-        
+
         // Build keeparmor filter
         const keepArmorSettings = settings?.searchFilterSettings?.keepArmor;
         if (keepArmorSettings?.enabled && keepArmorSettings?.additionalSearchTerms?.length > 0) {
           const terms = keepArmorSettings.additionalSearchTerms;
           let searchQuery = '';
-          
+
           if (terms.length === 1) {
             searchQuery = terms[0].term;
           } else {
             const groupedTerms = new Map<number, typeof terms>();
-            terms.forEach(term => {
+            terms.forEach((term) => {
               const groupNum = term.group ?? 0;
               if (!groupedTerms.has(groupNum)) {
                 groupedTerms.set(groupNum, []);
               }
               groupedTerms.get(groupNum)!.push(term);
             });
-            
+
             const groupParts = [];
             for (const [groupNum, groupTerms] of groupedTerms) {
               if (groupTerms.length === 1) {
                 groupParts.push(groupTerms[0].term);
               } else {
-                const innerTerms = groupTerms.map(term => term.term).join(' and ');
+                const innerTerms = groupTerms.map((term) => term.term).join(' and ');
                 groupParts.push(`(${innerTerms})`);
               }
             }
-            
+
             searchQuery = groupParts.join(' or ');
           }
-          
+
           const searchFilterFactory = makeSearchFilterFactory(searchConfig, {
             stores,
             allItems,
@@ -601,18 +692,19 @@ const statFilters: ItemFilterDefinition[] = [
           const armorFilter = searchFilterFactory(searchQuery);
           keepArmorFilter = (item: DimItem) => item.bucket.inArmor && armorFilter(item);
         }
-      } catch (error) {
-      }
+      } catch (error) {}
 
       // Get all non-exotic items grouped by bucket/class, excluding keep items
       const nonExoticItemsByBucketClass: Record<string, DimItem[]> = {};
 
       for (const item of allItems) {
-        if (item.classType !== DestinyClass.Classified &&
-            Boolean(item.power) &&
-            item.rarity !== 'Exotic' &&
-            !keepWeaponFilter(item) &&
-            !keepArmorFilter(item)) {
+        if (
+          item.classType !== DestinyClass.Classified &&
+          Boolean(item.power) &&
+          item.rarity !== 'Exotic' &&
+          !keepWeaponFilter(item) &&
+          !keepArmorFilter(item)
+        ) {
           const key = maxPowerKey(item, true); // Always consider class
           if (!nonExoticItemsByBucketClass[key]) {
             nonExoticItemsByBucketClass[key] = [];
@@ -645,10 +737,12 @@ const statFilters: ItemFilterDefinition[] = [
 
         // Find the power level of this item
         const itemPower = item.power;
-        
+
         // Get the unique power levels in descending order
-        const uniquePowerLevels = Array.from(new Set(sortedItems.map(i => i.power))).sort((a, b) => b - a);
-        
+        const uniquePowerLevels = Array.from(new Set(sortedItems.map((i) => i.power))).sort(
+          (a, b) => b - a,
+        );
+
         // Check if this item's power level is among the top N unique power levels
         const topNPowerLevels = uniquePowerLevels.slice(0, count);
         return topNPowerLevels.includes(itemPower);
@@ -667,13 +761,17 @@ const statFilters: ItemFilterDefinition[] = [
       }
 
       // Get the stat hashes for this perk
-      const { primary: primaryStatHash, secondary: secondaryStatHash } = getPerkStatHashes(filterValue);
+      const { primary: primaryStatHash, secondary: secondaryStatHash } =
+        getPerkStatHashes(filterValue);
 
       // Find all armor items that could potentially match
-      const armorItems = allItems.filter(item => 
-        item.bucket.inArmor && 
-        item.stats && 
-        item.stats.some(s => s.statHash === primaryStatHash || s.statHash === secondaryStatHash)
+      const armorItems = allItems.filter(
+        (item) =>
+          item.bucket.inArmor &&
+          item.stats &&
+          item.stats.some(
+            (s) => s.statHash === primaryStatHash || s.statHash === secondaryStatHash,
+          ),
       );
 
       // Group items by slot and class
@@ -690,33 +788,39 @@ const statFilters: ItemFilterDefinition[] = [
       const bestItemIds = new Set<string>();
 
       for (const [slotClass, items] of Object.entries(itemsBySlotClass)) {
-        if (items.length === 0) {continue;}
+        if (items.length === 0) {
+          continue;
+        }
 
         // Sort by primary stat (descending), then by secondary stat (descending)
         const sortedItems = items.sort((a, b) => {
-          const aPrimaryStat = a.stats?.find(s => s.statHash === primaryStatHash)?.base || 0;
-          const bPrimaryStat = b.stats?.find(s => s.statHash === primaryStatHash)?.base || 0;
-          
+          const aPrimaryStat = a.stats?.find((s) => s.statHash === primaryStatHash)?.base || 0;
+          const bPrimaryStat = b.stats?.find((s) => s.statHash === primaryStatHash)?.base || 0;
+
           if (aPrimaryStat !== bPrimaryStat) {
             return bPrimaryStat - aPrimaryStat; // Higher primary stat wins
           }
-          
+
           // If primary stats are tied, compare secondary stats
-          const aSecondaryStat = a.stats?.find(s => s.statHash === secondaryStatHash)?.base || 0;
-          const bSecondaryStat = b.stats?.find(s => s.statHash === secondaryStatHash)?.base || 0;
-          
+          const aSecondaryStat = a.stats?.find((s) => s.statHash === secondaryStatHash)?.base || 0;
+          const bSecondaryStat = b.stats?.find((s) => s.statHash === secondaryStatHash)?.base || 0;
+
           return bSecondaryStat - aSecondaryStat; // Higher secondary stat wins
         });
 
         // Add all items that tie for the best stats
         const bestItem = sortedItems[0];
-        const bestPrimaryStat = bestItem.stats?.find(s => s.statHash === primaryStatHash)?.base || 0;
-        const bestSecondaryStat = bestItem.stats?.find(s => s.statHash === secondaryStatHash)?.base || 0;
+        const bestPrimaryStat =
+          bestItem.stats?.find((s) => s.statHash === primaryStatHash)?.base || 0;
+        const bestSecondaryStat =
+          bestItem.stats?.find((s) => s.statHash === secondaryStatHash)?.base || 0;
 
         for (const item of sortedItems) {
-          const itemPrimaryStat = item.stats?.find(s => s.statHash === primaryStatHash)?.base || 0;
-          const itemSecondaryStat = item.stats?.find(s => s.statHash === secondaryStatHash)?.base || 0;
-          
+          const itemPrimaryStat =
+            item.stats?.find((s) => s.statHash === primaryStatHash)?.base || 0;
+          const itemSecondaryStat =
+            item.stats?.find((s) => s.statHash === secondaryStatHash)?.base || 0;
+
           if (itemPrimaryStat === bestPrimaryStat && itemSecondaryStat === bestSecondaryStat) {
             bestItemIds.add(item.id);
           } else {
@@ -734,14 +838,14 @@ const statFilters: ItemFilterDefinition[] = [
     format: 'freeform',
     destinyVersion: 2,
     filter: ({ filterValue, allItems, language, d2Definitions }) => {
-      
       // Get the stat hashes for this perk, or use defaults if not in our mapping
       let primaryStatHash: number;
       let secondaryStatHash: number;
-      
+
       // Normalize the filter value to match our mappings (capitalize first letter)
-      const normalizedPerkName = filterValue.charAt(0).toUpperCase() + filterValue.slice(1).toLowerCase();
-      
+      const normalizedPerkName =
+        filterValue.charAt(0).toUpperCase() + filterValue.slice(1).toLowerCase();
+
       if (isValidPerkName(normalizedPerkName)) {
         const statHashes = getPerkStatHashes(normalizedPerkName);
         primaryStatHash = statHashes.primary;
@@ -760,23 +864,23 @@ const statFilters: ItemFilterDefinition[] = [
 
       // Find all items that have the specified perk
       const perkTest = matchText(filterValue, language, /* exact */ false);
-      const itemsWithPerk = allItems.filter(item => 
-        item.bucket.inArmor && 
-        item.stats &&
-        testStringsFromAllSockets(perkTest, item, d2Definitions, /* includeDescription */ false)
+      const itemsWithPerk = allItems.filter(
+        (item) =>
+          item.bucket.inArmor &&
+          item.stats &&
+          testStringsFromAllSockets(perkTest, item, d2Definitions, /* includeDescription */ false),
       );
 
       if (itemsWithPerk.length > 0) {
         // Get the actual stat names based on the normalized perk name
         let primaryStatName = 'Primary';
         let secondaryStatName = 'Secondary';
-        
+
         if (isValidPerkName(normalizedPerkName)) {
           const statNames = getPerkStatNames(normalizedPerkName);
           primaryStatName = statNames.primary;
           secondaryStatName = statNames.secondary;
         }
-        
       }
 
       if (itemsWithPerk.length === 0) {
@@ -797,36 +901,40 @@ const statFilters: ItemFilterDefinition[] = [
       const bestItemIds = new Set<string>();
 
       for (const [slotClass, items] of Object.entries(itemsBySlotClass)) {
-        if (items.length === 0) {continue;}
-
+        if (items.length === 0) {
+          continue;
+        }
 
         // Sort by primary stat (descending), then by secondary stat (descending)
         const sortedItems = items.sort((a, b) => {
-          const aPrimaryStat = a.stats?.find(s => s.statHash === primaryStatHash)?.base || 0;
-          const bPrimaryStat = b.stats?.find(s => s.statHash === primaryStatHash)?.base || 0;
-          
+          const aPrimaryStat = a.stats?.find((s) => s.statHash === primaryStatHash)?.base || 0;
+          const bPrimaryStat = b.stats?.find((s) => s.statHash === primaryStatHash)?.base || 0;
+
           if (aPrimaryStat !== bPrimaryStat) {
             return bPrimaryStat - aPrimaryStat; // Higher primary stat wins
           }
-          
+
           // If primary stats are tied, compare secondary stats
-          const aSecondaryStat = a.stats?.find(s => s.statHash === secondaryStatHash)?.base || 0;
-          const bSecondaryStat = b.stats?.find(s => s.statHash === secondaryStatHash)?.base || 0;
-          
+          const aSecondaryStat = a.stats?.find((s) => s.statHash === secondaryStatHash)?.base || 0;
+          const bSecondaryStat = b.stats?.find((s) => s.statHash === secondaryStatHash)?.base || 0;
+
           return bSecondaryStat - aSecondaryStat; // Higher secondary stat wins
         });
 
         // Add all items that tie for the best stats
         if (sortedItems.length > 0) {
           const bestItem = sortedItems[0];
-          const bestPrimaryStat = bestItem.stats?.find(s => s.statHash === primaryStatHash)?.base || 0;
-          const bestSecondaryStat = bestItem.stats?.find(s => s.statHash === secondaryStatHash)?.base || 0;
-
+          const bestPrimaryStat =
+            bestItem.stats?.find((s) => s.statHash === primaryStatHash)?.base || 0;
+          const bestSecondaryStat =
+            bestItem.stats?.find((s) => s.statHash === secondaryStatHash)?.base || 0;
 
           for (const item of sortedItems) {
-            const itemPrimaryStat = item.stats?.find(s => s.statHash === primaryStatHash)?.base || 0;
-            const itemSecondaryStat = item.stats?.find(s => s.statHash === secondaryStatHash)?.base || 0;
-            
+            const itemPrimaryStat =
+              item.stats?.find((s) => s.statHash === primaryStatHash)?.base || 0;
+            const itemSecondaryStat =
+              item.stats?.find((s) => s.statHash === secondaryStatHash)?.base || 0;
+
             if (itemPrimaryStat === bestPrimaryStat && itemSecondaryStat === bestSecondaryStat) {
               bestItemIds.add(item.id);
             } else {
@@ -844,9 +952,7 @@ const statFilters: ItemFilterDefinition[] = [
     description: tl('Filter.Stats'),
     format: 'simple',
     destinyVersion: 2,
-    filter: () => 
-       () => true // Return all items
-    ,
+    filter: () => () => true, // Return all items
   },
 ];
 
@@ -867,7 +973,7 @@ function statFilterFromString(
     const customStatName = statNames.replace(':best', '');
 
     // Find the custom stat definition
-    const customStat = customStats.find(c => c.shortLabel === customStatName);
+    const customStat = customStats.find((c) => c.shortLabel === customStatName);
     if (!customStat) {
       return () => false; // No matching custom stat found
     }
@@ -887,7 +993,7 @@ function statFilterFromString(
       }
 
       // Find the stat on this item
-      const stat = item.stats.find(s => s.statHash === customStat.statHash);
+      const stat = item.stats.find((s) => s.statHash === customStat.statHash);
       if (!stat) {
         return false;
       }
@@ -897,7 +1003,11 @@ function statFilterFromString(
       const maxStatsForSlot = highestCustomStatsPerSlotPerTier[useWhichMaxes][itemSlot];
       const maxStatForCustomStat = maxStatsForSlot?.[customStatName];
 
-      return maxStatForCustomStat && stat[byBaseValue ? 'base' : 'value'] === maxStatForCustomStat[byBaseValue ? 'base' : 'value'];
+      return (
+        maxStatForCustomStat &&
+        stat[byBaseValue ? 'base' : 'value'] ===
+          maxStatForCustomStat[byBaseValue ? 'base' : 'value']
+      );
     };
   }
 
@@ -980,7 +1090,11 @@ function createStatCombiner(
       const namedCustomStats = customStats.filter((c) => c.shortLabel === statName);
 
       if (namedCustomStats.length) {
-        return (statValuesByHash: NodeJS.Dict<number>, _: any, item: DimItem) => {
+        return (
+          statValuesByHash: NodeJS.Dict<number>,
+          _sortStats: () => number[][],
+          item: DimItem,
+        ) => {
           const thisClassCustomStat = namedCustomStats.find((c) =>
             isClassCompatible(c.class, item.classType),
           );
@@ -1112,7 +1226,6 @@ function calculateMaxPowerPerBucket(allItems: DimItem[], classMatters: boolean) 
   );
 }
 
-
 type MaxCustomStatValuesDict = Record<
   'all' | 'nonexotic',
   { [slotName: string]: { [customStatLabel: string]: { value: number; base: number } } }
@@ -1135,7 +1248,7 @@ export function gatherHighestCustomStats(allItems: DimItem[], customStats: Custo
     // Check each custom stat for this item
     for (const customStat of customStats) {
       if (isClassCompatible(customStat.class, i.classType)) {
-        const stat = i.stats.find(s => s.statHash === customStat.statHash);
+        const stat = i.stats.find((s) => s.statHash === customStat.statHash);
         if (stat) {
           for (const thisSlotMaxes of thisSlotMaxGroups) {
             const thisSlotThisStatMaxes = (thisSlotMaxes[customStat.shortLabel] ??= {
@@ -1165,13 +1278,15 @@ function checkIfCustomStatMatchesMaxValue(
   }
 
   // Find the custom stat definition
-  const customStat = customStats.find(c => c.shortLabel === customStatLabel && isClassCompatible(c.class, item.classType));
+  const customStat = customStats.find(
+    (c) => c.shortLabel === customStatLabel && isClassCompatible(c.class, item.classType),
+  );
   if (!customStat) {
     return false;
   }
 
   // Find the stat on this item
-  const stat = item.stats.find(s => s.statHash === customStat.statHash);
+  const stat = item.stats.find((s) => s.statHash === customStat.statHash);
   if (!stat) {
     return false;
   }

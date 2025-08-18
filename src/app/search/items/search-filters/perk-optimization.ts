@@ -3,7 +3,12 @@ import { DimItem } from 'app/inventory/item-types';
 import { testStringsFromAllSockets } from 'app/search/items/search-filters/freeform';
 import { matchText } from 'app/search/text-utils';
 import { ItemFilterDefinition } from '../item-filter-types';
-import { perkStatMappings, getPerkStatHashes, isValidPerkName, PerkName, displayStatToHashMap } from './perk-stat-mappings';
+import {
+  displayStatToHashMap,
+  getPerkStatHashes,
+  isValidPerkName,
+  perkStatMappings,
+} from './perk-stat-mappings';
 
 /**
  * Filter that finds the best armor piece for a given perk based on optimized primary/secondary stats
@@ -18,11 +23,11 @@ const perkOptimizationFilter: ItemFilterDefinition = {
     console.log('🔥 bestforperk filter called with:', filterValue);
     console.log('🔥 allItems count:', allItems.length);
     console.log('🔥 d2Definitions:', Boolean(d2Definitions));
-    
+
     // Get the stat hashes for this perk, or use defaults if not in our mapping
     let primaryStatHash: number;
     let secondaryStatHash: number;
-    
+
     if (isValidPerkName(filterValue)) {
       const statHashes = getPerkStatHashes(filterValue);
       primaryStatHash = statHashes.primary;
@@ -43,10 +48,11 @@ const perkOptimizationFilter: ItemFilterDefinition = {
 
     // Find all items that have the specified perk
     const perkTest = matchText(filterValue, language, /* exact */ false);
-    const itemsWithPerk = allItems.filter(item => 
-      item.bucket.inArmor && 
-      item.stats &&
-      testStringsFromAllSockets(perkTest, item, d2Definitions, /* includeDescription */ false)
+    const itemsWithPerk = allItems.filter(
+      (item) =>
+        item.bucket.inArmor &&
+        item.stats &&
+        testStringsFromAllSockets(perkTest, item, d2Definitions, /* includeDescription */ false),
     );
 
     // Debug logging
@@ -54,7 +60,10 @@ const perkOptimizationFilter: ItemFilterDefinition = {
       console.log(`Looking for perk: "${filterValue}"`);
       console.log(`Found ${itemsWithPerk.length} items with this perk`);
       if (itemsWithPerk.length > 0) {
-        console.log('Sample items:', itemsWithPerk.slice(0, 3).map(i => i.name));
+        console.log(
+          'Sample items:',
+          itemsWithPerk.slice(0, 3).map((i) => i.name),
+        );
       }
     }
 
@@ -76,33 +85,38 @@ const perkOptimizationFilter: ItemFilterDefinition = {
     const bestItemIds = new Set<string>();
 
     for (const [slotClass, items] of Object.entries(itemsBySlotClass)) {
-      if (items.length === 0) {continue;}
+      if (items.length === 0) {
+        continue;
+      }
 
       // Sort by primary stat (descending), then by secondary stat (descending)
       const sortedItems = items.sort((a, b) => {
-        const aPrimaryStat = a.stats?.find(s => s.statHash === primaryStatHash)?.base || 0;
-        const bPrimaryStat = b.stats?.find(s => s.statHash === primaryStatHash)?.base || 0;
-        
+        const aPrimaryStat = a.stats?.find((s) => s.statHash === primaryStatHash)?.base || 0;
+        const bPrimaryStat = b.stats?.find((s) => s.statHash === primaryStatHash)?.base || 0;
+
         if (aPrimaryStat !== bPrimaryStat) {
           return bPrimaryStat - aPrimaryStat; // Higher primary stat wins
         }
-        
+
         // If primary stats are tied, compare secondary stats
-        const aSecondaryStat = a.stats?.find(s => s.statHash === secondaryStatHash)?.base || 0;
-        const bSecondaryStat = b.stats?.find(s => s.statHash === secondaryStatHash)?.base || 0;
-        
+        const aSecondaryStat = a.stats?.find((s) => s.statHash === secondaryStatHash)?.base || 0;
+        const bSecondaryStat = b.stats?.find((s) => s.statHash === secondaryStatHash)?.base || 0;
+
         return bSecondaryStat - aSecondaryStat; // Higher secondary stat wins
       });
 
       // Add all items that tie for the best stats
       const bestItem = sortedItems[0];
-      const bestPrimaryStat = bestItem.stats?.find(s => s.statHash === primaryStatHash)?.base || 0;
-      const bestSecondaryStat = bestItem.stats?.find(s => s.statHash === secondaryStatHash)?.base || 0;
+      const bestPrimaryStat =
+        bestItem.stats?.find((s) => s.statHash === primaryStatHash)?.base || 0;
+      const bestSecondaryStat =
+        bestItem.stats?.find((s) => s.statHash === secondaryStatHash)?.base || 0;
 
       for (const item of sortedItems) {
-        const itemPrimaryStat = item.stats?.find(s => s.statHash === primaryStatHash)?.base || 0;
-        const itemSecondaryStat = item.stats?.find(s => s.statHash === secondaryStatHash)?.base || 0;
-        
+        const itemPrimaryStat = item.stats?.find((s) => s.statHash === primaryStatHash)?.base || 0;
+        const itemSecondaryStat =
+          item.stats?.find((s) => s.statHash === secondaryStatHash)?.base || 0;
+
         if (itemPrimaryStat === bestPrimaryStat && itemSecondaryStat === bestSecondaryStat) {
           bestItemIds.add(item.id);
         } else {

@@ -1,7 +1,7 @@
 import { CustomStatDef, DestinyVersion } from '@destinyitemmanager/dim-api-types';
 import { destinyVersionSelector } from 'app/accounts/selectors';
-import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { customStatsSelector, languageSelector, settingsSelector } from 'app/d2l-api/selectors';
+import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { DimLanguage } from 'app/i18n';
 import { TagValue } from 'app/inventory/d2l-item-info';
 import { DimItem } from 'app/inventory/item-types';

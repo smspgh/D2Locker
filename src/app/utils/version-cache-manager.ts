@@ -30,7 +30,10 @@ export class VersionCacheManager {
       }
 
       if (storedVersion !== this.currentVersion) {
-        infoLog(TAG, `Version changed from ${storedVersion} to ${this.currentVersion} - clearing caches`);
+        infoLog(
+          TAG,
+          `Version changed from ${storedVersion} to ${this.currentVersion} - clearing caches`,
+        );
         await this.clearAllCaches();
         localStorage.setItem(VERSION_KEY, this.currentVersion);
         localStorage.setItem(LAST_CACHE_CLEAR_KEY, Date.now().toString());
@@ -53,10 +56,10 @@ export class VersionCacheManager {
       if ('caches' in window) {
         const cacheNames = await caches.keys();
         await Promise.all(
-          cacheNames.map(cacheName => {
+          cacheNames.map((cacheName) => {
             infoLog(TAG, 'Clearing cache:', cacheName);
             return caches.delete(cacheName);
-          })
+          }),
         );
       }
 
@@ -93,7 +96,7 @@ export class VersionCacheManager {
         'authorizationState', // OAuth state
         'd2l-api-enabled', // D2LSync setting
         'settings', // User preferences
-        'language' // Language preference
+        'language', // Language preference
       ];
 
       const keysToRemove: string[] = [];
@@ -107,11 +110,14 @@ export class VersionCacheManager {
       }
 
       // Remove non-essential keys
-      keysToRemove.forEach(key => {
+      keysToRemove.forEach((key) => {
         localStorage.removeItem(key);
       });
 
-      infoLog(TAG, `Cleared ${keysToRemove.length} localStorage items, preserved ${preserveKeys.length} essential items`);
+      infoLog(
+        TAG,
+        `Cleared ${keysToRemove.length} localStorage items, preserved ${preserveKeys.length} essential items`,
+      );
     } catch (error) {
       errorLog(TAG, 'Error clearing localStorage:', error);
     }
@@ -146,7 +152,7 @@ export class VersionCacheManager {
               // Database might not exist, that's ok
               return Promise.resolve();
             }
-          })
+          }),
         );
       }
     } catch (error) {

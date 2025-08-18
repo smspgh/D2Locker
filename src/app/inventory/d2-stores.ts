@@ -1,4 +1,3 @@
-import { startSpan } from '../utils/sentry';
 import { handleAuthErrors } from 'app/accounts/actions';
 import { compareAccounts, DestinyAccount } from 'app/accounts/destiny-account';
 import { getPlatforms } from 'app/accounts/platforms';
@@ -21,10 +20,10 @@ import { DestinyProfileResponse } from 'bungie-api-ts/destiny2';
 import { getCharacters as d1GetCharacters } from '../bungie-api/destiny1-api';
 import { getCharacters, getStores } from '../bungie-api/destiny2-api';
 import { bungieErrorToaster } from '../bungie-api/error-toaster';
-import { D2ManifestDefinitions, getDefinitions } from '../destiny2/d2-definitions';
 import { bungieNetPath } from '../d2l-ui/BungieImage';
+import { D2ManifestDefinitions, getDefinitions } from '../destiny2/d2-definitions';
 import { showNotification } from '../notifications/notifications';
-import { reportException } from '../utils/sentry';
+import { reportException, startSpan } from '../utils/sentry';
 import {
   CharacterInfo,
   charactersUpdated,

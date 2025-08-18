@@ -1,4 +1,4 @@
-import { LoadoutSort, VaultWeaponGroupingStyle } from '@destinyitemmanager/dim-api-types';
+import { VaultWeaponGroupingStyle } from '@destinyitemmanager/dim-api-types';
 import { currentAccountSelector, hasD1AccountSelector } from 'app/accounts/selectors';
 import { settingsSelector } from 'app/d2l-api/selectors';
 import PageWithMenu from 'app/d2l-ui/PageWithMenu';
@@ -9,9 +9,8 @@ import { clearAllNewItems } from 'app/inventory/actions';
 import { itemTagList } from 'app/inventory/d2l-item-info';
 import { allItemsSelector } from 'app/inventory/selectors';
 import { useLoadStores } from 'app/inventory/store/hooks';
-import { accountRoute } from 'app/routes';
-import WishListSettings from 'app/settings/WishListSettings';
 import SearchSettings from 'app/settings/SearchSettings';
+import WishListSettings from 'app/settings/WishListSettings';
 import { useIsPhonePortrait } from 'app/shell/selectors';
 import DimApiSettings from 'app/storage/DimApiSettings';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
@@ -24,7 +23,6 @@ import { errorLog } from 'app/utils/log';
 import { range } from 'es-toolkit';
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { NavLink } from 'react-router';
 import ErrorBoundary from '../d2l-ui/ErrorBoundary';
 import '../inventory-page/StoreBucket.scss';
 import InventoryItem from '../inventory/InventoryItem';
@@ -230,9 +228,10 @@ export default function SettingsPage() {
 
   // Filter based on visibility settings
   const itemSortProperties = Object.fromEntries(
-    Object.entries(allItemSortProperties).filter(([key]) =>
-      SETTINGS_VISIBILITY.sortOptions[key as keyof typeof SETTINGS_VISIBILITY.sortOptions]
-    )
+    Object.entries(allItemSortProperties).filter(
+      ([key]) =>
+        SETTINGS_VISIBILITY.sortOptions[key as keyof typeof SETTINGS_VISIBILITY.sortOptions],
+    ),
   );
 
   const vaultWeaponGroupingOptions = mapToOptions({
@@ -279,7 +278,10 @@ export default function SettingsPage() {
     { id: 'search-settings', title: t('Settings.SearchSettings') },
     $featureFlags.wishLists ? { id: 'wishlist', title: t('WishListRoll.Header') } : undefined,
     // Hide storage menu if no storage settings are visible
-    (SETTINGS_VISIBILITY.D2LSync || SETTINGS_VISIBILITY.storageInfo || SETTINGS_VISIBILITY.importBackup || SETTINGS_VISIBILITY.exportAPIProfile)
+    SETTINGS_VISIBILITY.D2LSync ||
+    SETTINGS_VISIBILITY.storageInfo ||
+    SETTINGS_VISIBILITY.importBackup ||
+    SETTINGS_VISIBILITY.exportAPIProfile
       ? { id: 'storage', title: t('Storage.MenuTitle') }
       : undefined,
     { id: 'spreadsheets', title: t('Settings.Data') },
@@ -400,7 +402,8 @@ export default function SettingsPage() {
               </button>
             </div>
 
-            {(SETTINGS_VISIBILITY.vaultWeaponGrouping || SETTINGS_VISIBILITY.separateArmorByClass) && (
+            {(SETTINGS_VISIBILITY.vaultWeaponGrouping ||
+              SETTINGS_VISIBILITY.separateArmorByClass) && (
               <div className={styles.setting}>
                 {SETTINGS_VISIBILITY.vaultWeaponGrouping && (
                   <>
@@ -415,11 +418,15 @@ export default function SettingsPage() {
                       <Checkbox
                         label={t('Settings.VaultWeaponGroupingStyle')}
                         name="vaultWeaponGroupingStyle"
-                        value={settings.vaultWeaponGroupingStyle !== VaultWeaponGroupingStyle.Inline}
+                        value={
+                          settings.vaultWeaponGroupingStyle !== VaultWeaponGroupingStyle.Inline
+                        }
                         onChange={(checked, setting) =>
                           setSetting(
                             setting,
-                            checked ? VaultWeaponGroupingStyle.Lines : VaultWeaponGroupingStyle.Inline,
+                            checked
+                              ? VaultWeaponGroupingStyle.Lines
+                              : VaultWeaponGroupingStyle.Inline,
                           )
                         }
                       />
@@ -595,9 +602,10 @@ export default function SettingsPage() {
                       </label>
                     </li>
                   )}
-                  {SETTINGS_VISIBILITY.characterSort.custom && settings.characterOrder === 'custom' && (
-                    <CharacterOrderEditor onSortOrderChanged={characterSortOrderChanged} />
-                  )}
+                  {SETTINGS_VISIBILITY.characterSort.custom &&
+                    settings.characterOrder === 'custom' && (
+                      <CharacterOrderEditor onSortOrderChanged={characterSortOrderChanged} />
+                    )}
                 </ul>
               </div>
             )}
@@ -666,7 +674,10 @@ export default function SettingsPage() {
 
           {$featureFlags.wishLists && <WishListSettings />}
 
-          {(SETTINGS_VISIBILITY.D2LSync || SETTINGS_VISIBILITY.storageInfo || SETTINGS_VISIBILITY.importBackup || SETTINGS_VISIBILITY.exportAPIProfile) && (
+          {(SETTINGS_VISIBILITY.D2LSync ||
+            SETTINGS_VISIBILITY.storageInfo ||
+            SETTINGS_VISIBILITY.importBackup ||
+            SETTINGS_VISIBILITY.exportAPIProfile) && (
             <ErrorBoundary name="StorageSettings">
               <DimApiSettings />
             </ErrorBoundary>

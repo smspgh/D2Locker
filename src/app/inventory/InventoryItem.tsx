@@ -1,6 +1,8 @@
 import { AlertIcon } from 'app/d2l-ui/AlertIcon';
+import { getRollAppraiserUtilsSync } from 'app/roll-appraiser/rollAppraiserService';
 import { percent } from 'app/shell/formatters';
 import { nonPullablePostmasterItem } from 'app/utils/item-utils';
+import { getSocketsByType } from 'app/utils/socket-utils';
 import clsx from 'clsx';
 import { BucketHashes } from 'data/d2/generated-enums';
 import React, { useMemo } from 'react';
@@ -17,8 +19,6 @@ import NewItemIndicator from './NewItemIndicator';
 import { getSubclassIconInfo } from './subclass';
 import { canSyncLockState } from './SyncTagLock';
 import TagIcon from './TagIcon';
-import { getRollAppraiserUtilsSync } from 'app/roll-appraiser/rollAppraiserService';
-import { getSocketsByType } from 'app/utils/socket-utils';
 
 export default function InventoryItem({
   item,
@@ -149,32 +149,45 @@ export default function InventoryItem({
  */
 function ComboRankDisplay({ item }: { item: DimItem }) {
   const utils = getRollAppraiserUtilsSync();
-  if (!utils) {return null;}
+  if (!utils) {
+    return null;
+  }
 
   const traitPerks = getSocketsByType(item, 'traits');
-  if (traitPerks.length < 2) {return null;}
-  
+  if (traitPerks.length < 2) {
+    return null;
+  }
+
   const perk4Hash = traitPerks[0]?.plugged?.plugDef.hash;
   const perk5Hash = traitPerks[1]?.plugged?.plugDef.hash;
-  
-  if (!perk4Hash || !perk5Hash) {return null;}
+
+  if (!perk4Hash || !perk5Hash) {
+    return null;
+  }
 
   const comboRankData = utils.getTraitComboRank(item.hash.toString(), perk4Hash, perk5Hash);
-  if (!comboRankData) {return null;}
+  if (!comboRankData) {
+    return null;
+  }
 
   const getRankColor = (rank: number) => {
     switch (rank) {
-      case 1: return styles.comboRank1;
-      case 2: return styles.comboRank2;
-      case 3: return styles.comboRank3;
-      case 4: return styles.comboRank4;
-      default: return styles.comboRank5;
+      case 1:
+        return styles.comboRank1;
+      case 2:
+        return styles.comboRank2;
+      case 3:
+        return styles.comboRank3;
+      case 4:
+        return styles.comboRank4;
+      default:
+        return styles.comboRank5;
     }
   };
 
   return (
     <div className={styles.comboRankBadge}>
-      <div 
+      <div
         className={clsx(styles.comboRankNumber, getRankColor(comboRankData.rank))}
         title={`Rank ${comboRankData.rank} combo (${comboRankData.count.toLocaleString()} users)`}
       >

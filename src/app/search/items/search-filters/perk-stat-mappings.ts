@@ -4,12 +4,12 @@ import { StatHashes } from 'data/d2/generated-enums';
  * Maps display stat names to actual Destiny 2 stat hashes
  */
 export const displayStatToHashMap = {
-  'Melee': StatHashes.Melee,
-  'Health': StatHashes.Health,
-  'Weapons': StatHashes.Weapons,
-  'Grenade': StatHashes.Grenade,
-  'Super': StatHashes.Super,
-  'Class': StatHashes.Class,
+  Melee: StatHashes.Melee,
+  Health: StatHashes.Health,
+  Weapons: StatHashes.Weapons,
+  Grenade: StatHashes.Grenade,
+  Super: StatHashes.Super,
+  Class: StatHashes.Class,
 } as const;
 
 /**
@@ -17,27 +17,27 @@ export const displayStatToHashMap = {
  * Each perk has a primary stat (first priority) and secondary stat (tie-breaker)
  */
 export const perkStatMappings = {
-  'Brawler': {
+  Brawler: {
     primary: 'Melee',
     secondary: 'Health',
   },
-  'Gunner': {
+  Gunner: {
     primary: 'Weapons',
     secondary: 'Grenade',
   },
-  'Specialist': {
+  Specialist: {
     primary: 'Class',
     secondary: 'Weapons',
   },
-  'Grenadier': {
+  Grenadier: {
     primary: 'Grenade',
     secondary: 'Super',
   },
-  'Paragon': {
+  Paragon: {
     primary: 'Super',
     secondary: 'Melee',
   },
-  'Bulwark': {
+  Bulwark: {
     primary: 'Health',
     secondary: 'Class',
   },
@@ -60,7 +60,10 @@ export function getPerkStatHashes(perkName: PerkName): { primary: number; second
 /**
  * Gets the display names for a given perk's primary and secondary stats
  */
-export function getPerkStatNames(perkName: PerkName): { primary: DisplayStatName; secondary: DisplayStatName } {
+export function getPerkStatNames(perkName: PerkName): {
+  primary: DisplayStatName;
+  secondary: DisplayStatName;
+} {
   return perkStatMappings[perkName];
 }
 

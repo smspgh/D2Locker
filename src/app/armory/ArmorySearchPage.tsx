@@ -8,7 +8,7 @@ import LazyArmorySearch from './LazyArmorySearch';
 export default function ArmorySearchPage({ account }: { account: DestinyAccount }) {
   usePageTitle('Weapon Database');
   const storesLoaded = useLoadStores(account);
-  
+
   if (!storesLoaded) {
     return <ShowPageLoading message={t('Loading.Profile')} />;
   }

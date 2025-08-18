@@ -27,7 +27,7 @@ export default function SelectAccount({ path }: { path?: string }) {
 
   // Auto-select the first Destiny 2 account (destinyVersion === 2)
   useEffect(() => {
-    const destiny2Account = sortedAccounts.find(account => account.destinyVersion === 2);
+    const destiny2Account = sortedAccounts.find((account) => account.destinyVersion === 2);
     if (destiny2Account) {
       navigate(accountRoute(destiny2Account) + (path ?? ''));
     }

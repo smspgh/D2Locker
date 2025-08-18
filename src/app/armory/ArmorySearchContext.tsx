@@ -18,9 +18,7 @@ export function ArmorySearchProvider({
   allWeapons: DimItem[];
 }) {
   return (
-    <ArmorySearchContext value={{ filteredWeapons, allWeapons }}>
-      {children}
-    </ArmorySearchContext>
+    <ArmorySearchContext value={{ filteredWeapons, allWeapons }}>{children}</ArmorySearchContext>
   );
 }
 

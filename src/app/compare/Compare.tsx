@@ -26,11 +26,11 @@ import { maxBy } from 'es-toolkit';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 // import { Link } from 'react-router';
+import { getRollAppraiserUtilsSync } from 'app/roll-appraiser/rollAppraiserService';
+import { getSocketsByType, getWeaponSockets } from 'app/utils/socket-utils';
 import Sheet from '../d2l-ui/Sheet';
 import { DimItem, DimSocket } from '../inventory/item-types';
 import { chainComparator, compareBy } from '../utils/comparators';
-import { getRollAppraiserUtilsSync } from 'app/roll-appraiser/rollAppraiserService';
-import { getSocketsByType, getWeaponSockets } from 'app/utils/socket-utils';
 import styles from './Compare.m.scss';
 import { getColumns } from './CompareColumns';
 import CompareItem, { CompareHeaders } from './CompareItem';
@@ -69,34 +69,38 @@ export default function Compare({ session }: { session: CompareSession }) {
     if (comparingArmor && !showAllArmorType && session.initialItemId) {
       // When toggle is OFF for armor, show only items with same itemHash as the initial item
       // For exotic armor, also consider perks since they determine uniqueness
-      const initialItem = rawCompareItems.find(item => item.id === session.initialItemId);
+      const initialItem = rawCompareItems.find((item) => item.id === session.initialItemId);
       if (initialItem) {
         if (initialItem.isExotic && initialItem.sockets?.allSockets) {
           // For exotic armor, match by both hash and perk combination
           const initialPerkHashes = initialItem.sockets.allSockets
-            .filter(socket => socket.isPerk && socket.plugged?.plugDef.hash)
-            .map(socket => socket.plugged!.plugDef.hash)
+            .filter((socket) => socket.isPerk && socket.plugged?.plugDef.hash)
+            .map((socket) => socket.plugged!.plugDef.hash)
             .sort((a, b) => a - b);
 
-          return rawCompareItems.filter(item => {
-            if (item.hash !== initialItem.hash) {return false;}
+          return rawCompareItems.filter((item) => {
+            if (item.hash !== initialItem.hash) {
+              return false;
+            }
 
             if (item.isExotic && item.sockets?.allSockets) {
               const itemPerkHashes = item.sockets.allSockets
-                .filter(socket => socket.isPerk && socket.plugged?.plugDef.hash)
-                .map(socket => socket.plugged!.plugDef.hash)
+                .filter((socket) => socket.isPerk && socket.plugged?.plugDef.hash)
+                .map((socket) => socket.plugged!.plugDef.hash)
                 .sort((a, b) => a - b);
 
               // Check if perk arrays are equal
-              return initialPerkHashes.length === itemPerkHashes.length &&
-                     initialPerkHashes.every((hash, index) => hash === itemPerkHashes[index]);
+              return (
+                initialPerkHashes.length === itemPerkHashes.length &&
+                initialPerkHashes.every((hash, index) => hash === itemPerkHashes[index])
+              );
             }
 
             return true; // Non-exotic armor just needs same hash
           });
         } else {
           // Non-exotic armor: just match by hash
-          return rawCompareItems.filter(item => item.hash === initialItem.hash);
+          return rawCompareItems.filter((item) => item.hash === initialItem.hash);
         }
       }
     }
@@ -238,19 +242,19 @@ export default function Compare({ session }: { session: CompareSession }) {
 
   // Identify the best item based on dupebest criteria
   const bestItem = useMemo(() => {
-    if (rows.length <= 1) {return undefined;}
+    if (rows.length <= 1) {
+      return undefined;
+    }
 
     // Sort a copy of the items using dupebest criteria
-    const itemsCopy = [...rows.map(r => r.item)];
+    const itemsCopy = [...rows.map((r) => r.item)];
 
     // Sort directly using the dupebest comparator
-    const getTag = (item: DimItem) => 
+    const getTag = (item: DimItem) =>
       // Use the tag selector to get the item's tag
-       (item.taggable && typeof item.taggable === 'object' && 'tag' in item.taggable)
+      item.taggable && typeof item.taggable === 'object' && 'tag' in item.taggable
         ? (item.taggable as any).tag
-        : undefined
-    ;
-
+        : undefined;
     // Create the comparator for dupebest
     const dupebestComparator = chainComparator<DimItem>(
       // 1. For armor: prioritize highest custom stat total if custom stats exist
@@ -259,7 +263,7 @@ export default function Compare({ session }: { session: CompareSession }) {
           // Find the highest custom stat value for this item
           let highestCustomStatValue = 0;
           for (const customStat of customStats) {
-            const stat = item.stats?.find(s => s.statHash === customStat.statHash);
+            const stat = item.stats?.find((s) => s.statHash === customStat.statHash);
             if (stat && stat.value > highestCustomStatValue) {
               highestCustomStatValue = stat.value;
             }
@@ -273,7 +277,9 @@ export default function Compare({ session }: { session: CompareSession }) {
       compareBy((item) => {
         if (item.bucket.inWeapons && item.sockets) {
           const utils = getRollAppraiserUtilsSync();
-          if (!utils) {return Number.MAX_SAFE_INTEGER;}
+          if (!utils) {
+            return Number.MAX_SAFE_INTEGER;
+          }
 
           const traitPerks = getSocketsByType(item, 'traits');
           if (traitPerks.length >= 2) {
@@ -294,20 +300,29 @@ export default function Compare({ session }: { session: CompareSession }) {
       compareBy((item) => {
         if (item.bucket.inWeapons && item.sockets) {
           const utils = getRollAppraiserUtilsSync();
-          if (!utils) {return Number.MAX_SAFE_INTEGER;}
+          if (!utils) {
+            return Number.MAX_SAFE_INTEGER;
+          }
 
           // Get weapon sockets properly categorized
           const weaponSockets = getWeaponSockets(item, { excludeEmptySockets: false });
-          if (!weaponSockets) {return 0;}
+          if (!weaponSockets) {
+            return 0;
+          }
 
           // Get the first two perk sockets with multiple options (like dupes.ts does)
           const allPerkSockets = item.sockets.allSockets
             .filter((s) => {
               // Must be a perk socket with multiple options
-              if (!s.isPerk || s.plugOptions.length <= 1) {return false;}
+              if (!s.isPerk || s.plugOptions.length <= 1) {
+                return false;
+              }
 
               // Exclude intrinsic socket
-              if (weaponSockets.intrinsicSocket && s.socketIndex === weaponSockets.intrinsicSocket.socketIndex) {
+              if (
+                weaponSockets.intrinsicSocket &&
+                s.socketIndex === weaponSockets.intrinsicSocket.socketIndex
+              ) {
                 return false;
               }
 
@@ -341,10 +356,14 @@ export default function Compare({ session }: { session: CompareSession }) {
               // Weight calculation: 1=2.5, 2=2.0, 3=1.5, 4+=1.0
               const getWeight = (rank: number) => {
                 switch (rank) {
-                  case 1: return 2.5;
-                  case 2: return 2.0;
-                  case 3: return 1.5;
-                  default: return 1.0;
+                  case 1:
+                    return 2.5;
+                  case 2:
+                    return 2.0;
+                  case 3:
+                    return 1.5;
+                  default:
+                    return 1.0;
                 }
               };
 
@@ -403,9 +422,10 @@ export default function Compare({ session }: { session: CompareSession }) {
     <div className={styles.options}>
       {comparingArmor && (
         <Checkbox
-          label={showAllArmorType
-            ? `Show All ${firstCompareItem?.classType === 0 ? 'Titan' : firstCompareItem?.classType === 1 ? 'Hunter' : 'Warlock'} ${firstCompareItem?.typeName}s (${rawCompareItems.length})`
-            : `Show Same ItemHash Only (${filteredCompareItems.length})`
+          label={
+            showAllArmorType
+              ? `Show All ${firstCompareItem?.classType === 0 ? 'Titan' : firstCompareItem?.classType === 1 ? 'Hunter' : 'Warlock'} ${firstCompareItem?.typeName}s (${rawCompareItems.length})`
+              : `Show Same ItemHash Only (${filteredCompareItems.length})`
           }
           name="showAllArmorType"
           value={showAllArmorType}

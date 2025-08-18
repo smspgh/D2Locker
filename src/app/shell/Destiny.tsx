@@ -29,7 +29,7 @@ import { setAppBadge } from 'app/utils/app-badge';
 import { noop } from 'app/utils/functions';
 import SingleVendorSheetContainer from 'app/vendors/single-vendor/SingleVendorSheetContainer';
 import { fetchWishList } from 'app/wishlists/wishlist-fetch';
-import { lazy, useEffect, useMemo, Suspense } from 'react';
+import { lazy, useEffect, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { Navigate, Route, Routes, useLocation, useParams } from 'react-router';
 import { Hotkey } from '../hotkeys/hotkeys';
@@ -52,7 +52,10 @@ const D1Vendors = lazy(
   () => import(/* webpackChunkName: "d1vendors" */ 'app/destiny1/vendors/D1Vendors'),
 );
 const Loadouts = lazy(() => import(/* webpackChunkName: "loadouts" */ 'app/loadout/Loadouts'));
-const LoadoutBuilderContainer = lazy(() => import(/* webpackChunkName: "loadout-builder" */ 'app/loadout-builder/LoadoutBuilderContainer'));
+const LoadoutBuilderContainer = lazy(
+  () =>
+    import(/* webpackChunkName: "loadout-builder" */ 'app/loadout-builder/LoadoutBuilderContainer'),
+);
 
 const SearchHistory = lazy(
   () => import(/* webpackChunkName: "searchHistory" */ '../search/SearchHistory'),

@@ -1,6 +1,6 @@
 import { AnimatePresence, Transition, Variants, motion } from 'motion/react';
-import styles from './Loading.m.scss';
 import loadingLogo from '../../../icons/input.svg';
+import styles from './Loading.m.scss';
 
 const containerAnimateVariants: Variants = {
   initial: { opacity: 0 },
@@ -24,19 +24,19 @@ const messageAnimateTransition: Transition<number> = {
 export function Loading({ message }: { message?: string }) {
   return (
     <section className={styles.loading}>
-      <motion.div 
+      <motion.div
         className={styles.logoContainer}
         initial={{ scale: 0.8, opacity: 0.5 }}
-        animate={{ 
+        animate={{
           scale: [0.8, 1.1, 1],
           opacity: [0.5, 1, 1],
-          rotate: [0, 5, -5, 0]
+          rotate: [0, 5, -5, 0],
         }}
         transition={{
           duration: 2,
-          ease: "easeInOut",
+          ease: 'easeInOut',
           repeat: Infinity,
-          repeatDelay: 0.3
+          repeatDelay: 0.3,
         }}
       >
         <img src={loadingLogo} alt="Loading" className={styles.logo} />

@@ -1,6 +1,6 @@
 import { AssumeArmorMasterwork, LoadoutParameters } from '@destinyitemmanager/dim-api-types';
-import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { AlertIcon } from 'app/d2l-ui/AlertIcon';
+import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { t } from 'app/i18next-t';
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { ResolvedLoadoutMod } from 'app/loadout/loadout-types';

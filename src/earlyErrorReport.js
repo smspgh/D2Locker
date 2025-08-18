@@ -1,6 +1,6 @@
 window.onerror = (message, source, line, col, error) => {
   const params = { message, source, line, col };
-   
+
   console.log(params, error);
   const errorBox = document.querySelector('#errorreport');
   if (errorBox) {

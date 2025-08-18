@@ -144,7 +144,8 @@ export default function DimApiSettings() {
       {STORAGE_SETTINGS_VISIBILITY.storageInfo && (
         <LocalStorageInfo showDetails={!apiPermissionGranted} className={settingClass} />
       )}
-      {(STORAGE_SETTINGS_VISIBILITY.importBackup || STORAGE_SETTINGS_VISIBILITY.exportAPIProfile) && (
+      {(STORAGE_SETTINGS_VISIBILITY.importBackup ||
+        STORAGE_SETTINGS_VISIBILITY.exportAPIProfile) && (
         <div className={settingClass}>
           <ImportExport
             onExportData={onExportData}

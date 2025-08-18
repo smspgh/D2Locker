@@ -1,6 +1,6 @@
-import { D1ObjectiveDefinition, D1ObjectiveProgress } from 'app/destiny1/d1-manifest-types';
 import BungieImage from 'app/d2l-ui/BungieImage';
 import RichDestinyText from 'app/d2l-ui/destiny-symbols/RichDestinyText';
+import { D1ObjectiveDefinition, D1ObjectiveProgress } from 'app/destiny1/d1-manifest-types';
 import { t } from 'app/i18next-t';
 import {
   getValueStyle,

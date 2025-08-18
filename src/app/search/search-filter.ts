@@ -153,7 +153,10 @@ function matchFilter<I, FilterCtx, SuggestionsCtx>(
         const [stat, rangeString] = filterValue.split(':', 2);
         try {
           // Handle special case for ":best" searches
-          const compare = rangeString === 'best' ? undefined : rangeStringToComparator(rangeString, filterDef.overload);
+          const compare =
+            rangeString === 'best'
+              ? undefined
+              : rangeStringToComparator(rangeString, filterDef.overload);
           const validator = filterDef.validateStat?.(currentFilterContext);
           const statToValidate = rangeString === 'best' ? `${stat}:best` : stat;
           if (!validator || validator(statToValidate)) {

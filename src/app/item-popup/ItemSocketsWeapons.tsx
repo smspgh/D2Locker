@@ -1,6 +1,10 @@
 import { t } from 'app/i18next-t';
 import { statsMs } from 'app/inventory/store/stats';
 import { useD2Definitions } from 'app/manifest/selectors';
+import ReviewSummaryDisplay from 'app/roll-appraiser/ReviewSummaryDisplay';
+import TopTraitCombos from 'app/roll-appraiser/TopTraitCombos';
+import TraitComboIndicator from 'app/roll-appraiser/TraitComboIndicator';
+import { useWeaponRankingData } from 'app/roll-appraiser/useRollAppraiserData';
 import { useSetting } from 'app/settings/hooks';
 import { AppIcon, faGrid, faList } from 'app/shell/icons';
 import { isKillTrackerSocket } from 'app/utils/item-utils';
@@ -18,10 +22,6 @@ import { ItemSocketsList, PlugClickHandler } from './ItemSockets';
 import styles from './ItemSocketsWeapons.m.scss';
 import Socket from './Socket';
 import SocketDetails from './SocketDetails';
-import { useWeaponRankingData } from 'app/roll-appraiser/useRollAppraiserData';
-import TraitComboIndicator from 'app/roll-appraiser/TraitComboIndicator';
-import ReviewSummaryDisplay from 'app/roll-appraiser/ReviewSummaryDisplay';
-import TopTraitCombos from 'app/roll-appraiser/TopTraitCombos';
 
 export default function ItemSocketsWeapons({
   item,
@@ -100,10 +100,10 @@ export default function ItemSocketsWeapons({
           {mods.length > 0 && <ItemSocketsList>{mods.map(renderSocket)}</ItemSocketsList>}
         </ArchetypeRow>
       )}
-      
+
       {/* Top 5 Trait Combinations */}
       {!minimal && <TopTraitCombos item={item} />}
-      
+
       {perks &&
         (listPerks ? (
           <div className={styles.perks}>
@@ -145,7 +145,7 @@ export default function ItemSocketsWeapons({
             )}
           </div>
         ))}
-      
+
       {/* Roll Appraiser Data Display */}
       {!minimal && weaponRankingData && (
         <div className={styles.rollAppraiserData}>
@@ -155,7 +155,7 @@ export default function ItemSocketsWeapons({
               <TraitComboIndicator comboData={weaponRankingData.traitComboRanking} />
             </div>
           )}
-          
+
           {/* Review Summary */}
           {weaponRankingData.reviewSummary && (
             <ReviewSummaryDisplay reviewData={weaponRankingData.reviewSummary} />

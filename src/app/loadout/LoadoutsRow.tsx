@@ -19,7 +19,6 @@ export default memo(function LoadoutRow({
   store,
   saved,
   equippable,
-  onShare,
   onSnapshotInGameLoadout,
 }: {
   loadout: Loadout;
@@ -72,7 +71,6 @@ export default memo(function LoadoutRow({
       );
     }
 
-
     if (streamDeckDeepLink) {
       actionButtons.push(
         <a href={streamDeckDeepLink} target="_blank">
@@ -103,15 +101,7 @@ export default memo(function LoadoutRow({
     }
 
     return actionButtons;
-  }, [
-    dispatch,
-    equippable,
-    loadout,
-    onSnapshotInGameLoadout,
-    saved,
-    store,
-    streamDeckDeepLink,
-  ]);
+  }, [dispatch, equippable, loadout, onSnapshotInGameLoadout, saved, store, streamDeckDeepLink]);
 
   return (
     <LoadoutView

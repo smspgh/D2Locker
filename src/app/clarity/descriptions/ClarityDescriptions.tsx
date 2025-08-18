@@ -82,9 +82,5 @@ export default function ClarityDescriptions({
     </div>
   ));
 
-  return (
-    <div className={clsx(styles.communityDescription, className)}>
-      {convertedDescription}
-    </div>
-  );
+  return <div className={clsx(styles.communityDescription, className)}>{convertedDescription}</div>;
 }

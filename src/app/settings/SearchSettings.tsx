@@ -1,211 +1,220 @@
-import React, { useState, useMemo, useCallback, useEffect } from 'react';
-import { t } from 'app/i18next-t';
-import { Settings } from './initial-settings';
-import { useSetSetting } from './hooks';
-import Checkbox from './Checkbox';
-import Select from './Select';
-import styles from './SettingsPage.m.scss';
-import { AppIcon, deleteIcon, plusIcon, editIcon } from 'app/shell/icons';
-import { useSelector } from 'react-redux';
-import { searchConfigSelector, filterFactorySelector } from 'app/search/items/item-search-filter';
-import { allItemsSelector } from 'app/inventory/selectors';
-import createAutocompleter from 'app/search/autocomplete';
-import { useCombobox } from 'downshift';
-import { parseQuery } from 'app/search/query-parser';
 import { languageSelector } from 'app/d2l-api/selectors';
+import { t } from 'app/i18next-t';
+import { allItemsSelector } from 'app/inventory/selectors';
 import { d2ManifestSelector } from 'app/manifest/selectors';
 import { buildArmoryIndex } from 'app/search/armory-search';
+import createAutocompleter from 'app/search/autocomplete';
+import { filterFactorySelector, searchConfigSelector } from 'app/search/items/item-search-filter';
 import searchBarStyles from 'app/search/SearchBar.m.scss';
-import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { setSearchQuery, toggleSearchResults } from 'app/shell/actions';
+import { useThunkDispatch } from 'app/store/thunk-dispatch';
+import { useCombobox } from 'downshift';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router';
+import Checkbox from './Checkbox';
+import { useSetSetting } from './hooks';
+import { Settings } from './initial-settings';
+import styles from './SettingsPage.m.scss';
 
 // Autocomplete component moved outside to prevent re-creation
-const AutocompleteSearchInput = React.memo(({ 
-  value, 
-  onChange, 
-  placeholder, 
-  resultCount,
-  autocompleter 
-}: {
-  value: string;
-  onChange: (value: string) => void;
-  placeholder: string;
-  resultCount: number;
-  autocompleter: any;
-}) => {
-  const inputRef = React.useRef<HTMLInputElement>(null);
-  const [localValue, setLocalValue] = useState(value);
-  
-  // Sync local value with prop value
-  useEffect(() => {
-    setLocalValue(value);
-  }, [value]);
-  
-  const suggestions = useMemo(() => {
-    if (!localValue.trim()) {return [];}
-    try {
-      const result = autocompleter(
-        localValue,           // query
-        localValue.length,    // caretIndex (cursor at end)
-        [],                   // recentSearches (empty for now)
-        false                 // includeArmory
-      ).slice(0, 5); // Limit to 5 suggestions
-      return result;
-    } catch (error) {
-      console.warn('Autocomplete error:', error);
-      return [];
-    }
-  }, [localValue, autocompleter]);
+const AutocompleteSearchInput = React.memo(
+  ({
+    value,
+    onChange,
+    placeholder,
+    resultCount,
+    autocompleter,
+  }: {
+    value: string;
+    onChange: (value: string) => void;
+    placeholder: string;
+    resultCount: number;
+    autocompleter: any;
+  }) => {
+    const inputRef = React.useRef<HTMLInputElement>(null);
+    const [localValue, setLocalValue] = useState(value);
 
-  const handleInputChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    const newValue = e.target.value;
-    const cursorPos = e.target.selectionStart || 0;
-    setLocalValue(newValue);
-    onChange(newValue);
-    
-    // Restore cursor position after React re-render
-    setTimeout(() => {
-      if (inputRef.current) {
-        inputRef.current.setSelectionRange(cursorPos, cursorPos);
-      }
-    }, 0);
-  }, [onChange]);
+    // Sync local value with prop value
+    useEffect(() => {
+      setLocalValue(value);
+    }, [value]);
 
-  const {
-    isOpen,
-    getMenuProps,
-    getInputProps,
-    getItemProps,
-    highlightedIndex,
-  } = useCombobox({
-    inputValue: localValue,
-    items: suggestions,
-    onInputValueChange: ({ inputValue, type }) => {
-      // Handle combobox internal state changes but don't update our input
-      if (type !== useCombobox.stateChangeTypes.InputChange) {
-        setLocalValue(inputValue || '');
+    const suggestions = useMemo(() => {
+      if (!localValue.trim()) {
+        return [];
       }
-    },
-    onSelectedItemChange: ({ selectedItem }) => {
-      if (selectedItem && inputRef.current) {
-        const input = inputRef.current;
-        const suggestionText = selectedItem.query.body || selectedItem.query.fullText;
-        
-        // Replace the entire input with the suggestion
-        setLocalValue(suggestionText);
-        onChange(suggestionText);
-        
-        // Set cursor position to the end
+      try {
+        const result = autocompleter(
+          localValue, // query
+          localValue.length, // caretIndex (cursor at end)
+          [], // recentSearches (empty for now)
+          false, // includeArmory
+        ).slice(0, 5); // Limit to 5 suggestions
+        return result;
+      } catch (error) {
+        console.warn('Autocomplete error:', error);
+        return [];
+      }
+    }, [localValue, autocompleter]);
+
+    const handleInputChange = useCallback(
+      (e: React.ChangeEvent<HTMLInputElement>) => {
+        const newValue = e.target.value;
+        const cursorPos = e.target.selectionStart || 0;
+        setLocalValue(newValue);
+        onChange(newValue);
+
+        // Restore cursor position after React re-render
         setTimeout(() => {
-          if (input) {
-            input.focus();
-            input.setSelectionRange(suggestionText.length, suggestionText.length);
+          if (inputRef.current) {
+            inputRef.current.setSelectionRange(cursorPos, cursorPos);
           }
         }, 0);
-      }
-    },
-    itemToString: (item) => item?.query.body || item?.query.fullText || '',
-    stateReducer: (state, actionAndChanges) => {
-      const { type, changes } = actionAndChanges;
-      switch (type) {
-        case useCombobox.stateChangeTypes.InputKeyDownEnter:
-        case useCombobox.stateChangeTypes.ItemClick:
-          return {
-            ...changes,
-            isOpen: false,
-            inputValue: localValue, // Keep current input value, don't replace it
-          };
-        default:
-          return changes;
-      }
-    },
-  });
+      },
+      [onChange],
+    );
 
-  return (
-    <div style={{ position: 'relative' }}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-        <input
-          {...getInputProps({
-            ref: inputRef,
-            type: 'text',
-            placeholder,
-            onChange: handleInputChange,
-          })}
-          style={{ flex: 1 }}
-        />
-      </div>
-      <div {...getMenuProps()}>
-        {isOpen && suggestions.length > 0 && (
-          <div 
-            className={searchBarStyles.menu}
-            style={{ zIndex: 9999 }}
-          >
-            {suggestions.map((item, index) => (
-              <div
-                {...getItemProps({ item, index })}
-                key={index}
-                className={searchBarStyles.menuItem}
-                style={{
-                  backgroundColor: highlightedIndex === index ? 'var(--theme-accent-primary)' : 'transparent',
-                }}
-              >
-                <div className={searchBarStyles.menuItemIcon}>
-                  🔍
+    const { isOpen, getMenuProps, getInputProps, getItemProps, highlightedIndex } = useCombobox({
+      inputValue: localValue,
+      items: suggestions,
+      onInputValueChange: ({ inputValue, type }) => {
+        // Handle combobox internal state changes but don't update our input
+        if (type !== useCombobox.stateChangeTypes.InputChange) {
+          setLocalValue(inputValue || '');
+        }
+      },
+      onSelectedItemChange: ({ selectedItem }) => {
+        if (selectedItem && inputRef.current) {
+          const input = inputRef.current;
+          const suggestionText = selectedItem.query.body || selectedItem.query.fullText;
+
+          // Replace the entire input with the suggestion
+          setLocalValue(suggestionText);
+          onChange(suggestionText);
+
+          // Set cursor position to the end
+          setTimeout(() => {
+            if (input) {
+              input.focus();
+              input.setSelectionRange(suggestionText.length, suggestionText.length);
+            }
+          }, 0);
+        }
+      },
+      itemToString: (item) => item?.query.body || item?.query.fullText || '',
+      stateReducer: (state, actionAndChanges) => {
+        const { type, changes } = actionAndChanges;
+        switch (type) {
+          case useCombobox.stateChangeTypes.InputKeyDownEnter:
+          case useCombobox.stateChangeTypes.ItemClick:
+            return {
+              ...changes,
+              isOpen: false,
+              inputValue: localValue, // Keep current input value, don't replace it
+            };
+          default:
+            return changes;
+        }
+      },
+    });
+
+    return (
+      <div style={{ position: 'relative' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <input
+            {...getInputProps({
+              ref: inputRef,
+              type: 'text',
+              placeholder,
+              onChange: handleInputChange,
+            })}
+            style={{ flex: 1 }}
+          />
+        </div>
+        <div {...getMenuProps()}>
+          {isOpen && suggestions.length > 0 && (
+            <div className={searchBarStyles.menu} style={{ zIndex: 9999 }}>
+              {suggestions.map((item, index) => (
+                <div
+                  {...getItemProps({ item, index })}
+                  key={index}
+                  className={searchBarStyles.menuItem}
+                  style={{
+                    backgroundColor:
+                      highlightedIndex === index ? 'var(--theme-accent-primary)' : 'transparent',
+                  }}
+                >
+                  <div className={searchBarStyles.menuItemIcon}>🔍</div>
+                  <div>{item.query.body || item.query.fullText}</div>
                 </div>
-                <div>
-                  {item.query.body || item.query.fullText}
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
+              ))}
+            </div>
+          )}
+        </div>
       </div>
-    </div>
-  );
-});
+    );
+  },
+);
 
 export default function SearchSettings({ settings }: { settings: Settings }) {
   const setSetting = useSetSetting();
   const dispatch = useThunkDispatch();
   const navigate = useNavigate();
   // No separate state needed - we'll add rows directly to the table
-  
+
   // Search configuration and autocomplete
   const searchConfig = useSelector(searchConfigSelector);
   const filterFactory = useSelector(filterFactorySelector);
   const allItems = useSelector(allItemsSelector);
   const language = useSelector(languageSelector);
   const d2Manifest = useSelector(d2ManifestSelector);
-  
+
   const armoryIndex = useMemo(() => buildArmoryIndex(d2Manifest, language), [d2Manifest, language]);
-  
-  const autocompleter = useMemo(() => createAutocompleter(searchConfig, armoryIndex), [searchConfig, armoryIndex]);
-  
+
+  const autocompleter = useMemo(
+    () => createAutocompleter(searchConfig, armoryIndex),
+    [searchConfig, armoryIndex],
+  );
+
   // Get weapon/armor counts for search terms
-  const getWeaponCount = useCallback((searchTerm: string) => {
-    if (!searchTerm.trim()) {return 0;}
-    try {
-      const searchFilter = filterFactory(searchTerm);
-      return allItems.filter(item => item.bucket?.sort === 'Weapons' && searchFilter(item)).length;
-    } catch {
-      return 0;
-    }
-  }, [filterFactory, allItems]);
-  
-  const getArmorCount = useCallback((searchTerm: string) => {
-    if (!searchTerm.trim()) {return 0;}
-    try {
-      const searchFilter = filterFactory(searchTerm);
-      return allItems.filter(item => item.bucket.inArmor && searchFilter(item)).length;
-    } catch {
-      return 0;
-    }
-  }, [filterFactory, allItems]);
-  
+  const getWeaponCount = useCallback(
+    (searchTerm: string) => {
+      if (!searchTerm.trim()) {
+        return 0;
+      }
+      try {
+        const searchFilter = filterFactory(searchTerm);
+        return allItems.filter((item) => item.bucket?.sort === 'Weapons' && searchFilter(item))
+          .length;
+      } catch {
+        return 0;
+      }
+    },
+    [filterFactory, allItems],
+  );
+
+  const getArmorCount = useCallback(
+    (searchTerm: string) => {
+      if (!searchTerm.trim()) {
+        return 0;
+      }
+      try {
+        const searchFilter = filterFactory(searchTerm);
+        return allItems.filter((item) => item.bucket.inArmor && searchFilter(item)).length;
+      } catch {
+        return 0;
+      }
+    },
+    [filterFactory, allItems],
+  );
+
   // No edit state needed - everything is inline editable
 
-  const handleWeaponSettingChange = (key: keyof NonNullable<Settings['searchFilterSettings']>['keepWeapon'], value: any) => {
+  const handleWeaponSettingChange = (
+    key: keyof NonNullable<Settings['searchFilterSettings']>['keepWeapon'],
+    value: any,
+  ) => {
     setSetting('searchFilterSettings', {
       ...settings.searchFilterSettings,
       keepWeapon: {
@@ -215,7 +224,10 @@ export default function SearchSettings({ settings }: { settings: Settings }) {
     });
   };
 
-  const handleArmorSettingChange = (key: keyof NonNullable<Settings['searchFilterSettings']>['keepArmor'], value: any) => {
+  const handleArmorSettingChange = (
+    key: keyof NonNullable<Settings['searchFilterSettings']>['keepArmor'],
+    value: any,
+  ) => {
     setSetting('searchFilterSettings', {
       ...settings.searchFilterSettings,
       keepArmor: {
@@ -225,16 +237,22 @@ export default function SearchSettings({ settings }: { settings: Settings }) {
     });
   };
 
-
   const removeWeaponSearchTerm = (index: number) => {
     const currentTerms = weaponSettings.additionalSearchTerms || [];
-    handleWeaponSettingChange('additionalSearchTerms', currentTerms.filter((_, i) => i !== index));
+    handleWeaponSettingChange(
+      'additionalSearchTerms',
+      currentTerms.filter((_, i) => i !== index),
+    );
   };
 
-  const updateWeaponSearchTerm = (index: number, field: 'term' | 'logic' | 'group', value: string | number) => {
+  const updateWeaponSearchTerm = (
+    index: number,
+    field: 'term' | 'logic' | 'group',
+    value: string | number,
+  ) => {
     const currentTerms = weaponSettings.additionalSearchTerms || [];
-    const updatedTerms = currentTerms.map((termObj, i) => 
-      i === index ? { ...termObj, [field]: value } : termObj
+    const updatedTerms = currentTerms.map((termObj, i) =>
+      i === index ? { ...termObj, [field]: value } : termObj,
     );
     handleWeaponSettingChange('additionalSearchTerms', updatedTerms);
   };
@@ -245,17 +263,24 @@ export default function SearchSettings({ settings }: { settings: Settings }) {
     handleWeaponSettingChange('additionalSearchTerms', [...currentTerms, newTerm]);
   };
 
-  const updateArmorSearchTerm = (index: number, field: 'term' | 'logic' | 'group', value: string | number) => {
+  const updateArmorSearchTerm = (
+    index: number,
+    field: 'term' | 'logic' | 'group',
+    value: string | number,
+  ) => {
     const currentTerms = armorSettings.additionalSearchTerms || [];
-    const updatedTerms = currentTerms.map((termObj, i) => 
-      i === index ? { ...termObj, [field]: value } : termObj
+    const updatedTerms = currentTerms.map((termObj, i) =>
+      i === index ? { ...termObj, [field]: value } : termObj,
     );
     handleArmorSettingChange('additionalSearchTerms', updatedTerms);
   };
 
   const removeArmorSearchTerm = (index: number) => {
     const currentTerms = armorSettings.additionalSearchTerms || [];
-    handleArmorSettingChange('additionalSearchTerms', currentTerms.filter((_, i) => i !== index));
+    handleArmorSettingChange(
+      'additionalSearchTerms',
+      currentTerms.filter((_, i) => i !== index),
+    );
   };
 
   const addNewArmorTerm = () => {
@@ -269,7 +294,7 @@ export default function SearchSettings({ settings }: { settings: Settings }) {
       // Combine the search term with the appropriate item type filter using explicit 'and'
       const typeFilter = itemType === 'weapon' ? 'is:weapon' : 'is:armor';
       const combinedQuery = `${typeFilter} and ${searchTerm}`;
-      
+
       // Set the search query in the main search bar
       dispatch(setSearchQuery(combinedQuery));
       // Open the search results
@@ -280,7 +305,6 @@ export default function SearchSettings({ settings }: { settings: Settings }) {
   const navigateToSearchHistory = () => {
     navigate('/search-history');
   };
-
 
   const logicOptions = [
     { value: 'AND', name: 'AND' },
@@ -300,7 +324,7 @@ export default function SearchSettings({ settings }: { settings: Settings }) {
   return (
     <section id="search-settings">
       <h2>{t('Settings.SearchSettings')}</h2>
-      
+
       <div className={styles.setting}>
         <button
           type="button"
@@ -309,7 +333,7 @@ export default function SearchSettings({ settings }: { settings: Settings }) {
           style={{
             marginBottom: '1rem',
             padding: '8px 16px',
-            fontSize: '14px'
+            fontSize: '14px',
           }}
         >
           🔍 View Search History
@@ -318,10 +342,10 @@ export default function SearchSettings({ settings }: { settings: Settings }) {
           View and manage your saved searches and search history.
         </div>
       </div>
-      
+
       <div className={styles.section}>
         <h3>{t('Settings.KeepWeaponSettings')}</h3>
-        
+
         <div className={styles.setting}>
           <Checkbox
             label={t('Settings.EnableKeepWeapon')}
@@ -333,13 +357,19 @@ export default function SearchSettings({ settings }: { settings: Settings }) {
 
         {weaponSettings.enabled && (
           <>
-
             <div className={styles.setting}>
               <label>{t('Settings.AdditionalSearchTerms')}</label>
               <div className={styles.fineprint}>{t('Settings.AdditionalSearchDesc')}</div>
-              
+
               <div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                <div
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    marginBottom: '8px',
+                  }}
+                >
                   <strong>{t('Settings.CurrentSearchTerms')}:</strong>
                   <button
                     type="button"
@@ -355,7 +385,7 @@ export default function SearchSettings({ settings }: { settings: Settings }) {
                       cursor: 'pointer',
                       display: 'flex',
                       alignItems: 'center',
-                      justifyContent: 'center'
+                      justifyContent: 'center',
                     }}
                     title="Add new search term"
                   >
@@ -367,9 +397,15 @@ export default function SearchSettings({ settings }: { settings: Settings }) {
                     <thead>
                       <tr style={{ borderBottom: '1px solid #444' }}>
                         <th style={{ textAlign: 'left', padding: '8px 4px' }}>Term</th>
-                        <th style={{ textAlign: 'center', padding: '8px 4px', minWidth: '60px' }}>Group</th>
-                        <th style={{ textAlign: 'center', padding: '8px 4px', minWidth: '70px' }}>Logic</th>
-                        <th style={{ textAlign: 'center', padding: '8px 4px', minWidth: '60px' }}>Results</th>
+                        <th style={{ textAlign: 'center', padding: '8px 4px', minWidth: '60px' }}>
+                          Group
+                        </th>
+                        <th style={{ textAlign: 'center', padding: '8px 4px', minWidth: '70px' }}>
+                          Logic
+                        </th>
+                        <th style={{ textAlign: 'center', padding: '8px 4px', minWidth: '60px' }}>
+                          Results
+                        </th>
                         <th style={{ textAlign: 'center', padding: '8px 4px', minWidth: '30px' }} />
                       </tr>
                     </thead>
@@ -391,7 +427,9 @@ export default function SearchSettings({ settings }: { settings: Settings }) {
                               min="1"
                               max="4"
                               value={(termObj.group ?? 0) + 1}
-                              onChange={(e) => updateWeaponSearchTerm(index, 'group', parseInt(e.target.value) - 1)}
+                              onChange={(e) =>
+                                updateWeaponSearchTerm(index, 'group', parseInt(e.target.value) - 1)
+                              }
                               style={{
                                 width: '40px',
                                 textAlign: 'center',
@@ -399,13 +437,20 @@ export default function SearchSettings({ settings }: { settings: Settings }) {
                                 color: '#fff',
                                 border: '1px solid #555',
                                 borderRadius: '4px',
-                                padding: '2px'
+                                padding: '2px',
                               }}
                             />
                           </td>
                           <td style={{ padding: '8px 4px', textAlign: 'center' }}>
                             <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                              <label style={{ fontSize: '11px', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                              <label
+                                style={{
+                                  fontSize: '11px',
+                                  display: 'flex',
+                                  alignItems: 'center',
+                                  gap: '4px',
+                                }}
+                              >
                                 <input
                                   type="radio"
                                   name={`weaponLogic${index}`}
@@ -416,7 +461,14 @@ export default function SearchSettings({ settings }: { settings: Settings }) {
                                 />
                                 AND
                               </label>
-                              <label style={{ fontSize: '11px', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                              <label
+                                style={{
+                                  fontSize: '11px',
+                                  display: 'flex',
+                                  alignItems: 'center',
+                                  gap: '4px',
+                                }}
+                              >
                                 <input
                                   type="radio"
                                   name={`weaponLogic${index}`}
@@ -439,7 +491,7 @@ export default function SearchSettings({ settings }: { settings: Settings }) {
                                   color: '#4CAF50',
                                   cursor: 'pointer',
                                   fontSize: '12px',
-                                  textDecoration: 'underline'
+                                  textDecoration: 'underline',
                                 }}
                                 onClick={() => showSearchResults(termObj.term, 'weapon')}
                                 title="Click to see matching weapons"
@@ -463,7 +515,7 @@ export default function SearchSettings({ settings }: { settings: Settings }) {
                                 cursor: 'pointer',
                                 display: 'flex',
                                 alignItems: 'center',
-                                justifyContent: 'center'
+                                justifyContent: 'center',
                               }}
                               title="Remove search term"
                             >
@@ -474,7 +526,10 @@ export default function SearchSettings({ settings }: { settings: Settings }) {
                       ))}
                       {(weaponSettings.additionalSearchTerms || []).length === 0 && (
                         <tr>
-                          <td colSpan={5} style={{ padding: '16px', textAlign: 'center', color: '#888' }}>
+                          <td
+                            colSpan={5}
+                            style={{ padding: '16px', textAlign: 'center', color: '#888' }}
+                          >
                             No search terms added. Click the + button to add one.
                           </td>
                         </tr>
@@ -483,7 +538,6 @@ export default function SearchSettings({ settings }: { settings: Settings }) {
                   </table>
                 </div>
               </div>
-              
             </div>
           </>
         )}
@@ -491,7 +545,7 @@ export default function SearchSettings({ settings }: { settings: Settings }) {
 
       <div className={styles.section}>
         <h3>{t('Settings.KeepArmorSettings')}</h3>
-        
+
         <div className={styles.setting}>
           <Checkbox
             label={t('Settings.EnableKeepArmor')}
@@ -503,13 +557,19 @@ export default function SearchSettings({ settings }: { settings: Settings }) {
 
         {armorSettings.enabled && (
           <>
-
             <div className={styles.setting}>
               <label>{t('Settings.AdditionalSearchTerms')}</label>
               <div className={styles.fineprint}>{t('Settings.AdditionalSearchDesc')}</div>
-              
+
               <div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                <div
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    marginBottom: '8px',
+                  }}
+                >
                   <strong>{t('Settings.CurrentSearchTerms')}:</strong>
                   <button
                     type="button"
@@ -525,7 +585,7 @@ export default function SearchSettings({ settings }: { settings: Settings }) {
                       cursor: 'pointer',
                       display: 'flex',
                       alignItems: 'center',
-                      justifyContent: 'center'
+                      justifyContent: 'center',
                     }}
                     title="Add new search term"
                   >
@@ -537,9 +597,15 @@ export default function SearchSettings({ settings }: { settings: Settings }) {
                     <thead>
                       <tr style={{ borderBottom: '1px solid #444' }}>
                         <th style={{ textAlign: 'left', padding: '8px 4px' }}>Term</th>
-                        <th style={{ textAlign: 'center', padding: '8px 4px', minWidth: '60px' }}>Group</th>
-                        <th style={{ textAlign: 'center', padding: '8px 4px', minWidth: '70px' }}>Logic</th>
-                        <th style={{ textAlign: 'center', padding: '8px 4px', minWidth: '60px' }}>Results</th>
+                        <th style={{ textAlign: 'center', padding: '8px 4px', minWidth: '60px' }}>
+                          Group
+                        </th>
+                        <th style={{ textAlign: 'center', padding: '8px 4px', minWidth: '70px' }}>
+                          Logic
+                        </th>
+                        <th style={{ textAlign: 'center', padding: '8px 4px', minWidth: '60px' }}>
+                          Results
+                        </th>
                         <th style={{ textAlign: 'center', padding: '8px 4px', minWidth: '30px' }} />
                       </tr>
                     </thead>
@@ -561,7 +627,9 @@ export default function SearchSettings({ settings }: { settings: Settings }) {
                               min="1"
                               max="4"
                               value={(termObj.group ?? 0) + 1}
-                              onChange={(e) => updateArmorSearchTerm(index, 'group', parseInt(e.target.value) - 1)}
+                              onChange={(e) =>
+                                updateArmorSearchTerm(index, 'group', parseInt(e.target.value) - 1)
+                              }
                               style={{
                                 width: '40px',
                                 textAlign: 'center',
@@ -569,13 +637,20 @@ export default function SearchSettings({ settings }: { settings: Settings }) {
                                 color: '#fff',
                                 border: '1px solid #555',
                                 borderRadius: '4px',
-                                padding: '2px'
+                                padding: '2px',
                               }}
                             />
                           </td>
                           <td style={{ padding: '8px 4px', textAlign: 'center' }}>
                             <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                              <label style={{ fontSize: '11px', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                              <label
+                                style={{
+                                  fontSize: '11px',
+                                  display: 'flex',
+                                  alignItems: 'center',
+                                  gap: '4px',
+                                }}
+                              >
                                 <input
                                   type="radio"
                                   name={`armorLogic${index}`}
@@ -586,7 +661,14 @@ export default function SearchSettings({ settings }: { settings: Settings }) {
                                 />
                                 AND
                               </label>
-                              <label style={{ fontSize: '11px', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                              <label
+                                style={{
+                                  fontSize: '11px',
+                                  display: 'flex',
+                                  alignItems: 'center',
+                                  gap: '4px',
+                                }}
+                              >
                                 <input
                                   type="radio"
                                   name={`armorLogic${index}`}
@@ -609,7 +691,7 @@ export default function SearchSettings({ settings }: { settings: Settings }) {
                                   color: '#4CAF50',
                                   cursor: 'pointer',
                                   fontSize: '12px',
-                                  textDecoration: 'underline'
+                                  textDecoration: 'underline',
                                 }}
                                 onClick={() => showSearchResults(termObj.term, 'armor')}
                                 title="Click to see matching armor"
@@ -633,7 +715,7 @@ export default function SearchSettings({ settings }: { settings: Settings }) {
                                 cursor: 'pointer',
                                 display: 'flex',
                                 alignItems: 'center',
-                                justifyContent: 'center'
+                                justifyContent: 'center',
                               }}
                               title="Remove search term"
                             >
@@ -644,7 +726,10 @@ export default function SearchSettings({ settings }: { settings: Settings }) {
                       ))}
                       {(armorSettings.additionalSearchTerms || []).length === 0 && (
                         <tr>
-                          <td colSpan={5} style={{ padding: '16px', textAlign: 'center', color: '#888' }}>
+                          <td
+                            colSpan={5}
+                            style={{ padding: '16px', textAlign: 'center', color: '#888' }}
+                          >
                             No search terms added. Click the + button to add one.
                           </td>
                         </tr>
