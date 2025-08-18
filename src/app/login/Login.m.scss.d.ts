@@ -3,8 +3,8 @@
 interface CssExports {
   'auth': string;
   'billboard': string;
-  'd2LSync': string;
-  'd2LSyncCheckbox': string;
+  'd2lSync': string;
+  'd2lSyncCheckbox': string;
   'explanation': string;
   'fineprint': string;
   'section': string;

@@ -844,9 +844,9 @@ const statFilters: ItemFilterDefinition[] = [
     description: tl('Filter.Stats'),
     format: 'simple',
     destinyVersion: 2,
-    filter: () => {
-      return () => true; // Return all items
-    },
+    filter: () => 
+       () => true // Return all items
+    ,
   },
 ];
 

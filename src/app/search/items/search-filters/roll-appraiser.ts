@@ -222,13 +222,11 @@ const rollAppraiserFilters: ItemFilterDefinition[] = [
     description: undefined as any,
     format: 'range',
     destinyVersion: 2,
-    filter: ({ compare }) => {
-      return (item) => {
+    filter: ({ compare }) => (item) => {
         const info = getWeaponRankingInfo(item);
         // Use bestComboRank which checks all available perk combinations
         return info?.bestComboRank ? compare!(info.bestComboRank) : false;
-      };
-    },
+      },
   },
 
   // Individual perk rank filters for each column
@@ -237,13 +235,11 @@ const rollAppraiserFilters: ItemFilterDefinition[] = [
     description: undefined as any,
     format: 'range',
     destinyVersion: 2,
-    filter: ({ compare }) => {
-      return (item) => {
+    filter: ({ compare }) => (item) => {
         const info = getWeaponRankingInfo(item);
         const column1Perks = info?.perkRankings.filter(p => p.index === 0) || [];
         return column1Perks.some(perk => perk.ranking && compare!(perk.ranking.rank));
-      };
-    },
+      },
   },
 
   {
@@ -251,13 +247,11 @@ const rollAppraiserFilters: ItemFilterDefinition[] = [
     description: undefined as any,
     format: 'range',
     destinyVersion: 2,
-    filter: ({ compare }) => {
-      return (item) => {
+    filter: ({ compare }) => (item) => {
         const info = getWeaponRankingInfo(item);
         const column2Perks = info?.perkRankings.filter(p => p.index === 1) || [];
         return column2Perks.some(perk => perk.ranking && compare!(perk.ranking.rank));
-      };
-    },
+      },
   },
 
   {
@@ -265,8 +259,7 @@ const rollAppraiserFilters: ItemFilterDefinition[] = [
     description: undefined as any,
     format: 'range',
     destinyVersion: 2,
-    filter: ({ compare }) => {
-      return (item) => {
+    filter: ({ compare }) => (item) => {
         const info = getWeaponRankingInfo(item);
         if (!info?.perkRankings) {return false;}
         
@@ -274,8 +267,7 @@ const rollAppraiserFilters: ItemFilterDefinition[] = [
         const result = column3Perks.some(perk => perk.ranking && compare!(perk.ranking.rank));
         
         return result;
-      };
-    },
+      },
   },
 
   {
@@ -283,13 +275,11 @@ const rollAppraiserFilters: ItemFilterDefinition[] = [
     description: undefined as any,
     format: 'range',
     destinyVersion: 2,
-    filter: ({ compare }) => {
-      return (item) => {
+    filter: ({ compare }) => (item) => {
         const info = getWeaponRankingInfo(item);
         const column4Perks = info?.perkRankings.filter(p => p.index === 3) || [];
         return column4Perks.some(perk => perk.ranking && compare!(perk.ranking.rank));
-      };
-    },
+      },
   },
 
   // Perk name filters for each column
