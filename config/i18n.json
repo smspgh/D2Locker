@@ -408,7 +408,7 @@
     "KeyboardShortcuts": "Keyboard Shortcuts",
     "MaterialCounts": "Material Counts",
     "Menu": "Menu",
-    "ProfileAge": "Destiny servers last sent updated data {{age}} ago.\nRefreshing from D2L may get newer data, but Bungie.net may also repeat cached information.",
+    "ProfileAge": "Destiny servers last sent updated data {{age}} ago.",
     "Refresh": "Refresh Destiny Data [R]",
     "ReloadApp": "Reload App",
     "ReportBug": "Report a Bug",
