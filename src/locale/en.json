@@ -320,7 +320,7 @@
     "MaxNonExotic": "Shows the top N non-exotic items per slot across all tiers except exotic (e.g., 'maxnonexotic:<=3' for top 3 non-exotic items per slot).",
     "KeepWeapon": "Shows weapons worth keeping: crafted weapons, best duplicate weapons, weapons with combo rank ≤2, or top 4 legendary weapons per slot.",
     "KeepArmor": "Shows armor worth keeping: best armor per class/type/tier, armor with max total base stats per class, or top 4 legendary armor pieces per slot/class.",
-    "Junk": "Shows items that are NOT worth keeping - the inverse of crafted weapons, good combo rank legendaries, non-duplicate exotics, best armor, and top power tier items.",
+    "Junk": "Shows items that are junk: (is:weapon or is:armor) and -(is:keepweapon or is:keeparmor or maxnonexotic:3). Items that aren't kept by any keep filters or aren't among the top 3 non-exotic items per slot.",
     "Memento": "Shows weapons that have a memento socket.",
     "ModSlot": "Shows armor with a specific mod type slot.",
     "Mods": {
