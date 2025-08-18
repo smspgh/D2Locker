@@ -109,12 +109,12 @@ export class RollAppraiserUtils {
         for (const perkData of perkArray) {
           if (perkData.PerkHash === standardHash) {
             return {
-              rank: perkData.Rank,
-              count: perkData.Count,
-              perkHash: perkData.PerkHash,
-              perkEnhancedHash: perkData.PerkEnhancedHash,
-              show: perkData.Show,
-              perkIndex: perkData.PerkIDX,
+              rank: Number(perkData.Rank),
+              count: Number(perkData.Count),
+              perkHash: Number(perkData.PerkHash),
+              perkEnhancedHash: perkData.PerkEnhancedHash ? Number(perkData.PerkEnhancedHash) : null,
+              show: Boolean(perkData.Show),
+              perkIndex: perkData.PerkIDX ? Number(perkData.PerkIDX) : undefined,
             };
           }
         }
@@ -133,16 +133,16 @@ export class RollAppraiserUtils {
       return null;
     }
 
-    const targetHash = typeof mwPerkHash === 'string' ? parseInt(mwPerkHash) : mwPerkHash;
+    const targetHash = typeof mwPerkHash === 'string' ? parseInt(mwPerkHash, 10) : mwPerkHash;
 
     for (const mwData of weaponMWs) {
       if (mwData.PerkHash === targetHash) {
         return {
-          rank: mwData.Rank,
-          count: mwData.Count,
-          perkHash: mwData.PerkHash,
-          perkEnhancedHash: mwData.PerkEnhancedHash || null,
-          show: mwData.Show,
+          rank: Number(mwData.Rank),
+          count: Number(mwData.Count),
+          perkHash: Number(mwData.PerkHash),
+          perkEnhancedHash: mwData.PerkEnhancedHash ? Number(mwData.PerkEnhancedHash) : null,
+          show: Boolean(mwData.Show),
         };
       }
     }
@@ -181,13 +181,13 @@ export class RollAppraiserUtils {
         return {
           rank: comboRank,
           indexInRank: indexInRank,
-          count: trait.Count,
-          perk4Hash: trait.Perk4Hash,
-          perk4EnhancedHash: trait.Perk4EnhancedHash,
-          perk5Hash: trait.Perk5Hash,
-          perk5EnhancedHash: trait.Perk5EnhancedHash,
-          show: trait.Show,
-          dateSaved: trait.DateSaved,
+          count: Number(trait.Count),
+          perk4Hash: Number(trait.Perk4Hash),
+          perk4EnhancedHash: trait.Perk4EnhancedHash ? Number(trait.Perk4EnhancedHash) : null,
+          perk5Hash: Number(trait.Perk5Hash),
+          perk5EnhancedHash: trait.Perk5EnhancedHash ? Number(trait.Perk5EnhancedHash) : null,
+          show: Boolean(trait.Show),
+          dateSaved: String(trait.DateSaved),
         };
       }
 
@@ -212,10 +212,10 @@ export class RollAppraiserUtils {
     }
 
     return {
-      reviewCount: review.ReviewCount,
-      pveAverage: review.PVEAvg,
-      pvpAverage: review.PVPAvg,
-      overallAverage: review.OverallAvg,
+      reviewCount: Number(review.ReviewCount),
+      pveAverage: Number(review.PVEAvg),
+      pvpAverage: Number(review.PVPAvg),
+      overallAverage: Number(review.OverallAvg),
     };
   }
 

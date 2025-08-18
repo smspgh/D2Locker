@@ -17,7 +17,6 @@ import { ColumnDefinition, Row, TableContext } from 'app/organizer/table-types';
 import { weaponMasterworkY2SocketTypeHash } from 'app/search/d2-known-values';
 import Checkbox from 'app/settings/Checkbox';
 import { useSetting } from 'app/settings/hooks';
-// import { AppIcon, faList } from 'app/shell/icons';
 import { acquisitionRecencyComparator } from 'app/shell/item-comparators';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { compact } from 'app/utils/collections';
@@ -145,12 +144,6 @@ export default function Compare({ session }: { session: CompareSession }) {
   // Memoize computing the list of stats
   const allStats = useMemo(() => buildStatInfo(compareItems), [compareItems]);
 
-  // const updateQuery = useCallback(
-  //   (newQuery: string) => {
-  //     dispatch(updateCompareQuery(newQuery));
-  //   },
-  //   [dispatch],
-  // );
 
   const remove = useCallback(
     (item: DimItem) => {
@@ -253,7 +246,7 @@ export default function Compare({ session }: { session: CompareSession }) {
     const getTag = (item: DimItem) =>
       // Use the tag selector to get the item's tag
       item.taggable && typeof item.taggable === 'object' && 'tag' in item.taggable
-        ? (item.taggable as any).tag
+        ? (item.taggable as { tag: unknown }).tag
         : undefined;
     // Create the comparator for dupebest
     const dupebestComparator = chainComparator<DimItem>(

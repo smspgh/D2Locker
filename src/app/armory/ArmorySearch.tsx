@@ -9,6 +9,7 @@ import { querySelector } from 'app/shell/selectors';
 import { BucketHashes } from 'data/d2/generated-enums';
 import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
+import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import styles from './ArmorySearch.m.scss';
 import { ArmorySearchProvider } from './ArmorySearchContext';
 import ItemGrid from './ItemGrid';
@@ -138,7 +139,7 @@ export default function ArmorySearch() {
 /**
  * Check if an item definition represents a weapon
  */
-function isWeaponItem(def: any): boolean {
+function isWeaponItem(def: DestinyInventoryItemDefinition): boolean {
   // Check if it's in a weapon bucket
   const weaponBuckets = [
     BucketHashes.KineticWeapons,
@@ -152,7 +153,7 @@ function isWeaponItem(def: any): boolean {
 /**
  * Check if this is a dummy/placeholder item that shouldn't be shown
  */
-function isDummyItem(def: any): boolean {
+function isDummyItem(def: DestinyInventoryItemDefinition): boolean {
   // Skip items with no icon or display properties
   if (!def.displayProperties?.icon || !def.displayProperties?.name) {
     return true;
