@@ -117,7 +117,7 @@ export default function SearchHistory() {
         </thead>
         <tbody>
           {recentSearches
-            .filter((s) => s.usageCount > 0)
+            .filter((s) => (s.usageCount || 0) > 0 || s.saved)
             .sort(searchComparator)
             .map((search) => (
               <tr key={search.query}>
@@ -131,7 +131,7 @@ export default function SearchHistory() {
                     <AppIcon icon={closeIcon} />
                   </button>
                 </td>
-                <td>{search.usageCount}</td>
+                <td>{search.usageCount || 1}</td>
                 <td>
                   <button
                     type="button"

@@ -54,7 +54,7 @@ export const horizontalClass = styles.horizontal;
 const SETTINGS_VISIBILITY = {
   language: false, // Hide Language (Always show English)
   itemDisplay: false, // Hide ITEM Display section
-  itemSize: true, // Hide Item size
+  itemSize: false, // Hide Item size
   vaultWeaponGrouping: false, // Hide Group vault weapons by
   separateArmorByClass: false, // Hide Separate Armor on different lines by class
   sortOptions: {

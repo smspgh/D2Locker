@@ -64,7 +64,7 @@ export const currentProfileSelector = createSelector(
 const recentSearchesSelectorCached = createSelector(
   (state: RootState) => state.d2lApi.searches[destinyVersionSelector(state)],
   (_state: RootState, searchType: SearchType) => searchType,
-  (searches, searchType) => searches.filter((s) => (s.type ?? SearchType.Item) === searchType),
+  (searches, searchType) => (searches || []).filter((s) => (s.type ?? SearchType.Item) === searchType),
 );
 
 /**
