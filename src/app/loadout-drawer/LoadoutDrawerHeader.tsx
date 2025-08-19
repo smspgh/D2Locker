@@ -21,7 +21,7 @@ export default function LoadoutDrawerHeader({
   useAutocomplete(inputRef, tags);
 
   return (
-    <WithSymbolsPicker className={styles.d2lInput} input={inputRef} setValue={onNameChanged}>
+    <WithSymbolsPicker className={styles.d2LInput} input={inputRef} setValue={onNameChanged}>
       <input
         name="name"
         ref={inputRef}

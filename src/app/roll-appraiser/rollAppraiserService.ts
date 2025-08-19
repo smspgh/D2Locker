@@ -23,7 +23,7 @@ async function loadRollAppraiserData(): Promise<RollAppraiserUtils> {
         throw new Error(`Failed to load roll appraiser data: ${response.statusText}`);
       }
 
-      const data: RollAppraiserData = await response.json();
+      const data = (await response.json()) as RollAppraiserData;
       rollAppraiserUtils = new RollAppraiserUtils(data);
 
       console.log('Roll appraiser data loaded successfully');

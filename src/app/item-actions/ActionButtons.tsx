@@ -179,7 +179,7 @@ export function ConsolidateActionButton({
 
   return (
     <ActionButton onClick={dispatchConsolidate}>
-      <img src={arrowsIn} />
+      <img src={arrowsIn as string} />
       {label && <span className={styles.label}>{t('MovePopup.Consolidate')}</span>}
     </ActionButton>
   );
@@ -203,7 +203,7 @@ export function DistributeActionButton({
 
   return (
     <ActionButton onClick={dispatchDistribute}>
-      <img src={arrowsOut} />
+      <img src={arrowsOut as string} />
       {label && <span className={styles.label}>{t('MovePopup.DistributeEvenly')}</span>}
     </ActionButton>
   );
@@ -225,7 +225,7 @@ export function InfuseActionButton({
 
   return (
     <ActionButton onClick={infuse} hotkey="i" hotkeyDescription={t('MovePopup.InfuseTitle')}>
-      <img src={d2Infuse} />
+      <img src={d2Infuse as string} />
       {label && <span className={styles.label}>{t('MovePopup.Infuse')}</span>}
     </ActionButton>
   );

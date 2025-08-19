@@ -609,13 +609,15 @@ function migrateSettings(state: DimApiState) {
   for (const destinyVersion in migratedSearches) {
     const searches = migratedSearches[destinyVersion as keyof typeof migratedSearches];
     if (searches && Array.isArray(searches)) {
-      migratedSearches[destinyVersion as keyof typeof migratedSearches] = searches.map((search: Search) => ({
-        usageCount: search.usageCount ?? 0,
-        lastUsage: search.lastUsage ?? 0,
-        saved: search.saved ?? false,
-        query: search.query,
-        type: search.type,
-      }));
+      migratedSearches[destinyVersion as keyof typeof migratedSearches] = searches.map(
+        (search: Search) => ({
+          usageCount: search.usageCount ?? 0,
+          lastUsage: search.lastUsage ?? 0,
+          saved: search.saved ?? false,
+          query: search.query,
+          type: search.type,
+        }),
+      );
     }
   }
 

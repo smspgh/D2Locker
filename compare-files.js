@@ -12,9 +12,9 @@ console.log('Existing file entries:', Object.keys(existing).length);
 const testKeys = new Set(Object.keys(test));
 const existingKeys = new Set(Object.keys(existing));
 
-const onlyInTest = [...testKeys].filter(k => !existingKeys.has(k));
-const onlyInExisting = [...existingKeys].filter(k => !testKeys.has(k));
-const inBoth = [...testKeys].filter(k => existingKeys.has(k));
+const onlyInTest = [...testKeys].filter((k) => !existingKeys.has(k));
+const onlyInExisting = [...existingKeys].filter((k) => !testKeys.has(k));
+const inBoth = [...testKeys].filter((k) => existingKeys.has(k));
 
 console.log('\n=== KEY DIFFERENCES ===');
 console.log('Only in test file:', onlyInTest.length);
@@ -51,11 +51,15 @@ console.log('Existing file - 839105230 maps to:', existing['839105230']);
 // Show some sample mappings from each file
 console.log('\n=== SAMPLE MAPPINGS ===');
 console.log('Test file samples:');
-Object.keys(test).slice(0, 5).forEach(key => {
-  console.log(`  ${key} -> ${test[key]}`);
-});
+Object.keys(test)
+  .slice(0, 5)
+  .forEach((key) => {
+    console.log(`  ${key} -> ${test[key]}`);
+  });
 
 console.log('Existing file samples:');
-Object.keys(existing).slice(0, 5).forEach(key => {
-  console.log(`  ${key} -> ${existing[key]}`);
-});
+Object.keys(existing)
+  .slice(0, 5)
+  .forEach((key) => {
+    console.log(`  ${key} -> ${existing[key]}`);
+  });

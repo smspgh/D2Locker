@@ -55,7 +55,7 @@ const loadClarityDescriptions = dedupePromise(async (loadFromIndexedDB: boolean)
     return (
       savedDescriptions ??
       // If IDB doesn't have the data (e.g. after deleting IDB but not localStorage), fetch it
-      (liveVersion && (await fetchRemoteDescriptions(liveVersion.descriptions)))
+      (liveVersion && fetchRemoteDescriptions(liveVersion.descriptions))
     );
   }
 

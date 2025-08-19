@@ -396,7 +396,7 @@ function ArmorStatsTriageSection({ item }: { item: DimItem }) {
                   ' '}
               </span>
               <span className={styles.statValue}>{best}</span>
-              <span className={styles.d2lmed}>{stat.displayProperties.name}</span>
+              <span className={styles.d2Lmed}>{stat.displayProperties.name}</span>
               <span className={styles.statValue}>{stat.base}</span>
               <span>
                 (<span style={{ color: getValueColors(quality)[1] }}>{percent}%</span>)

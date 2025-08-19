@@ -15,13 +15,17 @@ try {
     );
   `);
 
-  const stmt = db.prepare('INSERT OR IGNORE INTO api_keys (apiKey, appName, createdAt) VALUES (?, ?, ?)');
+  const stmt = db.prepare(
+    'INSERT OR IGNORE INTO api_keys (apiKey, appName, createdAt) VALUES (?, ?, ?)',
+  );
   const info = stmt.run(API_KEY, APP_NAME, Date.now());
 
   if (info.changes > 0) {
     console.log(`API key "${API_KEY}" for app "${APP_NAME}" inserted successfully.`);
   } else {
-    console.log(`API key "${API_KEY}" for app "${APP_NAME}" already exists. No new record inserted.`);
+    console.log(
+      `API key "${API_KEY}" for app "${APP_NAME}" already exists. No new record inserted.`,
+    );
   }
 } catch (error) {
   console.error('Error inserting API key:', error.message);

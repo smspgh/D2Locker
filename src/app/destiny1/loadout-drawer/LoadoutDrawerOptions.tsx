@@ -55,7 +55,7 @@ export default function LoadoutDrawerOptions({
     <div className={styles.loadoutOptions}>
       <div className={clsx(styles.inputGroup, styles.loadoutName)}>
         <input
-          className={styles.d2lInput}
+          className={styles.d2LInput}
           name="name"
           onChange={handleSetName}
           minLength={1}

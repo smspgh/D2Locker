@@ -1,8 +1,7 @@
 import express from 'express';
-import { createProxyMiddleware } from 'http-proxy-middleware';
-import path from 'path';
 import fs from 'fs';
 import https from 'https';
+import path from 'path';
 import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -37,7 +36,7 @@ app.use('/api', (req, res) => {
     path: url.pathname + url.search,
     method: req.method,
     headers: { ...req.headers },
-    rejectUnauthorized: false // Accept self-signed certificates
+    rejectUnauthorized: false, // Accept self-signed certificates
   };
 
   delete options.headers.host; // Remove host header
@@ -46,7 +45,7 @@ app.use('/api', (req, res) => {
     console.log(`Backend response: ${proxyRes.statusCode} for ${req.originalUrl}`);
 
     // Copy response headers
-    Object.keys(proxyRes.headers).forEach(key => {
+    Object.keys(proxyRes.headers).forEach((key) => {
       res.setHeader(key, proxyRes.headers[key]);
     });
 

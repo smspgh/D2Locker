@@ -46,7 +46,7 @@ module.exports = function (api) {
       // '@babel/plugin-transform-react-inline-elements',
     );
   }
-  
+
   // Add React Refresh for development or production HMR
   if (!isTest && (!isProduction || isProductionHMR)) {
     plugins.push('react-refresh/babel');

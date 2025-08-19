@@ -50,7 +50,7 @@ export function toApiTagValue(tag: TagValue | undefined): ApiTagValue | undefine
     return undefined;
   }
   // For now, we'll cast it as the API might accept our values
-  return tag as any;
+  return tag as ApiTagValue;
 }
 
 export function fromApiTagValue(tag: ApiTagValue | undefined): TagValue | undefined {

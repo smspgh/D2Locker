@@ -34,7 +34,7 @@ export class VersionCacheManager {
           TAG,
           `Version changed from ${storedVersion} to ${this.currentVersion} - clearing caches`,
         );
-        await this.clearAllCaches();
+        await VersionCacheManager.clearAllCaches();
         localStorage.setItem(VERSION_KEY, this.currentVersion);
         localStorage.setItem(LAST_CACHE_CLEAR_KEY, Date.now().toString());
         return true;
@@ -42,7 +42,7 @@ export class VersionCacheManager {
 
       return false;
     } catch (error) {
-      errorLog(TAG, 'Error checking version:', error);
+      errorLog(TAG, 'Error checking version:', error as Error);
       return false;
     }
   }

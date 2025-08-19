@@ -1,11 +1,11 @@
+import chokidar from 'chokidar';
 import express from 'express';
-import path from 'path';
+import expressStaticGzip from 'express-static-gzip';
 import fs from 'fs';
 import https from 'https';
+import path from 'path';
 import { fileURLToPath } from 'url';
 import { WebSocketServer } from 'ws';
-import chokidar from 'chokidar';
-import expressStaticGzip from 'express-static-gzip';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -89,7 +89,7 @@ app.use('/api', (req, res) => {
     path: url.pathname + url.search,
     method: req.method,
     headers: { ...req.headers },
-    rejectUnauthorized: false // Accept self-signed certificates
+    rejectUnauthorized: false, // Accept self-signed certificates
   };
 
   delete proxyOptions.headers.host; // Remove host header
@@ -98,7 +98,7 @@ app.use('/api', (req, res) => {
     console.log(`Backend response: ${proxyRes.statusCode} for ${req.originalUrl}`);
 
     // Copy response headers
-    Object.keys(proxyRes.headers).forEach(key => {
+    Object.keys(proxyRes.headers).forEach((key) => {
       res.setHeader(key, proxyRes.headers[key]);
     });
 
@@ -122,21 +122,27 @@ app.use('/api', (req, res) => {
 });
 
 // Serve static files from dist with compression support (only for non-API requests)
-app.use(expressStaticGzip(path.join(__dirname, 'dist'), {
-  enableBrotli: true,
-  orderPreference: ['br'],
-  customCompressions: [{
-    encodingName: 'br',
-    fileExtension: 'br'
-  }],
-  setHeaders: (res, reqPath) => {
-    // Set cache headers for the large JSON file
-    if (reqPath.includes('rollAppraiserData.json')) {
-      res.setHeader('Cache-Control', 'public, max-age=86400'); // 24 hours
-      console.log(`📦 HMR Serving ${reqPath} - Content-Encoding: ${res.getHeader('Content-Encoding') || 'none'}`);
-    }
-  }
-}));
+app.use(
+  expressStaticGzip(path.join(__dirname, 'dist'), {
+    enableBrotli: true,
+    orderPreference: ['br'],
+    customCompressions: [
+      {
+        encodingName: 'br',
+        fileExtension: 'br',
+      },
+    ],
+    setHeaders: (res, reqPath) => {
+      // Set cache headers for the large JSON file
+      if (reqPath.includes('rollAppraiserData.json')) {
+        res.setHeader('Cache-Control', 'public, max-age=86400'); // 24 hours
+        console.log(
+          `📦 HMR Serving ${reqPath} - Content-Encoding: ${res.getHeader('Content-Encoding') || 'none'}`,
+        );
+      }
+    },
+  }),
+);
 
 // Handle client-side routing - serve index.html with HMR script injected
 app.use((req, res, next) => {
@@ -169,7 +175,7 @@ server.listen(443, () => {
 
 // Create WebSocket server for HMR
 const wss = new WebSocketServer({
-  server: server
+  server: server,
 });
 
 const clients = new Set();
@@ -188,13 +194,13 @@ wss.on('connection', (ws) => {
 const watcher = chokidar.watch(path.join(__dirname, 'dist'), {
   ignored: /(^|[\/\\])\../, // ignore dotfiles
   persistent: true,
-  ignoreInitial: true
+  ignoreInitial: true,
 });
 
 watcher.on('change', (filepath) => {
   console.log(`File changed: ${filepath}`);
   // Send reload message to all connected clients
-  clients.forEach(ws => {
+  clients.forEach((ws) => {
     if (ws.readyState === ws.OPEN) {
       ws.send('reload');
     }

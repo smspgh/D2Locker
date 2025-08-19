@@ -15,7 +15,7 @@ export default function PerkRankIndicator({
   rank,
   count,
   className,
-  size = 'small',
+  size: _size = 'small',
 }: PerkRankIndicatorProps) {
   if (rank < 1) {
     return null;

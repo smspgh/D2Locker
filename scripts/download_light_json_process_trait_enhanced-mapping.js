@@ -1,7 +1,7 @@
+import { execFileSync } from 'child_process';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import { execFileSync } from 'child_process';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -44,7 +44,6 @@ class TraitEnhancedMappingGenerator {
 
       console.log(`Generated ${Object.keys(mapping).length} standard-to-enhanced perk mappings`);
       console.log('Mapping generation complete!');
-
     } catch (error) {
       console.error('Error generating mapping:', error);
       process.exit(1);
@@ -109,11 +108,12 @@ class TraitEnhancedMappingGenerator {
 }
 
 // Run if called directly
-const isMainModule = process.argv[1] && import.meta.url.endsWith(process.argv[1].replace(/\\/g, '/'));
+const isMainModule =
+  process.argv[1] && import.meta.url.endsWith(process.argv[1].replace(/\\/g, '/'));
 if (isMainModule || process.argv[1]?.includes('generate-trait-enhanced-mapping.js')) {
   console.log('Starting trait-to-enhanced mapping generation...');
   const generator = new TraitEnhancedMappingGenerator();
-  generator.generateMapping().catch(error => {
+  generator.generateMapping().catch((error) => {
     console.error('Fatal error:', error);
     process.exit(1);
   });

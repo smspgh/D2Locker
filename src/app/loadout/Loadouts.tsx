@@ -295,7 +295,6 @@ function Loadouts({ account: _account }: { account: DestinyAccount }) {
           store={selectedStore}
           loadout={viewingInGameLoadout}
           onEdit={setEditingInGameLoadout}
-          onShare={setSharedLoadout}
           onClose={handleViewingSheetClose}
         />
       )}

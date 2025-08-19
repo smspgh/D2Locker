@@ -54,7 +54,7 @@ export default function Game2Give() {
               <div className={styles.goal}>${game2GiveState.goal.toLocaleString()}</div>
             </div>
           </div>
-          <img src={heroimage} className={styles.hero} />
+          <img src={heroimage as string} className={styles.hero} />
           {/* {game2GiveState.error && <div>Error loading latest</div>} */}
         </div>
       )}

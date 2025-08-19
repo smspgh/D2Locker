@@ -43,7 +43,9 @@ export default function TopTraitCombos({ item, className }: TopTraitCombosProps)
     }
 
     // Access the TraitStats data directly from utils
-    const utilsData = utils as { data?: { TraitStats?: Record<string, Record<string, RawTraitData>> } };
+    const utilsData = utils as {
+      data?: { TraitStats?: Record<string, Record<string, RawTraitData>> };
+    };
     const weaponTraits = utilsData.data?.TraitStats?.[item.hash.toString()];
     if (!weaponTraits) {
       return [];

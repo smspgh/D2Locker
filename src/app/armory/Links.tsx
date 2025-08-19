@@ -17,7 +17,7 @@ export default function Links({ item }: { item: DimItem }) {
   const links = [
     {
       name: 'D2L',
-      icon: logo as string,
+      icon: logo,
       link: `/armory/${item.hash}?perks=${buildSocketParam(item)}`,
     },
     {

@@ -1,8 +1,8 @@
 import { faFlag } from '@fortawesome/free-solid-svg-icons';
-import Switch from 'app/d2l-ui/form/Switch';
+import Switch from 'app/d2l-ui/Switch';
 import { t } from 'app/i18next-t';
 import { useSetSetting } from 'app/settings/hooks';
-import { AppIcon, faIcon } from 'app/shell/icons';
+import { AppIcon } from 'app/shell/icons';
 import { querySelector } from 'app/shell/selectors';
 import { memo } from 'react';
 import { useSelector } from 'react-redux';
@@ -22,26 +22,21 @@ const NewFeaturedGearFilter = memo(function NewFeaturedGearFilter() {
         .replace(/\s*is:featured\s*/g, ' ')
         .replace(/\s+/g, ' ')
         .trim();
-      setSearchQuery(newQuery);
+      (setSearchQuery as (value: string) => void)(newQuery);
     } else {
       // Add the filter
       const newQuery = query ? `${query} is:newgear` : 'is:newgear';
-      setSearchQuery(newQuery);
+      (setSearchQuery as (value: string) => void)(newQuery);
     }
   };
 
   return (
     <div className={styles.container}>
-      <Switch
-        checked={isNewGearEnabled}
-        onChange={handleToggleNewGear}
-        label={
-          <>
-            <AppIcon icon={faIcon(faFlag)} />
-            {t('LoadoutBuilder.LimitToNewGear')}
-          </>
-        }
-      />
+      <Switch checked={isNewGearEnabled} onChange={handleToggleNewGear} name="newGearFilter" />
+      <label htmlFor="newGearFilter">
+        <AppIcon icon={faFlag as import('@fortawesome/fontawesome-svg-core').IconDefinition} />
+        {t('LoadoutBuilder.LimitToNewGear')}
+      </label>
     </div>
   );
 });

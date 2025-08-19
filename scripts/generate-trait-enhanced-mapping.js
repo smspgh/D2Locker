@@ -40,7 +40,6 @@ class TraitEnhancedMappingGenerator {
       console.log(`Generated ${Object.keys(mapping).length} standard-to-enhanced perk mappings`);
       console.log(`Updated trait-to-enhanced-trait.json with complete mappings`);
       console.log('Mapping generation complete!');
-
     } catch (error) {
       console.error('Error generating mapping:', error);
       process.exit(1);
@@ -88,9 +87,9 @@ class TraitEnhancedMappingGenerator {
           if (!nameToHashes.has(perkName)) {
             nameToHashes.set(perkName, []);
           }
-          
+
           const hashesForName = nameToHashes.get(perkName);
-          
+
           // Only add if we haven't seen this exact hash for this name before
           if (!hashesForName.includes(perkHash)) {
             hashesForName.push(perkHash);
@@ -105,16 +104,20 @@ class TraitEnhancedMappingGenerator {
         // Based on feedback: Second hash is actually standard (in ranking data), first is enhanced (from manifest)
         const standardHash = hashes[1].toString();
         const enhancedHash = hashes[0].toString();
-        
+
         mapping[standardHash] = enhancedHash;
         mappingsFound++;
-        
+
         // Log some examples for verification
         if (mappingsFound <= 10) {
-          console.log(`Mapping: ${perkName} - ${standardHash} (standard) → ${enhancedHash} (enhanced)`);
+          console.log(
+            `Mapping: ${perkName} - ${standardHash} (standard) → ${enhancedHash} (enhanced)`,
+          );
         }
       } else if (hashes.length > 2) {
-        console.warn(`Warning: Found ${hashes.length} versions of "${perkName}" - expected 2. Hashes: ${hashes.join(', ')}`);
+        console.warn(
+          `Warning: Found ${hashes.length} versions of "${perkName}" - expected 2. Hashes: ${hashes.join(', ')}`,
+        );
       }
     }
 
@@ -127,11 +130,12 @@ class TraitEnhancedMappingGenerator {
 }
 
 // Run if called directly
-const isMainModule = process.argv[1] && import.meta.url.endsWith(process.argv[1].replace(/\\/g, '/'));
+const isMainModule =
+  process.argv[1] && import.meta.url.endsWith(process.argv[1].replace(/\\/g, '/'));
 if (isMainModule || process.argv[1]?.includes('generate-trait-enhanced-mapping.js')) {
   console.log('Starting trait-to-enhanced mapping generation...');
   const generator = new TraitEnhancedMappingGenerator();
-  generator.generateMapping().catch(error => {
+  generator.generateMapping().catch((error) => {
     console.error('Fatal error:', error);
     process.exit(1);
   });

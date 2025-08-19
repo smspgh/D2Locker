@@ -10,7 +10,7 @@ console.log('Arrowhead Brake mapping (839105230):', updated['839105230']);
 console.log('');
 console.log('Sample barrel perk mappings:');
 const barrelPerks = ['839105230', '1482024992', '1392496348', '3250034553'];
-barrelPerks.forEach(perk => {
+barrelPerks.forEach((perk) => {
   console.log(`  ${perk} -> ${updated[perk] || 'NOT_FOUND'}`);
 });
 

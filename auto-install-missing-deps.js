@@ -4,7 +4,6 @@
  */
 
 import { execSync } from 'child_process';
-import fs from 'fs';
 
 function runBuildAndCaptureMissingDeps() {
   try {
@@ -13,12 +12,11 @@ function runBuildAndCaptureMissingDeps() {
     // Run the build and capture both stdout and stderr
     const result = execSync('powershell -Command "pnpm run build:production 2>&1"', {
       encoding: 'utf8',
-      stdio: 'pipe'
+      stdio: 'pipe',
     });
 
     console.log('✅ Build completed successfully! No missing dependencies found.');
     return [];
-
   } catch (error) {
     const errorOutput = error.stdout || error.stderr || error.message;
     console.log('📋 Analyzing build errors for missing dependencies...');
@@ -44,7 +42,7 @@ function runBuildAndCaptureMissingDeps() {
 
     if (uniqueDeps.length > 0) {
       console.log(`🎯 Found ${uniqueDeps.length} missing dependencies:`);
-      uniqueDeps.forEach(dep => console.log(`  - ${dep}`));
+      uniqueDeps.forEach((dep) => console.log(`  - ${dep}`));
     } else {
       console.log('❓ No missing dependencies found in error output');
       console.log('Build output (first 1000 chars):', errorOutput.substring(0, 1000));
@@ -68,7 +66,6 @@ function installDependencies(deps) {
     execSync(command, { stdio: 'inherit', cwd: process.cwd() });
 
     console.log('\n✅ Successfully installed missing dependencies!');
-
   } catch (error) {
     console.error('❌ Error installing dependencies:', error.message);
     throw error;
@@ -98,13 +95,15 @@ async function main() {
   }
 
   if (attempts >= maxAttempts) {
-    console.log('\n⚠️  Reached maximum attempts. You may need to manually resolve remaining issues.');
+    console.log(
+      '\n⚠️  Reached maximum attempts. You may need to manually resolve remaining issues.',
+    );
   } else {
     console.log('\n🏁 Process complete! Try running your build again.');
   }
 }
 
-main().catch(error => {
+main().catch((error) => {
   console.error('💥 Script failed:', error.message);
   process.exit(1);
 });

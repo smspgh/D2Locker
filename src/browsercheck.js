@@ -1,5 +1,4 @@
 /* eslint prefer-template: 0 */
-// @ts-nocheck
 import parser from 'ua-parser-js';
 import {
   samsungInternet,
@@ -7,6 +6,10 @@ import {
   supportedLanguages,
   unsupported,
 } from './browsercheck-utils.js';
+
+// Type declarations for imported objects
+/** @type {Record<string, string>} */
+const typedUnsupported = unsupported;
 
 // Adapted from 'is-browser-supported' npm package. Separate from index.js so it'll run even if that fails.
 // This is also intentionally written in es5 and not TypeScript because it should not use any new features.
@@ -122,33 +125,61 @@ export function isSupported(browsersSupported, userAgent) {
 
 var lang = getUserLocale();
 
-if ($BROWSERS.length && lang) {
-  var supported = isSupported($BROWSERS, navigator.userAgent);
-  if (!supported) {
-    // t(`Browsercheck.Unsupported`)
-    document.getElementById('browser-warning').textContent = unsupported[lang];
-    document.getElementById('browser-warning').style.display = 'block';
-  }
+// $BROWSERS is injected at build time - use JSDoc to help TypeScript
+/** @type {string[] | undefined} */
+const browsers =
+  typeof $BROWSERS !== 'undefined' && Array.isArray($BROWSERS)
+    ? /** @type {string[]} */ ($BROWSERS)
+    : undefined;
 
-  // Steam is never supported
-  if (navigator.userAgent.includes('Steam')) {
-    // https://shirezaks.com/Figuring-out-why-D2L-doesn't-work-in-Steam
-    // t(`Browsercheck.Steam`)
-    document.getElementById('browser-warning').textContent = steamBrowser[lang];
-    document.getElementById('browser-warning').style.display = 'block';
-  }
+/** @type {boolean} */
+let supported = true;
 
-  // Samsung Internet is not supported because of its weird forced dark mode
-  if (
-    navigator.userAgent.includes('SamsungBrowser') &&
-    // When the "Labs" setting to respect websites' dark mode capabilities is
-    // enabled, Samsung Internet will actually set prefers-color-scheme to dark.
-    // Otherwise, it's always "light". This *could* be a user who actually
-    // prefers a light theme - there's no way to tell.
-    window.matchMedia('(prefers-color-scheme: light)').matches
-  ) {
-    // t(`Browsercheck.Samsung`)
-    document.getElementById('browser-warning').textContent = samsungInternet[lang];
-    document.getElementById('browser-warning').style.display = 'block';
+try {
+  if (browsers?.length && lang) {
+    supported = isSupported(browsers, navigator.userAgent);
   }
+} catch {
+  // Build-time variable not available, assume supported
+}
+
+if (!supported) {
+  // t(`Browsercheck.Unsupported`)
+  const warningElement = document.getElementById('browser-warning');
+  if (warningElement) {
+    let message =
+      'The D2L team does not support using this browser. Some or all D2L features may not work.';
+    if (lang && typeof typedUnsupported === 'object' && typedUnsupported) {
+      // Find the localized message safely
+      const entries = Object.entries(typedUnsupported);
+      const entry = entries.find(([key]) => key === lang);
+      if (entry && typeof entry[1] === 'string') {
+        message = entry[1];
+      }
+    }
+    warningElement.textContent = message;
+    warningElement.style.display = 'block';
+  }
+}
+
+// Steam is never supported
+if (navigator.userAgent.includes('Steam')) {
+  // https://shirezaks.com/Figuring-out-why-D2L-doesn't-work-in-Steam
+  // t(`Browsercheck.Steam`)
+  document.getElementById('browser-warning').textContent = steamBrowser[lang] || steamBrowser.en;
+  document.getElementById('browser-warning').style.display = 'block';
+}
+
+// Samsung Internet is not supported because of its weird forced dark mode
+if (
+  navigator.userAgent.includes('SamsungBrowser') &&
+  // When the "Labs" setting to respect websites' dark mode capabilities is
+  // enabled, Samsung Internet will actually set prefers-color-scheme to dark.
+  // Otherwise, it's always "light". This *could* be a user who actually
+  // prefers a light theme - there's no way to tell.
+  window.matchMedia('(prefers-color-scheme: light)').matches
+) {
+  // t(`Browsercheck.Samsung`)
+  document.getElementById('browser-warning').textContent = samsungInternet[lang];
+  document.getElementById('browser-warning').style.display = 'block';
 }

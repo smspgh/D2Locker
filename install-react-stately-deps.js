@@ -33,7 +33,7 @@ const reactStatelyPackages = [
   '@react-stately/toggle',
   '@react-stately/tooltip',
   '@react-stately/tree',
-  '@react-stately/utils'
+  '@react-stately/utils',
 ];
 
 console.log('Installing @react-stately dependencies...');
@@ -43,12 +43,11 @@ try {
   // Install all packages at once
   const command = `pnpm add ${reactStatelyPackages.join(' ')}`;
   console.log('Running:', command);
-  
+
   execSync(command, { stdio: 'inherit', cwd: process.cwd() });
-  
+
   console.log('\n✅ All @react-stately dependencies installed successfully!');
   console.log('You can now run your build command.');
-  
 } catch (error) {
   console.error('❌ Error installing dependencies:', error.message);
   process.exit(1);

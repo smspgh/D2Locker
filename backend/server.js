@@ -1,13 +1,13 @@
-import express from 'express';
-import https from 'https';
-import fs from 'fs';
-import path from 'path';
-import { fileURLToPath } from 'url';
+import Database from 'better-sqlite3';
 import bodyParser from 'body-parser';
 import cors from 'cors';
-import Database from 'better-sqlite3';
 import crypto from 'crypto';
+import express from 'express';
 import expressStaticGzip from 'express-static-gzip';
+import fs from 'fs';
+import https from 'https';
+import path from 'path';
+import { fileURLToPath } from 'url';
 const app = express();
 const PORT = 8443; // Standard HTTPS port
 
@@ -15,11 +15,20 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 // Configure CORS
-app.use(cors({
-  origin: ['https://shirezaks.com', 'https://shirezaks.com', 'https://shirezaks.com:8443', 'https://localhost:8443', 'https://localhost:443', 'https://localhost'],
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'X-API-Key', 'X-D2L-Version'],
-}));
+app.use(
+  cors({
+    origin: [
+      'https://shirezaks.com',
+      'https://shirezaks.com',
+      'https://shirezaks.com:8443',
+      'https://localhost:8443',
+      'https://localhost:443',
+      'https://localhost',
+    ],
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-API-Key', 'X-D2L-Version'],
+  }),
+);
 
 // Middleware to parse JSON bodies
 app.use(bodyParser.json());
@@ -70,12 +79,12 @@ try {
   // Add new columns if they don't exist (migration)
   try {
     db.exec(`ALTER TABLE users ADD COLUMN lastModified INTEGER DEFAULT (strftime('%s', 'now'))`);
-  } catch (e) {
+  } catch (_e) {
     // Column already exists, ignore
   }
   try {
     db.exec(`ALTER TABLE users ADD COLUMN syncToken TEXT`);
-  } catch (e) {
+  } catch (_e) {
     // Column already exists, ignore
   }
 
@@ -92,48 +101,60 @@ try {
       updateExistingRecords.run(currentTime);
       console.log(`Updated ${existingUsers.length} existing records with lastModified timestamps`);
     }
-  } catch (migrationError) {
+  } catch (_migrationError) {
     // If the migration fails, it's likely because the columns don't exist yet
     console.log('Migration skipped - likely new database');
   }
 
   // Migrate existing search data to include tracking fields
   try {
-    const existingUsers = db.prepare('SELECT membershipId, destinyVersion, searches FROM users').all();
+    const existingUsers = db
+      .prepare('SELECT membershipId, destinyVersion, searches FROM users')
+      .all();
     let migratedCount = 0;
-    
+
     for (const user of existingUsers) {
       try {
         const searchesArray = JSON.parse(user.searches || '[]');
         let needsUpdate = false;
-        
-        const migratedSearches = searchesArray.map(search => {
-          if (search && search.query && search.type !== undefined) {
-            // Check if search is missing tracking fields
-            if (search.usageCount === undefined || search.lastUsage === undefined || search.saved === undefined) {
+
+        const migratedSearches = searchesArray.map((search) => {
+          if (search && search.query && search.type !== undefined && (
+              search.usageCount === undefined ||
+              search.lastUsage === undefined ||
+              search.saved === undefined
+            )) {
               needsUpdate = true;
               return {
                 query: search.query,
                 type: search.type,
                 usageCount: search.usageCount || 0,
                 lastUsage: search.lastUsage || 0,
-                saved: search.saved || false
+                saved: search.saved || false,
               };
-            }
           }
           return search;
         });
-        
+
         if (needsUpdate) {
-          const updateSearches = db.prepare('UPDATE users SET searches = ? WHERE membershipId = ? AND destinyVersion = ?');
-          updateSearches.run(JSON.stringify(migratedSearches), user.membershipId, user.destinyVersion);
+          const updateSearches = db.prepare(
+            'UPDATE users SET searches = ? WHERE membershipId = ? AND destinyVersion = ?',
+          );
+          updateSearches.run(
+            JSON.stringify(migratedSearches),
+            user.membershipId,
+            user.destinyVersion,
+          );
           migratedCount++;
         }
       } catch (parseError) {
-        console.warn(`Failed to migrate search data for user ${user.membershipId}-${user.destinyVersion}:`, parseError.message);
+        console.warn(
+          `Failed to migrate search data for user ${user.membershipId}-${user.destinyVersion}:`,
+          parseError.message,
+        );
       }
     }
-    
+
     if (migratedCount > 0) {
       console.log(`Migrated search data for ${migratedCount} users to include tracking fields`);
     }
@@ -141,7 +162,6 @@ try {
     console.warn('Search data migration failed:', migrationError.message);
   }
 } catch (error) {
-
   console.error('Error initializing database:', error.message);
   throw new Error('Error initializing database');
 }
@@ -194,10 +214,20 @@ function getUserData(membershipId, destinyVersion) {
       tags: JSON.stringify({}),
       searches: JSON.stringify([]),
       lastModified: currentTime,
-      syncToken: null // Will be removed from database schema
+      syncToken: null, // Will be removed from database schema
     };
-    const insertStmt = db.prepare('INSERT INTO users (membershipId, destinyVersion, settings, loadouts, tags, searches, lastModified) VALUES (?, ?, ?, ?, ?, ?, ?)');
-    insertStmt.run(data.membershipId, data.destinyVersion, data.settings, data.loadouts, data.tags, data.searches, data.lastModified);
+    const insertStmt = db.prepare(
+      'INSERT INTO users (membershipId, destinyVersion, settings, loadouts, tags, searches, lastModified) VALUES (?, ?, ?, ?, ?, ?, ?)',
+    );
+    insertStmt.run(
+      data.membershipId,
+      data.destinyVersion,
+      data.settings,
+      data.loadouts,
+      data.tags,
+      data.searches,
+      data.lastModified,
+    );
   }
 
   // Parse the raw data
@@ -209,20 +239,20 @@ function getUserData(membershipId, destinyVersion) {
   // Convert loadouts from array to object keyed by loadout ID
   const loadoutsObject = {};
   if (Array.isArray(loadoutsArray)) {
-    loadoutsArray.forEach(loadout => {
+    for (const loadout of loadoutsArray) {
       if (loadout && loadout.id) {
         loadoutsObject[loadout.id] = loadout;
       }
-    });
+    }
   }
 
   // Convert searches from array to object keyed by destinyVersion
   const searchesObject = {
-    "1": [], // Destiny 1
-    "2": []  // Destiny 2
+    1: [], // Destiny 1
+    2: [], // Destiny 2
   };
   if (Array.isArray(searchesArray)) {
-    searchesArray.forEach(search => {
+    for (const search of searchesArray) {
       if (search && search.type) {
         const destinyVersion = search.type.toString();
         if (searchesObject[destinyVersion]) {
@@ -232,12 +262,12 @@ function getUserData(membershipId, destinyVersion) {
             type: search.type,
             usageCount: search.usageCount || 0,
             lastUsage: search.lastUsage || 0,
-            saved: search.saved || false
+            saved: search.saved || false,
           };
           searchesObject[destinyVersion].push(migratedSearch);
         }
       }
-    });
+    }
   }
 
   const parsedData = {
@@ -247,7 +277,7 @@ function getUserData(membershipId, destinyVersion) {
     loadouts: loadoutsObject,
     tags: tags,
     searches: searchesObject,
-    lastModified: data.lastModified
+    lastModified: data.lastModified,
   };
   return parsedData;
 }
@@ -285,7 +315,7 @@ function updateUserData(membershipId, destinyVersion, updates) {
         updatedData.tags[update.payload.id] = {
           tag: update.payload.tag || undefined,
           notes: update.payload.notes || undefined,
-          craftedDate: update.payload.craftedDate || undefined
+          craftedDate: update.payload.craftedDate || undefined,
         };
         // Remove the entry if both tag and notes are null/undefined
         if (!update.payload.tag && !update.payload.notes) {
@@ -301,9 +331,11 @@ function updateUserData(membershipId, destinyVersion, updates) {
           }
           // Find existing search and update or add new one
           const searchArray = updatedData.searches[destinyVersion];
-          const searchIndex = searchArray.findIndex(s => s.query === update.payload.query && s.type === update.payload.type);
+          const searchIndex = searchArray.findIndex(
+            (s) => s.query === update.payload.query && s.type === update.payload.type,
+          );
           const currentTime = Date.now();
-          
+
           if (searchIndex !== -1) {
             // Update existing search - increment usage count and update timestamp
             const existingSearch = searchArray[searchIndex];
@@ -312,7 +344,7 @@ function updateUserData(membershipId, destinyVersion, updates) {
               type: update.payload.type,
               usageCount: (existingSearch.usageCount || 0) + 1,
               lastUsage: currentTime,
-              saved: existingSearch.saved || false
+              saved: existingSearch.saved || false,
             };
           } else {
             // Add new search with initial tracking data
@@ -321,7 +353,7 @@ function updateUserData(membershipId, destinyVersion, updates) {
               type: update.payload.type,
               usageCount: 1,
               lastUsage: currentTime,
-              saved: false
+              saved: false,
             });
           }
         }
@@ -332,7 +364,7 @@ function updateUserData(membershipId, destinyVersion, updates) {
           const destinyVersion = update.payload.type.toString();
           if (updatedData.searches[destinyVersion]) {
             updatedData.searches[destinyVersion] = updatedData.searches[destinyVersion].filter(
-              s => !(s.query === update.payload.query && s.type === update.payload.type)
+              (s) => !(s.query === update.payload.query && s.type === update.payload.type),
             );
           }
         }
@@ -345,15 +377,17 @@ function updateUserData(membershipId, destinyVersion, updates) {
             updatedData.searches[destinyVersion] = [];
           }
           const searchArray = updatedData.searches[destinyVersion];
-          const searchIndex = searchArray.findIndex(s => s.query === update.payload.query && s.type === update.payload.type);
+          const searchIndex = searchArray.findIndex(
+            (s) => s.query === update.payload.query && s.type === update.payload.type,
+          );
           const currentTime = Date.now();
-          
+
           if (searchIndex !== -1) {
             // Update existing search's saved status
             const existingSearch = searchArray[searchIndex];
             searchArray[searchIndex] = {
               ...existingSearch,
-              saved: update.payload.saved
+              saved: update.payload.saved,
             };
           } else {
             // Create new search if it doesn't exist (for save_search without prior search action)
@@ -362,7 +396,7 @@ function updateUserData(membershipId, destinyVersion, updates) {
               type: update.payload.type,
               usageCount: 1,
               lastUsage: currentTime,
-              saved: update.payload.saved
+              saved: update.payload.saved,
             });
           }
         }
@@ -377,16 +411,16 @@ function updateUserData(membershipId, destinyVersion, updates) {
 
   // Convert searches object back to array for database storage
   const searchesArray = [];
-  Object.entries(updatedData.searches).forEach(([destinyVersion, searches]) => {
+  for (const [destinyVersion, searches] of Object.entries(updatedData.searches)) {
     if (Array.isArray(searches)) {
-      searches.forEach(search => {
+      for (const search of searches) {
         searchesArray.push({
           ...search,
-          type: parseInt(destinyVersion, 10)
+          type: parseInt(destinyVersion, 10),
         });
-      });
+      }
     }
-  });
+  }
 
   // Update lastModified timestamp
   const currentTime = Date.now();
@@ -407,13 +441,12 @@ function updateUserData(membershipId, destinyVersion, updates) {
     JSON.stringify(searchesArray),
     currentTime,
     existingData.membershipId, // Use existingData's ID and version
-    existingData.destinyVersion
+    existingData.destinyVersion,
   );
 
   updatedData.lastModified = currentTime;
   return updatedData;
 }
-
 
 // Simple test route
 app.get('/', (_req, res) => {
@@ -428,21 +461,28 @@ const apiRouter = express.Router();
 app.use('/api', apiRouter);
 
 // Serve static files with compression support
-app.use('/backend/light', expressStaticGzip(path.join(__dirname, 'light'), {
-  enableBrotli: true,
-  orderPreference: ['br'],
-  customCompressions: [{
-    encodingName: 'br',
-    fileExtension: 'br'
-  }],
-  setHeaders: (res, reqPath) => {
-    // Set cache headers for the large JSON file
-    if (reqPath.includes('rollAppraiserData.json')) {
-      res.setHeader('Cache-Control', 'public, max-age=86400'); // 24 hours
-      console.log(`📦 Serving ${reqPath} - Content-Encoding: ${res.getHeader('Content-Encoding') || 'none'}`);
-    }
-  }
-}));
+app.use(
+  '/backend/light',
+  expressStaticGzip(path.join(__dirname, 'light'), {
+    enableBrotli: true,
+    orderPreference: ['br'],
+    customCompressions: [
+      {
+        encodingName: 'br',
+        fileExtension: 'br',
+      },
+    ],
+    setHeaders: (res, reqPath) => {
+      // Set cache headers for the large JSON file
+      if (reqPath.includes('rollAppraiserData.json')) {
+        res.setHeader('Cache-Control', 'public, max-age=86400'); // 24 hours
+        console.log(
+          `📦 Serving ${reqPath} - Content-Encoding: ${res.getHeader('Content-Encoding') || 'none'}`,
+        );
+      }
+    },
+  }),
+);
 
 // Mock endpoint for /platform_info - does not require authentication
 apiRouter.get('/platform_info', (_req, res) => {
@@ -470,7 +510,9 @@ apiRouter.get('/profile', validateApiKey, (req, res) => {
   const { platformMembershipId, destinyVersion, components, lastModified } = req.query;
 
   if (!platformMembershipId || !destinyVersion) {
-    return res.status(400).json({ error: 'Bad Request', message: 'Missing membershipId or destinyVersion' });
+    return res
+      .status(400)
+      .json({ error: 'Bad Request', message: 'Missing membershipId or destinyVersion' });
   }
 
   const userData = getUserData(String(platformMembershipId), parseInt(String(destinyVersion), 10));
@@ -482,12 +524,12 @@ apiRouter.get('/profile', validateApiKey, (req, res) => {
     return res.json({
       profile: {},
       syncToken: userData.lastModified, // Keep for frontend compatibility
-      lastModified: userData.lastModified
+      lastModified: userData.lastModified,
     });
   }
 
   // Create the profile structure that matches IndexedDB format
-  const profileKey = `${userData.membershipId}-d${userData.destinyVersion}`;
+  const _profileKey = `${userData.membershipId}-d${userData.destinyVersion}`;
 
   // Convert loadouts object to array for ProfileResponse format
   const loadoutsArray = Object.values(userData.loadouts);
@@ -495,16 +537,16 @@ apiRouter.get('/profile', validateApiKey, (req, res) => {
 
   // Convert searches object to array for ProfileResponse format
   const searchesArray = [];
-  Object.entries(userData.searches).forEach(([destinyVersion, searches]) => {
+  for (const [destinyVersion, searches] of Object.entries(userData.searches)) {
     if (Array.isArray(searches)) {
-      searches.forEach(search => {
+      for (const search of searches) {
         searchesArray.push({
           ...search,
-          type: parseInt(destinyVersion, 10)
+          type: parseInt(destinyVersion, 10),
         });
-      });
+      }
     }
-  });
+  }
 
   const profileResponse = {
     settings: userData.settings,
@@ -520,7 +562,7 @@ apiRouter.get('/profile', validateApiKey, (req, res) => {
     const componentsArray = String(components).split(',');
     const filteredResponse = {
       syncToken: profileResponse.syncToken,
-      lastModified: profileResponse.lastModified
+      lastModified: profileResponse.lastModified,
     };
 
     if (componentsArray.includes('settings')) {
@@ -548,7 +590,9 @@ apiRouter.post('/profile', validateApiKey, (req, res) => {
 
   // Validate that updates array is always present
   if (!updates || !Array.isArray(updates)) {
-    return res.status(400).json({ error: 'Bad Request', message: 'Missing or invalid updates array' });
+    return res
+      .status(400)
+      .json({ error: 'Bad Request', message: 'Missing or invalid updates array' });
   }
 
   // Use membershipId and destinyVersion from request body
@@ -588,13 +632,15 @@ apiRouter.post('/loadout_share', validateApiKey, (req, res) => {
   const { platformMembershipId, loadout } = req.body;
 
   if (!platformMembershipId || !loadout) {
-    return res.status(400).json({ error: 'Bad Request', message: 'Missing platformMembershipId or loadout' });
+    return res
+      .status(400)
+      .json({ error: 'Bad Request', message: 'Missing platformMembershipId or loadout' });
   }
 
   // Generate a unique share ID
   const shareId = crypto.randomBytes(8).toString('hex');
   const createdAt = Date.now();
-  const expiresAt = createdAt + (30 * 24 * 60 * 60 * 1000); // 30 days from now
+  const expiresAt = createdAt + 30 * 24 * 60 * 60 * 1000; // 30 days from now
 
   try {
     const stmt = db.prepare(`
@@ -608,7 +654,9 @@ apiRouter.post('/loadout_share', validateApiKey, (req, res) => {
     res.json({ shareUrl });
   } catch (error) {
     console.error('Error creating loadout share:', error);
-    res.status(500).json({ error: 'Internal Server Error', message: 'Failed to create loadout share' });
+    res
+      .status(500)
+      .json({ error: 'Internal Server Error', message: 'Failed to create loadout share' });
   }
 });
 
@@ -628,16 +676,20 @@ apiRouter.get('/loadout_share', (req, res) => {
     const share = stmt.get(shareId, Date.now());
 
     if (!share) {
-      return res.status(404).json({ error: 'Not Found', message: 'Loadout share not found or expired' });
+      return res
+        .status(404)
+        .json({ error: 'Not Found', message: 'Loadout share not found or expired' });
     }
 
     const loadout = JSON.parse(share.loadout);
     res.json({
-      loadout
+      loadout,
     });
   } catch (error) {
     console.error('Error retrieving loadout share:', error);
-    res.status(500).json({ error: 'Internal Server Error', message: 'Failed to retrieve loadout share' });
+    res
+      .status(500)
+      .json({ error: 'Internal Server Error', message: 'Failed to retrieve loadout share' });
   }
 });
 

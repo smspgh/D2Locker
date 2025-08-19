@@ -8,6 +8,7 @@ import {
   cleanupOutdatedCaches,
   createHandlerBoundToURL,
   precacheAndRoute,
+  type PrecacheEntry,
 } from 'workbox-precaching';
 import { NavigationRoute, registerRoute } from 'workbox-routing';
 import { CacheFirst } from 'workbox-strategies';
@@ -26,7 +27,9 @@ declare global {
 // Use globalWorker.__WB_MANIFEST which is injected by Workbox plugin
 // The next line contains self.__WB_MANIFEST for Workbox plugin detection
 // @ts-expect-error - self.__WB_MANIFEST is injected by Workbox at build time
-precacheAndRoute((globalWorker.__WB_MANIFEST || self.__WB_MANIFEST) as (string | PrecacheEntry)[], {});
+const manifest = globalWorker.__WB_MANIFEST || self.__WB_MANIFEST;
+// Use type assertion with explicit typing to satisfy TypeScript
+precacheAndRoute((Array.isArray(manifest) ? manifest : []) as (string | PrecacheEntry)[], {});
 cleanupOutdatedCaches();
 
 // Once this activates, start handling requests through the service worker immediately.

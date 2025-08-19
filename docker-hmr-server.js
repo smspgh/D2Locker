@@ -1,11 +1,11 @@
+import chokidar from 'chokidar';
 import express from 'express';
-import path from 'path';
+import expressStaticGzip from 'express-static-gzip';
 import fs from 'fs';
 import https from 'https';
+import path from 'path';
 import { fileURLToPath } from 'url';
 import { WebSocketServer } from 'ws';
-import chokidar from 'chokidar';
-import expressStaticGzip from 'express-static-gzip';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -77,7 +77,7 @@ const hmrScript = `
 app.use((req, res, next) => {
   if (req.path === '/' || req.path === '/index.html') {
     const originalSend = res.send;
-    res.send = function(data) {
+    res.send = function (data) {
       if (typeof data === 'string' && data.includes('</body>')) {
         data = data.replace('</body>', hmrScript + '</body>');
       }
@@ -88,18 +88,20 @@ app.use((req, res, next) => {
 });
 
 // Serve static files with gzip support
-app.use(expressStaticGzip(path.join(__dirname, 'dist'), {
-  enableBrotli: true,
-  orderPreference: ['br', 'gz'],
-  serveStatic: {
-    maxAge: '1d',
-    setHeaders: (res, path) => {
-      if (path.endsWith('.html')) {
-        res.setHeader('Cache-Control', 'no-cache');
-      }
-    }
-  }
-}));
+app.use(
+  expressStaticGzip(path.join(__dirname, 'dist'), {
+    enableBrotli: true,
+    orderPreference: ['br', 'gz'],
+    serveStatic: {
+      maxAge: '1d',
+      setHeaders: (res, path) => {
+        if (path.endsWith('.html')) {
+          res.setHeader('Cache-Control', 'no-cache');
+        }
+      },
+    },
+  }),
+);
 
 // Create HTTPS server
 const port = 443;
@@ -124,14 +126,15 @@ wss.on('connection', (ws) => {
 // Watch for file changes
 const watcher = chokidar.watch(path.join(__dirname, 'dist'), {
   ignored: /node_modules/,
-  persistent: true
+  persistent: true,
 });
 
 watcher.on('change', (filePath) => {
   console.log(`File changed: ${filePath}`);
   // Notify all connected clients
   clients.forEach((client) => {
-    if (client.readyState === 1) { // WebSocket.OPEN
+    if (client.readyState === 1) {
+      // WebSocket.OPEN
       client.send('reload');
     }
   });

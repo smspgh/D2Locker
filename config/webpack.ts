@@ -1,9 +1,8 @@
-import webpack from 'webpack';
 import * as dotenv from 'dotenv';
+import webpack from 'webpack';
 
 import ReactRefreshWebpackPlugin from '@pmmmwh/react-refresh-webpack-plugin';
 import browserslist from 'browserslist';
-import { execSync } from 'child_process';
 import { CleanWebpackPlugin } from 'clean-webpack-plugin';
 import CompressionPlugin from 'compression-webpack-plugin';
 import CopyWebpackPlugin from 'copy-webpack-plugin';
@@ -52,17 +51,20 @@ export interface Env extends EnvValues {
   name: 'release' | 'beta' | 'dev' | 'pr' | 'production-hmr';
 }
 type Argv = Record<string, CLIValues>;
-export type WebpackConfigurationGenerator = (env?: Env, argv?: Argv) => webpack.Configuration | Promise<webpack.Configuration>;
+export type WebpackConfigurationGenerator = (
+  env?: Env,
+  argv?: Argv,
+) => webpack.Configuration | Promise<webpack.Configuration>;
 
 export default (env: Env) => {
   env.name = Object.keys(env)[0] as Env['name'];
-  (['release', 'beta', 'dev', 'pr', 'production-hmr'] as const).forEach((e) => {
+  for (const e of ['release', 'beta', 'dev', 'pr', 'production-hmr'] as const) {
     // set booleans based on env
     env[e] = Boolean(env[e]);
     if (env[e]) {
       env.name = e;
     }
-  });
+  }
 
   // Load environment variables from appropriate .env file
   const envFile = env.dev ? '.dev.env' : '.env';
@@ -86,7 +88,9 @@ export default (env: Env) => {
     throw new Error('SSL certificates missing');
   }
 
-  const version = env.dev ? (packageJson.version?.toString() || '2.0.0') : (process.env.VERSION || '2.0.0');
+  const version = env.dev
+    ? packageJson.version?.toString() || '2.0.0'
+    : process.env.VERSION || '2.0.0';
 
   if (!env.dev) {
     console.log(`Building D2 Locker`);
@@ -129,49 +133,45 @@ export default (env: Env) => {
     },
 
     // Dev server
-    devServer: env.dev || env['production-hmr']
-      ? ({
-          host: process.env.DOCKER ? '0.0.0.0' : 'localhost',
-          port: 443, // Use port 443 for both dev and production-hmr
-          allowedHosts: 'all',
-          server: {
-            type: 'https',
-            options: {
-              key: fs.readFileSync(keyPath), // Private keys in PEM format.
-              cert: fs.readFileSync(certPath), // Cert chains in PEM format.
+    devServer:
+      env.dev || env['production-hmr']
+        ? ({
+            host: process.env.DOCKER ? '0.0.0.0' : 'localhost',
+            port: 443, // Use port 443 for both dev and production-hmr
+            allowedHosts: 'all',
+            server: {
+              type: 'https',
+              options: {
+                key: fs.readFileSync(keyPath), // Private keys in PEM format.
+                cert: fs.readFileSync(certPath), // Cert chains in PEM format.
+              },
             },
-          },
-          devMiddleware: {
-            stats: 'errors-only',
-          },
-          client: {
-            overlay: false,
-          },
-          historyApiFallback: true,
-          hot: 'only',
-          liveReload: false,
-          headers: (req) => {
-            // This mirrors what's in .htaccess - headers for html paths, COEP for JS.
-            const headers: Record<string, string | string[]> = req.baseUrl.match(/^[^.]+$/)
-              ? {
-                  'Content-Security-Policy': contentSecurityPolicy,
-                  // credentialless is only supported by chrome but require-corp blocks Bungie.net messages
-                  // Disabled for now as it blocks Google fonts
-                  // 'Cross-Origin-Embedder-Policy': 'credentialless',
-                  // 'Cross-Origin-Opener-Policy': 'same-origin',
-                }
-              : req.baseUrl.match(/\.js$/)
+            devMiddleware: {
+              stats: 'errors-only',
+            },
+            client: {
+              overlay: false,
+            },
+            historyApiFallback: true,
+            hot: 'only',
+            liveReload: false,
+            headers: (req) => {
+              // This mirrors what's in .htaccess - headers for html paths, COEP for JS.
+              const headers: Record<string, string | string[]> = req.baseUrl.match(/^[^.]+$/)
                 ? {
+                    'Content-Security-Policy': contentSecurityPolicy,
                     // credentialless is only supported by chrome but require-corp blocks Bungie.net messages
-                    // 'Cross-Origin-Embedder-Policy': 'require-corp',
+                    // Disabled for now as it blocks Google fonts
+                    // 'Cross-Origin-Embedder-Policy': 'credentialless',
+                    // 'Cross-Origin-Opener-Policy': 'same-origin',
                   }
                 : {};
 
-            return headers;
-          },
-          static: [],
-        } as DevServerConfiguration)
-      : undefined,
+              return headers;
+            },
+            static: [],
+          } as DevServerConfiguration)
+        : undefined,
 
     // Bail and fail hard on first error
     bail: !env.dev && !env['production-hmr'],
@@ -202,25 +202,27 @@ export default (env: Env) => {
           terserOptions: {
             ecma: 2020,
             module: true,
-            compress: env.dev ? false : {
-              passes: 1,
-              toplevel: true,
-              unsafe: true,
-              unsafe_math: true,
-              unsafe_proto: true,
-              pure_getters: true,
-              pure_funcs: [
-                'JSON.parse',
-                'Object.values',
-                'Object.keys',
-                'Object.groupBy',
-                'Object.fromEntries',
-                'Map.groupBy',
-                'Map',
-                'Set',
-                'BigInt',
-              ],
-            },
+            compress: env.dev
+              ? false
+              : {
+                  passes: 1,
+                  toplevel: true,
+                  unsafe: true,
+                  unsafe_math: true,
+                  unsafe_proto: true,
+                  pure_getters: true,
+                  pure_funcs: [
+                    'JSON.parse',
+                    'Object.values',
+                    'Object.keys',
+                    'Object.groupBy',
+                    'Object.fromEntries',
+                    'Map.groupBy',
+                    'Map',
+                    'Set',
+                    'BigInt',
+                  ],
+                },
             mangle: env.dev ? false : { toplevel: true },
           },
           extractComments: false,
@@ -251,7 +253,7 @@ export default (env: Env) => {
           exclude: /data\/webfonts\//,
           type: 'asset',
           generator: {
-            dataUrl: (content: any) => svgToMiniDataURI(content.toString()),
+            dataUrl: (content: any) => svgToMiniDataURI(String(content)),
           },
           parser: {
             dataUrlCondition: {
@@ -400,12 +402,14 @@ export default (env: Env) => {
 
     plugins: [],
 
-    cache: env.dev ? {
-      type: 'filesystem',
-      buildDependencies: {
-        config: [__filename],
-      },
-    } : false,
+    cache: env.dev
+      ? {
+          type: 'filesystem',
+          buildDependencies: {
+            config: [__filename],
+          },
+        }
+      : false,
   };
 
   const plugins: any[] = [
@@ -421,15 +425,15 @@ export default (env: Env) => {
     }),
 
     // Compress CSS after bundling so we can optimize across rules
-    new PostCSSAssetsPlugin({
+    new (PostCSSAssetsPlugin as any)({
       test: /\.css$/,
       log: false,
       plugins: [
         // Sort media queries so they can be merged by cssnano
-        sortMediaQueries({
+        (sortMediaQueries as any)({
           sort: 'desktop-first',
         }),
-        cssnano({
+        (cssnano as any)({
           preset: [
             'default',
             {

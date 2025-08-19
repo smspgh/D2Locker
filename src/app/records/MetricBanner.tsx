@@ -36,7 +36,9 @@ export default function MetricBanner({ metricHash, objectiveProgress, className 
   return (
     <div className={clsx(className, styles.icon)}>
       {bannerIcon && <BungieImage className={styles.bannerIcon} src={bannerIcon} />}
-      {masterwork && <img src={masterworkOverlay} className={styles.bannerIcon} loading="lazy" />}
+      {masterwork && (
+        <img src={masterworkOverlay as string} className={styles.bannerIcon} loading="lazy" />
+      )}
       <BungieImage className={styles.scopeIcon} src={scopeIcon} />
       <BungieImage className={styles.metricIcon} src={metricIcon} />
     </div>
