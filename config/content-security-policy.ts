@@ -42,7 +42,7 @@ export default function csp(
       featureFlags.wishLists && '',
       featureFlags.wishLists && '',
       // d2l sync
-      'https://shirezaks.com',
+      'https://d2locker.com',
       // Clarity
       featureFlags.clarityDescriptions && '',
       // Stream Deck Plugin

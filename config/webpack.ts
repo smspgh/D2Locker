@@ -78,8 +78,8 @@ export default (env: Env) => {
 
   // Check for SSL certificates in certs directory
   const certsPath = path.resolve(__dirname, '..', 'certs');
-  const keyPath = path.join(certsPath, 'shirezaks_com.key');
-  const certPath = path.join(certsPath, 'shirezaks_com.pem');
+  const keyPath = path.join(certsPath, 'd2locker_com.key');
+  const certPath = path.join(certsPath, 'd2locker_com.pem');
 
   if (env.dev && env.WEBPACK_SERVE && (!fs.existsSync(keyPath) || !fs.existsSync(certPath))) {
     console.error('SSL certificates not found in certs directory!');

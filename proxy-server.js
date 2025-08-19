@@ -11,8 +11,8 @@ const app = express();
 
 // Load SSL certificates
 const options = {
-  key: fs.readFileSync(path.join(__dirname, 'certs', 'shirezaks_com.key')),
-  cert: fs.readFileSync(path.join(__dirname, 'certs', 'shirezaks_com.pem')),
+  key: fs.readFileSync(path.join(__dirname, 'certs', 'd2locker_com.key')),
+  cert: fs.readFileSync(path.join(__dirname, 'certs', 'd2locker_com.pem')),
 };
 
 // Add debug logging for all requests
@@ -88,7 +88,7 @@ app.use((req, res, next) => {
 const server = https.createServer(options, app);
 
 server.listen(443, () => {
-  console.log('HTTPS Server running on https://shirezaks.com:443');
+  console.log('HTTPS Server running on https://d2locker.com:443');
   console.log('Proxying /api requests to https://localhost:8443');
   console.log('Serving static files from dist/');
 });

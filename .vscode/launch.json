@@ -9,7 +9,7 @@
       "request": "launch",
       "preLaunchTask": "start",
       "name": "Launch Chrome against localhost",
-      "url": "https://shirezaks.com/",
+      "url": "https://d2locker.com/",
       "webRoot": "${workspaceFolder}"
     },
     {

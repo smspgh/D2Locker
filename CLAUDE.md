@@ -201,8 +201,8 @@ Environment variables are loaded automatically by webpack based on the build tar
 - **Always use `pnpm`** (not npm or yarn) - enforced by `engines` in package.json
 - CSS class names use camelCase due to CSS Modules
 - SSL certificates are required and must be placed in `/certs` directory:
-  - `shirezaks_com.key` - Private key file
-  - `shirezaks_com.pem` - Certificate file
+  - `d2locker_com.key` - Private key file
+  - `d2locker_com.pem` - Certificate file
   - Used by both frontend (webpack dev server, HMR servers) and backend API
 - Build artifacts output to `/dist` directory
 - Feature flags in `/config/feature-flags.ts` control experimental features

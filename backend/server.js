@@ -18,9 +18,9 @@ const __dirname = path.dirname(__filename);
 app.use(
   cors({
     origin: [
-      'https://shirezaks.com',
-      'https://shirezaks.com',
-      'https://shirezaks.com:8443',
+      'https://d2locker.com',
+      'https://d2locker.com',
+      'https://d2locker.com:8443',
       'https://localhost:8443',
       'https://localhost:443',
       'https://localhost',
@@ -37,8 +37,8 @@ app.use(bodyParser.json());
 let privateKey, certificate, credentials;
 
 try {
-  privateKey = fs.readFileSync(path.join(__dirname, '..', 'certs', 'shirezaks_com.key'), 'utf8');
-  certificate = fs.readFileSync(path.join(__dirname, '..', 'certs', 'shirezaks_com.pem'), 'utf8');
+  privateKey = fs.readFileSync(path.join(__dirname, '..', 'certs', 'd2locker_com.key'), 'utf8');
+  certificate = fs.readFileSync(path.join(__dirname, '..', 'certs', 'd2locker_com.pem'), 'utf8');
   credentials = { key: privateKey, cert: certificate };
   console.log('SSL certificates loaded');
 } catch (error) {
@@ -650,7 +650,7 @@ apiRouter.post('/loadout_share', validateApiKey, (req, res) => {
     stmt.run(shareId, platformMembershipId, JSON.stringify(loadout), createdAt, expiresAt);
 
     // Return the share URL
-    const shareUrl = `https://shirezaks.com/loadout/${shareId}`;
+    const shareUrl = `https://d2locker.com/loadout/${shareId}`;
     res.json({ shareUrl });
   } catch (error) {
     console.error('Error creating loadout share:', error);

@@ -17,8 +17,8 @@ let options;
 
 try {
   options = {
-    key: fs.readFileSync(path.join(__dirname, 'certs', 'shirezaks_com.key')),
-    cert: fs.readFileSync(path.join(__dirname, 'certs', 'shirezaks_com.pem')),
+    key: fs.readFileSync(path.join(__dirname, 'certs', 'd2locker_com.key')),
+    cert: fs.readFileSync(path.join(__dirname, 'certs', 'd2locker_com.pem')),
   };
   console.log('SSL certificates loaded');
 } catch (error) {
