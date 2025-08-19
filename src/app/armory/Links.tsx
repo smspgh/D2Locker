@@ -25,7 +25,7 @@ export default function Links({ item }: { item: DimItem }) {
       icon: lightgg,
       link: `https://www.light.gg/db/${language}/items/${item.hash}${buildLightGGSockets(item)}`,
     },
-  ];
+  ] as const;
 
   return (
     <ul className={styles.links}>
