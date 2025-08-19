@@ -20,11 +20,3 @@
   height: 8px;
   width: 8px;
 }
-
-.upgrade {
-  composes: dot;
-  bottom: -8px;
-  right: -12px;
-  color: $upgrade-notification-dot !important;
-  font-size: 18px !important;
-}

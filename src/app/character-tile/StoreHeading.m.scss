@@ -1,42 +1,5 @@
 @use '../variables.scss' as *;
 
-.loadoutButton {
-  background-color: black;
-  width: 16px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.loadoutMenu {
-  composes: visibleScrollbars from '../d2l-ui/common.m.scss';
-  position: fixed;
-  inset: 0 auto auto 0;
-  margin: 0;
-  width: 300px;
-  box-sizing: border-box;
-  max-height: calc(var(--viewport-height) - var(--header-height) - #{62px + 16px});
-  overflow: hidden;
-  color: rgb(245, 245, 245, 0.6);
-  overscroll-behavior: contain;
-  background-color: var(--theme-dropdown-menu-bg);
-  will-change: transform;
-
-  // The phone layout version
-  @include phone-portrait {
-    position: fixed;
-    width: 100vw;
-    padding: 0;
-    max-height: calc(
-      var(--viewport-height) - 54px - var(--header-height) - env(safe-area-inset-bottom)
-    );
-  }
-
-  [role='button'] {
-    outline: none;
-  }
-}
-
 .characterHeader {
   max-width: $emblem-width + 16px !important;
   width: calc(6px + var(--character-column-width) - var(--item-margin)) !important;

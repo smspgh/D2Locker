@@ -18,7 +18,9 @@
       "Bash(npx eslint:*)",
       "mcp__serena__get_symbols_overview",
       "Bash(timeout 30s npx eslint src/app/d2l-api/reducer.ts --format=compact)",
-      "Bash(timeout 20s npx eslint src/app/d2l-api/reducer.ts src/app/search/items/search-filters/roll-appraiser.ts --format=compact --max-warnings=10)"
+      "Bash(timeout 20s npx eslint src/app/d2l-api/reducer.ts src/app/search/items/search-filters/roll-appraiser.ts --format=compact --max-warnings=10)",
+      "Bash(find:*)",
+      "Bash(sed:*)"
     ],
     "deny": []
   }

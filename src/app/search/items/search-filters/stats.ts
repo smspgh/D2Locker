@@ -375,8 +375,8 @@ const statFilters: ItemFilterDefinition[] = [
       }
 
       // Build keep filters to exclude items already marked as keep
-      let keepWeaponFilter: (item: DimItem) => boolean = () => false;
-      let keepArmorFilter: (item: DimItem) => boolean = () => false;
+      let keepWeaponFilter: (item: DimItem) => boolean = (_item: DimItem) => false;
+      let keepArmorFilter: (item: DimItem) => boolean = (_item: DimItem) => false;
 
       try {
         // Build the search config for keep filters
@@ -402,16 +402,16 @@ const statFilters: ItemFilterDefinition[] = [
             searchQuery = terms[0].term;
           } else {
             const groupedTerms = new Map<number, typeof terms>();
-            terms.forEach((term) => {
+            for (const term of terms) {
               const groupNum = term.group ?? 0;
               if (!groupedTerms.has(groupNum)) {
                 groupedTerms.set(groupNum, []);
               }
               groupedTerms.get(groupNum)!.push(term);
-            });
+            }
 
             const groupParts = [];
-            for (const [groupNum, groupTerms] of groupedTerms) {
+            for (const [_groupNum, groupTerms] of groupedTerms) {
               if (groupTerms.length === 1) {
                 groupParts.push(groupTerms[0].term);
               } else {
@@ -453,16 +453,16 @@ const statFilters: ItemFilterDefinition[] = [
             searchQuery = terms[0].term;
           } else {
             const groupedTerms = new Map<number, typeof terms>();
-            terms.forEach((term) => {
+            for (const term of terms) {
               const groupNum = term.group ?? 0;
               if (!groupedTerms.has(groupNum)) {
                 groupedTerms.set(groupNum, []);
               }
               groupedTerms.get(groupNum)!.push(term);
-            });
+            }
 
             const groupParts = [];
-            for (const [groupNum, groupTerms] of groupedTerms) {
+            for (const [_groupNum, groupTerms] of groupedTerms) {
               if (groupTerms.length === 1) {
                 groupParts.push(groupTerms[0].term);
               } else {
@@ -492,7 +492,7 @@ const statFilters: ItemFilterDefinition[] = [
           const armorFilter = searchFilterFactory(searchQuery);
           keepArmorFilter = (item: DimItem) => item.bucket.inArmor && armorFilter(item);
         }
-      } catch (error) {}
+      } catch {}
 
       // Group items by bucket and class, but only include items of the specified tier
       // that are NOT marked as keep items
@@ -575,8 +575,8 @@ const statFilters: ItemFilterDefinition[] = [
       }
 
       // Build keep filters to exclude items already marked as keep
-      let keepWeaponFilter: (item: DimItem) => boolean = () => false;
-      let keepArmorFilter: (item: DimItem) => boolean = () => false;
+      let keepWeaponFilter: (item: DimItem) => boolean = (_item: DimItem) => false;
+      let keepArmorFilter: (item: DimItem) => boolean = (_item: DimItem) => false;
 
       try {
         // Build the search config for keep filters
@@ -602,16 +602,16 @@ const statFilters: ItemFilterDefinition[] = [
             searchQuery = terms[0].term;
           } else {
             const groupedTerms = new Map<number, typeof terms>();
-            terms.forEach((term) => {
+            for (const term of terms) {
               const groupNum = term.group ?? 0;
               if (!groupedTerms.has(groupNum)) {
                 groupedTerms.set(groupNum, []);
               }
               groupedTerms.get(groupNum)!.push(term);
-            });
+            }
 
             const groupParts = [];
-            for (const [groupNum, groupTerms] of groupedTerms) {
+            for (const [_groupNum, groupTerms] of groupedTerms) {
               if (groupTerms.length === 1) {
                 groupParts.push(groupTerms[0].term);
               } else {
@@ -653,16 +653,16 @@ const statFilters: ItemFilterDefinition[] = [
             searchQuery = terms[0].term;
           } else {
             const groupedTerms = new Map<number, typeof terms>();
-            terms.forEach((term) => {
+            for (const term of terms) {
               const groupNum = term.group ?? 0;
               if (!groupedTerms.has(groupNum)) {
                 groupedTerms.set(groupNum, []);
               }
               groupedTerms.get(groupNum)!.push(term);
-            });
+            }
 
             const groupParts = [];
-            for (const [groupNum, groupTerms] of groupedTerms) {
+            for (const [_groupNum, groupTerms] of groupedTerms) {
               if (groupTerms.length === 1) {
                 groupParts.push(groupTerms[0].term);
               } else {
@@ -692,7 +692,7 @@ const statFilters: ItemFilterDefinition[] = [
           const armorFilter = searchFilterFactory(searchQuery);
           keepArmorFilter = (item: DimItem) => item.bucket.inArmor && armorFilter(item);
         }
-      } catch (error) {}
+      } catch {}
 
       // Get all non-exotic items grouped by bucket/class, excluding keep items
       const nonExoticItemsByBucketClass: Record<string, DimItem[]> = {};
@@ -768,8 +768,7 @@ const statFilters: ItemFilterDefinition[] = [
       const armorItems = allItems.filter(
         (item) =>
           item.bucket.inArmor &&
-          item.stats &&
-          item.stats.some(
+          item.stats?.some(
             (s) => s.statHash === primaryStatHash || s.statHash === secondaryStatHash,
           ),
       );
@@ -787,7 +786,7 @@ const statFilters: ItemFilterDefinition[] = [
       // For each slot+class group, find the best item(s) based on primary stat, then secondary stat
       const bestItemIds = new Set<string>();
 
-      for (const [slotClass, items] of Object.entries(itemsBySlotClass)) {
+      for (const [_slotClass, items] of Object.entries(itemsBySlotClass)) {
         if (items.length === 0) {
           continue;
         }
@@ -850,16 +849,14 @@ const statFilters: ItemFilterDefinition[] = [
         const statHashes = getPerkStatHashes(normalizedPerkName);
         primaryStatHash = statHashes.primary;
         secondaryStatHash = statHashes.secondary;
-      } else {
+      } else if (filterValue.toLowerCase().includes('brawler')) {
         // For perks not in our mapping, use smart defaults based on perk name
-        if (filterValue.toLowerCase().includes('brawler')) {
-          primaryStatHash = displayStatToHashMap.Melee;
-          secondaryStatHash = displayStatToHashMap.Health;
-        } else {
-          // Default fallback - optimize for Health and Melee
-          primaryStatHash = displayStatToHashMap.Health;
-          secondaryStatHash = displayStatToHashMap.Melee;
-        }
+        primaryStatHash = displayStatToHashMap.Melee;
+        secondaryStatHash = displayStatToHashMap.Health;
+      } else {
+        // Default fallback - optimize for Health and Melee
+        primaryStatHash = displayStatToHashMap.Health;
+        secondaryStatHash = displayStatToHashMap.Melee;
       }
 
       // Find all items that have the specified perk
@@ -873,13 +870,13 @@ const statFilters: ItemFilterDefinition[] = [
 
       if (itemsWithPerk.length > 0) {
         // Get the actual stat names based on the normalized perk name
-        let primaryStatName = 'Primary';
-        let secondaryStatName = 'Secondary';
+        const _primaryStatName = 'Primary';
+        const _secondaryStatName = 'Secondary';
 
         if (isValidPerkName(normalizedPerkName)) {
           const statNames = getPerkStatNames(normalizedPerkName);
-          primaryStatName = statNames.primary;
-          secondaryStatName = statNames.secondary;
+          const _pStatName = statNames.primary;
+          const _sStatName = statNames.secondary;
         }
       }
 
@@ -900,7 +897,7 @@ const statFilters: ItemFilterDefinition[] = [
       // For each slot+class group, find the best item(s) based on primary stat, then secondary stat
       const bestItemIds = new Set<string>();
 
-      for (const [slotClass, items] of Object.entries(itemsBySlotClass)) {
+      for (const [_slotClass, items] of Object.entries(itemsBySlotClass)) {
         if (items.length === 0) {
           continue;
         }
@@ -1222,7 +1219,7 @@ function calculateMaxPowerPerBucket(allItems: DimItem[], classMatters: boolean) 
   }
 
   return mapValues(allItemsByBucketClass, (items) =>
-    items && items.length ? maxOf(items, (i) => i.power) : 0,
+    items?.length ? maxOf(items, (i) => i.power) : 0,
   );
 }
 

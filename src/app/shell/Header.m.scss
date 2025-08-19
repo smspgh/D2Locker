@@ -65,17 +65,6 @@ $header-height: 44px;
   }
 }
 
-.logoLink {
-  height: 24px;
-
-  @include phone-portrait {
-    height: 44px;
-    margin: 0 4px !important;
-    display: flex;
-    align-items: center;
-  }
-}
-
 .menuItem {
   margin: 0 8px;
   text-decoration: none;
@@ -118,29 +107,6 @@ $header-height: 44px;
   composes: resetButton from '../d2l-ui/common.m.scss';
   position: relative;
   margin-left: 16px !important;
-}
-
-.logo {
-  height: 24px;
-  width: 68px;
-  color: var(--theme-accent-primary) !important;
-  font-size: 16px !important;
-  font-weight: bold;
-  font-weight: 400;
-
-  @include phone-portrait {
-    height: 24px * 1.2;
-    width: 68px * 1.2;
-  }
-  &.dev {
-    filter: grayscale(100%) brightness(150%);
-  }
-  &.beta {
-    filter: hue-rotate(160deg) brightness(107%);
-  }
-  &.pr {
-    filter: hue-rotate(280deg) brightness(107%);
-  }
 }
 
 .headerLinks {
@@ -230,11 +196,6 @@ $header-height: 44px;
       color: var(--theme-text);
       border-left: 4px solid var(--theme-accent-primary);
       padding-left: calc(1rem - 4px);
-    }
-
-    .launchSeparateIcon {
-      font-size: 1em;
-      color: #888;
     }
   }
 }

@@ -1,15 +1,5 @@
 @use '../../variables' as *;
 
-.clarityDescription {
-  margin-top: 2px;
-  border-left: 2px solid $communityBlue;
-  padding-left: 6px;
-  color: var(--theme-text-secondary);
-  h3 {
-    display: none;
-  }
-}
-
 .stack {
   font-weight: bold;
   font-size: 16px;

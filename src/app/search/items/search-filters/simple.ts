@@ -144,14 +144,7 @@ const simpleFilters: ItemFilterDefinition[] = [
       }
 
       // Baseline filter that returns false (nothing kept by default)
-      const baseFilter = (item: DimItem) => {
-        // Only apply to weapons
-        if (item.bucket?.sort !== 'Weapons') {
-          return false;
-        }
-        // Default baseline: keep nothing
-        return false;
-      };
+      const baseFilter = (_item: DimItem) => false;
 
       // If there are additional search terms, use them to determine what to keep
       if (
@@ -178,7 +171,7 @@ const simpleFilters: ItemFilterDefinition[] = [
 
           // Build query with proper grouping
           const groupParts = [];
-          for (const [groupNum, groupTerms] of groupedTerms) {
+          for (const [_groupNum, groupTerms] of groupedTerms) {
             if (groupTerms.length === 1) {
               // Single term in group, no inner parentheses needed
               groupParts.push(groupTerms[0].term);
@@ -273,14 +266,7 @@ const simpleFilters: ItemFilterDefinition[] = [
       }
 
       // Baseline filter that returns false (nothing kept by default)
-      const baseFilter = (item: DimItem) => {
-        // Only apply to armor
-        if (!item.bucket.inArmor) {
-          return false;
-        }
-        // Default baseline: keep nothing
-        return false;
-      };
+      const baseFilter = (_item: DimItem) => false;
 
       // If there are additional search terms, use them to determine what to keep
       if (
@@ -307,7 +293,7 @@ const simpleFilters: ItemFilterDefinition[] = [
 
           // Build query with proper grouping
           const groupParts = [];
-          for (const [groupNum, groupTerms] of groupedTerms) {
+          for (const [_groupNum, groupTerms] of groupedTerms) {
             if (groupTerms.length === 1) {
               // Single term in group, no inner parentheses needed
               groupParts.push(groupTerms[0].term);
@@ -445,14 +431,14 @@ const simpleFilters: ItemFilterDefinition[] = [
       // Pre-compute dupebest for weapons
       const weaponItems = allItems.filter((item) => item.bucket?.sort === 'Weapons');
       const weaponDupes = computeDupes(weaponItems);
-      const weaponDupesSorted = sortDupesBest(weaponDupes, getTag, customStats);
+      const _weaponDupesSorted = sortDupesBest(weaponDupes, getTag, customStats);
 
       // Pre-compute bestarmor for all classes
       const armorItems = allItems.filter((item) => item.bucket.inArmor);
       const armorDupes = computeArmorDupesByClassTypeTier(armorItems);
-      const armorDupesSorted = sortDupesBest(armorDupes, getTag, customStats);
+      const _armorDupesSorted = sortDupesBest(armorDupes, getTag, customStats);
 
-      return (item: DimItem) =>
+      return (_item: DimItem) =>
         // This is just a placeholder implementation
         // You can add actual keep logic here if needed
         false;

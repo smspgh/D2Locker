@@ -2,19 +2,13 @@
 // Please do not change this file!
 interface CssExports {
   'active': string;
-  'beta': string;
   'container': string;
-  'dev': string;
   'dropdown': string;
   'header': string;
   'headerLinks': string;
   'headerRight': string;
-  'launchSeparateIcon': string;
-  'logo': string;
-  'logoLink': string;
   'menu': string;
   'menuItem': string;
-  'pr': string;
   'pwaPrompt': string;
   'searchButton': string;
   'searchLink': string;

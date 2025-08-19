@@ -54,8 +54,8 @@ export const findItemsByBucket = (store: DimStore, bucketId: number): DimItem[] 
  * Leaving this code in place for any future power modifier would be nice.
  */
 export function getArtifactBonus(store: DimStore) {
-  // @ts-expect-error
-  const artifact = findItemsByBucket(store, BucketHashes.SeasonalArtifact).find((i) => i.equipped);
+  // @ts-expect-error Artifact bonus not fully implemented
+  const _artifact = findItemsByBucket(store, BucketHashes.SeasonalArtifact).find((i) => i.equipped);
   // return artifact?.primaryStat?.value || 0;
   return 0;
 }

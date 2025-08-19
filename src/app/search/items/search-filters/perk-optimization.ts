@@ -32,18 +32,14 @@ const perkOptimizationFilter: ItemFilterDefinition = {
       const statHashes = getPerkStatHashes(filterValue);
       primaryStatHash = statHashes.primary;
       secondaryStatHash = statHashes.secondary;
+    } else if (filterValue.toLowerCase().includes('brawler')) {
+      // Brawler perks should optimize for Melee (primary) and Health (secondary)
+      primaryStatHash = displayStatToHashMap.Melee;
+      secondaryStatHash = displayStatToHashMap.Health;
     } else {
-      // For perks not in our mapping, we need to determine stats based on the perk name
-      // You can expand this logic based on actual perk names you discover
-      if (filterValue.toLowerCase().includes('brawler')) {
-        // Brawler perks should optimize for Melee (primary) and Health (secondary)
-        primaryStatHash = displayStatToHashMap.Melee;
-        secondaryStatHash = displayStatToHashMap.Health;
-      } else {
-        // Default fallback - optimize for Health and Melee
-        primaryStatHash = displayStatToHashMap.Health;
-        secondaryStatHash = displayStatToHashMap.Melee;
-      }
+      // Default fallback - optimize for Health and Melee
+      primaryStatHash = displayStatToHashMap.Health;
+      secondaryStatHash = displayStatToHashMap.Melee;
     }
 
     // Find all items that have the specified perk
@@ -84,7 +80,7 @@ const perkOptimizationFilter: ItemFilterDefinition = {
     // For each slot+class group, find the best item(s) based on primary stat, then secondary stat
     const bestItemIds = new Set<string>();
 
-    for (const [slotClass, items] of Object.entries(itemsBySlotClass)) {
+    for (const [_slotClass, items] of Object.entries(itemsBySlotClass)) {
       if (items.length === 0) {
         continue;
       }

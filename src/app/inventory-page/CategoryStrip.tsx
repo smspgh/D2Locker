@@ -29,7 +29,7 @@ export default function CategoryStrip({
               onClick={() => onCategorySelected(category)}
               className={clsx({ [styles.selected]: category === selectedCategoryId })}
             >
-              {(t as any)(`Bucket.${category}`, { metadata: { keys: 'buckets' } })}
+              {t(`Bucket.${category}` as any, { metadata: { keys: 'buckets' } })}
             </div>
           ),
       )}

@@ -304,22 +304,15 @@ export default function Compare({ session }: { session: CompareSession }) {
 
           // Get the first two perk sockets with multiple options (like dupes.ts does)
           const allPerkSockets = item.sockets.allSockets
-            .filter((s) => {
-              // Must be a perk socket with multiple options
-              if (!s.isPerk || s.plugOptions.length <= 1) {
-                return false;
-              }
-
-              // Exclude intrinsic socket
-              if (
-                weaponSockets.intrinsicSocket &&
-                s.socketIndex === weaponSockets.intrinsicSocket.socketIndex
-              ) {
-                return false;
-              }
-
-              return true;
-            })
+            .filter(
+              (s) =>
+                s.isPerk &&
+                s.plugOptions.length > 1 &&
+                !(
+                  weaponSockets.intrinsicSocket &&
+                  s.socketIndex === weaponSockets.intrinsicSocket.socketIndex
+                ),
+            )
             .sort((a, b) => a.socketIndex - b.socketIndex);
 
           // Use the first two perk sockets (which should be columns 1 & 2)
@@ -389,7 +382,7 @@ export default function Compare({ session }: { session: CompareSession }) {
 
     // The first item after sorting is the best
     return itemsCopy[0];
-  }, [rows, filteredCompareItems, comparingArmor, customStats]);
+  }, [rows, comparingArmor, customStats]);
 
   const firstCompareItem = rows[0]?.item;
   // The example item is the one we'll use for generating suggestion buttons

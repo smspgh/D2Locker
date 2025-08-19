@@ -50,7 +50,7 @@ export class VersionCacheManager {
   /**
    * Force clear all caches and storage
    */
-  async clearAllCaches(): Promise<void> {
+  static async clearAllCaches(): Promise<void> {
     try {
       // 1. Clear browser caches
       if ('caches' in window) {
@@ -64,7 +64,7 @@ export class VersionCacheManager {
       }
 
       // 2. Clear localStorage (except essential items)
-      this.clearLocalStorage();
+      VersionCacheManager.clearLocalStorage();
 
       // 3. Clear sessionStorage
       try {
@@ -75,7 +75,7 @@ export class VersionCacheManager {
       }
 
       // 4. Clear IndexedDB (D2L's offline data)
-      await this.clearIndexedDB();
+      await VersionCacheManager.clearIndexedDB();
 
       infoLog(TAG, 'All caches cleared successfully');
     } catch (error) {
@@ -87,7 +87,7 @@ export class VersionCacheManager {
   /**
    * Clear localStorage but preserve essential items
    */
-  private clearLocalStorage(): void {
+  private static clearLocalStorage(): void {
     try {
       // Items to preserve during cache clear
       const preserveKeys = [
@@ -110,9 +110,9 @@ export class VersionCacheManager {
       }
 
       // Remove non-essential keys
-      keysToRemove.forEach((key) => {
+      for (const key of keysToRemove) {
         localStorage.removeItem(key);
-      });
+      }
 
       infoLog(
         TAG,
@@ -126,18 +126,18 @@ export class VersionCacheManager {
   /**
    * Clear IndexedDB databases
    */
-  private async clearIndexedDB(): Promise<void> {
+  private static async clearIndexedDB(): Promise<void> {
     try {
       if ('indexedDB' in window) {
         // D2L typically uses 'keyval-store' and potentially others
         const dbsToDelete = ['keyval-store', 'D2L', 'd2l-data'];
 
-        await Promise.all(
+        return await Promise.all(
           dbsToDelete.map(async (dbName) => {
             try {
               // Check if database exists first
               const deleteReq = indexedDB.deleteDatabase(dbName);
-              return new Promise<void>((resolve) => {
+              return await new Promise<void>((resolve) => {
                 deleteReq.onsuccess = () => {
                   infoLog(TAG, `Cleared IndexedDB: ${dbName}`);
                   resolve();
@@ -148,7 +148,7 @@ export class VersionCacheManager {
                   resolve(); // Continue anyway
                 };
               });
-            } catch (e) {
+            } catch {
               // Database might not exist, that's ok
               return Promise.resolve();
             }
@@ -163,10 +163,10 @@ export class VersionCacheManager {
   /**
    * Get when caches were last cleared
    */
-  getLastCacheClear(): Date | null {
+  static getLastCacheClear(): Date | null {
     try {
       const timestamp = localStorage.getItem(LAST_CACHE_CLEAR_KEY);
-      return timestamp ? new Date(parseInt(timestamp)) : null;
+      return timestamp ? new Date(parseInt(timestamp, 10)) : null;
     } catch {
       return null;
     }

@@ -86,11 +86,12 @@ function filterItemSocketsForArmory(item: DimItem): DimItem {
         const enhancedPerksPresent = new Set<number>();
         for (const plug of filteredPlugOptions) {
           const enhancedVersion = perkToEnhanced[plug.plugDef.hash];
-          if (enhancedVersion) {
-            // This is a standard perk, check if its enhanced version exists
-            if (filteredPlugOptions.some((p) => p.plugDef.hash === enhancedVersion)) {
-              enhancedPerksPresent.add(enhancedVersion);
-            }
+          if (
+            enhancedVersion &&
+            filteredPlugOptions.some((p) => p.plugDef.hash === enhancedVersion)
+          ) {
+            // This is a standard perk, and its enhanced version exists
+            enhancedPerksPresent.add(enhancedVersion);
           }
         }
 

@@ -65,7 +65,7 @@ export default function ArmorySearch() {
     return allManifestWeapons.filter((weapon) => {
       try {
         return searchFilter(weapon);
-      } catch (error) {
+      } catch {
         // If search filter fails, fall back to simple name search
         const searchTerm = query.toLowerCase();
         return (
@@ -166,9 +166,5 @@ function isDummyItem(def: DestinyInventoryItemDefinition): boolean {
 
   // Skip items with dummy category hashes
   const dummyCategories = [3109687656]; // ItemCategoryHashes.Dummies
-  if (def.itemCategoryHashes?.some((hash: number) => dummyCategories.includes(hash))) {
-    return true;
-  }
-
-  return false;
+  return def.itemCategoryHashes?.some((hash: number) => dummyCategories.includes(hash)) || false;
 }

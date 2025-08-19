@@ -6,7 +6,6 @@ interface CssExports {
   'insertLabel': string;
   'itemStats': string;
   'material': string;
-  'modClarityDescription': string;
   'modDescription': string;
   'modIcon': string;
   'modName': string;

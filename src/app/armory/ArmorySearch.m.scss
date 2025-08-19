@@ -72,26 +72,3 @@
     }
   }
 }
-
-.searchHelp {
-  margin-bottom: 16px;
-  font-size: 13px;
-  color: var(--theme-text-muted);
-  line-height: 1.6;
-
-  strong {
-    color: var(--theme-text);
-    display: block;
-    margin-bottom: 4px;
-  }
-
-  .helpExample {
-    display: inline-block;
-    background: var(--theme-surface-2);
-    padding: 2px 6px;
-    border-radius: 3px;
-    margin: 0 4px;
-    font-family: monospace;
-    font-size: 12px;
-  }
-}

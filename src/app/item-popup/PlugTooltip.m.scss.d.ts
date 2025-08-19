@@ -3,8 +3,6 @@
 interface CssExports {
   'automaticallyPickedSection': string;
   'cannotRollSection': string;
-  'clarityDescription': string;
-  'communityInsightSection': string;
   'craftingRequirementsSection': string;
   'elementIcon': string;
   'energyCost': string;

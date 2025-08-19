@@ -50,7 +50,7 @@ const TAG = 'd2l sync';
 let syncChannel: BroadcastChannel | null = null;
 try {
   syncChannel = new BroadcastChannel('d2l-sync');
-} catch (e) {
+} catch {
   // BroadcastChannel not supported in this browser
 }
 
@@ -168,8 +168,8 @@ const installObservers = once((dispatch: ThunkDispatch<RootState, undefined, Any
 
   // Listen for sync notifications from other tabs/windows
   if (syncChannel) {
-    syncChannel.addEventListener('message', (event) => {
-      if (event.data.type === 'settings-updated') {
+    syncChannel.addEventListener('message', (event: MessageEvent) => {
+      if ((event.data as { type?: string })?.type === 'settings-updated') {
         infoLog(TAG, 'Settings updated in another tab, syncing...');
         // Delay slightly to ensure the update has been flushed to the server
         setTimeout(() => {

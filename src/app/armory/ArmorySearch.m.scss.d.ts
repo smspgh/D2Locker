@@ -3,13 +3,11 @@
 interface CssExports {
   'armorySearchControls': string;
   'armorySearchResults': string;
-  'helpExample': string;
   'item': string;
   'itemGrid': string;
   'noResults': string;
   'owned': string;
   'resultsCount': string;
-  'searchHelp': string;
   'weaponTypeSection': string;
 }
 export const cssExports: CssExports;

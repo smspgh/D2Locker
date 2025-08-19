@@ -2,7 +2,6 @@
 // Please do not change this file!
 interface CssExports {
   'buttons': string;
-  'clarityDescription': string;
   'stack': string;
   'volumeRocker': string;
 }

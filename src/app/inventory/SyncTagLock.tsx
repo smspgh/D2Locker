@@ -43,6 +43,10 @@ function getNextItemToChangeLockState(
           break;
         }
 
+        case 'hotperk':
+          // hotperk items don't affect lock state
+          break;
+
         case undefined:
           break;
       }

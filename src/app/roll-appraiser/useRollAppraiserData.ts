@@ -8,7 +8,7 @@ import { getRollAppraiserUtils, getRollAppraiserUtilsSync } from './rollAppraise
  * Hook to get roll appraiser utils
  */
 export function useRollAppraiserUtils() {
-  const [utils, setUtils] = useState<RollAppraiserUtils | null>(getRollAppraiserUtilsSync());
+  const [utils, setUtils] = useState<RollAppraiserUtils | null>(() => getRollAppraiserUtilsSync());
   const [loading, setLoading] = useState(!utils);
   const [error, setError] = useState<Error | null>(null);
 
@@ -19,12 +19,12 @@ export function useRollAppraiserUtils() {
           setUtils(loadedUtils);
           setLoading(false);
         })
-        .catch((err) => {
-          setError(err);
+        .catch((err: any) => {
+          setError(err instanceof Error ? err : new Error(String(err)));
           setLoading(false);
         });
     }
-  }, []);
+  }, [utils]);
 
   return { utils, loading, error };
 }
@@ -58,7 +58,8 @@ export function useWeaponRankingData(item: DimItem | null): WeaponRankingData | 
         // Filter to only plugged perks
         const pluggedPerks = perkSockets.filter((s) => s.plugged && s.isPerk);
 
-        pluggedPerks.forEach((socket, index) => {
+        for (let index = 0; index < pluggedPerks.length; index++) {
+          const socket = pluggedPerks[index];
           if (socket.plugged) {
             perkHashes.push(socket.plugged.plugDef.hash);
             // Columns 3 and 4 (indexes 2 and 3) are typically trait perks
@@ -66,7 +67,7 @@ export function useWeaponRankingData(item: DimItem | null): WeaponRankingData | 
               traitPerkHashes.push(socket.plugged.plugDef.hash);
             }
           }
-        });
+        }
       }
 
       // Check for masterwork
@@ -114,7 +115,7 @@ export function useWeaponRankingData(item: DimItem | null): WeaponRankingData | 
     }
 
     setRankingData(weaponData);
-  }, [utils, item?.hash, item?.sockets, item?.destinyVersion, item?.bucket?.inWeapons, item?.name]);
+  }, [utils, item]);
 
   return rankingData;
 }

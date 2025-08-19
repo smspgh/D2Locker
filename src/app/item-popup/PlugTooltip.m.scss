@@ -14,12 +14,6 @@
 .requirement {
   font-style: italic;
 }
-.clarityDescription {
-  margin-top: 2px;
-  border-left: 2px solid $communityBlue;
-  padding-left: 6px;
-  margin-left: -8px;
-}
 .source {
   font-style: italic;
   opacity: 0.7;
@@ -39,22 +33,6 @@
       background-size: contain;
       background-position: right 0;
       margin: 0 2px -1px 0;
-    }
-  }
-  .clarityDescription {
-    margin: 0;
-    padding: 0;
-    border-left: none;
-  }
-  .communityInsightSection {
-    @include tooltip-section-color($communityBlue);
-
-    @include phone-portrait {
-      max-height: 25vh;
-      overflow: hidden;
-    }
-    h3 {
-      opacity: 0.6;
     }
   }
   .craftingRequirementsSection {

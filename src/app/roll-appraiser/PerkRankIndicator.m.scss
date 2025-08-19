@@ -12,24 +12,6 @@
   right: -4px;
   z-index: 2;
   pointer-events: none;
-
-  &.small {
-    width: 16px;
-    height: 16px;
-    font-size: 9px;
-  }
-
-  &.medium {
-    width: 20px;
-    height: 20px;
-    font-size: 11px;
-  }
-
-  &.large {
-    width: 24px;
-    height: 24px;
-    font-size: 12px;
-  }
 }
 
 .rank1 {

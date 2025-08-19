@@ -46,7 +46,6 @@ export default function StoreHeading({
   const openCharacterTile = () => {
     if (useOnTapped) {
       onTapped(store.id);
-      return;
     }
   };
 

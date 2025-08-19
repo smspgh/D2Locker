@@ -77,7 +77,7 @@ export default function LoadoutsContainer({ account }: { account: DestinyAccount
   );
 }
 
-function Loadouts({ account }: { account: DestinyAccount }) {
+function Loadouts({ account: _account }: { account: DestinyAccount }) {
   const dispatch = useDispatch();
 
   const stores = useSelector(sortedStoresSelector);

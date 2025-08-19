@@ -111,7 +111,7 @@ export default function SettingsPage() {
   const dispatch = useThunkDispatch();
   const settings = useSelector(settingsSelector);
   const currentAccount = useSelector(currentAccountSelector);
-  const hasD1Account = useSelector(hasD1AccountSelector);
+  const _hasD1Account = useSelector(hasD1AccountSelector);
   const isPhonePortrait = useIsPhonePortrait();
   useLoadStores(currentAccount);
   const setSetting = useSetSetting();

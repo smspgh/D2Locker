@@ -7,15 +7,6 @@
   padding-left: 4px;
 }
 
-.armorClassIcon {
-  box-sizing: border-box !important;
-  width: var(--item-size);
-  height: calc((var(--item-size) + ((var(--item-size) / 5) + 4px) - 1px));
-  font-size: calc(var(--item-size) * 0.71);
-  padding: 8px;
-  color: #999;
-}
-
 .weaponGroupingIconWrapper {
   box-sizing: border-box !important;
   display: flex;
@@ -43,18 +34,6 @@
 
   .inlineGroups & {
     display: contents;
-  }
-}
-
-.pullItemButton {
-  font-size: calc((var(--item-size) / 3));
-  margin: calc((var(--item-size) / 8) - 4px) auto calc((var(--item-size) / 8) - 4px) auto;
-  padding: 4px;
-  opacity: 0.3;
-  transition: opacity 0.3s ease-in-out;
-
-  @include interactive($hover: true) {
-    opacity: 1;
   }
 }
 

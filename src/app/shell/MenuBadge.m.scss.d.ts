@@ -3,7 +3,6 @@
 interface CssExports {
   'badgeNew': string;
   'dot': string;
-  'upgrade': string;
 }
 export const cssExports: CssExports;
 export default cssExports;
