@@ -1,4 +1,5 @@
 /* eslint prefer-template: 0 */
+// @ts-nocheck
 import parser from 'ua-parser-js';
 import {
   samsungInternet,

@@ -607,9 +607,9 @@ function migrateSettings(state: DimApiState) {
   // Migrate search data to ensure all searches have required fields
   const migratedSearches = { ...state.searches };
   for (const destinyVersion in migratedSearches) {
-    const searches = migratedSearches[destinyVersion];
+    const searches = migratedSearches[destinyVersion as keyof typeof migratedSearches];
     if (searches && Array.isArray(searches)) {
-      migratedSearches[destinyVersion] = (searches as Search[]).map((search: Search) => ({
+      migratedSearches[destinyVersion as keyof typeof migratedSearches] = searches.map((search: Search) => ({
         usageCount: search.usageCount ?? 0,
         lastUsage: search.lastUsage ?? 0,
         saved: search.saved ?? false,

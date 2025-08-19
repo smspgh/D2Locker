@@ -17,6 +17,16 @@ interface TraitComboEntry {
   show: boolean;
 }
 
+interface RawTraitData {
+  comboRank: number;
+  Perk4Hash: number;
+  Perk4EnhancedHash: number | null;
+  Perk5Hash: number;
+  Perk5EnhancedHash: number | null;
+  Count: number;
+  Show: boolean;
+}
+
 interface TopTraitCombosProps {
   item: DimItem;
   className?: string;
@@ -33,15 +43,16 @@ export default function TopTraitCombos({ item, className }: TopTraitCombosProps)
     }
 
     // Access the TraitStats data directly from utils
-    const weaponTraits = (utils as any).data?.TraitStats?.[item.hash.toString()];
+    const utilsData = utils as { data?: { TraitStats?: Record<string, Record<string, RawTraitData>> } };
+    const weaponTraits = utilsData.data?.TraitStats?.[item.hash.toString()];
     if (!weaponTraits) {
       return [];
     }
 
     // Convert trait entries to a more usable format
     const traitEntries: TraitComboEntry[] = Object.values(weaponTraits)
-      .filter((trait: any) => trait.Show) // Only show visible entries
-      .map((trait: any) => ({
+      .filter((trait: RawTraitData) => trait.Show) // Only show visible entries
+      .map((trait: RawTraitData) => ({
         rank: trait.comboRank,
         perk4Hash: trait.Perk4Hash,
         perk4EnhancedHash: trait.Perk4EnhancedHash,

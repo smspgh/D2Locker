@@ -156,7 +156,7 @@ function CollapsibleContainer({
 
   return (
     <InventoryCollapsibleTitle
-      title={(t as any)(`Bucket.${category}`, { metadata: { keys: 'buckets' } })}
+      title={t(`Bucket.${category}`, { metadata: { keys: 'buckets' } })}
       sectionId={category}
       stores={stores}
     >

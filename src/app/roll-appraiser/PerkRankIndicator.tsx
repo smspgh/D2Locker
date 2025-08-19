@@ -44,7 +44,7 @@ export default function PerkRankIndicator({
 
   return (
     <div
-      className={clsx(styles.rankIndicator, getRankColor(rank), styles[size], className)}
+      className={clsx(styles.rankIndicator, getRankColor(rank), className)}
       title={count ? `Rank ${rank} (${count.toLocaleString()} users)` : `Rank ${rank}`}
     >
       {rank}

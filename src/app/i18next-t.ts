@@ -11,7 +11,10 @@ export const t = (
     | {
         [arg: string]: number | string;
       },
-): string => originalT(key as any, opts);
+): string => {
+  const result = originalT(key as ParseKeys, opts);
+  return typeof result === 'string' ? result : String(result);
+};
 
 /**
  * This is a "marker function" that tells our i18next-scanner that you will translate this string later (tl = translate later).

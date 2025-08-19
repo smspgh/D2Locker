@@ -54,11 +54,11 @@ export class VersionCacheManager {
     try {
       // 1. Clear browser caches
       if ('caches' in window) {
-        const cacheNames = await caches.keys();
+        const cacheNames = await window.caches.keys();
         await Promise.all(
           cacheNames.map((cacheName) => {
             infoLog(TAG, 'Clearing cache:', cacheName);
-            return caches.delete(cacheName);
+            return window.caches.delete(cacheName);
           }),
         );
       }

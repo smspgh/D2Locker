@@ -14,12 +14,12 @@ import subclassVoid from 'images/subclass-void.png';
 import { DimItem, PluggableInventoryItemDefinition } from './item-types';
 
 const baseImagesByDamageType: LookupTable<DamageType, string> = {
-  [DamageType.Arc]: subclassArc,
-  [DamageType.Thermal]: subclassSolar,
-  [DamageType.Void]: subclassVoid,
-  [DamageType.Stasis]: subclassStasis,
-  [DamageType.Strand]: subclassStrand,
-  [DamageType.Kinetic]: subclassPrismatic,
+  [DamageType.Arc]: subclassArc as string,
+  [DamageType.Thermal]: subclassSolar as string,
+  [DamageType.Void]: subclassVoid as string,
+  [DamageType.Stasis]: subclassStasis as string,
+  [DamageType.Strand]: subclassStrand as string,
+  [DamageType.Kinetic]: subclassPrismatic as string,
 };
 
 interface SubclassIconInfo {

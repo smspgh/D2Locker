@@ -17,12 +17,12 @@ export default function Links({ item }: { item: DimItem }) {
   const links = [
     {
       name: 'D2L',
-      icon: logo,
+      icon: logo as string,
       link: `/armory/${item.hash}?perks=${buildSocketParam(item)}`,
     },
     {
       name: 'Light.gg',
-      icon: lightgg,
+      icon: lightgg as string,
       link: `https://www.light.gg/db/${language}/items/${item.hash}${buildLightGGSockets(item)}`,
     },
   ] as const;
@@ -97,7 +97,7 @@ function getWeaponSocketInfo(item: DimItem): null | {
     const weaponModSocket = item.sockets.allSockets.find((s) =>
       s.plugged?.plugDef.itemCategoryHashes?.includes(ItemCategoryHashes.WeaponModsDamage),
     );
-    const weaponMod = weaponModSocket?.plugged!.plugDef.hash ?? 0;
+    const weaponMod = weaponModSocket?.plugged?.plugDef.hash ?? 0;
 
     const trackerSocket = item.sockets.allSockets.find(isKillTrackerSocket);
     const largePerks = getSocketsWithStyle(item.sockets, DestinySocketCategoryStyle.LargePerk)

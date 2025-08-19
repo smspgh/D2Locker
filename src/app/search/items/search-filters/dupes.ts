@@ -210,10 +210,14 @@ export const sortDupesBest = (
 
         // Get the first two perk sockets with multiple options (like Compare.tsx does)
         const allPerkSockets = item.sockets.allSockets
-          .filter((s) => 
-            s.isPerk && 
-            s.plugOptions.length > 1 && 
-            !(weaponSockets.intrinsicSocket && s.socketIndex === weaponSockets.intrinsicSocket.socketIndex)
+          .filter(
+            (s) =>
+              s.isPerk &&
+              s.plugOptions.length > 1 &&
+              !(
+                weaponSockets.intrinsicSocket &&
+                s.socketIndex === weaponSockets.intrinsicSocket.socketIndex
+              ),
           )
           .sort((a, b) => a.socketIndex - b.socketIndex);
 
