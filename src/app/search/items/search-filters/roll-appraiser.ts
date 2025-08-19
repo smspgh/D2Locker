@@ -3,6 +3,7 @@ import { DimItem } from 'app/inventory/item-types';
 import { getRollAppraiserUtilsSync } from 'app/roll-appraiser/rollAppraiserService';
 import { quoteFilterString } from 'app/search/query-parser';
 import { getSocketsByIndexes, getWeaponSockets } from 'app/utils/socket-utils';
+import perkToEnhanced from 'data/d2/trait-to-enhanced-trait.json';
 import { ItemFilterDefinition } from '../item-filter-types';
 
 /**
@@ -72,14 +73,13 @@ function getWeaponRankingInfo(item: DimItem) {
   const perkRankings: { index: number; perkHash: number; ranking: number }[] = [];
   const traitPerkHashes: number[] = [];
 
-  // Load enhanced perk mapping
-  const perkToEnhanced = require('data/d2/trait-to-enhanced-trait.json');
+  // Use enhanced perk mapping
 
   // Process each perk socket and check ALL available perks for that socket
-  perkSockets.forEach((socket, socketIndex) => {
+  for (const [socketIndex, socket] of perkSockets.entries()) {
     // Check all plug options available for this socket
     if (socket.plugOptions && socket.plugOptions.length > 0) {
-      socket.plugOptions.forEach((plug) => {
+      for (const plug of socket.plugOptions) {
         const perkHash = plug.plugDef.hash;
         const ranking = utils.getPerkRank(item.hash.toString(), perkHash.toString());
 
@@ -94,7 +94,7 @@ function getWeaponRankingInfo(item: DimItem) {
         }
 
         // Also check if this perk has an enhanced version
-        const enhancedHash = perkToEnhanced[perkHash.toString()];
+        const enhancedHash = perkToEnhanced[perkHash.toString() as keyof typeof perkToEnhanced];
         if (enhancedHash) {
           const enhancedRanking = utils.getPerkRank(item.hash.toString(), enhancedHash);
           if (enhancedRanking) {
@@ -102,12 +102,12 @@ function getWeaponRankingInfo(item: DimItem) {
               enhancedRanking.perkIndex !== undefined ? enhancedRanking.perkIndex : socketIndex;
             perkRankings.push({
               index: perkColumnIndex,
-              perkHash: parseInt(enhancedHash),
+              perkHash: parseInt(enhancedHash, 10),
               ranking: enhancedRanking,
             });
           }
         }
-      });
+      }
     }
 
     // Also check the currently plugged perk if it's not in plugOptions
@@ -134,7 +134,7 @@ function getWeaponRankingInfo(item: DimItem) {
     if (socket.plugged && socket.isPerk && (socketIndex === 2 || socketIndex === 3)) {
       traitPerkHashes.push(socket.plugged.plugDef.hash);
     }
-  });
+  }
 
   // Get all possible combo rankings from available perks
   const combos: { rank: number; perk4: number; perk5: number }[] = [];
@@ -143,17 +143,18 @@ function getWeaponRankingInfo(item: DimItem) {
   const column3Perks: number[] = [];
   const column4Perks: number[] = [];
 
-  perkSockets.forEach((socket, socketIndex) => {
+  for (const [socketIndex, socket] of perkSockets.entries()) {
     if (socketIndex === 2 && socket.plugOptions) {
       // Column 3 perks
-      socket.plugOptions.forEach((plug) => {
+      for (const plug of socket.plugOptions) {
         column3Perks.push(plug.plugDef.hash);
         // Also check enhanced versions
-        const enhancedHash = perkToEnhanced[plug.plugDef.hash.toString()];
+        const enhancedHash =
+          perkToEnhanced[plug.plugDef.hash.toString() as keyof typeof perkToEnhanced];
         if (enhancedHash) {
-          column3Perks.push(parseInt(enhancedHash));
+          column3Perks.push(parseInt(enhancedHash, 10));
         }
-      });
+      }
       // Also include currently plugged if not in plugOptions
       if (socket.plugged && socket.isPerk) {
         const pluggedHash = socket.plugged.plugDef.hash;
@@ -163,14 +164,15 @@ function getWeaponRankingInfo(item: DimItem) {
       }
     } else if (socketIndex === 3 && socket.plugOptions) {
       // Column 4 perks
-      socket.plugOptions.forEach((plug) => {
+      for (const plug of socket.plugOptions) {
         column4Perks.push(plug.plugDef.hash);
         // Also check enhanced versions
-        const enhancedHash = perkToEnhanced[plug.plugDef.hash.toString()];
+        const enhancedHash =
+          perkToEnhanced[plug.plugDef.hash.toString() as keyof typeof perkToEnhanced];
         if (enhancedHash) {
-          column4Perks.push(parseInt(enhancedHash));
+          column4Perks.push(parseInt(enhancedHash, 10));
         }
-      });
+      }
       // Also include currently plugged if not in plugOptions
       if (socket.plugged && socket.isPerk) {
         const pluggedHash = socket.plugged.plugDef.hash;
@@ -179,7 +181,7 @@ function getWeaponRankingInfo(item: DimItem) {
         }
       }
     }
-  });
+  }
 
   // Check all combinations of column 3 and column 4 perks
   for (const perk3 of column3Perks) {
@@ -250,7 +252,13 @@ const rollAppraiserFilters: ItemFilterDefinition[] = [
       (item) => {
         const info = getWeaponRankingInfo(item);
         const column1Perks = info?.perkRankings.filter((p) => p.index === 0) || [];
-        return column1Perks.some((perk) => perk.ranking && compare!(perk.ranking.rank));
+        return column1Perks.some((perk) => {
+          if (!perk.ranking || typeof perk.ranking.rank !== 'number') {
+            return false;
+          }
+          const rank = perk.ranking.rank as number;
+          return compare!(rank);
+        });
       },
   },
 
@@ -264,7 +272,13 @@ const rollAppraiserFilters: ItemFilterDefinition[] = [
       (item) => {
         const info = getWeaponRankingInfo(item);
         const column2Perks = info?.perkRankings.filter((p) => p.index === 1) || [];
-        return column2Perks.some((perk) => perk.ranking && compare!(perk.ranking.rank));
+        return column2Perks.some((perk) => {
+          if (!perk.ranking || typeof perk.ranking.rank !== 'number') {
+            return false;
+          }
+          const rank = perk.ranking.rank as number;
+          return compare!(rank);
+        });
       },
   },
 
@@ -282,7 +296,13 @@ const rollAppraiserFilters: ItemFilterDefinition[] = [
         }
 
         const column3Perks = info.perkRankings.filter((p) => p.index === 2);
-        const result = column3Perks.some((perk) => perk.ranking && compare!(perk.ranking.rank));
+        const result = column3Perks.some((perk) => {
+          if (!perk.ranking || typeof perk.ranking.rank !== 'number') {
+            return false;
+          }
+          const rank = perk.ranking.rank as number;
+          return compare!(rank);
+        });
 
         return result;
       },
@@ -298,7 +318,13 @@ const rollAppraiserFilters: ItemFilterDefinition[] = [
       (item) => {
         const info = getWeaponRankingInfo(item);
         const column4Perks = info?.perkRankings.filter((p) => p.index === 3) || [];
-        return column4Perks.some((perk) => perk.ranking && compare!(perk.ranking.rank));
+        return column4Perks.some((perk) => {
+          if (!perk.ranking || typeof perk.ranking.rank !== 'number') {
+            return false;
+          }
+          const rank = perk.ranking.rank as number;
+          return compare!(rank);
+        });
       },
   },
 

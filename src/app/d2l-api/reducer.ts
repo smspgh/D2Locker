@@ -609,7 +609,7 @@ function migrateSettings(state: DimApiState) {
   for (const destinyVersion in migratedSearches) {
     const searches = migratedSearches[destinyVersion];
     if (searches && Array.isArray(searches)) {
-      migratedSearches[destinyVersion] = searches.map((search) => ({
+      migratedSearches[destinyVersion] = searches.map((search: Search) => ({
         usageCount: search.usageCount ?? 0,
         lastUsage: search.lastUsage ?? 0,
         saved: search.saved ?? false,

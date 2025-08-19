@@ -1,5 +1,5 @@
 import { DimItem } from 'app/inventory/item-types';
-import React, { createContext, use } from 'react';
+import React, { createContext, use, useMemo } from 'react';
 
 interface ArmorySearchContextType {
   filteredWeapons: DimItem[];
@@ -17,9 +17,9 @@ export function ArmorySearchProvider({
   filteredWeapons: DimItem[];
   allWeapons: DimItem[];
 }) {
-  return (
-    <ArmorySearchContext value={{ filteredWeapons, allWeapons }}>{children}</ArmorySearchContext>
-  );
+  const value = useMemo(() => ({ filteredWeapons, allWeapons }), [filteredWeapons, allWeapons]);
+
+  return <ArmorySearchContext value={value}>{children}</ArmorySearchContext>;
 }
 
 export function useArmorySearch() {

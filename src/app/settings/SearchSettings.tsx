@@ -15,7 +15,15 @@ import { useNavigate } from 'react-router';
 import Checkbox from './Checkbox';
 import { useSetSetting } from './hooks';
 import { Settings } from './initial-settings';
+// eslint-disable-next-line css-modules/no-unused-class
 import styles from './SettingsPage.m.scss';
+
+// Interface for search term objects
+interface SearchTerm {
+  term: string;
+  logic: 'AND' | 'OR';
+  group?: number;
+}
 
 // Autocomplete component moved outside to prevent re-creation
 const AutocompleteSearchInput = React.memo(
@@ -23,14 +31,12 @@ const AutocompleteSearchInput = React.memo(
     value,
     onChange,
     placeholder,
-    resultCount,
     autocompleter,
   }: {
     value: string;
     onChange: (value: string) => void;
     placeholder: string;
-    resultCount: number;
-    autocompleter: any;
+    autocompleter: ReturnType<typeof createAutocompleter>;
   }) => {
     const inputRef = React.useRef<HTMLInputElement>(null);
     const [localValue, setLocalValue] = useState(value);
@@ -87,7 +93,9 @@ const AutocompleteSearchInput = React.memo(
       onSelectedItemChange: ({ selectedItem }) => {
         if (selectedItem && inputRef.current) {
           const input = inputRef.current;
-          const suggestionText = selectedItem.query.body || selectedItem.query.fullText;
+          const suggestionText =
+            (selectedItem.query as { body?: string; fullText: string }).body ||
+            (selectedItem.query as { fullText: string }).fullText;
 
           // Replace the entire input with the suggestion
           setLocalValue(suggestionText);
@@ -102,7 +110,10 @@ const AutocompleteSearchInput = React.memo(
           }, 0);
         }
       },
-      itemToString: (item) => item?.query.body || item?.query.fullText || '',
+      itemToString: (item) =>
+        (item?.query as { body?: string; fullText?: string })?.body ||
+        (item?.query as { fullText?: string })?.fullText ||
+        '',
       stateReducer: (state, actionAndChanges) => {
         const { type, changes } = actionAndChanges;
         switch (type) {
@@ -137,8 +148,8 @@ const AutocompleteSearchInput = React.memo(
             <div className={searchBarStyles.menu} style={{ zIndex: 9999 }}>
               {suggestions.map((item, index) => (
                 <div
-                  {...getItemProps({ item, index })}
                   key={index}
+                  {...getItemProps({ item, index })}
                   className={searchBarStyles.menuItem}
                   style={{
                     backgroundColor:
@@ -146,7 +157,10 @@ const AutocompleteSearchInput = React.memo(
                   }}
                 >
                   <div className={searchBarStyles.menuItemIcon}>🔍</div>
-                  <div>{item.query.body || item.query.fullText}</div>
+                  <div>
+                    {(item.query as { body?: string; fullText: string }).body ||
+                      (item.query as { fullText: string }).fullText}
+                  </div>
                 </div>
               ))}
             </div>
@@ -156,6 +170,8 @@ const AutocompleteSearchInput = React.memo(
     );
   },
 );
+
+AutocompleteSearchInput.displayName = 'AutocompleteSearchInput';
 
 export default function SearchSettings({ settings }: { settings: Settings }) {
   const setSetting = useSetSetting();
@@ -211,115 +227,114 @@ export default function SearchSettings({ settings }: { settings: Settings }) {
 
   // No edit state needed - everything is inline editable
 
-  const handleWeaponSettingChange = (
-    key: keyof NonNullable<Settings['searchFilterSettings']>['keepWeapon'],
-    value: any,
-  ) => {
-    setSetting('searchFilterSettings', {
-      ...settings.searchFilterSettings,
-      keepWeapon: {
-        ...settings.searchFilterSettings?.keepWeapon,
-        [key]: value,
-      },
-    });
-  };
+  const weaponSettings = (settings.searchFilterSettings?.keepWeapon || {}) as NonNullable<
+    Settings['searchFilterSettings']
+  >['keepWeapon'];
+  const armorSettings = (settings.searchFilterSettings?.keepArmor || {}) as NonNullable<
+    Settings['searchFilterSettings']
+  >['keepArmor'];
 
-  const handleArmorSettingChange = (
-    key: keyof NonNullable<Settings['searchFilterSettings']>['keepArmor'],
-    value: any,
-  ) => {
-    setSetting('searchFilterSettings', {
-      ...settings.searchFilterSettings,
-      keepArmor: {
-        ...settings.searchFilterSettings?.keepArmor,
-        [key]: value,
-      },
-    });
-  };
+  const handleWeaponSettingChange = useCallback(
+    (key: keyof NonNullable<Settings['searchFilterSettings']>['keepWeapon'], value: unknown) => {
+      setSetting('searchFilterSettings', {
+        ...settings.searchFilterSettings,
+        keepWeapon: {
+          ...settings.searchFilterSettings?.keepWeapon,
+          [key]: value,
+        },
+      });
+    },
+    [setSetting, settings.searchFilterSettings],
+  );
 
-  const removeWeaponSearchTerm = (index: number) => {
-    const currentTerms = weaponSettings.additionalSearchTerms || [];
-    handleWeaponSettingChange(
-      'additionalSearchTerms',
-      currentTerms.filter((_, i) => i !== index),
-    );
-  };
+  const handleArmorSettingChange = useCallback(
+    (key: keyof NonNullable<Settings['searchFilterSettings']>['keepArmor'], value: unknown) => {
+      setSetting('searchFilterSettings', {
+        ...settings.searchFilterSettings,
+        keepArmor: {
+          ...settings.searchFilterSettings?.keepArmor,
+          [key]: value,
+        },
+      });
+    },
+    [setSetting, settings.searchFilterSettings],
+  );
 
-  const updateWeaponSearchTerm = (
-    index: number,
-    field: 'term' | 'logic' | 'group',
-    value: string | number,
-  ) => {
-    const currentTerms = weaponSettings.additionalSearchTerms || [];
-    const updatedTerms = currentTerms.map((termObj, i) =>
-      i === index ? { ...termObj, [field]: value } : termObj,
-    );
-    handleWeaponSettingChange('additionalSearchTerms', updatedTerms);
-  };
+  const removeWeaponSearchTerm = useCallback(
+    (index: number) => {
+      const currentTerms = (weaponSettings.additionalSearchTerms as SearchTerm[]) || [];
+      handleWeaponSettingChange(
+        'additionalSearchTerms',
+        currentTerms.filter((_, i) => i !== index),
+      );
+    },
+    [weaponSettings.additionalSearchTerms, handleWeaponSettingChange],
+  );
 
-  const addNewWeaponTerm = () => {
-    const currentTerms = weaponSettings.additionalSearchTerms || [];
-    const newTerm = { term: '', logic: 'AND' as const, group: 0 };
+  const updateWeaponSearchTerm = useCallback(
+    (index: number, field: 'term' | 'logic' | 'group', value: string | number) => {
+      const currentTerms = (weaponSettings.additionalSearchTerms as SearchTerm[]) || [];
+      const updatedTerms = currentTerms.map((termObj, i) =>
+        i === index ? { ...termObj, [field]: value } : termObj,
+      );
+      handleWeaponSettingChange('additionalSearchTerms', updatedTerms);
+    },
+    [weaponSettings.additionalSearchTerms, handleWeaponSettingChange],
+  );
+
+  const addNewWeaponTerm = useCallback(() => {
+    const currentTerms = (weaponSettings.additionalSearchTerms as SearchTerm[]) || [];
+    const newTerm: SearchTerm = { term: '', logic: 'AND' as const, group: 0 };
     handleWeaponSettingChange('additionalSearchTerms', [...currentTerms, newTerm]);
-  };
+  }, [weaponSettings.additionalSearchTerms, handleWeaponSettingChange]);
 
-  const updateArmorSearchTerm = (
-    index: number,
-    field: 'term' | 'logic' | 'group',
-    value: string | number,
-  ) => {
-    const currentTerms = armorSettings.additionalSearchTerms || [];
-    const updatedTerms = currentTerms.map((termObj, i) =>
-      i === index ? { ...termObj, [field]: value } : termObj,
-    );
-    handleArmorSettingChange('additionalSearchTerms', updatedTerms);
-  };
+  const updateArmorSearchTerm = useCallback(
+    (index: number, field: 'term' | 'logic' | 'group', value: string | number) => {
+      const currentTerms = (armorSettings.additionalSearchTerms as SearchTerm[]) || [];
+      const updatedTerms = currentTerms.map((termObj, i) =>
+        i === index ? { ...termObj, [field]: value } : termObj,
+      );
+      handleArmorSettingChange('additionalSearchTerms', updatedTerms);
+    },
+    [armorSettings.additionalSearchTerms, handleArmorSettingChange],
+  );
 
-  const removeArmorSearchTerm = (index: number) => {
-    const currentTerms = armorSettings.additionalSearchTerms || [];
-    handleArmorSettingChange(
-      'additionalSearchTerms',
-      currentTerms.filter((_, i) => i !== index),
-    );
-  };
+  const removeArmorSearchTerm = useCallback(
+    (index: number) => {
+      const currentTerms = (armorSettings.additionalSearchTerms as SearchTerm[]) || [];
+      handleArmorSettingChange(
+        'additionalSearchTerms',
+        currentTerms.filter((_, i) => i !== index),
+      );
+    },
+    [armorSettings.additionalSearchTerms, handleArmorSettingChange],
+  );
 
-  const addNewArmorTerm = () => {
-    const currentTerms = armorSettings.additionalSearchTerms || [];
-    const newTerm = { term: '', logic: 'AND' as const, group: 0 };
+  const addNewArmorTerm = useCallback(() => {
+    const currentTerms = (armorSettings.additionalSearchTerms as SearchTerm[]) || [];
+    const newTerm: SearchTerm = { term: '', logic: 'AND' as const, group: 0 };
     handleArmorSettingChange('additionalSearchTerms', [...currentTerms, newTerm]);
-  };
+  }, [armorSettings.additionalSearchTerms, handleArmorSettingChange]);
 
-  const showSearchResults = (searchTerm: string, itemType: 'weapon' | 'armor') => {
-    if (searchTerm.trim()) {
-      // Combine the search term with the appropriate item type filter using explicit 'and'
-      const typeFilter = itemType === 'weapon' ? 'is:weapon' : 'is:armor';
-      const combinedQuery = `${typeFilter} and ${searchTerm}`;
+  const showSearchResults = useCallback(
+    (searchTerm: string, itemType: 'weapon' | 'armor') => {
+      if (searchTerm.trim()) {
+        // Combine the search term with the appropriate item type filter using explicit 'and'
+        const typeFilter = itemType === 'weapon' ? 'is:weapon' : 'is:armor';
+        const combinedQuery = `${typeFilter} and ${searchTerm}`;
 
-      // Set the search query in the main search bar
-      dispatch(setSearchQuery(combinedQuery));
-      // Open the search results
-      dispatch(toggleSearchResults(true));
-    }
-  };
+        // Set the search query in the main search bar
+        dispatch(setSearchQuery(combinedQuery));
+        // Open the search results
+        dispatch(toggleSearchResults(true));
+      }
+    },
+    [dispatch],
+  );
 
-  const navigateToSearchHistory = () => {
+  const navigateToSearchHistory = useCallback(() => {
     navigate('/search-history');
-  };
-
-  const logicOptions = [
-    { value: 'AND', name: 'AND' },
-    { value: 'OR', name: 'OR' },
-  ];
-
-  const groupOptions = [
-    { value: 0, name: 'Group 1' },
-    { value: 1, name: 'Group 2' },
-    { value: 2, name: 'Group 3' },
-    { value: 3, name: 'Group 4' },
-  ];
-
-  const weaponSettings = settings.searchFilterSettings?.keepWeapon || {};
-  const armorSettings = settings.searchFilterSettings?.keepArmor || {};
+  }, [navigate]);
 
   return (
     <section id="search-settings">
@@ -343,14 +358,14 @@ export default function SearchSettings({ settings }: { settings: Settings }) {
         </div>
       </div>
 
-      <div className={styles.section}>
+      <div className={styles.section as string}>
         <h3>{t('Settings.KeepWeaponSettings')}</h3>
 
         <div className={styles.setting}>
           <Checkbox
             label={t('Settings.EnableKeepWeapon')}
             name="enableKeepWeapon"
-            value={weaponSettings.enabled ?? true}
+            value={(weaponSettings as { enabled?: boolean }).enabled ?? true}
             onChange={(checked) => handleWeaponSettingChange('enabled', checked)}
           />
         </div>
@@ -410,121 +425,127 @@ export default function SearchSettings({ settings }: { settings: Settings }) {
                       </tr>
                     </thead>
                     <tbody>
-                      {(weaponSettings.additionalSearchTerms || []).map((termObj, index) => (
-                        <tr key={index} style={{ borderBottom: '1px solid #333' }}>
-                          <td style={{ padding: '8px 4px' }}>
-                            <AutocompleteSearchInput
-                              value={termObj.term}
-                              onChange={(value) => updateWeaponSearchTerm(index, 'term', value)}
-                              placeholder="Enter search term"
-                              resultCount={0}
-                              autocompleter={autocompleter}
-                            />
-                          </td>
-                          <td style={{ padding: '8px 4px', textAlign: 'center' }}>
-                            <input
-                              type="number"
-                              min="1"
-                              max="4"
-                              value={(termObj.group ?? 0) + 1}
-                              onChange={(e) =>
-                                updateWeaponSearchTerm(index, 'group', parseInt(e.target.value) - 1)
-                              }
-                              style={{
-                                width: '40px',
-                                textAlign: 'center',
-                                backgroundColor: '#333',
-                                color: '#fff',
-                                border: '1px solid #555',
-                                borderRadius: '4px',
-                                padding: '2px',
-                              }}
-                            />
-                          </td>
-                          <td style={{ padding: '8px 4px', textAlign: 'center' }}>
-                            <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                              <label
+                      {((weaponSettings.additionalSearchTerms as SearchTerm[]) || []).map(
+                        (termObj, index) => (
+                          <tr key={index} style={{ borderBottom: '1px solid #333' }}>
+                            <td style={{ padding: '8px 4px' }}>
+                              <AutocompleteSearchInput
+                                value={termObj.term}
+                                onChange={(value) => updateWeaponSearchTerm(index, 'term', value)}
+                                placeholder="Enter search term"
+                                autocompleter={autocompleter}
+                              />
+                            </td>
+                            <td style={{ padding: '8px 4px', textAlign: 'center' }}>
+                              <input
+                                type="number"
+                                min="1"
+                                max="4"
+                                value={(termObj.group ?? 0) + 1}
+                                onChange={(e) =>
+                                  updateWeaponSearchTerm(
+                                    index,
+                                    'group',
+                                    parseInt(e.target.value, 10) - 1,
+                                  )
+                                }
                                 style={{
-                                  fontSize: '11px',
-                                  display: 'flex',
-                                  alignItems: 'center',
-                                  gap: '4px',
+                                  width: '40px',
+                                  textAlign: 'center',
+                                  backgroundColor: '#333',
+                                  color: '#fff',
+                                  border: '1px solid #555',
+                                  borderRadius: '4px',
+                                  padding: '2px',
                                 }}
-                              >
-                                <input
-                                  type="radio"
-                                  name={`weaponLogic${index}`}
-                                  value="AND"
-                                  checked={termObj.logic === 'AND'}
-                                  onChange={() => updateWeaponSearchTerm(index, 'logic', 'AND')}
-                                  style={{ margin: 0 }}
-                                />
-                                AND
-                              </label>
-                              <label
-                                style={{
-                                  fontSize: '11px',
-                                  display: 'flex',
-                                  alignItems: 'center',
-                                  gap: '4px',
-                                }}
-                              >
-                                <input
-                                  type="radio"
-                                  name={`weaponLogic${index}`}
-                                  value="OR"
-                                  checked={termObj.logic === 'OR'}
-                                  onChange={() => updateWeaponSearchTerm(index, 'logic', 'OR')}
-                                  style={{ margin: 0 }}
-                                />
-                                OR
-                              </label>
-                            </div>
-                          </td>
-                          <td style={{ padding: '8px 4px', textAlign: 'center' }}>
-                            {termObj.term && (
+                              />
+                            </td>
+                            <td style={{ padding: '8px 4px', textAlign: 'center' }}>
+                              <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                                <label
+                                  style={{
+                                    fontSize: '11px',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: '4px',
+                                  }}
+                                >
+                                  <input
+                                    type="radio"
+                                    name={`weaponLogic${index}`}
+                                    value="AND"
+                                    checked={termObj.logic === 'AND'}
+                                    onChange={() => updateWeaponSearchTerm(index, 'logic', 'AND')}
+                                    style={{ margin: 0 }}
+                                  />
+                                  AND
+                                </label>
+                                <label
+                                  style={{
+                                    fontSize: '11px',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: '4px',
+                                  }}
+                                >
+                                  <input
+                                    type="radio"
+                                    name={`weaponLogic${index}`}
+                                    value="OR"
+                                    checked={termObj.logic === 'OR'}
+                                    onChange={() => updateWeaponSearchTerm(index, 'logic', 'OR')}
+                                    style={{ margin: 0 }}
+                                  />
+                                  OR
+                                </label>
+                              </div>
+                            </td>
+                            <td style={{ padding: '8px 4px', textAlign: 'center' }}>
+                              {termObj.term && (
+                                <button
+                                  type="button"
+                                  style={{
+                                    background: 'none',
+                                    border: 'none',
+                                    color: '#4CAF50',
+                                    cursor: 'pointer',
+                                    fontSize: '12px',
+                                    textDecoration: 'underline',
+                                  }}
+                                  onClick={() => showSearchResults(termObj.term, 'weapon')}
+                                  title="Click to see matching weapons"
+                                >
+                                  {getWeaponCount(termObj.term)}
+                                </button>
+                              )}
+                            </td>
+                            <td style={{ padding: '8px 4px', textAlign: 'center' }}>
                               <button
                                 type="button"
+                                onClick={() => removeWeaponSearchTerm(index)}
                                 style={{
-                                  background: 'none',
+                                  background: '#f44336',
                                   border: 'none',
-                                  color: '#4CAF50',
-                                  cursor: 'pointer',
+                                  color: 'white',
+                                  borderRadius: '50%',
+                                  width: '20px',
+                                  height: '20px',
                                   fontSize: '12px',
-                                  textDecoration: 'underline',
+                                  cursor: 'pointer',
+                                  display: 'flex',
+                                  alignItems: 'center',
+                                  justifyContent: 'center',
                                 }}
-                                onClick={() => showSearchResults(termObj.term, 'weapon')}
-                                title="Click to see matching weapons"
+                                title="Remove search term"
                               >
-                                {getWeaponCount(termObj.term)}
+                                −
                               </button>
-                            )}
-                          </td>
-                          <td style={{ padding: '8px 4px', textAlign: 'center' }}>
-                            <button
-                              type="button"
-                              onClick={() => removeWeaponSearchTerm(index)}
-                              style={{
-                                background: '#f44336',
-                                border: 'none',
-                                color: 'white',
-                                borderRadius: '50%',
-                                width: '20px',
-                                height: '20px',
-                                fontSize: '12px',
-                                cursor: 'pointer',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                              }}
-                              title="Remove search term"
-                            >
-                              −
-                            </button>
-                          </td>
-                        </tr>
-                      ))}
-                      {(weaponSettings.additionalSearchTerms || []).length === 0 && (
+                            </td>
+                          </tr>
+                        ),
+                      )}
+                      {((weaponSettings.additionalSearchTerms as SearchTerm[]) || []).length ===
+                        0 && (
                         <tr>
                           <td
                             colSpan={5}
@@ -543,14 +564,14 @@ export default function SearchSettings({ settings }: { settings: Settings }) {
         )}
       </div>
 
-      <div className={styles.section}>
+      <div className={styles.section as string}>
         <h3>{t('Settings.KeepArmorSettings')}</h3>
 
         <div className={styles.setting}>
           <Checkbox
             label={t('Settings.EnableKeepArmor')}
             name="enableKeepArmor"
-            value={armorSettings.enabled ?? true}
+            value={(armorSettings as { enabled?: boolean }).enabled ?? true}
             onChange={(checked) => handleArmorSettingChange('enabled', checked)}
           />
         </div>
@@ -610,121 +631,127 @@ export default function SearchSettings({ settings }: { settings: Settings }) {
                       </tr>
                     </thead>
                     <tbody>
-                      {(armorSettings.additionalSearchTerms || []).map((termObj, index) => (
-                        <tr key={index} style={{ borderBottom: '1px solid #333' }}>
-                          <td style={{ padding: '8px 4px' }}>
-                            <AutocompleteSearchInput
-                              value={termObj.term}
-                              onChange={(value) => updateArmorSearchTerm(index, 'term', value)}
-                              placeholder="Enter search term"
-                              resultCount={0}
-                              autocompleter={autocompleter}
-                            />
-                          </td>
-                          <td style={{ padding: '8px 4px', textAlign: 'center' }}>
-                            <input
-                              type="number"
-                              min="1"
-                              max="4"
-                              value={(termObj.group ?? 0) + 1}
-                              onChange={(e) =>
-                                updateArmorSearchTerm(index, 'group', parseInt(e.target.value) - 1)
-                              }
-                              style={{
-                                width: '40px',
-                                textAlign: 'center',
-                                backgroundColor: '#333',
-                                color: '#fff',
-                                border: '1px solid #555',
-                                borderRadius: '4px',
-                                padding: '2px',
-                              }}
-                            />
-                          </td>
-                          <td style={{ padding: '8px 4px', textAlign: 'center' }}>
-                            <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                              <label
+                      {((armorSettings.additionalSearchTerms as SearchTerm[]) || []).map(
+                        (termObj, index) => (
+                          <tr key={index} style={{ borderBottom: '1px solid #333' }}>
+                            <td style={{ padding: '8px 4px' }}>
+                              <AutocompleteSearchInput
+                                value={termObj.term}
+                                onChange={(value) => updateArmorSearchTerm(index, 'term', value)}
+                                placeholder="Enter search term"
+                                autocompleter={autocompleter}
+                              />
+                            </td>
+                            <td style={{ padding: '8px 4px', textAlign: 'center' }}>
+                              <input
+                                type="number"
+                                min="1"
+                                max="4"
+                                value={(termObj.group ?? 0) + 1}
+                                onChange={(e) =>
+                                  updateArmorSearchTerm(
+                                    index,
+                                    'group',
+                                    parseInt(e.target.value, 10) - 1,
+                                  )
+                                }
                                 style={{
-                                  fontSize: '11px',
-                                  display: 'flex',
-                                  alignItems: 'center',
-                                  gap: '4px',
+                                  width: '40px',
+                                  textAlign: 'center',
+                                  backgroundColor: '#333',
+                                  color: '#fff',
+                                  border: '1px solid #555',
+                                  borderRadius: '4px',
+                                  padding: '2px',
                                 }}
-                              >
-                                <input
-                                  type="radio"
-                                  name={`armorLogic${index}`}
-                                  value="AND"
-                                  checked={termObj.logic === 'AND'}
-                                  onChange={() => updateArmorSearchTerm(index, 'logic', 'AND')}
-                                  style={{ margin: 0 }}
-                                />
-                                AND
-                              </label>
-                              <label
-                                style={{
-                                  fontSize: '11px',
-                                  display: 'flex',
-                                  alignItems: 'center',
-                                  gap: '4px',
-                                }}
-                              >
-                                <input
-                                  type="radio"
-                                  name={`armorLogic${index}`}
-                                  value="OR"
-                                  checked={termObj.logic === 'OR'}
-                                  onChange={() => updateArmorSearchTerm(index, 'logic', 'OR')}
-                                  style={{ margin: 0 }}
-                                />
-                                OR
-                              </label>
-                            </div>
-                          </td>
-                          <td style={{ padding: '8px 4px', textAlign: 'center' }}>
-                            {termObj.term && (
+                              />
+                            </td>
+                            <td style={{ padding: '8px 4px', textAlign: 'center' }}>
+                              <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                                <label
+                                  style={{
+                                    fontSize: '11px',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: '4px',
+                                  }}
+                                >
+                                  <input
+                                    type="radio"
+                                    name={`armorLogic${index}`}
+                                    value="AND"
+                                    checked={termObj.logic === 'AND'}
+                                    onChange={() => updateArmorSearchTerm(index, 'logic', 'AND')}
+                                    style={{ margin: 0 }}
+                                  />
+                                  AND
+                                </label>
+                                <label
+                                  style={{
+                                    fontSize: '11px',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: '4px',
+                                  }}
+                                >
+                                  <input
+                                    type="radio"
+                                    name={`armorLogic${index}`}
+                                    value="OR"
+                                    checked={termObj.logic === 'OR'}
+                                    onChange={() => updateArmorSearchTerm(index, 'logic', 'OR')}
+                                    style={{ margin: 0 }}
+                                  />
+                                  OR
+                                </label>
+                              </div>
+                            </td>
+                            <td style={{ padding: '8px 4px', textAlign: 'center' }}>
+                              {termObj.term && (
+                                <button
+                                  type="button"
+                                  style={{
+                                    background: 'none',
+                                    border: 'none',
+                                    color: '#4CAF50',
+                                    cursor: 'pointer',
+                                    fontSize: '12px',
+                                    textDecoration: 'underline',
+                                  }}
+                                  onClick={() => showSearchResults(termObj.term, 'armor')}
+                                  title="Click to see matching armor"
+                                >
+                                  {getArmorCount(termObj.term)}
+                                </button>
+                              )}
+                            </td>
+                            <td style={{ padding: '8px 4px', textAlign: 'center' }}>
                               <button
                                 type="button"
+                                onClick={() => removeArmorSearchTerm(index)}
                                 style={{
-                                  background: 'none',
+                                  background: '#f44336',
                                   border: 'none',
-                                  color: '#4CAF50',
-                                  cursor: 'pointer',
+                                  color: 'white',
+                                  borderRadius: '50%',
+                                  width: '20px',
+                                  height: '20px',
                                   fontSize: '12px',
-                                  textDecoration: 'underline',
+                                  cursor: 'pointer',
+                                  display: 'flex',
+                                  alignItems: 'center',
+                                  justifyContent: 'center',
                                 }}
-                                onClick={() => showSearchResults(termObj.term, 'armor')}
-                                title="Click to see matching armor"
+                                title="Remove search term"
                               >
-                                {getArmorCount(termObj.term)}
+                                −
                               </button>
-                            )}
-                          </td>
-                          <td style={{ padding: '8px 4px', textAlign: 'center' }}>
-                            <button
-                              type="button"
-                              onClick={() => removeArmorSearchTerm(index)}
-                              style={{
-                                background: '#f44336',
-                                border: 'none',
-                                color: 'white',
-                                borderRadius: '50%',
-                                width: '20px',
-                                height: '20px',
-                                fontSize: '12px',
-                                cursor: 'pointer',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                              }}
-                              title="Remove search term"
-                            >
-                              −
-                            </button>
-                          </td>
-                        </tr>
-                      ))}
-                      {(armorSettings.additionalSearchTerms || []).length === 0 && (
+                            </td>
+                          </tr>
+                        ),
+                      )}
+                      {((armorSettings.additionalSearchTerms as SearchTerm[]) || []).length ===
+                        0 && (
                         <tr>
                           <td
                             colSpan={5}

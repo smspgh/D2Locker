@@ -22,10 +22,10 @@ export const setUser = (_user: { id: string }) => {
 };
 
 /** Stub for startSpan - executes the callback immediately */
-export const startSpan = (_options: any, callback: () => any) => callback();
+export const startSpan = <T>(_options: any, callback: () => T): T => callback();
 
 /** Stub for withProfiler - returns the component as-is */
-export const withProfiler = (component: any) => component;
+export const withProfiler = <T>(component: T): T => component;
 
 /** Stub for getClient - returns null */
 export const getClient = () => null;

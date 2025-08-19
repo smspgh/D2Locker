@@ -144,7 +144,6 @@ export default function Compare({ session }: { session: CompareSession }) {
   // Memoize computing the list of stats
   const allStats = useMemo(() => buildStatInfo(compareItems), [compareItems]);
 
-
   const remove = useCallback(
     (item: DimItem) => {
       if (compareItems.length <= 1) {

@@ -2,6 +2,8 @@
  * Utilities for working with Roll Appraiser data rankings
  */
 
+import perkToEnhanced from 'data/d2/trait-to-enhanced-trait.json';
+
 interface PerkRankData {
   rank: number;
   count: number;
@@ -91,14 +93,10 @@ export class RollAppraiserUtils {
     }
 
     // If no direct match, check if this is an enhanced perk and look for its standard version
-    // Import the trait mapping here to avoid circular imports
-    // eslint-disable-next-line @typescript-eslint/no-require-imports
-    const perkToEnhanced = require('data/d2/trait-to-enhanced-trait.json') as Record<
-      string,
-      number
-    >;
+    // Use the trait mapping data
+    const enhancedMap = perkToEnhanced as Record<string, number>;
     const enhancedToPerk: Record<number, number> = {};
-    for (const [standard, enhanced] of Object.entries(perkToEnhanced)) {
+    for (const [standard, enhanced] of Object.entries(enhancedMap)) {
       enhancedToPerk[enhanced] = parseInt(standard, 10);
     }
 
@@ -112,7 +110,9 @@ export class RollAppraiserUtils {
               rank: Number(perkData.Rank),
               count: Number(perkData.Count),
               perkHash: Number(perkData.PerkHash),
-              perkEnhancedHash: perkData.PerkEnhancedHash ? Number(perkData.PerkEnhancedHash) : null,
+              perkEnhancedHash: perkData.PerkEnhancedHash
+                ? Number(perkData.PerkEnhancedHash)
+                : null,
               show: Boolean(perkData.Show),
               perkIndex: perkData.PerkIDX ? Number(perkData.PerkIDX) : undefined,
             };
