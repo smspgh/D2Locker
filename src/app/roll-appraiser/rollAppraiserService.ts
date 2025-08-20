@@ -26,10 +26,10 @@ async function loadRollAppraiserData(): Promise<RollAppraiserUtils> {
       const data = (await response.json()) as RollAppraiserData;
       rollAppraiserUtils = new RollAppraiserUtils(data);
 
-      console.log('Roll appraiser data loaded successfully');
+      // console.log('Roll appraiser data loaded successfully');
       return rollAppraiserUtils;
-    } catch (error) {
-      console.warn('Failed to load roll appraiser data:', error);
+    } catch {
+      // console.warn('Failed to load roll appraiser data:', _error);
       // Create empty utils if loading fails
       rollAppraiserUtils = new RollAppraiserUtils({
         PerkStats: {},

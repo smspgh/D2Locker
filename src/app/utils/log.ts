@@ -6,6 +6,8 @@ function logTime() {
   return (Date.now() - start) / 1000;
 }
 
+const INFO_LOGGING_DISABLED = true;
+
 /**
  * A wrapper around console.log. Use this when you mean to have logging in the shipped app.
  * Otherwise, we'll prevent console.log from getting submitted via a lint rule.
@@ -14,7 +16,9 @@ function logTime() {
  * @example infoLog("Manifest", "The manifest loaded")
  */
 export function infoLog(tag: string, message: unknown, ...args: unknown[]) {
-  console.log(`[${tag}]`, logTime(), message, ...args);
+  if (!INFO_LOGGING_DISABLED) {
+    console.log(`[${tag}]`, logTime(), message, ...args);
+  }
 }
 
 /**
@@ -25,7 +29,9 @@ export function infoLog(tag: string, message: unknown, ...args: unknown[]) {
  * @example warnLog("Manifest", "The manifest is out of date")
  */
 export function warnLog(tag: string, message: unknown, ...args: unknown[]) {
-  console.warn(`[${tag}]`, logTime(), message, ...args);
+  if (!INFO_LOGGING_DISABLED) {
+    console.warn(`[${tag}]`, logTime(), message, ...args);
+  }
 }
 
 /**
@@ -37,9 +43,11 @@ export function warnLog(tag: string, message: unknown, ...args: unknown[]) {
  * @example warnLogCollapsedStack("Manifest", "The manifest is out of date")
  */
 export function warnLogCollapsedStack(tag: string, message: unknown, ...args: unknown[]) {
-  console.groupCollapsed(`[${tag}]`, logTime(), message);
-  console.warn(`[${tag}]`, message, ...args);
-  console.groupEnd();
+  if (!INFO_LOGGING_DISABLED) {
+    console.groupCollapsed(`[${tag}]`, logTime(), message);
+    console.warn(`[${tag}]`, message, ...args);
+    console.groupEnd();
+  }
 }
 
 /**
@@ -63,6 +71,10 @@ export function timer(tag: string, message: string) {
   // Note: This will log the time when the timer started, but the log entry will
   // only appear when it ends.
   const label = `[${tag}] ${logTime()} ${message}`;
-  console.time(label);
-  return () => console.timeEnd(label);
+  if (!INFO_LOGGING_DISABLED) {
+    console.time(label);
+    return () => console.timeEnd(label);
+  }
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  return () => {};
 }
