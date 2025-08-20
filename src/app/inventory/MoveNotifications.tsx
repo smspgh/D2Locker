@@ -209,9 +209,9 @@ function ApplyLoadoutProgressBody({
 
       {modStates.length > 0 && (
         <div className={styles.iconList}>
-          {modStates.map(({ modHash, state }, i) => (
+          {modStates.map(({ modHash, state }) => (
             <div
-              key={i}
+              key={modHash}
               className={clsx('item', {
                 [styles.loadoutItemPending]: state === LoadoutModState.Pending,
                 [styles.loadoutItemFailed]:

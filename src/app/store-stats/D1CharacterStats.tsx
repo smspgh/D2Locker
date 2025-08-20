@@ -54,7 +54,7 @@ export function D1CharacterStats({
           <div className={styles.stat}>
             <BungieImage src={stat.displayProperties.icon} alt={stat.displayProperties.name} />
             {getD1CharacterStatTiers(stat).map((n, index) => (
-              <div key={index} className={styles.bar}>
+              <div key={`${stat.hash}-tier-${index}`} className={styles.bar}>
                 <div
                   className={clsx(styles.progress, {
                     [styles.complete]: n / 60 === 1,

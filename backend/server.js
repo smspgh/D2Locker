@@ -79,12 +79,12 @@ try {
   // Add new columns if they don't exist (migration)
   try {
     db.exec(`ALTER TABLE users ADD COLUMN lastModified INTEGER DEFAULT (strftime('%s', 'now'))`);
-  } catch (_e) {
+  } catch {
     // Column already exists, ignore
   }
   try {
     db.exec(`ALTER TABLE users ADD COLUMN syncToken TEXT`);
-  } catch (_e) {
+  } catch {
     // Column already exists, ignore
   }
 
@@ -101,7 +101,7 @@ try {
       updateExistingRecords.run(currentTime);
       console.log(`Updated ${existingUsers.length} existing records with lastModified timestamps`);
     }
-  } catch (_migrationError) {
+  } catch {
     // If the migration fails, it's likely because the columns don't exist yet
     console.log('Migration skipped - likely new database');
   }
@@ -119,19 +119,22 @@ try {
         let needsUpdate = false;
 
         const migratedSearches = searchesArray.map((search) => {
-          if (search && search.query && search.type !== undefined && (
-              search.usageCount === undefined ||
+          if (
+            search &&
+            search.query &&
+            search.type !== undefined &&
+            (search.usageCount === undefined ||
               search.lastUsage === undefined ||
-              search.saved === undefined
-            )) {
-              needsUpdate = true;
-              return {
-                query: search.query,
-                type: search.type,
-                usageCount: search.usageCount || 0,
-                lastUsage: search.lastUsage || 0,
-                saved: search.saved || false,
-              };
+              search.saved === undefined)
+          ) {
+            needsUpdate = true;
+            return {
+              query: search.query,
+              type: search.type,
+              usageCount: search.usageCount || 0,
+              lastUsage: search.lastUsage || 0,
+              saved: search.saved || false,
+            };
           }
           return search;
         });
@@ -529,7 +532,7 @@ apiRouter.get('/profile', validateApiKey, (req, res) => {
   }
 
   // Create the profile structure that matches IndexedDB format
-  const _profileKey = `${userData.membershipId}-d${userData.destinyVersion}`;
+  // const profileKey = `${userData.membershipId}-d${userData.destinyVersion}`;
 
   // Convert loadouts object to array for ProfileResponse format
   const loadoutsArray = Object.values(userData.loadouts);

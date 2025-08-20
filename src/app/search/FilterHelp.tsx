@@ -125,15 +125,15 @@ function FilterExplanation({
   return (
     <tr>
       <td>
-        {suggestions.map((k, i) => (
-          <div key={i} className={styles.entry}>
+        {suggestions.map((k) => (
+          <div key={k.keyword} className={styles.entry}>
             <a href="." onClick={(e) => applySuggestion(e, k.keyword)}>
               {k.ops ? `${k.keyword}` : k.keyword}
             </a>
-            {k.ops?.map((op, j) => {
+            {k.ops?.map((op) => {
               const x = `${k.keyword}${op}`;
               return (
-                <div key={j}>
+                <div key={`${k.keyword}-${op}`}>
                   <span className={styles.separator}>| </span>
                   <a href="." onClick={(e) => applySuggestion(e, x)}>
                     {op}

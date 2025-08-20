@@ -26,8 +26,13 @@ export default function Countdown({
         clearInterval(interval);
       }
     };
+
+    // Initial update
+    const initialDiff = endTime.getTime() - Date.now();
+    // eslint-disable-next-line @eslint-react/hooks-extra/no-direct-set-state-in-use-effect
+    setDiff(initialDiff);
+
     interval = window.setInterval(update, 60000);
-    update();
     return () => clearInterval(interval);
   }, [endTime]);
 

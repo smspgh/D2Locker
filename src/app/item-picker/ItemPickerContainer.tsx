@@ -36,6 +36,7 @@ export default function ItemPickerContainer({ children }: { children: React.Reac
   );
 
   const onClose = useCallback(() => {
+    // eslint-disable-next-line @eslint-react/hooks-extra/no-direct-set-state-in-use-effect
     setOptionsState((options) => {
       if (options) {
         // Cleanup any existing item picker

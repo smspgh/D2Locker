@@ -45,7 +45,8 @@ export default function LoadoutDrawerContainer({ account }: { account: DestinyAc
   const [initialLoadout, setInitialLoadout] = useState<EditLoadoutState>();
 
   const handleDrawerClose = useCallback(() => {
-    setInitialLoadout(undefined);
+    // eslint-disable-next-line @eslint-react/hooks-extra/no-direct-set-state-in-use-effect
+    setInitialLoadout(() => undefined);
   }, []);
 
   const stores = useSelector(storesSelector);
@@ -125,12 +126,13 @@ export default function LoadoutDrawerContainer({ account }: { account: DestinyAc
           return;
         }
 
-        setInitialLoadout({
+        // eslint-disable-next-line @eslint-react/hooks-extra/no-direct-set-state-in-use-effect
+        setInitialLoadout(() => ({
           loadout: parsedLoadout,
           storeId,
           showClass: false,
           fromExternal: true,
-        });
+        }));
         // Clear the loadout from params if the URL contained one...
         navigate(pathname, { replace: true });
       }

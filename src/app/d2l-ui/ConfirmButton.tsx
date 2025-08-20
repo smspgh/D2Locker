@@ -34,8 +34,13 @@ export function ConfirmButton({
   const childrenRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    setContentHeight(childrenRef.current?.offsetHeight || 0);
-    setContainerHeight(containerRef.current?.offsetHeight || 0);
+    const updateHeights = () => {
+      // eslint-disable-next-line @eslint-react/hooks-extra/no-direct-set-state-in-use-effect
+      setContentHeight(childrenRef.current?.offsetHeight || 0);
+      // eslint-disable-next-line @eslint-react/hooks-extra/no-direct-set-state-in-use-effect
+      setContainerHeight(containerRef.current?.offsetHeight || 0);
+    };
+    updateHeights();
   }, []);
 
   const onClickAction =

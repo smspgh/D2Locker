@@ -37,9 +37,10 @@ export default function Notification({ notification, onClose, ...animation }: Pr
     }
     if (!error && !success && notification.promise) {
       notification.promise
-        .then(() => setSuccess(true))
+        .then(() => setSuccess(() => true))
         .catch((e) =>
-          e instanceof CanceledError ? setSuccess(true) : setError(convertToError(e)),
+          // eslint-disable-next-line @eslint-react/hooks-extra/no-direct-set-state-in-use-effect
+          e instanceof CanceledError ? setSuccess(() => true) : setError(() => convertToError(e)),
         );
     } else if (notification.duration || error) {
       timer.current = window.setTimeout(

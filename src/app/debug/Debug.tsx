@@ -74,7 +74,8 @@ export default function Debug() {
     try {
       localStorage.setItem('test', 'true');
     } catch (e) {
-      setLocalStorageError(convertToError(e));
+      // eslint-disable-next-line @eslint-react/hooks-extra/no-direct-set-state-in-use-effect
+      setLocalStorageError(() => convertToError(e));
     }
   }, []);
 
@@ -230,7 +231,10 @@ export default function Debug() {
           <h3>Service Worker</h3>
           {serviceWorkers.length > 0 ? (
             serviceWorkers.map((w, i) => (
-              <div key={i}>
+              <div
+                // eslint-disable-next-line @eslint-react/no-array-index-key
+                key={`sw-${i}-${w.active?.scriptURL || w.waiting?.scriptURL || w.installing?.scriptURL || 'unknown'}`}
+              >
                 {i}: Active: {w.active?.state || 'null'}, Waiting: {w.waiting?.state || 'null'},
                 Installing: {w.installing?.state || 'null'}
               </div>

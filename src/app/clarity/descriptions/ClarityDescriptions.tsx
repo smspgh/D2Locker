@@ -73,9 +73,17 @@ export default function ClarityDescriptions({
   const description = perk.descriptions[selectedLanguage] || perk.descriptions.en;
 
   const convertedDescription = description?.map((line, i) => (
-    <div className={joinClassNames(line.classNames)} key={i}>
-      {line.linesContent?.map((linesContent, i) => (
-        <span className={joinClassNames(linesContent.classNames)} key={i}>
+    <div
+      className={joinClassNames(line.classNames)}
+      // eslint-disable-next-line @eslint-react/no-array-index-key
+      key={`line-${i}-${line.classNames?.join('-') || 'no-class'}`}
+    >
+      {line.linesContent?.map((linesContent, j) => (
+        <span
+          className={joinClassNames(linesContent.classNames)}
+          // eslint-disable-next-line @eslint-react/no-array-index-key
+          key={`content-${i}-${j}-${linesContent.text?.slice(0, 20) || linesContent.link?.slice(0, 20) || 'empty'}`}
+        >
           {linesContent.link ? customContent(linesContent) : applyFormatting(linesContent.text)}
         </span>
       ))}

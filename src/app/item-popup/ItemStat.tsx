@@ -220,7 +220,7 @@ function StatBar({ segments, stat }: { segments: StatSegments; stat: DimStat }) 
         {segments
           // Process base stats last, letting them be the most likely to hit cap and lose display length
           .toSorted(([, statType]) => (statType === 'base' ? 1 : 0))
-          .map(([val, statType], index) => {
+          .map(([val, statType, description], index) => {
             let segmentLength = Math.abs(val);
             if (val < 0) {
               segmentLength = Math.min(segmentLength, remainingEmpty);
@@ -231,7 +231,8 @@ function StatBar({ segments, stat }: { segments: StatSegments; stat: DimStat }) 
             }
             return (
               <div
-                key={index}
+                // eslint-disable-next-line @eslint-react/no-array-index-key
+                key={`segment-${index}-${statType}-${val}-${description || 'no-desc'}`}
                 className={clsx(
                   styles.statBarSegment,
                   val < 0 && statType !== 'masterwork' ? styles.negative : statStyles[statType][0],
@@ -255,7 +256,10 @@ function StatBarTooltip({ segments, stat }: { segments: StatSegments; stat: DimS
             const [typeClassName, i18nLabel] = statStyles[statType];
             const className = clsx(typeClassName, { [styles.negative]: val < 0 });
             return (
-              <React.Fragment key={index}>
+              <React.Fragment
+                // eslint-disable-next-line @eslint-react/no-array-index-key
+                key={`tooltip-${index}-${statType}-${val}-${description || 'no-desc'}`}
+              >
                 <span className={className}>
                   {index > 0 && val >= 0 && '+'}
                   {val}

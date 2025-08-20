@@ -121,6 +121,7 @@ export default function D1LoadoutBuilder({ account }: { account: DestinyAccount 
 
   const [state, setStateFull] = useState(initialState);
   const setState = (partialState: Partial<State>) =>
+    // eslint-disable-next-line @eslint-react/hooks-extra/no-direct-set-state-in-use-effect
     setStateFull((state: State) => ({ ...state, ...partialState }));
   const cancelToken = useRef({ cancelled: false });
   const dispatch = useThunkDispatch();
@@ -150,6 +151,7 @@ export default function D1LoadoutBuilder({ account }: { account: DestinyAccount 
         store.items.filter((i) => i.hash === 2672107540),
       );
       if (felwinters.length) {
+        // eslint-disable-next-line @eslint-react/hooks-extra/no-direct-set-state-in-use-effect
         setStateFull((state) => ({
           ...state,
           excludeditems: uniqBy([...state.excludeditems, ...felwinters], (i) => i.id),
@@ -180,7 +182,7 @@ export default function D1LoadoutBuilder({ account }: { account: DestinyAccount 
           fullMode,
           cancelToken.current,
         );
-        setState({ ...result, progress: 1 });
+        setState(() => ({ ...result, progress: 1 }));
       })();
     }
   }, [
@@ -199,9 +201,9 @@ export default function D1LoadoutBuilder({ account }: { account: DestinyAccount 
 
   useEffect(() => {
     if (includeVendors && !vendors && !loadingVendors) {
-      setState({ loadingVendors: true });
+      setState(() => ({ loadingVendors: true }));
       dispatch(loadVendors()).then((vendors) => {
-        setState({ vendors, loadingVendors: false });
+        setState(() => ({ vendors, loadingVendors: false }));
       });
     }
   }, [dispatch, includeVendors, loadingVendors, vendors]);
@@ -214,12 +216,12 @@ export default function D1LoadoutBuilder({ account }: { account: DestinyAccount 
         vendor.allItems.filter((i) => i.item.hash === 2672107540),
       );
       if (felwinters.length) {
-        setState({
+        setState(() => ({
           excludeditems: uniqBy(
             [...excludeditems, ...felwinters.map((si) => si.item)],
             (i) => i.id,
           ),
-        });
+        }));
       }
     }
     // Only depend on vendorsLoaded because we only want this to run once

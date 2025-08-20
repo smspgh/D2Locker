@@ -112,10 +112,10 @@ function Sockets({
 
   return (
     <div className={clsx(styles.lockedItems, { [styles.small]: size === 'small' })}>
-      {modsAndWhitelist.map(({ plugDef, whitelist, automaticallyPicked }, index) => (
+      {modsAndWhitelist.map(({ plugDef, whitelist, automaticallyPicked }) => (
         <PlugDef
           className={clsx({ [styles.automaticallyPicked]: automaticallyPicked })}
-          key={index}
+          key={plugDef.hash}
           plug={plugDef}
           onClick={onSocketClick ? () => onSocketClick(plugDef, whitelist) : undefined}
           automaticallyPicked={automaticallyPicked}

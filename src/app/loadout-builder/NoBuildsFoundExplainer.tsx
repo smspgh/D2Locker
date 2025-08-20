@@ -75,9 +75,9 @@ export default function NoBuildsFoundExplainer({
 
   const modRow = (mods: PluggableInventoryItemDefinition[]) => (
     <div key="modsDisplay" className={styles.modRow}>
-      {mods.map((mod, index) => (
+      {mods.map((mod) => (
         <PlugDef
-          key={index}
+          key={mod.hash}
           plug={mod}
           onClose={() =>
             dispatch({

@@ -27,15 +27,18 @@ export default function LoadoutImportSheet({
 
   useEffect(() => {
     if (!shareUrl) {
-      setState('ok');
+      // eslint-disable-next-line @eslint-react/hooks-extra/no-direct-set-state-in-use-effect
+      setState(() => 'ok');
       return;
     }
     const decodedUrl = decodeShareUrl(shareUrl);
     if (!decodedUrl) {
-      setState(t('Loadouts.Import.BadURL'));
+      // eslint-disable-next-line @eslint-react/hooks-extra/no-direct-set-state-in-use-effect
+      setState(() => t('Loadouts.Import.BadURL'));
       return;
     }
-    setState('fetching');
+    // eslint-disable-next-line @eslint-react/hooks-extra/no-direct-set-state-in-use-effect
+    setState(() => 'fetching');
     let canceled = false;
     (async () => {
       try {

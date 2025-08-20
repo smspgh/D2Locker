@@ -82,7 +82,8 @@ const autoOptimizationContextSelector = currySelector(
 export function MakeLoadoutAnalysisAvailable({ children }: { children: ReactNode }) {
   const [analyzer, setAnalyzer] = useState<LoadoutBackgroundAnalyzer | null>(null);
   useEffect(() => {
-    setAnalyzer(new LoadoutBackgroundAnalyzer());
+    // eslint-disable-next-line @eslint-react/hooks-extra/no-direct-set-state-in-use-effect
+    setAnalyzer(() => new LoadoutBackgroundAnalyzer());
     return () => {
       setAnalyzer((oldAnalyzer) => {
         oldAnalyzer?.destroy();

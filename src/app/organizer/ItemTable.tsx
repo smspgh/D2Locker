@@ -89,7 +89,11 @@ export default function ItemTable({ categories }: { categories: ItemCategoryTree
   const [socketOverrides, onPlugClicked] = useSocketOverridesForItems();
   const [maxItems, setMaxItems] = useState(EXPAND_INCREMENT);
   useEffect(() => {
-    setMaxItems(EXPAND_INCREMENT);
+    const resetMaxItems = () => {
+      // eslint-disable-next-line @eslint-react/hooks-extra/no-direct-set-state-in-use-effect
+      setMaxItems(EXPAND_INCREMENT);
+    };
+    resetMaxItems();
   }, [categories]);
   const expandItems = useCallback(() => setMaxItems((m) => m + EXPAND_INCREMENT), []);
 

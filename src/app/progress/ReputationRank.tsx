@@ -64,7 +64,7 @@ export function ReputationRank({
         {streakCheckboxes && (
           <ObjectiveRow className={styles.winStreak}>
             {streakCheckboxes.map((c, i) => (
-              <ObjectiveCheckbox key={i} completed={c} />
+              <ObjectiveCheckbox key={`streak-${i}`} completed={c} />
             ))}
           </ObjectiveRow>
         )}

@@ -43,7 +43,10 @@ const AutocompleteSearchInput = React.memo(
 
     // Sync local value with prop value
     useEffect(() => {
-      setLocalValue(value);
+      const timer = setTimeout(() => {
+        setLocalValue(value);
+      }, 0);
+      return () => clearTimeout(timer);
     }, [value]);
 
     const suggestions = useMemo(() => {
@@ -148,7 +151,7 @@ const AutocompleteSearchInput = React.memo(
             <div className={searchBarStyles.menu} style={{ zIndex: 9999 }}>
               {suggestions.map((item, index) => (
                 <div
-                  key={index}
+                  key={`suggestion-${(item.query as { body?: string; fullText: string }).body || (item.query as { fullText: string }).fullText}`}
                   {...getItemProps({ item, index })}
                   className={searchBarStyles.menuItem}
                   style={{
@@ -427,7 +430,10 @@ export default function SearchSettings({ settings }: { settings: Settings }) {
                     <tbody>
                       {((weaponSettings.additionalSearchTerms as SearchTerm[]) || []).map(
                         (termObj, index) => (
-                          <tr key={index} style={{ borderBottom: '1px solid #333' }}>
+                          <tr
+                            key={`weapon-term-${termObj.term}-${termObj.logic}`}
+                            style={{ borderBottom: '1px solid #333' }}
+                          >
                             <td style={{ padding: '8px 4px' }}>
                               <AutocompleteSearchInput
                                 value={termObj.term}
@@ -633,7 +639,10 @@ export default function SearchSettings({ settings }: { settings: Settings }) {
                     <tbody>
                       {((armorSettings.additionalSearchTerms as SearchTerm[]) || []).map(
                         (termObj, index) => (
-                          <tr key={index} style={{ borderBottom: '1px solid #333' }}>
+                          <tr
+                            key={`armor-term-${termObj.term}-${termObj.logic}`}
+                            style={{ borderBottom: '1px solid #333' }}
+                          >
                             <td style={{ padding: '8px 4px' }}>
                               <AutocompleteSearchInput
                                 value={termObj.term}

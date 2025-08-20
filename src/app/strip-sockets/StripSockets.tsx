@@ -381,9 +381,9 @@ function SocketKindButton({
       </div>
       <div>
         {itemCategories.map(
-          ({ icon, num }, idx) =>
+          ({ icon, num }) =>
             num > 0 && (
-              <React.Fragment key={idx}>
+              <React.Fragment key={icon}>
                 <img src={icon} className={styles.itemTypeIcon} /> {num}
                 <br />
               </React.Fragment>

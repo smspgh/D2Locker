@@ -102,6 +102,7 @@ export default function About() {
               </ExternalLink>
             </h2>
             <div
+              // eslint-disable-next-line @eslint-react/dom/no-dangerously-set-innerhtml
               dangerouslySetInnerHTML={{
                 __html: t('Views.Support.OpenCollective', { link: openCollectiveLink }),
               }}
@@ -126,6 +127,7 @@ export default function About() {
               </ExternalLink>
             </h2>
             <div
+              // eslint-disable-next-line @eslint-react/dom/no-dangerously-set-innerhtml
               dangerouslySetInnerHTML={{
                 __html: t('Views.Support.Store', { link: storeLink }),
               }}
@@ -149,6 +151,7 @@ export default function About() {
             </ExternalLink>
           </h2>
           <div
+            // eslint-disable-next-line @eslint-react/dom/no-dangerously-set-innerhtml
             dangerouslySetInnerHTML={{
               __html: t('Views.About.GitHubHelp', { link: githubLink }),
             }}
@@ -159,6 +162,7 @@ export default function About() {
             <ExternalLink href={crowdinLinkDirect}>{t('Views.About.Translation')}</ExternalLink>
           </h2>
           <div
+            // eslint-disable-next-line @eslint-react/dom/no-dangerously-set-innerhtml
             dangerouslySetInnerHTML={{
               __html: t('Views.About.TranslationText', { link: crowdinLink }),
             }}
@@ -177,6 +181,7 @@ export default function About() {
         <dt>{t('Views.About.FAQLostItem')}</dt>
         <dd>
           <div
+            // eslint-disable-next-line @eslint-react/dom/no-dangerously-set-innerhtml
             dangerouslySetInnerHTML={{
               __html: t('Views.About.FAQLostItemAnswer', { link: bungieLink }),
             }}
@@ -201,6 +206,7 @@ export default function About() {
           <p>{t('Views.Support.FreeToDownload')}</p>
           <p>
             <span
+              // eslint-disable-next-line @eslint-react/dom/no-dangerously-set-innerhtml
               dangerouslySetInnerHTML={{
                 __html: t('Views.Support.OpenCollective', { link: openCollectiveLink }),
               }}

@@ -269,10 +269,12 @@ function StatEditBar({
   const [minText, setMinText] = useState(min.toString());
   const [maxText, setMaxText] = useState(max.toString());
   useEffect(() => {
-    setMinText(min.toString());
+    // eslint-disable-next-line @eslint-react/hooks-extra/no-direct-set-state-in-use-effect
+    setMinText(() => min.toString());
   }, [min]);
   useEffect(() => {
-    setMaxText(max.toString());
+    // eslint-disable-next-line @eslint-react/hooks-extra/no-direct-set-state-in-use-effect
+    setMaxText(() => max.toString());
   }, [max]);
 
   const setMinMaxFromText = (text: string, setter: (s: number) => void) => {

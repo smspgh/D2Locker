@@ -381,7 +381,7 @@ function SearchBar({
       // pixels remaining in viewport minus offset minus 10px for padding
       const pxAvailable = viewportHeight - y - height - 10;
       // constrain to size that would allow only whole items to be seen
-      setMenuMaxHeight(Math.floor(pxAvailable / resultItemHeight) * resultItemHeight);
+      setMenuMaxHeight(() => Math.floor(pxAvailable / resultItemHeight) * resultItemHeight);
     }
   }, [isOpen]);
 

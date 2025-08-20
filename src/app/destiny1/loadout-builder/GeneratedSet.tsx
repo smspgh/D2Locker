@@ -97,7 +97,11 @@ export default function GeneratedSet({ setType, store, activesets, excludeItem }
               (config, i) =>
                 i > 0 &&
                 !collapsed && (
-                  <div key={i} className={styles.label}>
+                  <div
+                    // eslint-disable-next-line @eslint-react/no-array-index-key
+                    key={`config-${i}-${Object.values(config).join('-')}`}
+                    className={styles.label}
+                  >
                     {config[armorpiece.item.bucket.hash as ArmorTypes] === 'int'
                       ? t('Stats.Intellect')
                       : config[armorpiece.item.bucket.hash as ArmorTypes] === 'dis'

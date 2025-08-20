@@ -36,17 +36,17 @@ export default function RefreshButton({ className }: { className?: string }) {
   const [spin, setSpin] = useState(active ? Date.now() : 0);
   useEffect(() => {
     if (active && spin === 0) {
-      setSpin(Date.now());
+      setSpin(() => Date.now());
     } else if (!active && spin !== 0) {
       const elapsed = Date.now() - spin;
       const remainingTime = Math.max(0, MIN_SPIN - elapsed);
       if (remainingTime > 0) {
         const timer = window.setTimeout(() => {
-          setSpin(0);
+          setSpin(() => 0);
         }, remainingTime);
         return () => window.clearTimeout(timer);
       } else {
-        setSpin(0);
+        setSpin(() => 0);
       }
     }
   }, [active, spin]);

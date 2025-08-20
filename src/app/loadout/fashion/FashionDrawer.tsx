@@ -405,11 +405,13 @@ export default function FashionDrawer({
   );
 }
 
+const defaultMods: number[] = [];
+
 function FashionItem({
   item,
   exampleItem,
   bucketHash,
-  mods = [],
+  mods = defaultMods,
   storeId,
   onPickPlug,
   onRemovePlug,

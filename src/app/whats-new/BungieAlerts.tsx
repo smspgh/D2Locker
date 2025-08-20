@@ -32,6 +32,7 @@ export default function BungieAlerts() {
       {alerts.map((alert) => (
         <div key={alert.AlertKey} className={AlertLevelStyles[alert.AlertLevel]}>
           <h2>{t('BungieAlert.Title')}</h2>
+          {/* eslint-disable-next-line @eslint-react/dom/no-dangerously-set-innerhtml */}
           <p dangerouslySetInnerHTML={{ __html: alert.AlertHtml }} />
           <div>
             {t('BungieService.Twitter')}{' '}

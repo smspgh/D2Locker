@@ -357,7 +357,10 @@ export default function ItemTypeSelector({
         }
         return (
           currentSelection.subCategories && (
-            <div key={depth} className={styles.level}>
+            <div
+              key={`category-${currentSelection.itemCategoryHash || 'root'}-sublevel`}
+              className={styles.level}
+            >
               {currentSelection.subCategories?.map((subCategory) => {
                 const categoryHashList = [...upstreamCategories, subCategory.itemCategoryHash];
 

@@ -38,7 +38,7 @@ export function useWeaponRankingData(item: DimItem | null): WeaponRankingData | 
 
   useEffect(() => {
     if (!utils || !item || item.destinyVersion !== 2 || !item.bucket.inWeapons) {
-      setRankingData(null);
+      setRankingData(() => null);
       return;
     }
 
@@ -114,7 +114,7 @@ export function useWeaponRankingData(item: DimItem | null): WeaponRankingData | 
       weaponData.traitComboRanking = comboRank;
     }
 
-    setRankingData(weaponData);
+    setRankingData(() => weaponData);
   }, [utils, item]);
 
   return rankingData;

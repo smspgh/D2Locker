@@ -170,7 +170,7 @@ function ItemBucket({
         items.length > 0 ? (
           <div
             className={clsx(styles.items, index === 0 ? styles.equipped : styles.unequipped)}
-            key={index}
+            key={index === 0 ? 'equipped' : 'unequipped'}
           >
             {items.map(({ item, loadoutItem, missing }) => (
               <DraggableInventoryItem item={item} key={item.id}>
@@ -198,7 +198,7 @@ function ItemBucket({
           index === 0 && (
             <div
               className={clsx(styles.items, index === 0 ? styles.equipped : styles.unequipped)}
-              key={index}
+              key={index === 0 ? 'equipped' : 'unequipped'}
             >
               <BucketPlaceholder bucketHash={bucketHash} />
               {/* TODO: show empty placeholder for bucket type? */}

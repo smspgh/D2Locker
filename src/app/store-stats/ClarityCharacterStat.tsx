@@ -212,13 +212,15 @@ export default function ClarityCharacterStat({
   );
 }
 
+const defaultOverrides: DestinyInventoryItemDefinition[] = [];
+
 function StatTableRow({
   name,
   icon,
   cooldowns,
   tier,
   unit,
-  overrides = [],
+  overrides = defaultOverrides,
 }: {
   name: string;
   icon?: string;

@@ -39,11 +39,13 @@ import { WeaponCraftedInfo } from './WeaponCraftedInfo';
 import { WeaponDeepsightInfo } from './WeaponDeepsightInfo';
 import { ItemPopupExtraInfo } from './item-popup';
 
+const defaultExtraInfo: ItemPopupExtraInfo = {};
+
 // TODO: probably need to load manifest. We can take a lot of properties off the item if we just load the definition here.
 export default function ItemDetails({
   item: originalItem,
   id,
-  extraInfo = {},
+  extraInfo = defaultExtraInfo,
 }: {
   item: DimItem;
   id: string;

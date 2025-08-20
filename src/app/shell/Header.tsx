@@ -107,7 +107,7 @@ export default function Header() {
   // Clear filter and close dropdown on path change
   const { pathname } = useLocation();
   useEffect(() => {
-    setDropdownOpen(false);
+    setDropdownOpen(() => false);
     dispatch(setSearchQuery(''));
   }, [dispatch, pathname]);
 

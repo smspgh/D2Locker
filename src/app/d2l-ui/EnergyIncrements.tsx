@@ -58,7 +58,7 @@ export function EnergyMeterIncrements({
     <div className={clsx(styles.energyMeterIncrements, { [styles.medium]: variant === 'medium' })}>
       {meterIncrements.map((incrementStyle, i) => (
         <div
-          key={i}
+          key={`energy-${i}`}
           className={incrementStyle}
           role={minCapacity !== undefined && i + 1 > minCapacity ? 'button' : undefined}
           onClick={previewUpgrade ? () => previewUpgrade(i + 1) : undefined}

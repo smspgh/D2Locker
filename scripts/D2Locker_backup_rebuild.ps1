@@ -11,7 +11,7 @@ if (-not ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdent
 
 # Define paths
 $projectPath = "C:\coding_projects\D2Locker"
-$backupDestination = "D:\D2Locker_backups"
+$backupDestination = "C:\Users\smspg\OneDrive\d2locker_backups"
 $serviceName = "D2LockerService"
 
 Write-Host "=== D2Locker Backup and Rebuild Script ===" -ForegroundColor Green

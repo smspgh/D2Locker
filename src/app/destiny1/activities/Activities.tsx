@@ -130,7 +130,7 @@ export default function Activities({ account }: { account: DestinyAccount }) {
                                       <div className={styles.steps}>
                                         {character.steps.map((step, index) => (
                                           <span
-                                            key={index}
+                                            key={`step-${index}-${step.complete}`}
                                             className={clsx(styles.stepIcon, {
                                               [styles.complete]: step.complete,
                                             })}

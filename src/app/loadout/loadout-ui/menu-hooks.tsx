@@ -69,7 +69,8 @@ export function useLoadoutFilterPills(
 
   // Reset filters on character change
   useEffect(() => {
-    setSelectedFilters(emptyArray());
+    // eslint-disable-next-line @eslint-react/hooks-extra/no-direct-set-state-in-use-effect
+    setSelectedFilters(() => emptyArray());
   }, [store.id]);
 
   const loadoutsByHashtag = useMemo(() => groupLoadoutsByHashtag(savedLoadouts), [savedLoadouts]);

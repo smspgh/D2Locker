@@ -33,7 +33,8 @@ export function ExpandableTextBlock({
   // then clamping wasn't necessary. set isOpen to mark it as, effectively, already opened
   useEffect(() => {
     if (closedHeight && wrapperRef.current!.clientHeight >= contentRef.current!.clientHeight) {
-      setOpen(true);
+      // eslint-disable-next-line @eslint-react/hooks-extra/no-direct-set-state-in-use-effect
+      setOpen(() => true);
     }
   }, [closedHeight]);
 

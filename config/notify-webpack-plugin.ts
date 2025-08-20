@@ -2,7 +2,7 @@
 
 import { Compiler, Stats } from 'webpack';
 
-import chalk, { type Chalk } from 'chalk';
+import chalk from 'chalk';
 
 export default class NotifyPlugin {
   name: string;
@@ -23,7 +23,8 @@ export default class NotifyPlugin {
 
     compiler.hooks.compile.tap('NotifyPlugin', () => {
       const action = this.firstRun ? 'starting to build' : 'updating';
-      console.log(`==> ${(chalk as Chalk).cyan(`Webpack is ${action} ${this.name}...`)}`);
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
+      console.log(`==> ${chalk.cyan(`Webpack is ${action} ${this.name}...`)}`);
     });
 
     compiler.hooks.done.tap('NotifyPlugin', this.onDone.bind(this));
@@ -32,7 +33,8 @@ export default class NotifyPlugin {
   onDone(rawWebpackStats: Stats) {
     const { time } = rawWebpackStats.toJson({ timings: true });
     const action = this.firstRun ? 'building' : 'updating';
-    console.log(`==> ${(chalk as Chalk).green(`Webpack finished ${action} ${this.name} in ${time}ms`)}`);
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
+    console.log(`==> ${chalk.green(`Webpack finished ${action} ${this.name} in ${time}ms`)}`);
 
     this.firstRun = false;
   }

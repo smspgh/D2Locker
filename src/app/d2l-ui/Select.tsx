@@ -101,7 +101,8 @@ export default function Select<T>({
         maxButtonWidth !== undefined
           ? maxButtonWidth
           : buttonRef.current.getBoundingClientRect().width - 2;
-      setDropdownWidth(width);
+      // eslint-disable-next-line @eslint-react/hooks-extra/no-direct-set-state-in-use-effect
+      setDropdownWidth(() => width);
     }
   }, [dropdownWidth, maxButtonWidth, maxDropdownWidth]);
 

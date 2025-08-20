@@ -425,15 +425,17 @@ export default (env: Env) => {
     }),
 
     // Compress CSS after bundling so we can optimize across rules
-    new (PostCSSAssetsPlugin as any)({
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+    new PostCSSAssetsPlugin({
       test: /\.css$/,
       log: false,
       plugins: [
         // Sort media queries so they can be merged by cssnano
-        (sortMediaQueries as any)({
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+        sortMediaQueries({
           sort: 'desktop-first',
         }),
-        (cssnano as any)({
+        cssnano({
           preset: [
             'default',
             {
