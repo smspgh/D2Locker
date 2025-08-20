@@ -88,9 +88,6 @@ export default function SearchHistory() {
     <div className={styles.searchHistory}>
       <p className={styles.instructions}>
         {t('SearchHistory.Description')}
-        <button type="button" className="d2l-button" onClick={onDeleteAll}>
-          {t('SearchHistory.DeleteAll')}
-        </button>
         <RadioButtons
           className={styles.tabs}
           options={radioOptions}
@@ -98,6 +95,11 @@ export default function SearchHistory() {
           onChange={setSearchType}
         />
       </p>
+      <div className={styles.controls}>
+        <button type="button" className="d2l-button" onClick={onDeleteAll}>
+          {t('SearchHistory.DeleteAll')}
+        </button>
+      </div>
       <table>
         <thead>
           <tr>

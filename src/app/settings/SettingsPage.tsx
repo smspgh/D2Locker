@@ -256,7 +256,7 @@ export default function SettingsPage() {
     { id: 'items', title: t('Settings.Items') },
     { id: 'inventory', title: t('Settings.Inventory') },
     { id: 'filter-options', title: 'Filter Options' },
-    { id: 'search-history', title: 'Search History' },
+    { id: 'search-history', title: t('SearchHistory.Title') },
     $featureFlags.wishLists ? { id: 'wishlist', title: t('WishListRoll.Header') } : undefined,
     // Hide storage menu if no storage settings are visible
     SETTINGS_VISIBILITY.D2LSync ||
@@ -274,8 +274,12 @@ export default function SettingsPage() {
   return (
     <PageWithMenu>
       <PageWithMenu.Menu>
-        {!isPhonePortrait &&
-          menuItems.map((menuItem) => (
+        {menuItems
+          .filter((menuItem) => 
+            // Show all items in desktop view, only search-history in mobile view
+            !isPhonePortrait || menuItem.id === 'search-history'
+          )
+          .map((menuItem) => (
             <PageWithMenu.MenuButton
               key={menuItem.id}
               anchor={menuItem.id === 'search-history' ? undefined : menuItem.id}
