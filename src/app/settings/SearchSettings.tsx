@@ -12,7 +12,6 @@ import { useCombobox } from 'downshift';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router';
-import Checkbox from './Checkbox';
 import { useSetSetting } from './hooks';
 import { Settings } from './initial-settings';
 // eslint-disable-next-line css-modules/no-unused-class
@@ -182,6 +181,10 @@ export default function SearchSettings({ settings }: { settings: Settings }) {
   const navigate = useNavigate();
   // No separate state needed - we'll add rows directly to the table
 
+  // State for collapsing sections
+  const [weaponCollapsed, setWeaponCollapsed] = React.useState(true);
+  const [armorCollapsed, setArmorCollapsed] = React.useState(true);
+
   // Search configuration and autocomplete
   const searchConfig = useSelector(searchConfigSelector);
   const filterFactory = useSelector(filterFactorySelector);
@@ -340,40 +343,19 @@ export default function SearchSettings({ settings }: { settings: Settings }) {
   }, [navigate]);
 
   return (
-    <section id="search-settings">
-      <h2>{t('Settings.SearchSettings')}</h2>
+    <section id="filter-options">
+      <h2>Filter Options</h2>
 
-      <div className={styles.setting}>
-        <button
-          type="button"
-          className="d2l-button"
-          onClick={navigateToSearchHistory}
-          style={{
-            marginBottom: '1rem',
-            padding: '8px 16px',
-            fontSize: '14px',
-          }}
-        >
-          🔍 View Search History
-        </button>
-        <div className={styles.fineprint}>
-          View and manage your saved searches and search history.
-        </div>
-      </div>
 
       <div className={styles.section as string}>
-        <h3>{t('Settings.KeepWeaponSettings')}</h3>
+        <h3
+          style={{ cursor: 'pointer', userSelect: 'none' }}
+          onClick={() => setWeaponCollapsed(!weaponCollapsed)}
+        >
+          {weaponCollapsed ? '▶' : '▼'} {t('Settings.KeepWeaponSettings')}
+        </h3>
 
-        <div className={styles.setting}>
-          <Checkbox
-            label={t('Settings.EnableKeepWeapon')}
-            name="enableKeepWeapon"
-            value={(weaponSettings as { enabled?: boolean }).enabled ?? true}
-            onChange={(checked) => handleWeaponSettingChange('enabled', checked)}
-          />
-        </div>
-
-        {weaponSettings.enabled && (
+        {!weaponCollapsed && (
           <>
             <div className={styles.setting}>
               <label>{t('Settings.AdditionalSearchTerms')}</label>
@@ -571,30 +553,23 @@ export default function SearchSettings({ settings }: { settings: Settings }) {
       </div>
 
       <div className={styles.section as string}>
-        <h3>{t('Settings.KeepArmorSettings')}</h3>
+        <h3
+          style={{ cursor: 'pointer', userSelect: 'none' }}
+          onClick={() => setArmorCollapsed(!armorCollapsed)}
+        >
+          {armorCollapsed ? '▶' : '▼'} {t('Settings.KeepArmorSettings')}
+        </h3>
 
-        <div className={styles.setting}>
-          <Checkbox
-            label={t('Settings.EnableKeepArmor')}
-            name="enableKeepArmor"
-            value={(armorSettings as { enabled?: boolean }).enabled ?? true}
-            onChange={(checked) => handleArmorSettingChange('enabled', checked)}
-          />
-        </div>
-
-        {armorSettings.enabled && (
+        {!armorCollapsed && (
           <>
             <div className={styles.setting}>
-              <label>{t('Settings.AdditionalSearchTerms')}</label>
-              <div className={styles.fineprint}>{t('Settings.AdditionalSearchDesc')}</div>
-
               <div>
                 <div
                   style={{
                     display: 'flex',
                     justifyContent: 'space-between',
                     alignItems: 'center',
-                    marginBottom: '8px',
+                    marginBottom: '2px',
                   }}
                 >
                   <strong>{t('Settings.CurrentSearchTerms')}:</strong>

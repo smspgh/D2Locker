@@ -23,6 +23,7 @@ import { errorLog } from 'app/utils/log';
 import { range } from 'es-toolkit';
 import React from 'react';
 import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router';
 import ErrorBoundary from '../d2l-ui/ErrorBoundary';
 import '../inventory-page/StoreBucket.scss';
 import InventoryItem from '../inventory/InventoryItem';
@@ -109,6 +110,7 @@ const themeOptions = mapToOptions({
 export default function SettingsPage() {
   usePageTitle(t('Settings.Settings'));
   const dispatch = useThunkDispatch();
+  const navigate = useNavigate();
   const settings = useSelector(settingsSelector);
   const currentAccount = useSelector(currentAccountSelector);
   const _hasD1Account = useSelector(hasD1AccountSelector);
@@ -275,7 +277,8 @@ export default function SettingsPage() {
     { id: 'theme', title: t('Settings.Theme') },
     { id: 'items', title: t('Settings.Items') },
     { id: 'inventory', title: t('Settings.Inventory') },
-    { id: 'search-settings', title: t('Settings.SearchSettings') },
+    { id: 'filter-options', title: 'Filter Options' },
+    { id: 'search-history', title: 'Search History' },
     $featureFlags.wishLists ? { id: 'wishlist', title: t('WishListRoll.Header') } : undefined,
     // Hide storage menu if no storage settings are visible
     SETTINGS_VISIBILITY.D2LSync ||
@@ -295,7 +298,11 @@ export default function SettingsPage() {
       <PageWithMenu.Menu>
         {!isPhonePortrait &&
           menuItems.map((menuItem) => (
-            <PageWithMenu.MenuButton key={menuItem.id} anchor={menuItem.id}>
+            <PageWithMenu.MenuButton 
+              key={menuItem.id} 
+              anchor={menuItem.id === 'search-history' ? undefined : menuItem.id}
+              onClick={menuItem.id === 'search-history' ? () => navigate('/search-history') : undefined}
+            >
               <span>{menuItem.title}</span>
             </PageWithMenu.MenuButton>
           ))}
@@ -328,42 +335,6 @@ export default function SettingsPage() {
           <section id="items">
             <h2>{t('Settings.Items')}</h2>
 
-            <div className="sub-bucket">
-              {exampleWeapon && (
-                <InventoryItem
-                  item={exampleWeapon}
-                  isNew={settings.showNewItems}
-                  tag="keep"
-                  wishlistRoll={godRoll}
-                  autoLockTagged={settings.autoLockTagged}
-                />
-              )}
-              {exampleWeaponMasterworked && (
-                <InventoryItem
-                  item={exampleWeaponMasterworked}
-                  isNew={settings.showNewItems}
-                  tag="keep"
-                  wishlistRoll={godRoll}
-                  autoLockTagged={settings.autoLockTagged}
-                />
-              )}
-              {exampleArmor && (
-                <InventoryItem
-                  item={exampleArmor}
-                  isNew={settings.showNewItems}
-                  autoLockTagged={settings.autoLockTagged}
-                />
-              )}
-              {exampleArchivedArmor && (
-                <InventoryItem
-                  item={exampleArchivedArmor}
-                  isNew={settings.showNewItems}
-                  tag="junk"
-                  searchHidden={true}
-                  autoLockTagged={settings.autoLockTagged}
-                />
-              )}
-            </div>
 
             {!isPhonePortrait && SETTINGS_VISIBILITY.itemSize && (
               <div className={styles.setting}>
