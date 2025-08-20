@@ -275,9 +275,10 @@ export default function SettingsPage() {
     <PageWithMenu>
       <PageWithMenu.Menu>
         {menuItems
-          .filter((menuItem) => 
-            // Show all items in desktop view, only search-history in mobile view
-            !isPhonePortrait || menuItem.id === 'search-history'
+          .filter(
+            (menuItem) =>
+              // Show all items in desktop view, only search-history in mobile view
+              !isPhonePortrait || menuItem.id === 'search-history',
           )
           .map((menuItem) => (
             <PageWithMenu.MenuButton

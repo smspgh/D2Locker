@@ -94,12 +94,10 @@ export default function SearchHistory() {
           value={searchType}
           onChange={setSearchType}
         />
-      </p>
-      <div className={styles.controls}>
         <button type="button" className="d2l-button" onClick={onDeleteAll}>
           {t('SearchHistory.DeleteAll')}
         </button>
-      </div>
+      </p>
       <table>
         <thead>
           <tr>
