@@ -1,20 +1,16 @@
-import type { ParseKeys } from 'i18next';
-// eslint-disable-next-line no-restricted-imports
-import { t as originalT } from 'i18next';
+// Import from our simplified i18n module instead of i18next
+import { t as simpleT } from './i18n';
 
-export type I18nKey = ParseKeys;
+export type I18nKey = string;
 
 export const t = (
-  key: I18nKey | string,
+  key: I18nKey,
   opts?:
     | { count?: number; context?: string; metadata?: { context?: string[]; keys?: string } }
     | {
         [arg: string]: number | string;
       },
-): string => {
-  const result = originalT(key as ParseKeys, opts);
-  return typeof result === 'string' ? result : String(result);
-};
+): string => simpleT(key, opts);
 
 /**
  * This is a "marker function" that tells our i18next-scanner that you will translate this string later (tl = translate later).

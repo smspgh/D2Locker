@@ -29,7 +29,6 @@ import { AppIcon, faGrid, faList, lockIcon, unlockedIcon } from '../shell/icons'
 import CharacterOrderEditor from './CharacterOrderEditor';
 import Checkbox from './Checkbox';
 import { CustomStatsSettings } from './CustomStatsSettings';
-import LanguageSetting from './LanguageSetting';
 import Select, { mapToOptions } from './Select';
 import styles from './SettingsPage.m.scss';
 import SortOrderEditor, { SortProperty } from './SortOrderEditor';
@@ -253,7 +252,6 @@ export default function SettingsPage() {
     .sort(compareByIndex(sortSettings.sortOrder, (o) => o.id));
 
   const menuItems = compact([
-    SETTINGS_VISIBILITY.language ? { id: 'general', title: t('Settings.Language') } : undefined,
     { id: 'theme', title: t('Settings.Theme') },
     { id: 'items', title: t('Settings.Items') },
     { id: 'inventory', title: t('Settings.Inventory') },
@@ -292,15 +290,6 @@ export default function SettingsPage() {
       <PageWithMenu.Contents className={styles.settings}>
         <h1>{t('Settings.Settings')}</h1>
         <form>
-          {SETTINGS_VISIBILITY.language && (
-            <section id="general">
-              <h2>{t('Settings.Language')}</h2>
-              <div className={styles.setting}>
-                <LanguageSetting />
-              </div>
-            </section>
-          )}
-
           <section id="theme">
             <h2>{t('Settings.Theme')}</h2>
             <div className={styles.setting}>
