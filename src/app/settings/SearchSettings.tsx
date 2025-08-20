@@ -11,7 +11,6 @@ import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { useCombobox } from 'downshift';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { useNavigate } from 'react-router';
 import { useSetSetting } from './hooks';
 import { Settings } from './initial-settings';
 // eslint-disable-next-line css-modules/no-unused-class
@@ -178,7 +177,6 @@ AutocompleteSearchInput.displayName = 'AutocompleteSearchInput';
 export default function SearchSettings({ settings }: { settings: Settings }) {
   const setSetting = useSetSetting();
   const dispatch = useThunkDispatch();
-  const navigate = useNavigate();
   // No separate state needed - we'll add rows directly to the table
 
   // State for collapsing sections
@@ -338,22 +336,28 @@ export default function SearchSettings({ settings }: { settings: Settings }) {
     [dispatch],
   );
 
-  const navigateToSearchHistory = useCallback(() => {
-    navigate('/search-history');
-  }, [navigate]);
-
   return (
     <section id="filter-options">
       <h2>Filter Options</h2>
 
-
       <div className={styles.section as string}>
-        <h3
-          style={{ cursor: 'pointer', userSelect: 'none' }}
+        <button
+          type="button"
+          style={{
+            background: 'none',
+            border: 'none',
+            padding: 0,
+            cursor: 'pointer',
+            userSelect: 'none',
+            fontSize: 'inherit',
+            fontWeight: 'bold',
+            textAlign: 'left',
+            width: '100%',
+          }}
           onClick={() => setWeaponCollapsed(!weaponCollapsed)}
         >
           {weaponCollapsed ? '▶' : '▼'} {t('Settings.KeepWeaponSettings')}
-        </h3>
+        </button>
 
         {!weaponCollapsed && (
           <>
@@ -553,12 +557,23 @@ export default function SearchSettings({ settings }: { settings: Settings }) {
       </div>
 
       <div className={styles.section as string}>
-        <h3
-          style={{ cursor: 'pointer', userSelect: 'none' }}
+        <button
+          type="button"
+          style={{
+            background: 'none',
+            border: 'none',
+            padding: 0,
+            cursor: 'pointer',
+            userSelect: 'none',
+            fontSize: 'inherit',
+            fontWeight: 'bold',
+            textAlign: 'left',
+            width: '100%',
+          }}
           onClick={() => setArmorCollapsed(!armorCollapsed)}
         >
           {armorCollapsed ? '▶' : '▼'} {t('Settings.KeepArmorSettings')}
-        </h3>
+        </button>
 
         {!armorCollapsed && (
           <>

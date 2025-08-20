@@ -7,7 +7,7 @@ import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import { I18nKey, tl } from 'app/i18next-t';
 import { ThunkResult } from 'app/store/types';
 import { filterMap, isEmpty } from 'app/utils/collections';
-import { infoLog, warnLog } from 'app/utils/log';
+import { infoLog } from 'app/utils/log';
 import { keyBy } from 'es-toolkit';
 import { banIcon, tagIcon } from '../shell/icons';
 import { setItemNote, setItemTag, tagCleanup } from './actions';
@@ -212,12 +212,13 @@ export function cleanInfos(stores: DimStore[]): ThunkResult {
           return false;
         }
       });
-      if (cleanupIds.size > eligibleCleanupIds.length) {
-        warnLog(
-          'cleanInfos',
-          `${cleanupIds.size - eligibleCleanupIds.length} infos have IDs newer than the newest ID in inventory`,
-        );
-      }
+      // Removed warning log for infos with newer IDs - this is normal behavior
+      // if (cleanupIds.size > eligibleCleanupIds.length) {
+      //   warnLog(
+      //     'cleanInfos',
+      //     `${cleanupIds.size - eligibleCleanupIds.length} infos have IDs newer than the newest ID in inventory`,
+      //   );
+      // }
       if (eligibleCleanupIds.length > 0) {
         infoLog('cleanInfos', `Purging tag/notes from ${eligibleCleanupIds.length} deleted items`);
         dispatch(tagCleanup(eligibleCleanupIds));

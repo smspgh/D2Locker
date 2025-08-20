@@ -7,7 +7,6 @@ import NewItemIndicator from 'app/inventory/NewItemIndicator';
 import TagIcon from 'app/inventory/TagIcon';
 import { clearAllNewItems } from 'app/inventory/actions';
 import { itemTagList } from 'app/inventory/d2l-item-info';
-import { allItemsSelector } from 'app/inventory/selectors';
 import { useLoadStores } from 'app/inventory/store/hooks';
 import SearchSettings from 'app/settings/SearchSettings';
 import WishListSettings from 'app/settings/WishListSettings';
@@ -26,7 +25,6 @@ import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router';
 import ErrorBoundary from '../d2l-ui/ErrorBoundary';
 import '../inventory-page/StoreBucket.scss';
-import InventoryItem from '../inventory/InventoryItem';
 import { AppIcon, faGrid, faList, lockIcon, unlockedIcon } from '../shell/icons';
 import CharacterOrderEditor from './CharacterOrderEditor';
 import Checkbox from './Checkbox';
@@ -117,24 +115,6 @@ export default function SettingsPage() {
   const isPhonePortrait = useIsPhonePortrait();
   useLoadStores(currentAccount);
   const setSetting = useSetSetting();
-  const allItems = useSelector(allItemsSelector);
-
-  const exampleWeapon = allItems.find(
-    (i) => i.bucket.sort === 'Weapons' && !i.isExotic && !i.masterwork && !i.deepsightInfo,
-  );
-  // Include a masterworked item because they look different in some themes
-  const exampleWeaponMasterworked = allItems.find(
-    (i) => i.bucket.sort === 'Weapons' && !i.isExotic && i.masterwork && !i.deepsightInfo,
-  );
-  const exampleArmor = allItems.find((i) => i.bucket.sort === 'Armor' && !i.isExotic);
-  const exampleArchivedArmor = allItems.find(
-    (i) => i !== exampleArmor && i.bucket.sort === 'Armor' && !i.isExotic,
-  );
-  const godRoll = {
-    wishListPerks: new Set<number>(),
-    notes: undefined,
-    isUndesirable: false,
-  };
 
   const onCheckChange = (checked: boolean, name: keyof Settings) => {
     if (name.length === 0) {
@@ -298,10 +278,12 @@ export default function SettingsPage() {
       <PageWithMenu.Menu>
         {!isPhonePortrait &&
           menuItems.map((menuItem) => (
-            <PageWithMenu.MenuButton 
-              key={menuItem.id} 
+            <PageWithMenu.MenuButton
+              key={menuItem.id}
               anchor={menuItem.id === 'search-history' ? undefined : menuItem.id}
-              onClick={menuItem.id === 'search-history' ? () => navigate('/search-history') : undefined}
+              onClick={
+                menuItem.id === 'search-history' ? () => navigate('/search-history') : undefined
+              }
             >
               <span>{menuItem.title}</span>
             </PageWithMenu.MenuButton>
@@ -334,7 +316,6 @@ export default function SettingsPage() {
 
           <section id="items">
             <h2>{t('Settings.Items')}</h2>
-
 
             {!isPhonePortrait && SETTINGS_VISIBILITY.itemSize && (
               <div className={styles.setting}>
