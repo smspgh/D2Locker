@@ -6,12 +6,9 @@ import memoizeOne from 'memoize-one';
 import { Comparator } from './comparators';
 import { stubTrue } from './functions';
 
-// Since we only support English now, we can use a simple mapping
-const d2lLangToBrowserLang = { en: 'en' };
-
 /** Map D2L's locale values to a [BCP 47 language tag](http://tools.ietf.org/html/rfc5646) */
 function mapLocale(language: DimLanguage): Intl.UnicodeBCP47LocaleIdentifier {
-  return d2lLangToBrowserLang[language] ?? language;
+  return language;
 }
 
 const cachedSortCollator = memoizeOne(
