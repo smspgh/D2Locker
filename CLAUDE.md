@@ -56,10 +56,8 @@ pnpm build:light
 pnpm process-light-data
 ```
 
-### Testing & Quality
+### Quality
 ```bash
-# Run all tests
-pnpm test
 
 # Linting (runs all linters: ESLint, Prettier, Stylelint)
 pnpm lint
@@ -129,7 +127,6 @@ pnpm serve:api
 - **Styling**: SCSS with CSS Modules (`.m.scss` files)
 - **Build**: Webpack 5, Babel, with environment-specific configs
 - **Backend**: Express.js 5, SQLite (better-sqlite3), JWT auth
-- **Testing**: Jest, React Testing Library, jsdom environment
 - **Package Manager**: pnpm 8.8.0 (required)
 
 ### Key Architectural Patterns
@@ -181,12 +178,6 @@ pnpm serve:api
 - CSS extraction and minification for production builds
 - Bundle analysis available via webpack-bundle-analyzer
 
-### Testing
-
-- Jest test runner with jsdom environment
-- React Testing Library for component testing
-- Test files co-located with source files (`.test.ts/.tsx`)
-- Global test setup in `/src/testing/jest-setup.cjs`
 
 ### Environment Variables
 

@@ -247,7 +247,6 @@ export default tseslint.config(
       '*.m.scss.d.ts',
       '*.m.css.d.ts',
       'src/build-browsercheck-utils.js',
-      'src/testing/jest-setup.cjs',
       'src/fa-subset.js',
       'src/data/font/symbol-name-sources.ts', // TODO: fix the source!
       // Root level JS files that aren't part of TypeScript project
@@ -260,7 +259,6 @@ export default tseslint.config(
       'proxy-server.js',
       'simple-hmr-server.js',
       'verify-update.js',
-      'jest.config.js',
       'i18next-scanner.config.cjs',
       'scripts/download_light_json_process_trait_enhanced-mapping.js',
       'scripts/generate-trait-enhanced-mapping.js',
@@ -524,14 +522,6 @@ export default tseslint.config(
       '@typescript-eslint/no-unsafe-call': 'off',
       '@typescript-eslint/no-unsafe-member-access': 'off',
       'no-console': 'off',
-    },
-  },
-  {
-    name: 'tests',
-    files: ['**/*.test.ts'],
-    rules: {
-      // We don't want to allow importing test modules in app modules, but of course you can do it in other test modules.
-      'no-restricted-imports': 'off',
     },
   },
 );
