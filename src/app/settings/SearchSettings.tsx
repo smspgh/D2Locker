@@ -362,9 +362,6 @@ export default function SearchSettings({ settings }: { settings: Settings }) {
         {!weaponCollapsed && (
           <>
             <div className={styles.setting}>
-              <label>{t('Settings.AdditionalSearchTerms')}</label>
-              <div className={styles.fineprint}>{t('Settings.AdditionalSearchDesc')}</div>
-
               <div>
                 <div
                   style={{
