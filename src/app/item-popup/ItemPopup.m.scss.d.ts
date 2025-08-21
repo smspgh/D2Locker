@@ -11,6 +11,8 @@ interface CssExports {
   'failureReason': string;
   'header': string;
   'legendary': string;
+  'mobileDescription': string;
+  'mobileFlavor': string;
   'mobileHeaderBottom': string;
   'mobileHeaderTop': string;
   'mobileIcon': string;

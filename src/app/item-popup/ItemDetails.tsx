@@ -187,17 +187,10 @@ export default function ItemDetails({
         </div>
       )}
 
-      {/* Mobile: Show description and flavor text after moving header info to static section */}
-      {isPhonePortrait && (
+      {/* Mobile: Show classification status after moving other info to static header */}
+      {isPhonePortrait && item.classified && (
         <div className={styles.mobileDescriptionSection}>
-          <DestinyTooltipText item={item} />
-          {item.classified && <div>{t('ItemService.Classified2')}</div>}
-          {item.description && (
-            <p>
-              <RichDestinyText text={item.description} />
-            </p>
-          )}
-          {flavorText && <p className={styles.flavor}>{flavorText}</p>}
+          <div>{t('ItemService.Classified2')}</div>
         </div>
       )}
 

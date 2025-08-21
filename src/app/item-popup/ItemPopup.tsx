@@ -17,6 +17,7 @@ import { AmmoIcon } from 'app/item-popup/AmmoIcon';
 import BreakerType from 'app/item-popup/BreakerType';
 import { useD2Definitions, useDefinitions } from 'app/manifest/selectors';
 import BungieImage from 'app/d2l-ui/BungieImage';
+import { DestinyTooltipText } from 'app/d2l-ui/DestinyTooltipText';
 import { getEvent } from 'app/inventory/store/season';
 import { D2EventInfo } from 'data/d2/d2-event-info-v2';
 import type { ItemRarityName } from 'app/search/d2-known-values';
@@ -134,6 +135,7 @@ export default function ItemPopup({
   const itemDef = d2Defs?.InventoryItem.get(item.hash);
   const collectible = item.collectibleHash && d2Defs ? d2Defs.Collectible.get(item.collectibleHash) : undefined;
   const seasonNum = getSeason(item);
+  const flavorText = itemDef?.flavorText || itemDef?.displaySource;
 
   const header = (
     <div className={styles.header}>
@@ -158,6 +160,13 @@ export default function ItemPopup({
             {seasonNum >= 0 && <SeasonInfo defs={d2Defs} item={item} seasonNum={seasonNum} />}
             {collectible?.sourceString && (
               <div className={styles.mobileSource}>{collectible.sourceString}</div>
+            )}
+            {flavorText && <div className={styles.mobileFlavor}>{flavorText}</div>}
+            <DestinyTooltipText item={item} />
+            {item.description && (
+              <div className={styles.mobileDescription}>
+                <RichDestinyText text={item.description} />
+              </div>
             )}
           </div>
         </div>
