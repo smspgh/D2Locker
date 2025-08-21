@@ -178,3 +178,62 @@
   display: flex;
   flex-flow: column nowrap;
 }
+
+// Mobile item header styles
+.mobileItemHeader {
+  --item-size: 80px;
+  padding: 12px;
+  background: rgb(0, 0, 0, 0.7);
+  border-bottom: 1px solid #333;
+}
+
+.mobileHeaderTop {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.mobileIcon {
+  flex-shrink: 0;
+}
+
+.mobileInfo {
+  flex: 1;
+  min-width: 0;
+}
+
+.mobileItemName {
+  margin: 0;
+  font-size: 18px;
+  font-weight: bold;
+  color: white;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.mobileItemDetails {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 4px;
+  font-size: 14px;
+  opacity: 0.8;
+  
+  span {
+    white-space: nowrap;
+  }
+}
+
+.mobileHeaderBottom {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 12px;
+  opacity: 0.7;
+}
+
+.mobileSource {
+  font-style: italic;
+}

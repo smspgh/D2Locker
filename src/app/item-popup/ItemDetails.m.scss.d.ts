@@ -14,6 +14,7 @@ interface CssExports {
   'itemShader': string;
   'itemSource': string;
   'milestoneImage': string;
+  'mobileDescriptionSection': string;
   'mobileItemActions': string;
   'mods': string;
   'ownedIcon': string;

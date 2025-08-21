@@ -151,5 +151,24 @@
   display: flex;
   justify-content: center;
   gap: 4px;
+
+  // Add extra spacing before TraitComboIndicator
+  :global(.comboIndicator) {
+    margin-left: 24px;
+  }
 }
 
+// Mobile description section (appears after static header)
+.mobileDescriptionSection {
+  padding: 16px;
+  margin-bottom: 16px;
+
+  p {
+    margin: 8px 0 0 0;
+  }
+
+  .flavor {
+    font-style: italic;
+    opacity: 0.8;
+  }
+}

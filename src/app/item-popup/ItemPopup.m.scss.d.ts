@@ -11,9 +11,17 @@ interface CssExports {
   'failureReason': string;
   'header': string;
   'legendary': string;
+  'mobileHeaderBottom': string;
+  'mobileHeaderTop': string;
+  'mobileIcon': string;
+  'mobileInfo': string;
   'mobileItemActions': string;
   'mobileItemActionsBelow': string;
+  'mobileItemDetails': string;
+  'mobileItemHeader': string;
+  'mobileItemName': string;
   'mobileMoveLocations': string;
+  'mobileSource': string;
   'movePopupDialog': string;
   'popupBackground': string;
   'rare': string;

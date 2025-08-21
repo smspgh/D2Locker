@@ -1,20 +1,29 @@
 import { AlertIcon } from 'app/d2l-ui/AlertIcon';
 import ClickOutside from 'app/d2l-ui/ClickOutside';
+import ElementIcon from 'app/d2l-ui/ElementIcon';
 import { PressTipRoot } from 'app/d2l-ui/PressTip';
 import Sheet from 'app/d2l-ui/Sheet';
 import RichDestinyText from 'app/d2l-ui/destiny-symbols/RichDestinyText';
 import { usePopper } from 'app/d2l-ui/usePopper';
 import { t } from 'app/i18next-t';
+import { DefItemIcon } from 'app/inventory/ItemIcon';
 import { DimItem } from 'app/inventory/item-types';
+import { getSeason } from 'app/inventory/store/season';
 import { sortedStoresSelector } from 'app/inventory/selectors';
 import ItemAccessoryButtons from 'app/item-actions/ItemAccessoryButtons';
 import { ConsolidateActionButton, DistributeActionButton } from 'app/item-actions/ActionButtons';
 import ItemMoveLocations from 'app/item-actions/ItemMoveLocations';
+import { AmmoIcon } from 'app/item-popup/AmmoIcon';
+import BreakerType from 'app/item-popup/BreakerType';
+import { useD2Definitions, useDefinitions } from 'app/manifest/selectors';
+import BungieImage from 'app/d2l-ui/BungieImage';
+import { getEvent } from 'app/inventory/store/season';
+import { D2EventInfo } from 'data/d2/d2-event-info-v2';
 import type { ItemRarityName } from 'app/search/d2-known-values';
 import { useIsPhonePortrait } from 'app/shell/selectors';
 import OpenOnStreamDeckButton from 'app/stream-deck/OpenOnStreamDeckButton/OpenOnStreamDeckButton';
 import { streamDeckEnabledSelector } from 'app/stream-deck/selectors';
-import { nonPullablePostmasterItem } from 'app/utils/item-utils';
+import { getItemYear, itemTypeName, nonPullablePostmasterItem } from 'app/utils/item-utils';
 import { Portal } from 'app/utils/temp-container';
 import clsx from 'clsx';
 import { useMemo, useRef } from 'react';
@@ -36,6 +45,37 @@ const rarityClasses: Record<ItemRarityName, string> = {
   Unknown: '',
   Currency: '',
 } as const;
+
+// SeasonInfo component (copied from ItemDetails)
+function SeasonInfo({
+  defs,
+  item,
+  className,
+  seasonNum,
+}: {
+  item: DimItem;
+  defs: any;
+  className?: string;
+  seasonNum: number;
+}) {
+  const season = Object.values(defs.Season.getAll()).find((s: any) => s.seasonNumber === seasonNum);
+  const event = getEvent(item);
+  return (
+    season && (
+      <div className={clsx(className)}>
+        {season.displayProperties.hasIcon && (
+          <BungieImage height={15} width={15} src={season.displayProperties.icon} />
+        )}{' '}
+        {season.displayProperties.name} (
+        {t('Armory.Season', {
+          season: season.seasonNumber,
+          year: getItemYear(item) ?? '?',
+        })}
+        ){Boolean(event) && ` - ${D2EventInfo[event!].name}`}
+      </div>
+    )
+  );
+}
 
 /**
  * The item inspection popup, which is either a popup on desktop or a sheet on mobile.
@@ -60,6 +100,8 @@ export default function ItemPopup({
 }) {
   const stores = useSelector(sortedStoresSelector);
   const isPhonePortrait = useIsPhonePortrait();
+  const defs = useDefinitions()!;
+  const d2Defs = useD2Definitions();
 
   const popupRef = useRef<HTMLDivElement>(null);
   usePopper({
@@ -88,9 +130,39 @@ export default function ItemPopup({
 
   const failureStrings = Array.from(extraInfo?.failureStrings ?? []);
 
+  // Mobile header info
+  const itemDef = d2Defs?.InventoryItem.get(item.hash);
+  const collectible = item.collectibleHash && d2Defs ? d2Defs.Collectible.get(item.collectibleHash) : undefined;
+  const seasonNum = getSeason(item);
+
   const header = (
     <div className={styles.header}>
-      {/* Hide old header since we now have Armory-style header in ItemDetails */}
+      {/* Mobile-specific item header info */}
+      {isPhonePortrait && itemDef && d2Defs && (
+        <div className={styles.mobileItemHeader}>
+          <div className={styles.mobileHeaderTop}>
+            <div className={styles.mobileIcon}>
+              <DefItemIcon itemDef={itemDef} />
+            </div>
+            <div className={styles.mobileInfo}>
+              <h1 className={styles.mobileItemName}>{item.name}</h1>
+              <div className={styles.mobileItemDetails}>
+                <ElementIcon element={item.element} />
+                <BreakerType item={item} />
+                {item.destinyVersion === 2 && item.ammoType > 0 && <AmmoIcon type={item.ammoType} />}
+                <span>{itemTypeName(item)}</span>
+              </div>
+            </div>
+          </div>
+          <div className={styles.mobileHeaderBottom}>
+            {seasonNum >= 0 && <SeasonInfo defs={d2Defs} item={item} seasonNum={seasonNum} />}
+            {collectible?.sourceString && (
+              <div className={styles.mobileSource}>{collectible.sourceString}</div>
+            )}
+          </div>
+        </div>
+      )}
+      
       {failureStrings?.map(
         (failureString) =>
           failureString.length > 0 && (
@@ -104,7 +176,7 @@ export default function ItemPopup({
           <AlertIcon /> {t('MovePopup.CantPullFromPostmaster')}
         </div>
       )}
-      {/* Mobile actions moved below content in Sheet body */}
+      {/* Tab buttons */}
       {tabButtons}
     </div>
   );

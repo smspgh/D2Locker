@@ -149,8 +149,8 @@ export default function ItemDetails({
           : undefined
       }
     >
-      {/* Armory-style header */}
-      {itemDef && d2Defs && (
+      {/* Armory-style header - only show on desktop */}
+      {itemDef && d2Defs && !isPhonePortrait && (
         <div className={styles.armoryHeader}>
           <div className="item">
             <DefItemIcon itemDef={itemDef} />
@@ -184,6 +184,20 @@ export default function ItemDetails({
             )}
             {flavorText && <p className={styles.flavor}>{flavorText}</p>}
           </div>
+        </div>
+      )}
+
+      {/* Mobile: Show description and flavor text after moving header info to static section */}
+      {isPhonePortrait && (
+        <div className={styles.mobileDescriptionSection}>
+          <DestinyTooltipText item={item} />
+          {item.classified && <div>{t('ItemService.Classified2')}</div>}
+          {item.description && (
+            <p>
+              <RichDestinyText text={item.description} />
+            </p>
+          )}
+          {flavorText && <p className={styles.flavor}>{flavorText}</p>}
         </div>
       )}
 

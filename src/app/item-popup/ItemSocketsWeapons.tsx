@@ -3,7 +3,6 @@ import { statsMs } from 'app/inventory/store/stats';
 import { useD2Definitions } from 'app/manifest/selectors';
 import ReviewSummaryDisplay from 'app/roll-appraiser/ReviewSummaryDisplay';
 import TopTraitCombos from 'app/roll-appraiser/TopTraitCombos';
-import TraitComboIndicator from 'app/roll-appraiser/TraitComboIndicator';
 import { useWeaponRankingData } from 'app/roll-appraiser/useRollAppraiserData';
 import { useSetting } from 'app/settings/hooks';
 import { AppIcon, faGrid, faList } from 'app/shell/icons';
@@ -149,13 +148,6 @@ export default function ItemSocketsWeapons({
       {/* Roll Appraiser Data Display */}
       {!minimal && weaponRankingData && (
         <div className={styles.rollAppraiserData}>
-          {/* Trait Combo Ranking */}
-          {weaponRankingData.traitComboRanking && (
-            <div className={styles.traitCombo}>
-              <TraitComboIndicator comboData={weaponRankingData.traitComboRanking} />
-            </div>
-          )}
-
           {/* Review Summary */}
           {weaponRankingData.reviewSummary && (
             <ReviewSummaryDisplay reviewData={weaponRankingData.reviewSummary} />
