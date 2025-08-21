@@ -12,6 +12,7 @@ interface CssExports {
   'header': string;
   'legendary': string;
   'mobileItemActions': string;
+  'mobileItemActionsBelow': string;
   'mobileMoveLocations': string;
   'movePopupDialog': string;
   'popupBackground': string;

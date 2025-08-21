@@ -79,12 +79,12 @@ export function applySocketOverrides(
           plugOptions,
         };
       } else {
-        errorLog(
-          'applySocketOverrides',
-          "Tried to override to a socket that didn't exist in the options",
-          override,
-          s.plugOptions,
-        );
+        // errorLog(
+        //   'applySocketOverrides',
+        //   "Tried to override to a socket that didn't exist in the options",
+        //   override,
+        //   s.plugOptions,
+        // );
       }
     }
 

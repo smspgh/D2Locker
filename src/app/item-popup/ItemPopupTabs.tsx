@@ -10,7 +10,7 @@ import ItemDetails from './ItemDetails';
 import styles from './ItemPopupTabs.m.scss';
 import { ItemPopupExtraInfo } from './item-popup';
 
-export function useItemPopupTabs(item: DimItem, extraInfo: ItemPopupExtraInfo | undefined) {
+export function useItemPopupTabs(item: DimItem, extraInfo: ItemPopupExtraInfo | undefined, actionsModel?: any) {
   const [tab, setTab] = useSetting('itemPopupTab');
   const id = useId();
   const focusedTab = useRef<ItemPopupTab | undefined>(undefined);
@@ -27,7 +27,7 @@ export function useItemPopupTabs(item: DimItem, extraInfo: ItemPopupExtraInfo | 
       tab: ItemPopupTab.Overview,
       title: t('MovePopup.OverviewTab'),
       id: detailsId,
-      component: <ItemDetails item={item} extraInfo={extraInfo} id={detailsId} />,
+      component: <ItemDetails item={item} extraInfo={extraInfo} id={detailsId} actionsModel={actionsModel} />,
     },
   ];
   if ($featureFlags.triage && doShowTriage(item)) {

@@ -2,14 +2,24 @@
 // Please do not change this file!
 interface CssExports {
   'acquiredIcon': string;
+  'armoryHeader': string;
+  'element': string;
+  'flavor': string;
   'fullImage': string;
+  'hasScreenshot': string;
+  'headerContent': string;
+  'item': string;
   'itemDescription': string;
   'itemDetailsBody': string;
   'itemShader': string;
   'itemSource': string;
   'milestoneImage': string;
+  'mobileItemActions': string;
   'mods': string;
   'ownedIcon': string;
+  'season': string;
+  'source': string;
+  'subtitle': string;
 }
 export const cssExports: CssExports;
 export default cssExports;

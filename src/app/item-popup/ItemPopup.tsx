@@ -8,6 +8,7 @@ import { t } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
 import { sortedStoresSelector } from 'app/inventory/selectors';
 import ItemAccessoryButtons from 'app/item-actions/ItemAccessoryButtons';
+import { ConsolidateActionButton, DistributeActionButton } from 'app/item-actions/ActionButtons';
 import ItemMoveLocations from 'app/item-actions/ItemMoveLocations';
 import type { ItemRarityName } from 'app/search/d2-known-values';
 import { useIsPhonePortrait } from 'app/shell/selectors';
@@ -57,7 +58,6 @@ export default function ItemPopup({
   noLink?: boolean;
   onClose: () => void;
 }) {
-  const { content, tabButtons } = useItemPopupTabs(item, extraInfo);
   const stores = useSelector(sortedStoresSelector);
   const isPhonePortrait = useIsPhonePortrait();
 
@@ -79,6 +79,8 @@ export default function ItemPopup({
     [item, stores],
   );
 
+  const { content, tabButtons } = useItemPopupTabs(item, extraInfo, itemActionsModel);
+
   const streamDeckEnabled = $featureFlags.elgatoStreamDeck
     ? // eslint-disable-next-line react-hooks/rules-of-hooks
       useSelector(streamDeckEnabledSelector)
@@ -88,7 +90,7 @@ export default function ItemPopup({
 
   const header = (
     <div className={styles.header}>
-      <ItemPopupHeader item={item} key={`header${item.hash}`} noLink={noLink} />
+      {/* Hide old header since we now have Armory-style header in ItemDetails */}
       {failureStrings?.map(
         (failureString) =>
           failureString.length > 0 && (
@@ -102,16 +104,7 @@ export default function ItemPopup({
           <AlertIcon /> {t('MovePopup.CantPullFromPostmaster')}
         </div>
       )}
-      {isPhonePortrait && itemActionsModel.hasAccessoryControls && (
-        <div className={styles.mobileItemActions}>
-          <ItemAccessoryButtons
-            item={item}
-            mobile={true}
-            showLabel={false}
-            actionsModel={itemActionsModel}
-          />
-        </div>
-      )}
+      {/* Mobile actions moved below content in Sheet body */}
       {tabButtons}
     </div>
   );
@@ -132,7 +125,10 @@ export default function ItemPopup({
         )
       }
     >
-      <div className={styles.popupBackground}>{content}</div>
+      <div className={styles.popupBackground}>
+        {content}
+{/* Mobile Actions removed - Tag/Lock/Compare are now in ItemDetails, Consolidate/Distribute not needed */}
+      </div>
     </Sheet>
   ) : (
     <Portal>

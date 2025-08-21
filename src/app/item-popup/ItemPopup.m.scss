@@ -6,6 +6,17 @@
 
 @use '../variables.scss' as *;
 
+// Mobile actions positioned below content (after screenshot)
+.mobileItemActionsBelow {
+  padding: 16px;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 8px;
+  margin: 16px;
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+}
+
 .arrow {
   width: $theme-tooltip-arrow-size;
   height: $theme-tooltip-arrow-size;

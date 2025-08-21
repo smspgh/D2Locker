@@ -155,7 +155,7 @@ export function DefItemIcon({
 
   return (
     <>
-      <BungieImage src={itemDef.displayProperties.icon} className={itemImageStyles} alt="" />
+      <BungieImage src={itemDef.displayProperties.highResIcon || itemDef.displayProperties.icon} className={itemImageStyles} alt="" />
       {iconOverlay && <BungieImage src={iconOverlay} className={styles.iconOverlay} alt="" />}
       {energyCost !== undefined && energyCost > 0 && (
         <>

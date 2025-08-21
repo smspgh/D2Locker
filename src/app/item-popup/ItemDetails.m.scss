@@ -2,6 +2,16 @@
 
 .itemDetailsBody {
   overflow: hidden;
+
+  @include phone-portrait {
+    overflow: visible;
+    touch-action: pan-y;
+  }
+
+  &.hasScreenshot {
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+  }
 }
 
 .itemDescription {
@@ -55,4 +65,90 @@
     filter: invert(1);
     background: none !important;
   }
+}
+
+// Armory-style header
+.armoryHeader {
+  --item-size: 100px;
+
+  display: grid;
+  grid-template-columns: min-content 1fr;
+  grid-template-areas:
+    'item title'
+    'content content';
+  grid-gap: 16px;
+  padding: 16px;
+  margin-bottom: 16px;
+  background: rgb(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+
+  .item {
+    grid-area: item;
+    align-self: start;
+  }
+
+  h1 {
+    grid-area: title;
+    align-self: center;
+    margin: 0;
+    font-size: 24px;
+    font-weight: bold;
+    color: white;
+  }
+
+  .headerContent {
+    grid-area: content;
+    align-self: start;
+  }
+
+  .subtitle {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 8px;
+    font-size: 14px;
+    opacity: 0.8;
+  }
+
+  .element {
+    width: 16px;
+    height: 16px;
+  }
+
+  .season {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 12px;
+    opacity: 0.7;
+  }
+
+  .source {
+    font-style: italic;
+    opacity: 0.7;
+    margin: 4px 0;
+  }
+
+  .flavor {
+    font-style: italic;
+    opacity: 0.8;
+    margin: 8px 0 0 0;
+    font-size: 13px;
+  }
+
+  p {
+    margin: 8px 0 0 0;
+  }
+}
+
+// Mobile actions moved below screenshot
+.mobileItemActions {
+  padding: 4px;
+  background: rgb(0, 0, 0, 0.3);
+  border-radius: 4px;
+  margin: 4px;
+  display: flex;
+  justify-content: center;
+  gap: 4px;
 }

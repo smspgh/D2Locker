@@ -220,27 +220,7 @@ export default function Armory({
       <Links item={item} />
       <div className={styles.header}>
         <div className="item">
-          {(() => {
-            // Use high-res icon if available, fallback to regular icon
-            const iconSrc = itemDef.displayProperties.highResIcon || itemDef.displayProperties.icon;
-            const itemCategoryHashes = itemDef.itemCategoryHashes || [];
-            const borderless = 
-              itemCategoryHashes.includes(ItemCategoryHashes.Packages) ||
-              itemCategoryHashes.includes(ItemCategoryHashes.Engrams);
-            
-            const itemImageStyles = clsx('item-img', {
-              [styles.borderless]: borderless,
-            });
-            
-            const iconOverlay = itemDef.iconWatermark || itemDef.iconWatermarkShelved || undefined;
-            
-            return (
-              <>
-                <BungieImage src={iconSrc} className={itemImageStyles} alt="" />
-                {iconOverlay && <BungieImage src={iconOverlay} className={styles.iconOverlay} alt="" />}
-              </>
-            );
-          })()}
+          <DefItemIcon itemDef={itemDef} />
         </div>
         <h1>{item.name}</h1>
         <div className={styles.headerContent}>

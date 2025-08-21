@@ -1,6 +1,18 @@
 import { DestinyTooltipText } from 'app/d2l-ui/DestinyTooltipText';
+import ElementIcon from 'app/d2l-ui/ElementIcon';
+import RichDestinyText from 'app/d2l-ui/destiny-symbols/RichDestinyText';
 import { t, tl } from 'app/i18next-t';
+import { DefItemIcon } from 'app/inventory/ItemIcon';
+import { getSeason } from 'app/inventory/store/season';
+import { AmmoIcon } from 'app/item-popup/AmmoIcon';
+import BreakerType from 'app/item-popup/BreakerType';
+import { useD2Definitions } from 'app/manifest/selectors';
+import { useIsPhonePortrait } from 'app/shell/selectors';
+import { getItemYear, itemTypeName } from 'app/utils/item-utils';
 import { createItemContextSelector, storesSelector } from 'app/inventory/selectors';
+import { getEvent } from 'app/inventory/store/season';
+import { D2EventInfo } from 'data/d2/d2-event-info-v2';
+import { bungieNetPath } from 'app/d2l-ui/BungieImage';
 import { isTrialsPassage } from 'app/inventory/store/objectives';
 import { applySocketOverrides, useSocketOverrides } from 'app/inventory/store/override-sockets';
 import { getStore } from 'app/inventory/stores-helpers';
@@ -12,6 +24,7 @@ import { Reward } from 'app/progress/Reward';
 import { RootState } from 'app/store/types';
 import { getItemKillTrackerInfo, isD1Item } from 'app/utils/item-utils';
 import { SingleVendorSheetContext } from 'app/vendors/single-vendor/SingleVendorSheetContainer';
+import { TagActionButton, LockActionButton, CompareActionButton } from 'app/item-actions/ActionButtons';
 import clsx from 'clsx';
 import { BucketHashes, ItemCategoryHashes } from 'data/d2/generated-enums';
 import helmetIcon from 'destiny-icons/armor_types/helmet.svg';
@@ -41,17 +54,52 @@ import { ItemPopupExtraInfo } from './item-popup';
 
 const defaultExtraInfo: ItemPopupExtraInfo = {};
 
+// SeasonInfo component (copied from Armory)
+function SeasonInfo({
+  defs,
+  item,
+  className,
+  seasonNum,
+}: {
+  item: DimItem;
+  defs: any;
+  className?: string;
+  seasonNum: number;
+}) {
+  const season = Object.values(defs.Season.getAll()).find((s: any) => s.seasonNumber === seasonNum);
+  const event = getEvent(item);
+  return (
+    season && (
+      <div className={clsx(styles.season, className)}>
+        {season.displayProperties.hasIcon && (
+          <BungieImage height={15} width={15} src={season.displayProperties.icon} />
+        )}{' '}
+        {season.displayProperties.name} (
+        {t('Armory.Season', {
+          season: season.seasonNumber,
+          year: getItemYear(item) ?? '?',
+        })}
+        ){Boolean(event) && ` - ${D2EventInfo[event!].name}`}
+      </div>
+    )
+  );
+}
+
 // TODO: probably need to load manifest. We can take a lot of properties off the item if we just load the definition here.
 export default function ItemDetails({
   item: originalItem,
   id,
   extraInfo = defaultExtraInfo,
+  actionsModel,
 }: {
   item: DimItem;
   id: string;
   extraInfo?: ItemPopupExtraInfo;
+  actionsModel?: any;
 }) {
   const defs = useDefinitions()!;
+  const d2Defs = useD2Definitions();
+  const isPhonePortrait = useIsPhonePortrait();
   const itemCreationContext = useSelector(createItemContextSelector);
   const [socketOverrides, onPlugClicked, resetSocketOverrides] = useSocketOverrides();
   const item = defs.isDestiny2
@@ -64,6 +112,13 @@ export default function ItemDetails({
   const ownerStore = useSelector((state: RootState) => getStore(storesSelector(state), item.owner));
 
   const killTrackerInfo = getItemKillTrackerInfo(item);
+  
+  // Armory-style header data
+  const itemDef = d2Defs?.InventoryItem.get(item.hash);
+  const collectible = item.collectibleHash && d2Defs ? d2Defs.Collectible.get(item.collectibleHash) : undefined;
+  const screenshot = itemDef?.screenshot;
+  const seasonNum = getSeason(item);
+  const flavorText = itemDef?.flavorText || itemDef?.displaySource;
 
   const showVendor = use(SingleVendorSheetContext);
 
@@ -73,7 +128,69 @@ export default function ItemDetails({
       : tl('MovePopup.LoadingSockets');
 
   return (
-    <div id={id} role="tabpanel" aria-labelledby={`${id}-tab`} className={styles.itemDetailsBody}>
+    <div 
+      id={id} 
+      role="tabpanel" 
+      aria-labelledby={`${id}-tab`} 
+      className={clsx(styles.itemDetailsBody, { [styles.hasScreenshot]: screenshot && !isPhonePortrait })}
+      style={
+        screenshot && !isPhonePortrait
+          ? {
+              backgroundImage: `linear-gradient(180deg, rgba(0,0,0,0.75) 0px, rgba(0,0,0,0) 200px), linear-gradient(180deg, rgba(0,0,0,0) 400px, rgba(11,12,15,0.9) 500px), url("${bungieNetPath(
+                screenshot,
+              )}")`,
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+            }
+          : undefined
+      }
+    >
+      {/* Armory-style header */}
+      {itemDef && d2Defs && (
+        <div className={styles.armoryHeader}>
+          <div className="item">
+            <DefItemIcon itemDef={itemDef} />
+          </div>
+          <h1>{item.name}</h1>
+          <div className={styles.headerContent}>
+            <div className={styles.subtitle}>
+              <ElementIcon element={item.element} className={styles.element} />
+              <BreakerType item={item} />
+              {item.destinyVersion === 2 && item.ammoType > 0 && <AmmoIcon type={item.ammoType} />}
+              <div>{itemTypeName(item)}</div>
+              {item.pursuit?.questLine && (
+                <div>
+                  {t('MovePopup.Subtitle.QuestProgress', {
+                    questStepNum: item.pursuit.questLine.questStepNum,
+                    questStepsTotal: item.pursuit.questLine.questStepsTotal ?? '?',
+                  })}
+                </div>
+              )}
+              {seasonNum >= 0 && <SeasonInfo defs={d2Defs} item={item} seasonNum={seasonNum} />}
+            </div>
+            <DestinyTooltipText item={item} />
+            {item.classified && <div>{t('ItemService.Classified2')}</div>}
+            {collectible?.sourceString && (
+              <div className={styles.source}>{collectible?.sourceString}</div>
+            )}
+            {item.description && (
+              <p>
+                <RichDestinyText text={item.description} />
+              </p>
+            )}
+            {flavorText && <p className={styles.flavor}>{flavorText}</p>}
+          </div>
+        </div>
+      )}
+
+      {isPhonePortrait && screenshot && (
+        <div className="item-details">
+          <BungieImage width="100%" src={screenshot} />
+        </div>
+      )}
+
+      {/* TODO: Add mobile actions below screenshot */}
+
       {item.itemCategoryHashes.includes(ItemCategoryHashes.Shaders) && (
         <BungieImage className={styles.itemShader} src={item.icon} width="96" height="96" />
       )}
@@ -116,6 +233,15 @@ export default function ItemDetails({
       {defs.isDestiny2 && <WeaponDeepsightInfo item={item} />}
 
       {defs.isDestiny2 && <WeaponCatalystInfo item={item} />}
+
+      {/* Mobile action buttons above Enemies Defeated */}
+      {isPhonePortrait && actionsModel && (
+        <div className={styles.mobileItemActions}>
+          {actionsModel.taggable && <TagActionButton item={item} label={false} hideKeys={true} />}
+          {actionsModel.lockable && <LockActionButton item={item} label={false} />}
+          {actionsModel.comparable && <CompareActionButton item={item} label={false} />}
+        </div>
+      )}
 
       {killTrackerInfo && defs.isDestiny2 && (
         <KillTrackerInfo tracker={killTrackerInfo} showTextLabel className="masterwork-progress" />
