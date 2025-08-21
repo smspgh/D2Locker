@@ -3,13 +3,6 @@
 interface CssExports {
   'acquiredIcon': string;
   'armoryHeader': string;
-  'comboRank1': string;
-  'comboRank2': string;
-  'comboRank3': string;
-  'comboRank4': string;
-  'comboRank5': string;
-  'comboRankBadge': string;
-  'comboRankNumber': string;
   'element': string;
   'flavor': string;
   'fullImage': string;
