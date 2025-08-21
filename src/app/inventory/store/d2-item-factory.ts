@@ -467,7 +467,12 @@ export function makeItem(
     isExotic: itemDef.inventory!.tierType === TierType.Exotic,
     name,
     description: displayProperties.description,
-    icon: overrideStyleItem?.displayProperties.highResIcon || overrideStyleItem?.displayProperties.icon || displayProperties.highResIcon || displayProperties.icon || d2MissingIcon,
+    icon:
+      overrideStyleItem?.displayProperties.highResIcon ||
+      overrideStyleItem?.displayProperties.icon ||
+      displayProperties.highResIcon ||
+      displayProperties.icon ||
+      d2MissingIcon,
     hiddenOverlay,
     iconOverlay,
     secondaryIcon: overrideStyleItem?.secondaryIcon || itemDef.secondaryIcon || itemDef.screenshot,

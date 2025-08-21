@@ -1,7 +1,7 @@
 import { DimItem } from 'app/inventory/item-types';
 import { RollAppraiserUtils, WeaponRankingData } from 'app/utils/rollAppraiserUtils';
 import { getSocketsByIndexes, getWeaponSockets } from 'app/utils/socket-utils';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { getRollAppraiserUtils, getRollAppraiserUtilsSync } from './rollAppraiserService';
 
 /**
@@ -33,13 +33,11 @@ export function useRollAppraiserUtils() {
  * Hook to get weapon ranking data for a specific item
  */
 export function useWeaponRankingData(item: DimItem | null): WeaponRankingData | null {
-  const { utils } = useRollAppraiserUtils();
-  const [rankingData, setRankingData] = useState<WeaponRankingData | null>(null);
+  const { utils, error } = useRollAppraiserUtils();
 
-  useEffect(() => {
-    if (!utils || !item || item.destinyVersion !== 2 || !item.bucket.inWeapons) {
-      setRankingData(() => null);
-      return;
+  const rankingData = useMemo((): WeaponRankingData | null => {
+    if (!utils || error || !item || item.destinyVersion !== 2 || !item.bucket.inWeapons) {
+      return null;
     }
 
     // Get perk hashes from the weapon's sockets
@@ -114,8 +112,8 @@ export function useWeaponRankingData(item: DimItem | null): WeaponRankingData | 
       weaponData.traitComboRanking = comboRank;
     }
 
-    setRankingData(() => weaponData);
-  }, [utils, item]);
+    return weaponData;
+  }, [utils, item, error]);
 
   return rankingData;
 }

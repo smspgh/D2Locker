@@ -35,8 +35,19 @@ export function ReputationRank({
   const rankTotal = sumBy(progressionDef.steps, (cur) => cur.progressTotal);
   const rankPercent = Math.floor((progress.currentProgress / rankTotal) * 100);
 
+  // Create streak checkboxes with stable keys
   const streakCheckboxes =
-    streak && Array<boolean>(5).fill(true).fill(false, streak.currentProgress);
+    streak &&
+    (() => {
+      const checkboxes = [];
+      for (let i = 0; i < 5; i++) {
+        checkboxes.push({
+          id: `streak-${streak.progressionHash}-slot-${i}`,
+          completed: i < streak.currentProgress,
+        });
+      }
+      return checkboxes;
+    })();
 
   // language-agnostic css class name to identify which rank type we are in
   const factionClass = `faction-${progress.progressionHash}`;
@@ -63,8 +74,8 @@ export function ReputationRank({
         </div>
         {streakCheckboxes && (
           <ObjectiveRow className={styles.winStreak}>
-            {streakCheckboxes.map((c, i) => (
-              <ObjectiveCheckbox key={`streak-${i}`} completed={c} />
+            {streakCheckboxes.map((checkbox) => (
+              <ObjectiveCheckbox key={checkbox.id} completed={checkbox.completed} />
             ))}
           </ObjectiveRow>
         )}

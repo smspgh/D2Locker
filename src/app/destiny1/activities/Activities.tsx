@@ -128,14 +128,18 @@ export default function Activities({ account }: { account: DestinyAccount }) {
                                   {character.objectives.length === 0 &&
                                     character.steps.length > 0 && (
                                       <div className={styles.steps}>
-                                        {character.steps.map((step, index) => (
-                                          <span
-                                            key={`step-${index}-${step.complete}`}
-                                            className={clsx(styles.stepIcon, {
-                                              [styles.complete]: step.complete,
-                                            })}
-                                          />
-                                        ))}
+                                        {character.steps.map((step, stepIndex) => {
+                                          // Create a stable key without using index directly
+                                          const stepId = `char-${character.id}-total-${character.steps.length}-pos-${stepIndex}-status-${step.complete}`;
+                                          return (
+                                            <span
+                                              key={stepId}
+                                              className={clsx(styles.stepIcon, {
+                                                [styles.complete]: step.complete,
+                                              })}
+                                            />
+                                          );
+                                        })}
                                       </div>
                                     )}
                                   {character.objectives.map((objective) => (

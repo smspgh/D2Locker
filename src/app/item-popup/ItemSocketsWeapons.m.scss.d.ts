@@ -8,7 +8,6 @@ interface CssExports {
   'perks': string;
   'rollAppraiserData': string;
   'stats': string;
-  'traitCombo': string;
 }
 export const cssExports: CssExports;
 export default cssExports;

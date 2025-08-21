@@ -1,7 +1,6 @@
 import { UNSET_PLUG_HASH } from 'app/loadout/known-values';
 import { DEFAULT_ORNAMENTS } from 'app/search/d2-known-values';
 import { isEmpty } from 'app/utils/collections';
-import { errorLog } from 'app/utils/log';
 import perkToEnhanced from 'data/d2/trait-to-enhanced-trait.json';
 import { produce } from 'immer';
 import { useCallback, useState } from 'react';

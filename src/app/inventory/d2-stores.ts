@@ -269,7 +269,9 @@ function loadProfile(
           : { profile: cachedProfileResponse, live: false };
       } else {
         // No cached data and offline mode is on
-        const error = new Error('No cached data available in offline mode. Disable offline mode to fetch fresh data from Bungie.');
+        const error = new Error(
+          'No cached data available in offline mode. Disable offline mode to fetch fresh data from Bungie.',
+        );
         error.name = 'OfflineModeError';
         throw error;
       }

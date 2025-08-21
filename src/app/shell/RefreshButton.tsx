@@ -1,4 +1,5 @@
 import { destinyVersionSelector } from 'app/accounts/selectors';
+import { offlineModeSelector } from 'app/d2l-api/selectors';
 import { PressTip, useTooltipCustomization } from 'app/d2l-ui/PressTip';
 import { useHotkey } from 'app/hotkeys/useHotkey';
 import { t } from 'app/i18next-t';
@@ -8,7 +9,6 @@ import {
   profileErrorSelector,
   profileMintedSelector,
 } from 'app/inventory/selectors';
-import { offlineModeSelector } from 'app/d2l-api/selectors';
 import { useEventBusListener } from 'app/utils/hooks';
 import { i15dDurationFromMsWithSeconds } from 'app/utils/time';
 import clsx from 'clsx';
@@ -36,19 +36,26 @@ export default function RefreshButton({ className }: { className?: string }) {
 
   // Always show the spinner for at least MIN_SPIN milliseconds
   const [spin, setSpin] = useState(active ? Date.now() : 0);
+
+  // Start spinning when active becomes true
   useEffect(() => {
     if (active && spin === 0) {
-      setSpin(() => Date.now());
-    } else if (!active && spin !== 0) {
+      // eslint-disable-next-line @eslint-react/hooks-extra/no-direct-set-state-in-use-effect
+      setSpin(Date.now());
+    }
+  }, [active, spin]);
+
+  // Stop spinning with minimum delay when active becomes false
+  useEffect(() => {
+    if (!active && spin !== 0) {
       const elapsed = Date.now() - spin;
       const remainingTime = Math.max(0, MIN_SPIN - elapsed);
       if (remainingTime > 0) {
-        const timer = window.setTimeout(() => {
-          setSpin(() => 0);
-        }, remainingTime);
+        const timer = window.setTimeout(() => setSpin(0), remainingTime);
         return () => window.clearTimeout(timer);
       } else {
-        setSpin(() => 0);
+        // eslint-disable-next-line @eslint-react/hooks-extra/no-direct-set-state-in-use-effect
+        setSpin(0);
       }
     }
   }, [active, spin]);
@@ -68,13 +75,15 @@ export default function RefreshButton({ className }: { className?: string }) {
   useHotkey('r', t('Hotkey.RefreshInventory'), refresh);
 
   return (
-    <PressTip tooltip={<RefreshButtonTooltip autoRefresh={autoRefresh} offlineMode={offlineMode} />}>
+    <PressTip
+      tooltip={<RefreshButtonTooltip autoRefresh={autoRefresh} offlineMode={offlineMode} />}
+    >
       <button
         type="button"
         className={clsx(styles.refreshButton, className, { disabled })}
         onClick={refresh}
         title={
-          t('Header.Refresh') + 
+          t('Header.Refresh') +
           (autoRefresh ? `\n${t('Header.AutoRefresh')}` : '') +
           (offlineMode ? '\nOffline Mode: Using cached data only' : '')
         }
@@ -103,7 +112,13 @@ function profileAge(profileMintedDate: Date) {
   return profileMintedDate.getTime() === 0 ? undefined : Date.now() - profileMintedDate.getTime();
 }
 
-function RefreshButtonTooltip({ autoRefresh, offlineMode }: { autoRefresh: boolean; offlineMode: boolean }) {
+function RefreshButtonTooltip({
+  autoRefresh,
+  offlineMode,
+}: {
+  autoRefresh: boolean;
+  offlineMode: boolean;
+}) {
   const profileAge = useProfileAge();
   const profileError = useSelector(profileErrorSelector);
   const isManifestError = profileError?.name === 'ManifestError';

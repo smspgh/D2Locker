@@ -53,15 +53,17 @@ export function EnergyMeterIncrements({
   const meterIncrements = Array<string | undefined>(maxEnergyCapacity)
     .fill(styles.unavailable)
     .fill(undefined, 0, energyCapacity)
-    .fill(styles.used, 0, energyUsed);
+    .fill(styles.used, 0, energyUsed)
+    .map((style, index) => ({ style, position: index, id: `slot-${index}` }));
+
   return (
     <div className={clsx(styles.energyMeterIncrements, { [styles.medium]: variant === 'medium' })}>
-      {meterIncrements.map((incrementStyle, i) => (
+      {meterIncrements.map(({ style: incrementStyle, position, id }) => (
         <div
-          key={`energy-${i}`}
+          key={id}
           className={incrementStyle}
-          role={minCapacity !== undefined && i + 1 > minCapacity ? 'button' : undefined}
-          onClick={previewUpgrade ? () => previewUpgrade(i + 1) : undefined}
+          role={minCapacity !== undefined && position + 1 > minCapacity ? 'button' : undefined}
+          onClick={previewUpgrade ? () => previewUpgrade(position + 1) : undefined}
         />
       ))}
     </div>

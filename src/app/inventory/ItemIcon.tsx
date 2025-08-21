@@ -88,11 +88,9 @@ export default function ItemIcon({ item, className }: { item: DimItem; className
       )}
       {item.tier > 1 ? (
         <div className={styles.tierPipContainer}>
-          {Array(item.tier)
-            .fill(0)
-            .map((_, i) => (
-              <div key={`tier-pip-${i}`} className={styles.tierPip} />
-            ))}
+          {Array.from({ length: item.tier }, (_, pos) => (
+            <div key={`tier${pos}of${item.tier}for${item.hash}`} className={styles.tierPip} />
+          ))}
         </div>
       ) : null}
       {item.plug?.energyCost !== undefined && item.plug.energyCost > 0 && (
@@ -155,7 +153,11 @@ export function DefItemIcon({
 
   return (
     <>
-      <BungieImage src={itemDef.displayProperties.highResIcon || itemDef.displayProperties.icon} className={itemImageStyles} alt="" />
+      <BungieImage
+        src={itemDef.displayProperties.highResIcon || itemDef.displayProperties.icon}
+        className={itemImageStyles}
+        alt=""
+      />
       {iconOverlay && <BungieImage src={iconOverlay} className={styles.iconOverlay} alt="" />}
       {energyCost !== undefined && energyCost > 0 && (
         <>

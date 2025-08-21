@@ -1,8 +1,8 @@
+import { offlineModeSelector } from 'app/d2l-api/selectors';
 import { autoRefreshEnabledSelector } from 'app/inventory/selectors';
 import { d2lNeedsUpdate$, reloadD2L } from 'app/register-service-worker';
 import { hasSearchQuerySelector } from 'app/shell/selectors';
 import { RootState } from 'app/store/types';
-import { offlineModeSelector } from 'app/d2l-api/selectors';
 import { useEventBusListener } from 'app/utils/hooks';
 import { EventBus } from 'app/utils/observable';
 import { useCallback, useEffect, useRef } from 'react';

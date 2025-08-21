@@ -3,7 +3,11 @@ import { deleteAllApiData, loadDimApiData } from 'app/d2l-api/actions';
 import { setApiPermissionGranted, updateGlobalSetting } from 'app/d2l-api/basic-actions';
 import { exportDimApiData } from 'app/d2l-api/d2l-api';
 import { importDataBackup } from 'app/d2l-api/import';
-import { apiPermissionGrantedSelector, D2LSyncErrorSelector, offlineModeSelector } from 'app/d2l-api/selectors';
+import {
+  apiPermissionGrantedSelector,
+  D2LSyncErrorSelector,
+  offlineModeSelector,
+} from 'app/d2l-api/selectors';
 import HelpLink from 'app/d2l-ui/HelpLink';
 import useConfirm from 'app/d2l-ui/useConfirm';
 import { t } from 'app/i18next-t';
@@ -133,7 +137,7 @@ export default function DimApiSettings() {
           )}
         </div>
       )}
-      
+
       <div className={settingClass}>
         <Checkbox
           name={'offlineMode' as keyof Settings}
@@ -142,8 +146,9 @@ export default function DimApiSettings() {
           onChange={onOfflineModeChange}
         />
         <div className={fineprintClass}>
-          When enabled, D2Locker will only use cached/local data and won't make calls to Bungie's servers. 
-          This prevents API rate limiting but means data won't be updated until you disable offline mode.
+          When enabled, D2Locker will only use cached/local data and won't make calls to Bungie's
+          servers. This prevents API rate limiting but means data won't be updated until you disable
+          offline mode.
         </div>
       </div>
       {profileLoadedError && (

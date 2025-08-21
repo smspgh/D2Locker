@@ -53,13 +53,16 @@ export function D1CharacterStats({
         <PressTip key={stat.hash} tooltip={tooltips[index]}>
           <div className={styles.stat}>
             <BungieImage src={stat.displayProperties.icon} alt={stat.displayProperties.name} />
-            {getD1CharacterStatTiers(stat).map((n, index) => (
-              <div key={`${stat.hash}-tier-${index}`} className={styles.bar}>
+            {getD1CharacterStatTiers(stat).map((tierValue) => (
+              <div
+                key={`stat-${stat.hash}-tier-value-${tierValue}-${Math.floor(tierValue / 60)}`}
+                className={styles.bar}
+              >
                 <div
                   className={clsx(styles.progress, {
-                    [styles.complete]: n / 60 === 1,
+                    [styles.complete]: tierValue / 60 === 1,
                   })}
-                  style={{ width: percent(n / 60) }}
+                  style={{ width: percent(tierValue / 60) }}
                 />
               </div>
             ))}

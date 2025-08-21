@@ -1,33 +1,34 @@
+import { bungieNetPath } from 'app/d2l-ui/BungieImage';
 import { DestinyTooltipText } from 'app/d2l-ui/DestinyTooltipText';
 import ElementIcon from 'app/d2l-ui/ElementIcon';
 import RichDestinyText from 'app/d2l-ui/destiny-symbols/RichDestinyText';
 import { t, tl } from 'app/i18next-t';
 import { DefItemIcon } from 'app/inventory/ItemIcon';
-import { getSeason } from 'app/inventory/store/season';
-import { AmmoIcon } from 'app/item-popup/AmmoIcon';
-import BreakerType from 'app/item-popup/BreakerType';
-import { useD2Definitions } from 'app/manifest/selectors';
-import { useIsPhonePortrait } from 'app/shell/selectors';
-import { getItemYear, itemTypeName } from 'app/utils/item-utils';
 import { createItemContextSelector, storesSelector } from 'app/inventory/selectors';
-import { getEvent } from 'app/inventory/store/season';
-import { D2EventInfo } from 'data/d2/d2-event-info-v2';
-import { bungieNetPath } from 'app/d2l-ui/BungieImage';
 import { isTrialsPassage } from 'app/inventory/store/objectives';
 import { applySocketOverrides, useSocketOverrides } from 'app/inventory/store/override-sockets';
+import { getEvent, getSeason } from 'app/inventory/store/season';
 import { getStore } from 'app/inventory/stores-helpers';
+import {
+  CompareActionButton,
+  LockActionButton,
+  TagActionButton,
+} from 'app/item-actions/ActionButtons';
+import { AmmoIcon } from 'app/item-popup/AmmoIcon';
+import BreakerType from 'app/item-popup/BreakerType';
 import { KillTrackerInfo } from 'app/item-popup/KillTracker';
-import { useDefinitions } from 'app/manifest/selectors';
+import { useD2Definitions, useDefinitions } from 'app/manifest/selectors';
 import { ActivityModifier } from 'app/progress/ActivityModifier';
 import Objective from 'app/progress/Objective';
 import { Reward } from 'app/progress/Reward';
-import { RootState } from 'app/store/types';
-import { getItemKillTrackerInfo, isD1Item } from 'app/utils/item-utils';
-import { SingleVendorSheetContext } from 'app/vendors/single-vendor/SingleVendorSheetContainer';
-import { TagActionButton, LockActionButton, CompareActionButton } from 'app/item-actions/ActionButtons';
 import TraitComboIndicator from 'app/roll-appraiser/TraitComboIndicator';
 import { useWeaponRankingData } from 'app/roll-appraiser/useRollAppraiserData';
+import { useIsPhonePortrait } from 'app/shell/selectors';
+import { RootState } from 'app/store/types';
+import { getItemKillTrackerInfo, getItemYear, isD1Item, itemTypeName } from 'app/utils/item-utils';
+import { SingleVendorSheetContext } from 'app/vendors/single-vendor/SingleVendorSheetContainer';
 import clsx from 'clsx';
+import { D2EventInfo } from 'data/d2/d2-event-info-v2';
 import { BucketHashes, ItemCategoryHashes } from 'data/d2/generated-enums';
 import helmetIcon from 'destiny-icons/armor_types/helmet.svg';
 import modificationIcon from 'destiny-icons/general/modifications.svg';
@@ -64,21 +65,23 @@ function SeasonInfo({
   seasonNum,
 }: {
   item: DimItem;
-  defs: any;
+  defs: ReturnType<typeof useD2Definitions>;
   className?: string;
   seasonNum: number;
 }) {
-  const season = Object.values(defs.Season.getAll()).find((s: any) => s.seasonNumber === seasonNum);
+  const season = Object.values(defs?.Season.getAll() ?? {}).find(
+    (s) => s.seasonNumber === seasonNum,
+  );
   const event = getEvent(item);
   return (
     season && (
       <div className={clsx(styles.season, className)}>
-        {season.displayProperties.hasIcon && (
-          <BungieImage height={15} width={15} src={season.displayProperties.icon} />
+        {season.displayProperties?.hasIcon && (
+          <BungieImage height={15} width={15} src={season.displayProperties?.icon} />
         )}{' '}
-        {season.displayProperties.name} (
+        {season.displayProperties?.name} (
         {t('Armory.Season', {
-          season: season.seasonNumber,
+          season: season?.seasonNumber,
           year: getItemYear(item) ?? '?',
         })}
         ){Boolean(event) && ` - ${D2EventInfo[event!].name}`}
@@ -86,7 +89,6 @@ function SeasonInfo({
     )
   );
 }
-
 
 // TODO: probably need to load manifest. We can take a lot of properties off the item if we just load the definition here.
 export default function ItemDetails({
@@ -98,7 +100,9 @@ export default function ItemDetails({
   item: DimItem;
   id: string;
   extraInfo?: ItemPopupExtraInfo;
-  actionsModel?: any;
+  actionsModel?: ReturnType<
+    typeof import('app/item-popup/item-popup-actions').buildItemActionsModel
+  >;
 }) {
   const defs = useDefinitions()!;
   const d2Defs = useD2Definitions();
@@ -116,10 +120,11 @@ export default function ItemDetails({
   const weaponRankingData = useWeaponRankingData(item);
 
   const killTrackerInfo = getItemKillTrackerInfo(item);
-  
+
   // Armory-style header data
   const itemDef = d2Defs?.InventoryItem.get(item.hash);
-  const collectible = item.collectibleHash && d2Defs ? d2Defs.Collectible.get(item.collectibleHash) : undefined;
+  const collectible =
+    item.collectibleHash && d2Defs ? d2Defs.Collectible.get(item.collectibleHash) : undefined;
   const screenshot = itemDef?.screenshot;
   const seasonNum = getSeason(item);
   const flavorText = itemDef?.flavorText || itemDef?.displaySource;
@@ -132,11 +137,13 @@ export default function ItemDetails({
       : tl('MovePopup.LoadingSockets');
 
   return (
-    <div 
-      id={id} 
-      role="tabpanel" 
-      aria-labelledby={`${id}-tab`} 
-      className={clsx(styles.itemDetailsBody, { [styles.hasScreenshot]: screenshot && !isPhonePortrait })}
+    <div
+      id={id}
+      role="tabpanel"
+      aria-labelledby={`${id}-tab`}
+      className={clsx(styles.itemDetailsBody, {
+        [styles.hasScreenshot]: screenshot && !isPhonePortrait,
+      })}
       style={
         screenshot && !isPhonePortrait
           ? {
@@ -152,7 +159,7 @@ export default function ItemDetails({
       {/* Armory-style header - only show on desktop */}
       {itemDef && d2Defs && !isPhonePortrait && (
         <div className={styles.armoryHeader}>
-          <div className="item">
+          <div className={styles.item}>
             <DefItemIcon itemDef={itemDef} />
           </div>
           <h1>{item.name}</h1>
@@ -248,9 +255,9 @@ export default function ItemDetails({
       {/* Mobile action buttons above Enemies Defeated */}
       {isPhonePortrait && actionsModel && (
         <div className={styles.mobileItemActions}>
-          {actionsModel.taggable && <TagActionButton item={item} label={false} hideKeys={true} />}
-          {actionsModel.lockable && <LockActionButton item={item} label={false} />}
-          {actionsModel.comparable && <CompareActionButton item={item} label={false} />}
+          {actionsModel?.taggable && <TagActionButton item={item} label={false} hideKeys={true} />}
+          {actionsModel?.lockable && <LockActionButton item={item} label={false} />}
+          {actionsModel?.comparable && <CompareActionButton item={item} label={false} />}
           {item.bucket?.inWeapons && weaponRankingData?.traitComboRanking && (
             <TraitComboIndicator comboData={weaponRankingData.traitComboRanking} />
           )}

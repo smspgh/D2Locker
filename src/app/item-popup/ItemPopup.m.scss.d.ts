@@ -17,8 +17,6 @@ interface CssExports {
   'mobileHeaderTop': string;
   'mobileIcon': string;
   'mobileInfo': string;
-  'mobileItemActions': string;
-  'mobileItemActionsBelow': string;
   'mobileItemDetails': string;
   'mobileItemHeader': string;
   'mobileItemName': string;

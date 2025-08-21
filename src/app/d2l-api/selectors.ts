@@ -84,8 +84,7 @@ export const issueBannerEnabledSelector = (state: RootState) =>
   state.d2lApi.globalSettings.showIssueBanner;
 
 /** Whether offline mode is enabled (prevents Bungie API calls) */
-export const offlineModeSelector = (state: RootState) =>
-  state.d2lApi.globalSettings.offlineMode;
+export const offlineModeSelector = (state: RootState) => state.d2lApi.globalSettings.offlineMode;
 
 /** Global settings selector for accessing all global settings */
 export const globalSettingsSelector = (state: RootState) => state.d2lApi.globalSettings;

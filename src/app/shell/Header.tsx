@@ -106,8 +106,10 @@ export default function Header() {
 
   // Clear filter and close dropdown on path change
   const { pathname } = useLocation();
+
   useEffect(() => {
-    setDropdownOpen(() => false);
+    // eslint-disable-next-line @eslint-react/hooks-extra/no-direct-set-state-in-use-effect
+    setDropdownOpen(false);
     dispatch(setSearchQuery(''));
   }, [dispatch, pathname]);
 

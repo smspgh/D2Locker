@@ -8,7 +8,7 @@ import ElementIcon from 'app/d2l-ui/ElementIcon';
 import RichDestinyText from 'app/d2l-ui/destiny-symbols/RichDestinyText';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { t } from 'app/i18next-t';
-import ItemIcon, { DefItemIcon } from 'app/inventory/ItemIcon';
+import { DefItemIcon } from 'app/inventory/ItemIcon';
 import { DimItem } from 'app/inventory/item-types';
 import { allItemsSelector, createItemContextSelector } from 'app/inventory/selectors';
 import { makeFakeItem } from 'app/inventory/store/d2-item-factory';
@@ -166,17 +166,17 @@ export default function Armory({
   // Create socket overrides that preserve the fake item's full socket data
   // but apply real item sockets only for non-cosmetic sockets to show user's actual perks
   const combinedSocketOverrides: SocketOverrides = {};
-  
+
   // Only apply real item sockets for perk sockets, not ornaments or other cosmetic sockets
   if (realItemSockets && itemWithoutSockets.sockets) {
     for (const [socketIndex, plugHash] of Object.entries(realItemSockets)) {
       const socketIndexNum = parseInt(socketIndex, 10);
       const socket = itemWithoutSockets.sockets.allSockets[socketIndexNum];
-      
+
       // Only override if it's a perk socket or non-cosmetic socket
       // Skip ornament sockets (they have screenshots) to preserve the fake item's ornament data
-      if (socket && (!socket.plugged?.plugDef.screenshot)) {
-        combinedSocketOverrides[socketIndexNum] = plugHash;
+      if (socket && !socket.plugged?.plugDef.screenshot) {
+        combinedSocketOverrides[socketIndexNum] = plugHash as number;
       }
     }
   }

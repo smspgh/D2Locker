@@ -374,16 +374,22 @@ function SearchBar({
   }, [searchQueryVersion]);
 
   // Determine a maximum height for the results menu
-  useEffect(() => {
-    if (inputElement.current && window.visualViewport) {
+  const menuMaxHeightCalc = useMemo(() => {
+    if (inputElement.current && window.visualViewport && isOpen) {
       const { y, height } = inputElement.current.getBoundingClientRect();
       const { height: viewportHeight } = window.visualViewport;
       // pixels remaining in viewport minus offset minus 10px for padding
       const pxAvailable = viewportHeight - y - height - 10;
       // constrain to size that would allow only whole items to be seen
-      setMenuMaxHeight(() => Math.floor(pxAvailable / resultItemHeight) * resultItemHeight);
+      return Math.floor(pxAvailable / resultItemHeight) * resultItemHeight;
     }
+    return 0;
   }, [isOpen]);
+
+  useEffect(() => {
+    // eslint-disable-next-line @eslint-react/hooks-extra/no-direct-set-state-in-use-effect
+    setMenuMaxHeight(menuMaxHeightCalc);
+  }, [menuMaxHeightCalc]);
 
   const deleteSearch = useCallback(
     (e: React.MouseEvent, item: SearchItem) => {
