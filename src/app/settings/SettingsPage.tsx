@@ -86,7 +86,7 @@ const SETTINGS_VISIBILITY = {
   hideCollectPostmaster: false, // Hide "Hide the 'Collect Postmaster' button" section
   badgePostmaster: false, // Hide postmaster badge on app icon
   farmingModeSpaces: false, // Hide farming mode empty spaces
-  D2LSync: false, // Hide Enable d2l sync section
+  D2LSync: true, // Show Enable d2l sync section to access offline mode
   storageInfo: false, // Hide storage usage info
   importBackup: false, // Hide Import Data Backup button
   importCSV: false, // Hide Import CSV option

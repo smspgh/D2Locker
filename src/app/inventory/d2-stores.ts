@@ -3,7 +3,7 @@ import { compareAccounts, DestinyAccount } from 'app/accounts/destiny-account';
 import { getPlatforms } from 'app/accounts/platforms';
 import { currentAccountSelector } from 'app/accounts/selectors';
 import { loadClarity } from 'app/clarity/descriptions/loadDescriptions';
-import { customStatsSelector } from 'app/d2l-api/selectors';
+import { customStatsSelector, offlineModeSelector } from 'app/d2l-api/selectors';
 import { t } from 'app/i18next-t';
 import { inGameLoadoutLoaded } from 'app/loadout/ingame/actions';
 import { processInGameLoadouts } from 'app/loadout/loadout-type-converters';
@@ -256,6 +256,24 @@ function loadProfile(
     const cachedProfileMintedDate = cachedProfileResponse
       ? new Date(cachedProfileResponse.responseMintedTimestamp ?? 0)
       : new Date(0);
+
+    // Check if offline mode is enabled
+    const offlineMode = offlineModeSelector(getState());
+    if (offlineMode) {
+      if (cachedProfileResponse) {
+        infoLog(TAG, 'Offline mode enabled, using cached profile data only');
+        // Clear any previous errors since we're intentionally using cached data
+        dispatch(profileError(undefined));
+        return storesLoadedSelector(getState())
+          ? undefined
+          : { profile: cachedProfileResponse, live: false };
+      } else {
+        // No cached data and offline mode is on
+        const error = new Error('No cached data available in offline mode. Disable offline mode to fetch fresh data from Bungie.');
+        error.name = 'OfflineModeError';
+        throw error;
+      }
+    }
 
     try {
       const remoteProfileResponse = await getStores(account);

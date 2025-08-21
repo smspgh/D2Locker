@@ -19,6 +19,14 @@
   right: -4px;
 }
 
+.offlineMode {
+  position: absolute;
+  top: -8px;
+  left: -8px;
+  font-size: 12px;
+  opacity: 0.8;
+}
+
 .outOfDate {
   color: $red;
   background-color: #1b1b2d;

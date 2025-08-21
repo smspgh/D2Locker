@@ -19,6 +19,12 @@ export const globalSettingsLoaded = createAction('d2l-api/GLOBAL_SETTINGS_LOADED
   Partial<GlobalSettings>
 >();
 
+/** Update a specific global setting. */
+export const updateGlobalSetting = createAction('d2l-api/UPDATE_GLOBAL_SETTING')<{
+  key: keyof import('./reducer').ExtendedGlobalSettings;
+  value: boolean | string | number;
+}>();
+
 export const profileLoaded = createAction('d2l-api/PROFILE_LOADED')<{
   profileResponse: ProfileResponse;
   account?: DestinyAccount;

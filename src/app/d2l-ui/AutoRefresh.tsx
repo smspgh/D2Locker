@@ -2,6 +2,7 @@ import { autoRefreshEnabledSelector } from 'app/inventory/selectors';
 import { d2lNeedsUpdate$, reloadD2L } from 'app/register-service-worker';
 import { hasSearchQuerySelector } from 'app/shell/selectors';
 import { RootState } from 'app/store/types';
+import { offlineModeSelector } from 'app/d2l-api/selectors';
 import { useEventBusListener } from 'app/utils/hooks';
 import { EventBus } from 'app/utils/observable';
 import { useCallback, useEffect, useRef } from 'react';
@@ -40,6 +41,7 @@ export default function AutoRefresh() {
 function useAutoRefresh() {
   const { pathname } = useLocation();
   const onOptimizerPage = pathname.endsWith('/optimizer');
+  const offlineMode = useSelector(offlineModeSelector);
 
   // Throttle calls to refresh to no more often than destinyProfileMinimumRefreshInterval
   const throttledRefresh = useThrottledRefresh();
@@ -69,7 +71,9 @@ function useAutoRefresh() {
         isOnline &&
         !currentlyDragging &&
         // Don't auto reload on the optimizer page, it makes it recompute all the time
-        !onOptimizerPage
+        !onOptimizerPage &&
+        // Don't auto refresh when offline mode is enabled
+        !offlineMode
       ) {
         throttledRefresh(); // Trigger the refresh assuming we haven't just refreshed
       } else if (hasActivePromises) {
@@ -95,7 +99,7 @@ function useAutoRefresh() {
         // If we didn't refresh because of any of the conditions above, restart the timer to try again next time
         startTimer();
       }
-    }, [onOptimizerPage, throttledRefresh, startTimer]),
+    }, [onOptimizerPage, throttledRefresh, startTimer, offlineMode]),
   );
 }
 

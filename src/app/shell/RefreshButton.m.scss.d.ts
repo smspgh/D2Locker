@@ -3,6 +3,7 @@
 interface CssExports {
   'errorDetails': string;
   'errorTooltip': string;
+  'offlineMode': string;
   'outOfDate': string;
   'refreshButton': string;
   'userIsPlaying': string;

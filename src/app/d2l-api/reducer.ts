@@ -41,11 +41,16 @@ import { DeleteLoadoutUpdateWithRollback, ProfileUpdateWithRollback } from './ap
 import * as actions from './basic-actions';
 import { makeProfileKey, makeProfileKeyFromAccount } from './selectors';
 
+// Extend GlobalSettings to include D2Locker-specific settings
+export interface ExtendedGlobalSettings extends GlobalSettings {
+  offlineMode: boolean;
+}
+
 // After you've got a search history of more than this many items, we start deleting the older ones
 const MAX_SEARCH_HISTORY = 300;
 
 export interface DimApiState {
-  globalSettings: GlobalSettings;
+  globalSettings: ExtendedGlobalSettings;
   globalSettingsLoaded: boolean;
 
   /** Has the user granted us permission to store their info? */
@@ -138,6 +143,8 @@ export const initialState: DimApiState = {
     // Override default refresh intervals for faster sync
     destinyProfileRefreshInterval: 60, // 1 minute instead of 2 minutes
     d2lProfileMinimumRefreshInterval: 30, // 30 seconds instead of 10 minutes for settings sync
+    // D2Locker-specific setting for offline mode
+    offlineMode: false,
   },
 
   apiPermissionGranted: getInitialApiPermissionSetting(),
@@ -181,6 +188,15 @@ export const d2lApi = (
         globalSettings: {
           ...state.globalSettings,
           ...action.payload,
+        },
+      };
+
+    case getType(actions.updateGlobalSetting):
+      return {
+        ...state,
+        globalSettings: {
+          ...state.globalSettings,
+          [action.payload.key]: action.payload.value,
         },
       };
 

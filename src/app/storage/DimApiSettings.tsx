@@ -1,9 +1,9 @@
 import { ExportResponse } from '@destinyitemmanager/dim-api-types';
 import { deleteAllApiData, loadDimApiData } from 'app/d2l-api/actions';
-import { setApiPermissionGranted } from 'app/d2l-api/basic-actions';
+import { setApiPermissionGranted, updateGlobalSetting } from 'app/d2l-api/basic-actions';
 import { exportDimApiData } from 'app/d2l-api/d2l-api';
 import { importDataBackup } from 'app/d2l-api/import';
-import { apiPermissionGrantedSelector, D2LSyncErrorSelector } from 'app/d2l-api/selectors';
+import { apiPermissionGrantedSelector, D2LSyncErrorSelector, offlineModeSelector } from 'app/d2l-api/selectors';
 import HelpLink from 'app/d2l-ui/HelpLink';
 import useConfirm from 'app/d2l-ui/useConfirm';
 import { t } from 'app/i18next-t';
@@ -36,6 +36,7 @@ const STORAGE_SETTINGS_VISIBILITY = {
 export default function DimApiSettings() {
   const dispatch = useThunkDispatch();
   const apiPermissionGranted = useSelector(apiPermissionGrantedSelector);
+  const offlineMode = useSelector(offlineModeSelector);
 
   const profileLoadedError = useSelector(D2LSyncErrorSelector);
   const [hasBackedUp, setHasBackedUp] = useState(false);
@@ -98,6 +99,10 @@ export default function DimApiSettings() {
     await dispatch(loadDimApiData({ forceLoad: true }));
   };
 
+  const onOfflineModeChange = (checked: boolean) => {
+    dispatch(updateGlobalSetting({ key: 'offlineMode', value: checked }));
+  };
+
   return (
     <section className={styles.storage} id="storage">
       {confirmDialog}
@@ -128,6 +133,19 @@ export default function DimApiSettings() {
           )}
         </div>
       )}
+      
+      <div className={settingClass}>
+        <Checkbox
+          name={'offlineMode' as keyof Settings}
+          label="Offline Mode"
+          value={offlineMode}
+          onChange={onOfflineModeChange}
+        />
+        <div className={fineprintClass}>
+          When enabled, D2Locker will only use cached/local data and won't make calls to Bungie's servers. 
+          This prevents API rate limiting but means data won't be updated until you disable offline mode.
+        </div>
+      </div>
       {profileLoadedError && (
         <ErrorPanel title={t('Storage.ProfileErrorTitle')} error={profileLoadedError} />
       )}

@@ -163,9 +163,27 @@ export default function Armory({
     );
   }
 
+  // Create socket overrides that preserve the fake item's full socket data
+  // but apply real item sockets only for non-cosmetic sockets to show user's actual perks
+  const combinedSocketOverrides: SocketOverrides = {};
+  
+  // Only apply real item sockets for perk sockets, not ornaments or other cosmetic sockets
+  if (realItemSockets && itemWithoutSockets.sockets) {
+    for (const [socketIndex, plugHash] of Object.entries(realItemSockets)) {
+      const socketIndexNum = parseInt(socketIndex, 10);
+      const socket = itemWithoutSockets.sockets.allSockets[socketIndexNum];
+      
+      // Only override if it's a perk socket or non-cosmetic socket
+      // Skip ornament sockets (they have screenshots) to preserve the fake item's ornament data
+      if (socket && (!socket.plugged?.plugDef.screenshot)) {
+        combinedSocketOverrides[socketIndexNum] = plugHash;
+      }
+    }
+  }
+
   const itemWithOverrides = applySocketOverrides(itemCreationContext, itemWithoutSockets, {
-    // Start with the item's current sockets
-    ...realItemSockets,
+    // Apply filtered real item sockets (perks only, not ornaments)
+    ...combinedSocketOverrides,
     // Then apply whatever the user chose in the Armory UI
     ...socketOverrides,
   });
@@ -177,9 +195,8 @@ export default function Armory({
 
   const collectible = item.collectibleHash ? defs.Collectible.get(item.collectibleHash) : undefined;
 
-  // Use the ornament's screenshot if available
-  const ornamentSocket = item.sockets?.allSockets.find((s) => s.plugged?.plugDef.screenshot);
-  const screenshot = ornamentSocket?.plugged?.plugDef.screenshot || itemDef.screenshot;
+  // Use the main item's screenshot
+  const screenshot = itemDef.screenshot;
   const flavorText = itemDef.flavorText || itemDef.displaySource;
 
   // TODO: Show Catalyst benefits for exotics
@@ -203,7 +220,7 @@ export default function Armory({
       <Links item={item} />
       <div className={styles.header}>
         <div className="item">
-          <ItemIcon item={item} />
+          <DefItemIcon itemDef={itemDef} />
         </div>
         <h1>{item.name}</h1>
         <div className={styles.headerContent}>

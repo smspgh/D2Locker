@@ -8,6 +8,7 @@ import {
   profileErrorSelector,
   profileMintedSelector,
 } from 'app/inventory/selectors';
+import { offlineModeSelector } from 'app/d2l-api/selectors';
 import { useEventBusListener } from 'app/utils/hooks';
 import { i15dDurationFromMsWithSeconds } from 'app/utils/time';
 import clsx from 'clsx';
@@ -25,6 +26,7 @@ const MIN_SPIN = 1000; // 1 second
 export default function RefreshButton({ className }: { className?: string }) {
   const [disabled, setDisabled] = useState(false);
   const autoRefresh = useSelector(autoRefreshEnabledSelector);
+  const offlineMode = useSelector(offlineModeSelector);
 
   const handleChanges = useCallback(
     () => setDisabled(!navigator.onLine || document.hidden || isDragging$.getCurrentValue()),
@@ -66,16 +68,21 @@ export default function RefreshButton({ className }: { className?: string }) {
   useHotkey('r', t('Hotkey.RefreshInventory'), refresh);
 
   return (
-    <PressTip tooltip={<RefreshButtonTooltip autoRefresh={autoRefresh} />}>
+    <PressTip tooltip={<RefreshButtonTooltip autoRefresh={autoRefresh} offlineMode={offlineMode} />}>
       <button
         type="button"
         className={clsx(styles.refreshButton, className, { disabled })}
         onClick={refresh}
-        title={t('Header.Refresh') + (autoRefresh ? `\n${t('Header.AutoRefresh')}` : '')}
+        title={
+          t('Header.Refresh') + 
+          (autoRefresh ? `\n${t('Header.AutoRefresh')}` : '') +
+          (offlineMode ? '\nOffline Mode: Using cached data only' : '')
+        }
         aria-keyshortcuts="R"
       >
         <AppIcon icon={refreshIcon} spinning={spin !== 0} />
         {autoRefresh && <div className={styles.userIsPlaying} />}
+        {offlineMode && <div className={styles.offlineMode}>⚠</div>}
       </button>
     </PressTip>
   );
@@ -96,7 +103,7 @@ function profileAge(profileMintedDate: Date) {
   return profileMintedDate.getTime() === 0 ? undefined : Date.now() - profileMintedDate.getTime();
 }
 
-function RefreshButtonTooltip({ autoRefresh }: { autoRefresh: boolean }) {
+function RefreshButtonTooltip({ autoRefresh, offlineMode }: { autoRefresh: boolean; offlineMode: boolean }) {
   const profileAge = useProfileAge();
   const profileError = useSelector(profileErrorSelector);
   const isManifestError = profileError?.name === 'ManifestError';
@@ -123,6 +130,9 @@ function RefreshButtonTooltip({ autoRefresh }: { autoRefresh: boolean }) {
       ) : (
         <>
           <b>{t('Header.Refresh') + (autoRefresh ? `\n${t('Header.AutoRefresh')}` : '')}</b>
+          {offlineMode && (
+            <div style={{ color: '#ffa500' }}>⚠ Offline Mode: Using cached data only</div>
+          )}
           {profileAge !== undefined && (
             <div>{t('Header.ProfileAge', { age: i15dDurationFromMsWithSeconds(profileAge) })}</div>
           )}
