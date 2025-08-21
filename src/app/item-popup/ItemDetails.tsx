@@ -25,6 +25,8 @@ import { RootState } from 'app/store/types';
 import { getItemKillTrackerInfo, isD1Item } from 'app/utils/item-utils';
 import { SingleVendorSheetContext } from 'app/vendors/single-vendor/SingleVendorSheetContainer';
 import { TagActionButton, LockActionButton, CompareActionButton } from 'app/item-actions/ActionButtons';
+import TraitComboIndicator from 'app/roll-appraiser/TraitComboIndicator';
+import { useWeaponRankingData } from 'app/roll-appraiser/useRollAppraiserData';
 import clsx from 'clsx';
 import { BucketHashes, ItemCategoryHashes } from 'data/d2/generated-enums';
 import helmetIcon from 'destiny-icons/armor_types/helmet.svg';
@@ -85,6 +87,7 @@ function SeasonInfo({
   );
 }
 
+
 // TODO: probably need to load manifest. We can take a lot of properties off the item if we just load the definition here.
 export default function ItemDetails({
   item: originalItem,
@@ -110,6 +113,7 @@ export default function ItemDetails({
     : handCannonIcon;
 
   const ownerStore = useSelector((state: RootState) => getStore(storesSelector(state), item.owner));
+  const weaponRankingData = useWeaponRankingData(item);
 
   const killTrackerInfo = getItemKillTrackerInfo(item);
   
@@ -240,6 +244,9 @@ export default function ItemDetails({
           {actionsModel.taggable && <TagActionButton item={item} label={false} hideKeys={true} />}
           {actionsModel.lockable && <LockActionButton item={item} label={false} />}
           {actionsModel.comparable && <CompareActionButton item={item} label={false} />}
+          {item.bucket?.inWeapons && weaponRankingData?.traitComboRanking && (
+            <TraitComboIndicator comboData={weaponRankingData.traitComboRanking} />
+          )}
         </div>
       )}
 
