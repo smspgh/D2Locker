@@ -143,7 +143,7 @@ export function PerkCircleWithTooltip({
       ? utils.getPerkRank(item.hash.toString(), plug.plugDef.hash.toString())
       : null;
 
-  // Debug logging for armory items
+  /*   // Debug logging for armory items
   if (utils && item.destinyVersion === 2 && item.bucket.inWeapons && socketInfo.isPerk) {
     const hasDataForWeapon = utils.hasDataForWeapon(item.hash.toString());
     const isArmoryItem = !item.owner; // Fake items don't have owners
@@ -170,7 +170,7 @@ export function PerkCircleWithTooltip({
         isArmoryItem,
       });
     }
-  }
+  } */
 
   return (
     <div style={{ position: 'relative', display: 'inline-block' }}>
