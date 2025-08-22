@@ -146,6 +146,17 @@
     "IsVendorItem": "This item is not in your inventory, but {{vendorName}} sells it.",
     "NoModArmor": "Pre-mods"
   },
+  "BestPerks": {
+    "Button": "Best Perks",
+    "ButtonHelp": "Apply best perk combination",
+    "Success": "Best Perks Applied",
+    "Applied": "Applied {{count}} optimal perks to your weapon",
+    "AlreadyOptimal": "Already Optimal",
+    "NoChangesNeeded": "Your weapon already has the best perk combination",
+    "Error": "Error Applying Perks",
+    "NotApplicable": "Best perks can only be applied to weapons with trait data",
+    "UnknownError": "An unknown error occurred while applying perks"
+  },
   "Cooldown": {
     "Grenade": "Grenade cooldown: {{cooldown}}",
     "Melee": "Melee cooldown: {{cooldown}}",

@@ -8,6 +8,7 @@ import { consolidate, distribute } from 'app/inventory/move-item';
 import { allItemsSelector, sortedStoresSelector, tagSelector } from 'app/inventory/selectors';
 import { getStore } from 'app/inventory/stores-helpers';
 import ActionButton from 'app/item-actions/ActionButton';
+import BestPerksButton from 'app/item-actions/BestPerksButton';
 import LockButton from 'app/item-actions/LockButton';
 import ItemTagSelector from 'app/item-popup/ItemTagSelector';
 import { hideItemPopup } from 'app/item-popup/item-popup';
@@ -252,3 +253,5 @@ export function LoadoutActionButton({
     </ActionButton>
   );
 }
+
+export { BestPerksButton };

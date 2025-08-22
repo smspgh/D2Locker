@@ -10,6 +10,7 @@ import { applySocketOverrides, useSocketOverrides } from 'app/inventory/store/ov
 import { getEvent, getSeason } from 'app/inventory/store/season';
 import { getStore } from 'app/inventory/stores-helpers';
 import {
+  BestPerksButton,
   CompareActionButton,
   LockActionButton,
   TagActionButton,
@@ -256,9 +257,12 @@ export default function ItemDetails({
       {isPhonePortrait && actionsModel && (
         <div className={styles.mobileItemActions}>
           <div className={styles.actionButtons}>
-            {actionsModel?.taggable && <TagActionButton item={item} label={false} hideKeys={true} />}
+            {actionsModel?.taggable && (
+              <TagActionButton item={item} label={false} hideKeys={true} />
+            )}
             {actionsModel?.lockable && <LockActionButton item={item} label={false} />}
             {actionsModel?.comparable && <CompareActionButton item={item} label={false} />}
+            <BestPerksButton item={item} label={false} />
           </div>
           {item.bucket?.inWeapons && weaponRankingData?.traitComboRanking && (
             <TraitComboIndicator comboData={weaponRankingData.traitComboRanking} />
