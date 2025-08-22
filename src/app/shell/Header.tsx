@@ -1,4 +1,5 @@
 import { currentAccountSelector } from 'app/accounts/selectors';
+import { settingsSelector } from 'app/d2l-api/selectors';
 import { PressTipRoot } from 'app/d2l-ui/PressTip';
 import Sheet from 'app/d2l-ui/Sheet';
 import { showCheatSheet$ } from 'app/hotkeys/HotkeysCheatSheet';
@@ -7,6 +8,7 @@ import { useHotkeys } from 'app/hotkeys/useHotkey';
 import { t } from 'app/i18next-t';
 import { accountRoute } from 'app/routes';
 import { SearchFilterRef } from 'app/search/SearchBar';
+import { useSetSetting } from 'app/settings/hooks';
 import DimApiWarningBanner from 'app/storage/DimApiWarningBanner';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import StreamDeckButton from 'app/stream-deck/StreamDeckButton/StreamDeckButton';
@@ -40,14 +42,25 @@ const menuAnimateTransition: Transition<number> = { type: 'spring', duration: 0.
 
 // TODO: finally time to hack apart the header styles!
 
+const themeOptions = {
+  pyramid: 'D2L Default',
+  classic: 'D2L Light',
+  d2ldark: 'D2L Dark',
+};
+
 export default function Header() {
   const dispatch = useThunkDispatch();
   const isPhonePortrait = useIsPhonePortrait();
   const account = useSelector(currentAccountSelector);
+  const settings = useSelector(settingsSelector);
+  const setSetting = useSetSetting();
 
   // Hamburger menu
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownToggler = useRef<HTMLButtonElement>(null);
+  
+  // Theme dropdown
+  const [themeDropdownOpen, setThemeDropdownOpen] = useState(false);
   const toggleDropdown = useCallback((e: React.MouseEvent | KeyboardEvent) => {
     e.preventDefault();
     setDropdownOpen((dropdownOpen) => !dropdownOpen);
@@ -55,6 +68,7 @@ export default function Header() {
 
   const hideDropdown = useCallback(() => {
     setDropdownOpen(false);
+    setThemeDropdownOpen(false);
   }, []);
 
   // Mobile search bar
@@ -110,6 +124,7 @@ export default function Header() {
   useEffect(() => {
     // eslint-disable-next-line @eslint-react/hooks-extra/no-direct-set-state-in-use-effect
     setDropdownOpen(false);
+    setThemeDropdownOpen(false);
     dispatch(setSearchQuery(''));
   }, [dispatch, pathname]);
 
@@ -212,6 +227,17 @@ export default function Header() {
     setDropdownOpen(false);
   };
 
+  const changeTheme = (theme: string) => {
+    setSetting('theme', theme);
+    setThemeDropdownOpen(false);
+  };
+
+  const toggleThemeDropdown = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setThemeDropdownOpen(!themeDropdownOpen);
+  };
+
   // Calculate the true height of the header, for use in other things
   const headerRef = useRef<HTMLDivElement>(null);
   useSetCSSVarToHeight(headerRef, '--header-height');
@@ -267,6 +293,46 @@ export default function Header() {
                     <NavLink className={navLinkClassName} to={`${accountRoute(account)}/search-history`}>
                       {t('SearchHistory.Title')}
                     </NavLink>
+                  )}
+                  {account && (
+                    <NavLink className={navLinkClassName} to={`${accountRoute(account)}/filter-options`}>
+                      Filter Options
+                    </NavLink>
+                  )}
+                  <button
+                    type="button"
+                    className={styles.menuItem}
+                    onClick={toggleThemeDropdown}
+                    style={{ 
+                      width: '100%', 
+                      textAlign: 'left',
+                      background: 'transparent',
+                      border: 'none'
+                    }}
+                  >
+                    Theme
+                  </button>
+                  {themeDropdownOpen && (
+                    <div style={{ paddingLeft: '16px' }}>
+                      {Object.entries(themeOptions).map(([key, label]) => (
+                        <button
+                          key={key}
+                          type="button"
+                          onClick={() => changeTheme(key)}
+                          className={styles.menuItem}
+                          style={{
+                            width: '100%',
+                            textAlign: 'left',
+                            padding: '6px 8px',
+                            fontSize: '14px',
+                            background: (settings.theme === key || (!settings.theme && key === 'pyramid')) ? 'var(--theme-accent-primary)' : 'transparent',
+                            color: (settings.theme === key || (!settings.theme && key === 'pyramid')) ? 'var(--theme-text-contrast)' : 'var(--theme-text)',
+                          }}
+                        >
+                          {label}
+                        </button>
+                      ))}
+                    </div>
                   )}
                   <NavLink className={navLinkClassName} to="/settings">
                     {t('Settings.Settings')}

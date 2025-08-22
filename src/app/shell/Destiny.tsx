@@ -61,6 +61,10 @@ const SearchHistory = lazy(
   () => import(/* webpackChunkName: "searchHistory" */ '../search/SearchHistory'),
 );
 
+const FilterOptions = lazy(
+  () => import(/* webpackChunkName: "filterOptions" */ '../settings/FilterOptions'),
+);
+
 /**
  * Base view for pages that show Destiny content.
  */
@@ -245,6 +249,14 @@ export default function Destiny() {
               element={
                 <ErrorBoundary name="searchHistory">
                   <SearchHistory />
+                </ErrorBoundary>
+              }
+            />
+            <Route
+              path="filter-options"
+              element={
+                <ErrorBoundary name="filterOptions">
+                  <FilterOptions />
                 </ErrorBoundary>
               }
             />

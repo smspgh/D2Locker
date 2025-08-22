@@ -31,6 +31,7 @@ export default function MainSearchBarActions() {
   const onRecords = location.pathname.endsWith('records');
   const onVendors = location.pathname.endsWith('vendors');
   const onArmorySearch = location.pathname.endsWith('armory-search');
+  const onFilterOptions = location.pathname.endsWith('filter-options');
 
   // Use armory filtered items when on armory search page, otherwise use inventory items
   const filteredItems =
@@ -40,7 +41,7 @@ export default function MainSearchBarActions() {
 
   // We don't have access to the selected store so we'd match multiple characters' worth.
   // Just suppress the count for now
-  const showSearchResults = onInventory && !isPhonePortrait;
+  const showSearchResults = (onInventory || onFilterOptions) && !isPhonePortrait;
   const showSearchCount = Boolean(
     queryValid && searchQuery && !onProgress && !onRecords && !onVendors && !onArmorySearch,
   );

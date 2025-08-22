@@ -93,14 +93,9 @@ const SETTINGS_VISIBILITY = {
 };
 
 const themeOptions = mapToOptions({
-  default: 'Default (Beyond Light)',
-  classic: 'D2L Classic',
-  d2ldark: 'D2L Dark Mode',
-  europa: 'Europa',
-  neomuna: 'Neomuna',
-  pyramid: 'Pyramid Fleet',
-  throneworld: 'Throne World',
-  vexnet: 'Vex Network',
+  pyramid: 'D2L Default',
+  classic: 'D2L Light',
+  d2ldark: 'D2L Dark',
 });
 
 export default function SettingsPage() {
