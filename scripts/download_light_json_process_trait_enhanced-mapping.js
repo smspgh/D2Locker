@@ -18,7 +18,9 @@ class TraitEnhancedMappingGenerator {
       if (!process.argv.includes('--no-fetch')) {
         const pythonScriptPath = path.join(__dirname, '../backend/get_light.py');
         console.log(`Executing Python script to fetch latest data: ${pythonScriptPath}`);
-        execFileSync('python', [pythonScriptPath], { stdio: 'inherit' });
+        execFileSync('C:\\Program Files\\Python313\\python.exe', [pythonScriptPath], {
+          stdio: 'inherit',
+        });
         console.log('Python script finished successfully.');
       } else {
         console.log('"--no-fetch" flag detected. Skipping Python script execution.');

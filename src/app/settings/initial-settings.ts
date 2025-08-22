@@ -25,6 +25,8 @@ export interface Settings extends DimApiSettings {
       }[];
     };
   };
+  // Filter armor in vault by current character class
+  vaultArmorFilterByClass?: boolean;
 }
 
 export const initialSettingsState: Settings = {
@@ -40,6 +42,8 @@ export const initialSettingsState: Settings = {
       additionalSearchTerms: [],
     },
   },
+  // Default to filtering armor by current character class in vault
+  vaultArmorFilterByClass: true,
   organizerColumnsWeapons: [
     'icon',
     'name',

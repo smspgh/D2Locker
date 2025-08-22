@@ -1,0 +1,5 @@
+is:keepweapon:
+(is:weapon (is:legendary and comborank:<4) or (-is:dupelower and is:exotic) or (is:crafted) or (exactperk:"flash counter" and is:sword))
+
+is:keeparmor:
+(((is:armor and bestforperk:Brawler) or (is:armor and bestforperk:Gunner) or (is:armor and bestforperk:Specialist) or (is:armor and bestforperk:Grenadier) or (is:armor and bestforperk:Paragon) or (is:armor and bestforperk:Bulwark)) or (is:bestarmor and is:exotic))

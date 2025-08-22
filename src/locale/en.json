@@ -708,6 +708,9 @@
       "Name": "Uses Seasonal Mods"
     }
   },
+  "Menu": {
+    "VaultArmorFilter": "Active Class Only"
+  },
   "LoadoutBuilder": {
     "All": "All",
     "AnyExotic": "Any Exotic",
@@ -1296,6 +1299,10 @@
     "ShowNewItems": "Show green dot on new items",
     "SingleCharacter": "Single-Character View",
     "SingleCharacterExplanation": "D2L will show only the most recently played character.\nItems held by hidden characters will appear in the vault, if they can be used by the current character.\nItems specific to other classes will be hidden entirely.",
+    "VaultArmorFilterByClass": {
+      "Title": "Filter vault armor by character class",
+      "Description": "When enabled, the vault will only show armor that can be used by your active character. Disable to see armor for all classes."
+    },
     "SizeItem": "Item size",
     "SortByAmmoType": "Ammo Type",
     "SortByAmount": "Stack Size",

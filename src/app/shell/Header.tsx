@@ -1,5 +1,5 @@
 import { currentAccountSelector } from 'app/accounts/selectors';
-import { settingsSelector } from 'app/d2l-api/selectors';
+import { settingSelector, settingsSelector } from 'app/d2l-api/selectors';
 import { PressTipRoot } from 'app/d2l-ui/PressTip';
 import Sheet from 'app/d2l-ui/Sheet';
 import { showCheatSheet$ } from 'app/hotkeys/HotkeysCheatSheet';
@@ -53,12 +53,13 @@ export default function Header() {
   const isPhonePortrait = useIsPhonePortrait();
   const account = useSelector(currentAccountSelector);
   const settings = useSelector(settingsSelector);
+  const vaultArmorFilterByClass = useSelector(settingSelector('vaultArmorFilterByClass'));
   const setSetting = useSetSetting();
 
   // Hamburger menu
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownToggler = useRef<HTMLButtonElement>(null);
-  
+
   // Theme dropdown
   const [themeDropdownOpen, setThemeDropdownOpen] = useState(false);
   const toggleDropdown = useCallback((e: React.MouseEvent | KeyboardEvent) => {
@@ -238,6 +239,12 @@ export default function Header() {
     setThemeDropdownOpen(!themeDropdownOpen);
   };
 
+  const toggleVaultArmorFilter = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setSetting('vaultArmorFilterByClass', !vaultArmorFilterByClass);
+  };
+
   // Calculate the true height of the header, for use in other things
   const headerRef = useRef<HTMLDivElement>(null);
   useSetCSSVarToHeight(headerRef, '--header-height');
@@ -290,24 +297,73 @@ export default function Header() {
                   {destinyLinks}
                   <hr />
                   {account && (
-                    <NavLink className={navLinkClassName} to={`${accountRoute(account)}/search-history`}>
+                    <NavLink
+                      className={navLinkClassName}
+                      to={`${accountRoute(account)}/search-history`}
+                    >
                       {t('SearchHistory.Title')}
                     </NavLink>
                   )}
                   {account && (
-                    <NavLink className={navLinkClassName} to={`${accountRoute(account)}/filter-options`}>
+                    <NavLink
+                      className={navLinkClassName}
+                      to={`${accountRoute(account)}/filter-options`}
+                    >
                       Filter Options
                     </NavLink>
+                  )}
+                  {account && (
+                    <button
+                      type="button"
+                      className={styles.menuItem}
+                      onClick={toggleVaultArmorFilter}
+                      style={{
+                        width: '100%',
+                        textAlign: 'left',
+                        background: 'transparent',
+                        border: 'none',
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                      }}
+                    >
+                      <span>{t('Menu.VaultArmorFilter', { defaultValue: 'Active Class Only' })}</span>
+                      <span
+                        style={{
+                          width: '40px',
+                          height: '20px',
+                          borderRadius: '10px',
+                          background: vaultArmorFilterByClass
+                            ? 'var(--theme-accent-primary)'
+                            : 'var(--theme-accent-secondary)',
+                          position: 'relative',
+                          transition: 'background-color 0.2s',
+                        }}
+                      >
+                        <span
+                          style={{
+                            position: 'absolute',
+                            top: '2px',
+                            left: vaultArmorFilterByClass ? '22px' : '2px',
+                            width: '16px',
+                            height: '16px',
+                            borderRadius: '8px',
+                            background: 'white',
+                            transition: 'left 0.2s',
+                          }}
+                        />
+                      </span>
+                    </button>
                   )}
                   <button
                     type="button"
                     className={styles.menuItem}
                     onClick={toggleThemeDropdown}
-                    style={{ 
-                      width: '100%', 
+                    style={{
+                      width: '100%',
                       textAlign: 'left',
                       background: 'transparent',
-                      border: 'none'
+                      border: 'none',
                     }}
                   >
                     Theme
@@ -325,8 +381,14 @@ export default function Header() {
                             textAlign: 'left',
                             padding: '6px 8px',
                             fontSize: '14px',
-                            background: (settings.theme === key || (!settings.theme && key === 'pyramid')) ? 'var(--theme-accent-primary)' : 'transparent',
-                            color: (settings.theme === key || (!settings.theme && key === 'pyramid')) ? 'var(--theme-text-contrast)' : 'var(--theme-text)',
+                            background:
+                              settings.theme === key || (!settings.theme && key === 'pyramid')
+                                ? 'var(--theme-accent-primary)'
+                                : 'transparent',
+                            color:
+                              settings.theme === key || (!settings.theme && key === 'pyramid')
+                                ? 'var(--theme-text-contrast)'
+                                : 'var(--theme-text)',
                           }}
                         >
                           {label}

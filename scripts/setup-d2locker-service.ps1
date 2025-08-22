@@ -6,7 +6,9 @@ param(
     [switch]$Uninstall,
     [switch]$Start,
     [switch]$Stop,
-    [switch]$Status
+    [switch]$Status,
+    [switch]$Update,
+    [string]$Command = "prod"
 )
 
 # Configuration
@@ -111,7 +113,7 @@ function Install-D2LockerService {
 
     # Install service
     & $script:nssmPath install $serviceName pnpm
-    & $script:nssmPath set $serviceName AppParameters "prod-nf"
+    & $script:nssmPath set $serviceName AppParameters $Command
     & $script:nssmPath set $serviceName AppDirectory $appPath
     & $script:nssmPath set $serviceName DisplayName $serviceDisplayName
     & $script:nssmPath set $serviceName Description $serviceDescription
@@ -135,7 +137,7 @@ function Install-D2LockerService {
     Write-Host "✓ D2Locker service installed successfully!" -ForegroundColor Green
     Write-Host "Service Name: $serviceName" -ForegroundColor Cyan
     Write-Host "Display Name: $serviceDisplayName" -ForegroundColor Cyan
-    Write-Host "Command: pnpm prod-nf" -ForegroundColor Cyan
+    Write-Host "Command: pnpm $Command" -ForegroundColor Cyan
     Write-Host "Working Directory: $appPath" -ForegroundColor Cyan
     Write-Host "Logs Directory: $logPath" -ForegroundColor Cyan
     Write-Host "NSSM Path: $script:nssmPath" -ForegroundColor Cyan
@@ -190,6 +192,33 @@ function Stop-D2LockerService {
     } catch {
         Write-Host "✗ Failed to stop service: $($_.Exception.Message)" -ForegroundColor Red
     }
+}
+
+function Update-D2LockerService {
+    Write-Host "Updating D2Locker service command..." -ForegroundColor Yellow
+    
+    # Check if service exists
+    $existingService = Get-Service -Name $serviceName -ErrorAction SilentlyContinue
+    if (-not $existingService) {
+        Write-Host "✗ Service '$serviceName' does not exist. Install first with -Install" -ForegroundColor Red
+        return
+    }
+
+    # Download NSSM if needed
+    Download-NSSM
+
+    # Stop service if running
+    if ($existingService.Status -eq 'Running') {
+        Write-Host "Stopping service to update configuration..." -ForegroundColor Yellow
+        Stop-Service -Name $serviceName -Force
+        Start-Sleep -Seconds 2
+    }
+
+    # Update the AppParameters
+    & $script:nssmPath set $serviceName AppParameters $Command
+    
+    Write-Host "✓ Service command updated to: pnpm $Command" -ForegroundColor Green
+    Write-Host "You can start the service with: .\setup-d2locker-service.ps1 -Start" -ForegroundColor Yellow
 }
 
 function Get-D2LockerServiceStatus {
@@ -257,24 +286,36 @@ if ($Install) {
     Stop-D2LockerService
 } elseif ($Status) {
     Get-D2LockerServiceStatus
+} elseif ($Update) {
+    Update-D2LockerService
 } else {
     Write-Host "D2Locker Windows Service Setup" -ForegroundColor Cyan
     Write-Host ""
     Write-Host "Usage:" -ForegroundColor Yellow
-    Write-Host "  .\setup-d2locker-service.ps1 -Install    # Install the service"
-    Write-Host "  .\setup-d2locker-service.ps1 -Start      # Start the service"
-    Write-Host "  .\setup-d2locker-service.ps1 -Stop       # Stop the service"
-    Write-Host "  .\setup-d2locker-service.ps1 -Status     # Check service status"
-    Write-Host "  .\setup-d2locker-service.ps1 -Uninstall  # Remove the service"
+    Write-Host "  .\setup-d2locker-service.ps1 -Install [-Command <command>]    # Install the service"
+    Write-Host "  .\setup-d2locker-service.ps1 -Start                          # Start the service"
+    Write-Host "  .\setup-d2locker-service.ps1 -Stop                           # Stop the service"
+    Write-Host "  .\setup-d2locker-service.ps1 -Status                         # Check service status"
+    Write-Host "  .\setup-d2locker-service.ps1 -Update -Command <command>      # Update service command"
+    Write-Host "  .\setup-d2locker-service.ps1 -Uninstall                      # Remove the service"
+    Write-Host ""
+    Write-Host "Available Commands:" -ForegroundColor Yellow
+    Write-Host "  prod      # Production with Python data fetch (default)"
+    Write-Host "  prod-nf   # Production without Python data fetch (faster startup)"
+    Write-Host "  dev       # Development mode"
+    Write-Host "  dev-nf    # Development mode without Python data fetch"
     Write-Host ""
     Write-Host "The service will:" -ForegroundColor Green
     Write-Host "  ✓ Start automatically when Windows boots"
     Write-Host "  ✓ Run without requiring user login"
-    Write-Host "  ✓ Run 'pnpm prod-nf' in C:\coding_projects\D2Locker"
+    Write-Host "  ✓ Run 'pnpm prod' in C:\coding_projects\D2Locker"
     Write-Host "  ✓ Serve frontend on port 443 (HTTPS)"
     Write-Host "  ✓ Serve backend on port 3000 (HTTP)"
     Write-Host "  ✓ Log output to C:\coding_projects\D2Locker\logs"
     Write-Host "  ✓ Run as LocalSystem (required for port 443)"
     Write-Host ""
-    Write-Host "Start with: .\setup-d2locker-service.ps1 -Install" -ForegroundColor Cyan
+    Write-Host "Examples:" -ForegroundColor Cyan
+    Write-Host "  .\setup-d2locker-service.ps1 -Install                    # Install with default 'prod' command"
+    Write-Host "  .\setup-d2locker-service.ps1 -Install -Command prod-nf   # Install without Python data fetch"
+    Write-Host "  .\setup-d2locker-service.ps1 -Update -Command prod-nf    # Update existing service command"
 }

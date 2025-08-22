@@ -1,55 +1,77 @@
-// Basic D2L dark Theme
 .theme-guardian {
-  // Core Destiny-inspired colors
-  --guardian-dark-bg: #0c0e12; // A deep, nearly black space color
-  --guardian-mid-gray: #1a202d; // A metallic, subtle gray for UI elements
-  --guardian-light-gray: #b0c0d1; // Light gray for primary text
+  /* --- Core Palette (Foundation) --- */
+  /* IMPROVED: Converted key colors to HSL for easier manipulation. */
+  /* HSL stands for Hue, Saturation, Lightness. */
+  --guardian-dark-bg: #0c0e12; /* The base background */
+  --guardian-mid-gray: #1a202d; /* UI panels, cards, etc. */
+  --guardian-light-gray: #b0c0d1; /* Primary text */
+  --guardian-secondary-gray: #7e879a; /* Secondary/placeholder text */
 
-  // Subclass-inspired accent colors
-  --guardian-solar: #f26629; // Bright, burning orange for Solar
-  --guardian-arc: #0584b4; // Electric blue for Arc
-  --guardian-void: #8e58a2; // Deep, mystical purple for Void
-  --guardian-stasis: #69c5e3; // Cold, icy blue for Stasis
-  --guardian-strand: #26b285; // Vibrant, kinetic green for Strand
-  --guardian-masterwork: #d4a946; // The iconic golden masterwork color
+  /* --- Subclass Accents (HSL) --- */
+  /* Using HSL lets us easily create lighter/darker shades or change opacity. */
+  --guardian-solar-hsl: 17, 90%, 55%; /* #f26629 */
+  --guardian-arc-hsl: 198, 95%, 37%; /* #0584b4 */
+  --guardian-void-hsl: 283, 30%, 50%; /* #8e58a2 */
+  --guardian-stasis-hsl: 195, 68%, 65%; /* #69c5e3 */
+  --guardian-strand-hsl: 161, 64%, 42%; /* #26b285 */
+  --guardian-masterwork-hsl: 43, 62%, 58%; /* #d4a946 */
 
-  // Default Accent: You can switch this to any of the subclass colors above
-  --theme-accent-primary: var(--guardian-solar);
-  --theme-accent-secondary: var(--guardian-masterwork);
+  /* NEW: State colors for feedback */
+  --guardian-error-hsl: 0, 70%, 55%; /* A clear red for errors/warnings */
 
-  // --- Theme Properties ---
+  /* --- Active Theme Accents --- */
+  /* Switch the HSL variable here to change the entire theme's accent. */
+  --theme-accent-primary-hsl: var(--guardian-solar-hsl);
+  --theme-accent-secondary-hsl: var(--guardian-masterwork-hsl);
 
-  // Generic fills for modal backgrounds
+  /* IMPROVED: Generate the solid color from the active HSL accent */
+  --theme-accent-primary: hsl(var(--theme-accent-primary-hsl));
+  --theme-accent-secondary: hsl(var(--theme-accent-secondary-hsl));
+
+  /* --- Theme Properties --- */
+
+  /* Generic fills for modals, popups, etc. */
   --theme-fill-modal: #11141b;
   --theme-fill-modal-actions: var(--guardian-mid-gray);
 
-  // Text
+  /* Text */
   --theme-text: var(--guardian-light-gray);
   --theme-text-invert: var(--guardian-dark-bg);
-  --theme-text-secondary: #7e879a;
+  --theme-text-secondary: var(--guardian-secondary-gray);
 
-  // Buttons
-  --theme-button-bg: rgb(var(--theme-accent-primary), 0.2); // Translucent button
+  /* Buttons */
+  /* IMPROVED: Cleaner way to set translucent colors using HSL alpha channel. */
+  --theme-button-bg: hsl(var(--theme-accent-primary-hsl), 0.15);
   --theme-button-text: var(--theme-text);
-  --theme-button-border: 1px solid var(--theme-accent-primary);
-  --theme-button-hover-bg: rgb(var(--theme-accent-primary), 0.4);
+  --theme-button-border: 1px solid hsl(var(--theme-accent-primary-hsl), 0.7);
+  --theme-button-hover-bg: hsl(var(--theme-accent-primary-hsl), 0.3);
+  /* NEW: Active state for a "pressed" feel. */
+  --theme-button-active-bg: hsl(var(--theme-accent-primary-hsl), 0.4);
+  /* NEW: Focus state for accessibility (keyboard navigation). */
+  --theme-focus-glow: 0 0 0 3px hsl(var(--theme-accent-primary-hsl), 0.5);
 
-  // Input field (text boxes and text areas)
+  /* Input fields (text boxes, text areas) */
   --theme-input-bg: var(--guardian-mid-gray);
-  --theme-input-border: 1px solid var(--guardian-mid-gray);
+  --theme-input-border: 1px solid #2a3342;
   --theme-input-placeholder: var(--theme-text-secondary);
+  /* NEW: Border color when the input is focused. */
+  --theme-input-focus-border: 1px solid var(--theme-accent-primary);
 
-  // Shadows
-  --theme-drop-shadow: 0 0 10px rgb(0, 0, 0, 0.7);
+  /* Shadows & Borders */
+  --theme-drop-shadow: 0 4px 12px rgb(0, 0, 0, 0.5);
+  --theme-border-subtle: 1px solid rgb(176, 192, 209, 0.1); /* Subtle divider */
 
-  // Tooltips
+  /* Tooltips */
   --theme-tooltip-underline: var(--theme-accent-primary);
   --theme-tooltip-header-bg: var(--guardian-dark-bg);
   --theme-tooltip-body-bg: var(--guardian-mid-gray);
   --theme-tooltip-border: var(--theme-accent-primary);
   --theme-tooltip-minimal-bg: var(--guardian-dark-bg);
 
-  // App background gradient pattern
+  /* App Background */
+  /* IMPROVED: Added a very subtle noise texture for a more "in-game" feel. */
+  /* You'll need a noise.png file or you can generate one online. */
+  /* --theme-app-bg-noise: url('path/to/noise.png'); */
   --theme-app-bg-gradient-start: var(--guardian-dark-bg);
   --theme-app-bg-gradient-end: #0f1218;
   --theme-app-bg-gradient: radial-gradient(
@@ -57,44 +79,50 @@
     var(--theme-app-bg-gradient-start) 0%,
     var(--theme-app-bg-gradient-end) 100%
   );
+  /* Layer the noise on top of the gradient */
   --theme-app-bg: var(--theme-app-bg-gradient);
   --theme-section-bg: var(--guardian-mid-gray);
   --theme-pwa-background: var(--guardian-dark-bg);
 
-  // Header
-  --theme-header-nav-bg: var(--guardian-dark-bg);
+  /* NEW: Universal transition for smoother state changes */
+  --theme-transition-fast: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Header */
+  --theme-header-nav-bg: rgb(12, 14, 18, 0.8); /* Slightly transparent for depth */
+  /* NEW: A backdrop blur for a modern "glass" effect if the header is floating. */
+  --theme-header-backdrop-blur: 10px;
   --theme-header-nav-slideout-menu-bg: var(--theme-fill-modal);
   --theme-header-characters-bg: var(--guardian-dark-bg);
   --theme-header-characters-txt: var(--theme-text);
 
-  // Dropdown menu
+  /* Dropdown menu */
   --theme-dropdown-menu-bg: var(--theme-fill-modal);
 
-  // Search
+  /* Search */
   --theme-search-bg: rgb(255, 255, 255, 0.05);
   --theme-search-dropdown-bg: var(--theme-fill-modal);
 
-  // Items (example colors for item rolls/rarities)
+  /* Items (Rarities, Rolls, etc.) */
   --theme-item-polaroid: var(--guardian-mid-gray);
   --theme-item-polaroid-txt: var(--theme-text);
   --theme-item-polaroid-hover-border: var(--theme-accent-primary);
-  --theme-item-polaroid-masterwork: var(--guardian-masterwork); // Masterwork is gold
+  --theme-item-polaroid-masterwork: var(--theme-accent-secondary);
   --theme-item-polaroid-masterwork-txt: var(--guardian-dark-bg);
-  --theme-item-polaroid-capped: #812c2c; // A deep red for capped items
+  --theme-item-polaroid-capped: hsl(var(--guardian-error-hsl));
   --theme-item-polaroid-capped-txt: var(--theme-text);
-  --theme-item-polaroid-godroll: var(--guardian-masterwork);
+  --theme-item-polaroid-godroll: var(--theme-accent-secondary);
   --theme-item-polaroid-trashroll: var(--theme-text-secondary);
   --theme-item-polaroid-element-adjust-brightness: 150%;
 
-  // Item popup
+  /* Item Popup */
   --theme-item-popup-border: var(--theme-accent-primary);
   --theme-item-popup-arrow: var(--theme-fill-modal-actions);
   --theme-item-popup-actions-bg: var(--theme-fill-modal-actions);
   --theme-item-popup-panel-bg: #2a3342;
   --theme-item-popup-progress-bar-bg: #353e4b;
 
-  // Organizer & Records
+  /* Organizer & Records */
   --theme-organizer-row-odd-bg: #0f1218;
   --theme-organizer-row-even-bg: #14171d;
-  --theme-record-redeemed: var(--guardian-masterwork);
+  --theme-record-redeemed: var(--theme-accent-secondary);
 }

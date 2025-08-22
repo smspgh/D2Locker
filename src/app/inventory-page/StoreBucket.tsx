@@ -1,4 +1,5 @@
 import { DestinyVersion, VaultWeaponGroupingStyle } from '@destinyitemmanager/dim-api-types';
+import { settingSelector } from 'app/d2l-api/selectors';
 import WeaponGroupingIcon from 'app/d2l-ui/WeaponGroupingIcon';
 import { InventoryBucket } from 'app/inventory/inventory-buckets';
 import { DimItem } from 'app/inventory/item-types';
@@ -12,6 +13,7 @@ import {
   vaultWeaponGroupingStyleSelector,
 } from 'app/settings/vault-grouping';
 import { vaultGroupingValueWithType } from 'app/shell/item-comparators';
+import { isClassCompatible } from 'app/utils/item-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { BucketHashes } from 'data/d2/generated-enums';
@@ -164,6 +166,7 @@ export default function StoreBucket({
 }) {
   const currentStore = useSelector(currentStoreSelector);
   const stores = useSelector(storesSelector);
+  const vaultArmorFilterByClass = useSelector(settingSelector('vaultArmorFilterByClass'));
 
   let items = findItemsByBucket(store, bucket.hash);
 
@@ -182,6 +185,21 @@ export default function StoreBucket({
       (i) =>
         i.classType === DestinyClass.Unknown ||
         (currentStore && i.classType === currentStore.classType),
+    );
+  }
+
+  // Filter armor in vault by current character class if enabled
+  if (
+    vaultArmorFilterByClass &&
+    store.isVault &&
+    bucket.inArmor &&
+    currentStore &&
+    !singleCharacter // Don't double-filter when single character mode is already active
+  ) {
+    items = items.filter(
+      (item) =>
+        item.classType === DestinyClass.Unknown ||
+        isClassCompatible(item.classType, currentStore.classType),
     );
   }
 
