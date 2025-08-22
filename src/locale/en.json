@@ -709,7 +709,15 @@
     }
   },
   "Menu": {
-    "VaultArmorFilter": "Active Class Only"
+    "VaultArmorFilter": "Active Class Only",
+    "LockerOptions": "Locker Options"
+  },
+  "LockerOptions": {
+    "Title": "Locker Options",
+    "SortingHeader": "Item Sorting",
+    "SortingDescription": "Drag and drop to reorder. Check to enable. Click arrows to reverse sort direction.",
+    "VaultHeader": "Vault Organization",
+    "DisplayHeader": "Display Options"
   },
   "LoadoutBuilder": {
     "All": "All",
@@ -1319,12 +1327,16 @@
     "SortByTier": "Tier (D2)",
     "SortByType": "Type",
     "SortByWeaponElement": "Damage Type",
+    "SortByMasterwork": "Masterworked",
     "SortCustom": "Custom Sort",
     "SortName": "Name",
     "SpacesSize_one": "{{count}} space",
     "SpacesSize_other": "{{count}} spaces",
     "Theme": "Theme",
     "VaultArmorGroupingStyle": "Separate armor on different lines by class",
+    "VaultColumns": "Vault columns",
+    "VaultColumnsDescription": "Maximum number of items per row in the vault.",
+    "ShowNewItemsDescription": "Display a green indicator on newly acquired items.",
     "VaultGroupingNone": "None",
     "VaultWeaponGroupingStyle": "Separate weapon groups on different lines",
     "WishlistRefreshNotificationBody": "If you do not see any updates, be sure the source (such as GitHub) reflects them!",

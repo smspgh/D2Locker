@@ -65,6 +65,10 @@ const FilterOptions = lazy(
   () => import(/* webpackChunkName: "filterOptions" */ '../settings/FilterOptions'),
 );
 
+const LockerOptions = lazy(
+  () => import(/* webpackChunkName: "lockerOptions" */ '../locker-options/LockerOptions'),
+);
+
 /**
  * Base view for pages that show Destiny content.
  */
@@ -257,6 +261,14 @@ export default function Destiny() {
               element={
                 <ErrorBoundary name="filterOptions">
                   <FilterOptions />
+                </ErrorBoundary>
+              }
+            />
+            <Route
+              path="locker-options"
+              element={
+                <ErrorBoundary name="lockerOptions">
+                  <LockerOptions />
                 </ErrorBoundary>
               }
             />

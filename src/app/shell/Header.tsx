@@ -314,6 +314,14 @@ export default function Header() {
                     </NavLink>
                   )}
                   {account && (
+                    <NavLink
+                      className={navLinkClassName}
+                      to={`${accountRoute(account)}/locker-options`}
+                    >
+                      {t('Menu.LockerOptions', { defaultValue: 'Locker Options' })}
+                    </NavLink>
+                  )}
+                  {account && (
                     <button
                       type="button"
                       className={styles.menuItem}
