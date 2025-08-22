@@ -180,8 +180,8 @@ export default function SearchSettings({ settings }: { settings: Settings }) {
   // No separate state needed - we'll add rows directly to the table
 
   // State for collapsing sections
-  const [weaponCollapsed, setWeaponCollapsed] = React.useState(true);
-  const [armorCollapsed, setArmorCollapsed] = React.useState(true);
+  const [weaponCollapsed, setWeaponCollapsed] = React.useState(false);
+  const [armorCollapsed, setArmorCollapsed] = React.useState(false);
 
   // Search configuration and autocomplete
   const searchConfig = useSelector(searchConfigSelector);

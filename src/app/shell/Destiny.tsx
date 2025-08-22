@@ -65,8 +65,19 @@ const FilterOptions = lazy(
   () => import(/* webpackChunkName: "filterOptions" */ '../settings/FilterOptions'),
 );
 
+const SearchFilter = lazy(
+  () => import(/* webpackChunkName: "searchFilter" */ '../search-filter/SearchFilter'),
+);
+
 const LockerOptions = lazy(
   () => import(/* webpackChunkName: "lockerOptions" */ '../locker-options/LockerOptions'),
+);
+
+const ItemDisplayOptions = lazy(
+  () =>
+    import(
+      /* webpackChunkName: "itemDisplayOptions" */ '../item-display-options/ItemDisplayOptions'
+    ),
 );
 
 /**
@@ -265,10 +276,26 @@ export default function Destiny() {
               }
             />
             <Route
+              path="search-filter"
+              element={
+                <ErrorBoundary name="searchFilter">
+                  <SearchFilter />
+                </ErrorBoundary>
+              }
+            />
+            <Route
               path="locker-options"
               element={
                 <ErrorBoundary name="lockerOptions">
                   <LockerOptions />
+                </ErrorBoundary>
+              }
+            />
+            <Route
+              path="item-display-options"
+              element={
+                <ErrorBoundary name="itemDisplayOptions">
+                  <ItemDisplayOptions />
                 </ErrorBoundary>
               }
             />

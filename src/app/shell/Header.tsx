@@ -300,25 +300,17 @@ export default function Header() {
                   {account && (
                     <NavLink
                       className={navLinkClassName}
-                      to={`${accountRoute(account)}/search-history`}
+                      to={`${accountRoute(account)}/search-filter`}
                     >
-                      {t('SearchHistory.Title')}
+                      Search / Filter
                     </NavLink>
                   )}
                   {account && (
                     <NavLink
                       className={navLinkClassName}
-                      to={`${accountRoute(account)}/filter-options`}
+                      to={`${accountRoute(account)}/item-display-options`}
                     >
-                      Filter Options
-                    </NavLink>
-                  )}
-                  {account && (
-                    <NavLink
-                      className={navLinkClassName}
-                      to={`${accountRoute(account)}/locker-options`}
-                    >
-                      {t('Menu.LockerOptions', { defaultValue: 'Locker Options' })}
+                      Item Display Options
                     </NavLink>
                   )}
                   {account && (
@@ -407,9 +399,6 @@ export default function Header() {
                       ))}
                     </div>
                   )}
-                  <NavLink className={navLinkClassName} to="/settings">
-                    {t('Settings.Settings')}
-                  </NavLink>
                   {installable && (
                     <a className={styles.menuItem} onClick={installDim}>
                       Install D2Locker as an App
