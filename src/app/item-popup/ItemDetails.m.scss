@@ -149,13 +149,17 @@
   border-radius: 4px;
   margin: 4px;
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
+  align-items: center;
   gap: 10px;
 
-  // Add extra spacing before TraitComboIndicator
-  :global(.comboIndicator) {
-    margin-left: 24px;
+  // Group action buttons on the left
+  .actionButtons {
+    display: flex;
+    gap: 10px;
   }
+
+  // TraitComboIndicator will align to the right automatically
 }
 
 // Mobile description section (appears after static header)

@@ -2,6 +2,7 @@
 // Please do not change this file!
 interface CssExports {
   'acquiredIcon': string;
+  'actionButtons': string;
   'armoryHeader': string;
   'element': string;
   'flavor': string;

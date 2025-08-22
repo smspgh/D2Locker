@@ -255,9 +255,11 @@ export default function ItemDetails({
       {/* Mobile action buttons above Enemies Defeated */}
       {isPhonePortrait && actionsModel && (
         <div className={styles.mobileItemActions}>
-          {actionsModel?.taggable && <TagActionButton item={item} label={false} hideKeys={true} />}
-          {actionsModel?.lockable && <LockActionButton item={item} label={false} />}
-          {actionsModel?.comparable && <CompareActionButton item={item} label={false} />}
+          <div className={styles.actionButtons}>
+            {actionsModel?.taggable && <TagActionButton item={item} label={false} hideKeys={true} />}
+            {actionsModel?.lockable && <LockActionButton item={item} label={false} />}
+            {actionsModel?.comparable && <CompareActionButton item={item} label={false} />}
+          </div>
           {item.bucket?.inWeapons && weaponRankingData?.traitComboRanking && (
             <TraitComboIndicator comboData={weaponRankingData.traitComboRanking} />
           )}
