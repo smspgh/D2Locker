@@ -517,6 +517,74 @@ const rollAppraiserFilters: ItemFilterDefinition[] = [
         return info?.reviewSummary ? compare!(info.reviewSummary.overallAverage) : false;
       },
   },
+
+  // Has best perks filter
+  {
+    keywords: 'hasbp',
+    description: 'Shows weapons that do not have their best available perks selected',
+    destinyVersion: 2,
+    filter: () => (item) => {
+      const info = getWeaponRankingInfo(item);
+      if (!info || !item.sockets) {
+        return false;
+      }
+
+      const weaponSockets = getWeaponSockets(item, { excludeEmptySockets: false });
+      if (!weaponSockets?.perks) {
+        return false;
+      }
+
+      const perkSockets = getSocketsByIndexes(item.sockets, weaponSockets.perks.socketIndexes);
+
+      // Check individual perk columns for non-optimal selections
+      for (const [socketIndex, socket] of perkSockets.entries()) {
+        const availablePerks: number[] = [];
+
+        if (socket.reusablePlugItems) {
+          for (const plug of socket.reusablePlugItems) {
+            if (plug.enabled) {
+              availablePerks.push(plug.plugItemHash);
+            }
+          }
+        }
+
+        // Find best perk for this column
+        let bestPerkRank = Infinity;
+        let bestPerkHash: number | null = null;
+
+        for (const perkHash of availablePerks) {
+          const ranking = info.perkRankings.find(
+            (p) => p.perkHash === perkHash && p.index === socketIndex,
+          );
+          if (
+            ranking?.ranking &&
+            typeof ranking.ranking.rank === 'number' &&
+            ranking.ranking.rank < bestPerkRank
+          ) {
+            bestPerkRank = ranking.ranking.rank as number;
+            bestPerkHash = perkHash;
+          }
+        }
+
+        // If current perk is not the best, return true (has suboptimal perks)
+        if (bestPerkHash && socket.plugged?.plugDef.hash !== bestPerkHash) {
+          return true;
+        }
+      }
+
+      // Check trait combo optimization
+      const currentComboRank = info.comboRank;
+      const bestComboRank = info.bestComboRank;
+
+      // If there's a better combo available, return true
+      if (bestComboRank !== null && currentComboRank !== null && bestComboRank < currentComboRank) {
+        return true;
+      }
+
+      // If best combo exists but current combo doesn't (no combo selected), return true
+      return bestComboRank !== null && currentComboRank === null;
+    },
+  },
 ];
 
 // Make filters globally accessible for debugging

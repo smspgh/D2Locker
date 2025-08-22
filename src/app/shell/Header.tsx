@@ -263,6 +263,11 @@ export default function Header() {
                 >
                   {destinyLinks}
                   <hr />
+                  {account && (
+                    <NavLink className={navLinkClassName} to={`${accountRoute(account)}/search-history`}>
+                      {t('SearchHistory.Title')}
+                    </NavLink>
+                  )}
                   <NavLink className={navLinkClassName} to="/settings">
                     {t('Settings.Settings')}
                   </NavLink>

@@ -262,7 +262,7 @@ export default function ItemDetails({
             )}
             {actionsModel?.lockable && <LockActionButton item={item} label={false} />}
             {actionsModel?.comparable && <CompareActionButton item={item} label={false} />}
-            <BestPerksButton item={item} label={false} />
+            <BestPerksButton item={item} label={false} onPlugClicked={onPlugClicked} />
           </div>
           {item.bucket?.inWeapons && weaponRankingData?.traitComboRanking && (
             <TraitComboIndicator comboData={weaponRankingData.traitComboRanking} />

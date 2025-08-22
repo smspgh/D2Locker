@@ -148,14 +148,26 @@
   },
   "BestPerks": {
     "Button": "Best Perks",
-    "ButtonHelp": "Apply best perk combination",
+    "ButtonHelp": "Select best trait combination (columns 3 & 4 only)",
+    "Selected": "Best Perks Selected",
+    "SelectedCount": "Selected {{count}} optimal perks for preview",
     "Success": "Best Perks Applied",
     "Applied": "Applied {{count}} optimal perks to your weapon",
     "AlreadyOptimal": "Already Optimal",
     "NoChangesNeeded": "Your weapon already has the best perk combination",
     "Error": "Error Applying Perks",
     "NotApplicable": "Best perks can only be applied to weapons with trait data",
-    "UnknownError": "An unknown error occurred while applying perks"
+    "UnknownError": "An unknown error occurred while applying perks",
+    "Info": "Open Item Details",
+    "OpenItemDetails": "Please open the item details to select best perks",
+    "BulkAction": "Apply Best Perks",
+    "BulkConfirm": "Apply best trait combinations to {{count}} weapons? This will modify trait columns (3 & 4) on all weapons.",
+    "NoWeapons": "No Weapons Found",
+    "NoWeaponsFound": "No weapons found in the current search results",
+    "BulkSuccess": "Best Perks Applied",
+    "BulkSuccessBody": "Successfully applied best perks to {{success}} of {{total}} weapons",
+    "BulkFailed": "Failed to Apply Perks",
+    "BulkFailedBody": "Could not apply best perks to any weapons"
   },
   "Cooldown": {
     "Grenade": "Grenade cooldown: {{cooldown}}",

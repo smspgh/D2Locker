@@ -22,7 +22,6 @@ import { errorLog } from 'app/utils/log';
 import { range } from 'es-toolkit';
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { useNavigate } from 'react-router';
 import ErrorBoundary from '../d2l-ui/ErrorBoundary';
 import '../inventory-page/StoreBucket.scss';
 import { AppIcon, faGrid, faList, lockIcon, unlockedIcon } from '../shell/icons';
@@ -86,7 +85,7 @@ const SETTINGS_VISIBILITY = {
   hideCollectPostmaster: false, // Hide "Hide the 'Collect Postmaster' button" section
   badgePostmaster: false, // Hide postmaster badge on app icon
   farmingModeSpaces: false, // Hide farming mode empty spaces
-  D2LSync: true, // Show Enable d2l sync section to access offline mode
+  D2LSync: false, // Hide Enable d2l sync section to access offline mode
   storageInfo: false, // Hide storage usage info
   importBackup: false, // Hide Import Data Backup button
   importCSV: false, // Hide Import CSV option
@@ -107,7 +106,6 @@ const themeOptions = mapToOptions({
 export default function SettingsPage() {
   usePageTitle(t('Settings.Settings'));
   const dispatch = useThunkDispatch();
-  const navigate = useNavigate();
   const settings = useSelector(settingsSelector);
   const currentAccount = useSelector(currentAccountSelector);
   const _hasD1Account = useSelector(hasD1AccountSelector);
@@ -256,7 +254,6 @@ export default function SettingsPage() {
     { id: 'items', title: t('Settings.Items') },
     { id: 'inventory', title: t('Settings.Inventory') },
     { id: 'filter-options', title: 'Filter Options' },
-    { id: 'search-history', title: t('SearchHistory.Title') },
     $featureFlags.wishLists ? { id: 'wishlist', title: t('WishListRoll.Header') } : undefined,
     // Hide storage menu if no storage settings are visible
     SETTINGS_VISIBILITY.D2LSync ||
@@ -274,23 +271,11 @@ export default function SettingsPage() {
   return (
     <PageWithMenu>
       <PageWithMenu.Menu>
-        {menuItems
-          .filter(
-            (menuItem) =>
-              // Show all items in desktop view, only search-history in mobile view
-              !isPhonePortrait || menuItem.id === 'search-history',
-          )
-          .map((menuItem) => (
-            <PageWithMenu.MenuButton
-              key={menuItem.id}
-              anchor={menuItem.id === 'search-history' ? undefined : menuItem.id}
-              onClick={
-                menuItem.id === 'search-history' ? () => navigate('/search-history') : undefined
-              }
-            >
-              <span>{menuItem.title}</span>
-            </PageWithMenu.MenuButton>
-          ))}
+        {menuItems.map((menuItem) => (
+          <PageWithMenu.MenuButton key={menuItem.id} anchor={menuItem.id}>
+            <span>{menuItem.title}</span>
+          </PageWithMenu.MenuButton>
+        ))}
       </PageWithMenu.Menu>
       <PageWithMenu.Contents className={styles.settings}>
         <h1>{t('Settings.Settings')}</h1>

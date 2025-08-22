@@ -5,12 +5,16 @@ import { saveSearch } from 'app/d2l-api/basic-actions';
 import { recentSearchesSelector } from 'app/d2l-api/selectors';
 import Dropdown, { Option } from 'app/d2l-ui/Dropdown';
 import { t } from 'app/i18next-t';
+import { insertPlug } from 'app/inventory/advanced-write-actions';
 import { bulkLockItems, bulkTagItems } from 'app/inventory/bulk-actions';
+import { DimSocket } from 'app/inventory/item-types';
 import { storesSortedByImportanceSelector } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
 import { itemMoveLoadout } from 'app/loadout-drawer/auto-loadouts';
 import { applyLoadout } from 'app/loadout-drawer/loadout-apply';
+import { showNotification } from 'app/notifications/notifications';
 import { TagCommandInfo } from 'app/organizer/ItemActions';
+import { useRollAppraiserUtils } from 'app/roll-appraiser/useRollAppraiserData';
 import { validateQuerySelector } from 'app/search/items/item-search-filter';
 import { canonicalizeQuery, parseQuery } from 'app/search/query-parser';
 import { toggleSearchResults } from 'app/shell/actions';
@@ -18,6 +22,7 @@ import { useIsPhonePortrait } from 'app/shell/selectors';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { stripSockets } from 'app/strip-sockets/strip-sockets-actions';
 import { compact } from 'app/utils/collections';
+import { getSocketsByIndexes, getWeaponSockets } from 'app/utils/socket-utils';
 import { memo } from 'react';
 import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router';
@@ -82,6 +87,154 @@ export default memo(function ItemActionsDropdown({
     const state = selectedTag === 'lock';
     const lockables = filteredItems.filter((i) => i.lockable);
     dispatch(bulkLockItems(lockables, state));
+  });
+
+  const { utils } = useRollAppraiserUtils();
+
+  const applyBestPerks = loadingTracker.trackPromise(async () => {
+    if (!utils) {
+      showNotification({
+        type: 'error',
+        title: t('BestPerks.Error'),
+        body: t('BestPerks.NotApplicable'),
+      });
+      return;
+    }
+
+    const weapons = filteredItems.filter((item) => item.bucket?.inWeapons && item.sockets);
+    if (weapons.length === 0) {
+      showNotification({
+        type: 'warning',
+        title: t('BestPerks.NoWeapons'),
+        body: t('BestPerks.NoWeaponsFound'),
+      });
+      return;
+    }
+
+    // Show confirmation dialog
+    // eslint-disable-next-line no-alert
+    if (!window.confirm(t('BestPerks.BulkConfirm', { count: weapons.length }))) {
+      return;
+    }
+
+    let successCount = 0;
+    let _failCount = 0;
+
+    for (const item of weapons) {
+      try {
+        const weaponSockets = getWeaponSockets(item, {
+          excludeEmptySockets: false,
+          includeFakeMasterwork: Boolean(item.crafted),
+        });
+        if (!weaponSockets?.perks) {
+          _failCount++;
+          continue;
+        }
+
+        const perkSockets = getSocketsByIndexes(item.sockets!, weaponSockets.perks.socketIndexes);
+        const perksToApply: { socket: DimSocket; plugHash: number }[] = [];
+
+        // Handle trait combo optimization
+        const column3Perks: number[] = [];
+        const column4Perks: number[] = [];
+        let column3Socket: DimSocket | null = null;
+        let column4Socket: DimSocket | null = null;
+
+        for (const [socketIndex, socket] of perkSockets.entries()) {
+          if (socketIndex === 2) {
+            column3Socket = socket;
+            if (socket.reusablePlugItems) {
+              for (const plug of socket.reusablePlugItems) {
+                if (plug.enabled) {
+                  column3Perks.push(plug.plugItemHash);
+                }
+              }
+            }
+            if (socket.plugged && !column3Perks.includes(socket.plugged.plugDef.hash)) {
+              column3Perks.push(socket.plugged.plugDef.hash);
+            }
+          } else if (socketIndex === 3) {
+            column4Socket = socket;
+            if (socket.reusablePlugItems) {
+              for (const plug of socket.reusablePlugItems) {
+                if (plug.enabled) {
+                  column4Perks.push(plug.plugItemHash);
+                }
+              }
+            }
+            if (socket.plugged && !column4Perks.includes(socket.plugged.plugDef.hash)) {
+              column4Perks.push(socket.plugged.plugDef.hash);
+            }
+          }
+        }
+
+        if (column3Perks.length > 0 && column4Perks.length > 0 && column3Socket && column4Socket) {
+          let bestCombo: { rank: number; perk3Hash: number; perk4Hash: number } | null = null;
+
+          for (const perk3 of column3Perks) {
+            for (const perk4 of column4Perks) {
+              const combo = utils.getTraitComboRank(
+                item.hash.toString(),
+                perk3.toString(),
+                perk4.toString(),
+              );
+              if (combo && (!bestCombo || combo.rank < bestCombo.rank)) {
+                bestCombo = { rank: combo.rank, perk3Hash: perk3, perk4Hash: perk4 };
+              }
+            }
+          }
+
+          if (bestCombo) {
+            // Override individual best perks with combo best perks
+            for (const [index, perk] of perksToApply.entries()) {
+              if (perk.socket === column3Socket) {
+                perksToApply[index] = { socket: column3Socket, plugHash: bestCombo.perk3Hash };
+              } else if (perk.socket === column4Socket) {
+                perksToApply[index] = { socket: column4Socket, plugHash: bestCombo.perk4Hash };
+              }
+            }
+
+            if (
+              !perksToApply.find((p) => p.socket === column3Socket) &&
+              column3Socket.plugged?.plugDef.hash !== bestCombo.perk3Hash
+            ) {
+              perksToApply.push({ socket: column3Socket, plugHash: bestCombo.perk3Hash });
+            }
+            if (
+              !perksToApply.find((p) => p.socket === column4Socket) &&
+              column4Socket.plugged?.plugDef.hash !== bestCombo.perk4Hash
+            ) {
+              perksToApply.push({ socket: column4Socket, plugHash: bestCombo.perk4Hash });
+            }
+          }
+        }
+
+        // Apply the perks
+        if (perksToApply.length > 0) {
+          for (const { socket, plugHash } of perksToApply) {
+            await dispatch(insertPlug(item, socket, plugHash));
+          }
+          successCount++;
+        }
+      } catch (error) {
+        console.error('Error applying best perks to item:', item.name, error);
+        _failCount++;
+      }
+    }
+
+    if (successCount > 0) {
+      showNotification({
+        type: 'success',
+        title: t('BestPerks.BulkSuccess'),
+        body: t('BestPerks.BulkSuccessBody', { success: successCount, total: weapons.length }),
+      });
+    } else {
+      showNotification({
+        type: 'error',
+        title: t('BestPerks.BulkFailed'),
+        body: t('BestPerks.BulkFailedBody'),
+      });
+    }
   });
 
   const compareMatching = () => {
@@ -155,6 +308,17 @@ export default memo(function ItemActionsDropdown({
         </>
       ),
     })),
+    destinyVersion === 2 && {
+      key: 'apply-best-perks',
+      onSelected: applyBestPerks,
+      disabled: !searchActive || !filteredItems.some((i) => i.bucket?.inWeapons),
+      content: (
+        <>
+          <span style={{ fontWeight: 'bold', fontSize: '11px', marginRight: '6px' }}>BP</span>
+          {t('BestPerks.BulkAction')}
+        </>
+      ),
+    },
     { key: 'characters' },
     {
       key: 'compare',
