@@ -125,6 +125,7 @@ export default function Header() {
   useEffect(() => {
     // eslint-disable-next-line @eslint-react/hooks-extra/no-direct-set-state-in-use-effect
     setDropdownOpen(false);
+    // eslint-disable-next-line @eslint-react/hooks-extra/no-direct-set-state-in-use-effect
     setThemeDropdownOpen(false);
     dispatch(setSearchQuery(''));
   }, [dispatch, pathname]);
@@ -327,7 +328,9 @@ export default function Header() {
                         alignItems: 'center',
                       }}
                     >
-                      <span>{t('Menu.VaultArmorFilter', { defaultValue: 'Active Class Only' })}</span>
+                      <span>
+                        {t('Menu.VaultArmorFilter', { defaultValue: 'Active Class Only' })}
+                      </span>
                       <span
                         style={{
                           width: '40px',
