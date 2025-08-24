@@ -3,9 +3,9 @@ import PageWithMenu from 'app/d2l-ui/PageWithMenu';
 import { t } from 'app/i18next-t';
 import { itemTagList } from 'app/inventory/d2l-item-info';
 import Checkbox from 'app/settings/Checkbox';
-import Select from 'app/settings/Select';
 import { useSetSetting } from 'app/settings/hooks';
 import { itemSortSettingsSelector } from 'app/settings/item-sort';
+import Select from 'app/settings/Select';
 import { fineprintClass, settingClass } from 'app/settings/SettingsPage';
 import styles from 'app/settings/SettingsPage.m.scss';
 import SortOrderEditor, { SortProperty } from 'app/settings/SortOrderEditor';
@@ -57,7 +57,7 @@ export default function ItemDisplayOptions() {
   const onChangeNumeric: React.ChangeEventHandler<HTMLInputElement | HTMLSelectElement> = (e) => {
     const val = parseInt(e.target.value, 10);
     if (!isNaN(val)) {
-      setSetting(e.target.name as any, val);
+      setSetting(e.target.name as 'charColMobile', val);
     }
   };
 

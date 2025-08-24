@@ -8,6 +8,7 @@ import { filterFactorySelector, searchConfigSelector } from 'app/search/items/it
 import searchBarStyles from 'app/search/SearchBar.m.scss';
 import { setSearchQuery, toggleSearchResults } from 'app/shell/actions';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
+import { Portal } from 'app/utils/temp-container';
 import { useCombobox } from 'downshift';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
@@ -38,13 +39,14 @@ const AutocompleteSearchInput = React.memo(
   }) => {
     const inputRef = React.useRef<HTMLInputElement>(null);
     const [localValue, setLocalValue] = useState(value);
+    const containerRef = React.useRef<HTMLDivElement>(null);
 
-    // Sync local value with prop value
+    // Sync with external value changes
     useEffect(() => {
-      const timer = setTimeout(() => {
+      const timeoutId = setTimeout(() => {
         setLocalValue(value);
       }, 0);
-      return () => clearTimeout(timer);
+      return () => clearTimeout(timeoutId);
     }, [value]);
 
     const suggestions = useMemo(() => {
@@ -57,7 +59,7 @@ const AutocompleteSearchInput = React.memo(
           localValue.length, // caretIndex (cursor at end)
           [], // recentSearches (empty for now)
           false, // includeArmory
-        ).slice(0, 5); // Limit to 5 suggestions
+        ).slice(0, 7); // Limit to 7 suggestions
         return result;
       } catch (error) {
         console.warn('Autocomplete error:', error);
@@ -66,18 +68,9 @@ const AutocompleteSearchInput = React.memo(
     }, [localValue, autocompleter]);
 
     const handleInputChange = useCallback(
-      (e: React.ChangeEvent<HTMLInputElement>) => {
-        const newValue = e.target.value;
-        const cursorPos = e.target.selectionStart || 0;
+      (newValue: string) => {
         setLocalValue(newValue);
         onChange(newValue);
-
-        // Restore cursor position after React re-render
-        setTimeout(() => {
-          if (inputRef.current) {
-            inputRef.current.setSelectionRange(cursorPos, cursorPos);
-          }
-        }, 0);
       },
       [onChange],
     );
@@ -86,14 +79,13 @@ const AutocompleteSearchInput = React.memo(
       inputValue: localValue,
       items: suggestions,
       onInputValueChange: ({ inputValue, type }) => {
-        // Handle combobox internal state changes but don't update our input
-        if (type !== useCombobox.stateChangeTypes.InputChange) {
-          setLocalValue(inputValue || '');
+        // Only handle the change if it's from user input
+        if (type === useCombobox.stateChangeTypes.InputChange && inputValue !== undefined) {
+          handleInputChange(inputValue);
         }
       },
       onSelectedItemChange: ({ selectedItem }) => {
-        if (selectedItem && inputRef.current) {
-          const input = inputRef.current;
+        if (selectedItem) {
           const suggestionText =
             (selectedItem.query as { body?: string; fullText: string }).body ||
             (selectedItem.query as { fullText: string }).fullText;
@@ -102,13 +94,13 @@ const AutocompleteSearchInput = React.memo(
           setLocalValue(suggestionText);
           onChange(suggestionText);
 
-          // Set cursor position to the end
-          setTimeout(() => {
-            if (input) {
-              input.focus();
-              input.setSelectionRange(suggestionText.length, suggestionText.length);
+          // Keep focus on the input
+          requestAnimationFrame(() => {
+            if (inputRef.current) {
+              inputRef.current.focus();
+              inputRef.current.setSelectionRange(suggestionText.length, suggestionText.length);
             }
-          }, 0);
+          });
         }
       },
       itemToString: (item) =>
@@ -123,8 +115,16 @@ const AutocompleteSearchInput = React.memo(
             return {
               ...changes,
               isOpen: false,
-              inputValue: localValue, // Keep current input value, don't replace it
             };
+          case useCombobox.stateChangeTypes.InputBlur:
+            // Keep dropdown open if clicking on an item
+            if (state.highlightedIndex !== -1) {
+              return {
+                ...changes,
+                isOpen: state.isOpen,
+              };
+            }
+            return changes;
           default:
             return changes;
         }
@@ -132,41 +132,97 @@ const AutocompleteSearchInput = React.memo(
     });
 
     return (
-      <div style={{ position: 'relative' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <input
-            {...getInputProps({
-              ref: inputRef,
-              type: 'text',
-              placeholder,
-              onChange: handleInputChange,
-            })}
-            style={{ flex: 1 }}
-          />
-        </div>
-        <div {...getMenuProps()}>
-          {isOpen && suggestions.length > 0 && (
-            <div className={searchBarStyles.menu} style={{ zIndex: 9999 }}>
-              {suggestions.map((item, index) => (
-                <div
-                  key={`suggestion-${(item.query as { body?: string; fullText: string }).body || (item.query as { fullText: string }).fullText}`}
-                  {...getItemProps({ item, index })}
-                  className={searchBarStyles.menuItem}
-                  style={{
-                    backgroundColor:
-                      highlightedIndex === index ? 'var(--theme-accent-primary)' : 'transparent',
-                  }}
-                >
-                  <div className={searchBarStyles.menuItemIcon}>🔍</div>
-                  <div>
-                    {(item.query as { body?: string; fullText: string }).body ||
-                      (item.query as { fullText: string }).fullText}
+      <div ref={containerRef} style={{ position: 'relative', width: '100%' }}>
+        <input
+          {...getInputProps({
+            ref: inputRef,
+            type: 'text',
+            placeholder,
+            onChange: (e) => {
+              // Prevent default behavior
+              e.persist?.();
+            },
+          })}
+          style={{ width: '100%', boxSizing: 'border-box' }}
+        />
+        {isOpen && suggestions.length > 0 && (
+          <Portal>
+            <div
+              {...getMenuProps()}
+              className={searchBarStyles.menu}
+              style={{
+                position: 'fixed',
+                zIndex: 99999,
+                maxHeight: '300px',
+                overflowY: 'auto',
+                background: 'var(--theme-search-dropdown-bg)',
+                border: '1px solid var(--theme-search-dropdown-border)',
+                borderRadius: '4px',
+                boxShadow: '0 4px 8px rgba(0,0,0,0.3)',
+                ...(containerRef.current &&
+                  (() => {
+                    const rect = containerRef.current.getBoundingClientRect();
+                    const spaceBelow = window.innerHeight - rect.bottom;
+                    const spaceAbove = rect.top;
+                    const menuHeight = Math.min(300, suggestions.length * 40);
+
+                    // Make dropdown wider than input - minimum 300px or 1.5x the input width
+                    const dropdownWidth = Math.max(300, rect.width * 1.5);
+                    // Center the dropdown if it's wider than the input
+                    const leftOffset = Math.max(0, rect.left - (dropdownWidth - rect.width) / 2);
+                    // Ensure it doesn't go off the right edge of the screen
+                    const adjustedLeft = Math.min(
+                      leftOffset,
+                      window.innerWidth - dropdownWidth - 10,
+                    );
+
+                    if (spaceBelow >= menuHeight || spaceBelow > spaceAbove) {
+                      // Show below
+                      return {
+                        top: `${rect.bottom + 2}px`,
+                        left: `${adjustedLeft}px`,
+                        width: `${dropdownWidth}px`,
+                      };
+                    } else {
+                      // Show above
+                      return {
+                        bottom: `${window.innerHeight - rect.top + 2}px`,
+                        left: `${adjustedLeft}px`,
+                        width: `${dropdownWidth}px`,
+                      };
+                    }
+                  })()),
+              }}
+            >
+              {suggestions.map((item, index) => {
+                const itemKey =
+                  (item.query as { body?: string; fullText: string }).body ||
+                  (item.query as { fullText: string }).fullText;
+                return (
+                  <div
+                    key={`suggestion-${itemKey}`}
+                    {...getItemProps({ item, index })}
+                    className={searchBarStyles.menuItem}
+                    style={{
+                      backgroundColor:
+                        highlightedIndex === index ? 'var(--theme-accent-primary)' : 'transparent',
+                      cursor: 'pointer',
+                      padding: '8px 12px',
+                    }}
+                  >
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <span className={searchBarStyles.menuItemIcon}>🔍</span>
+                      <span>
+                        {(item.query as { body?: string; fullText: string }).body ||
+                          (item.query as { fullText: string }).fullText}
+                      </span>
+                    </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
-          )}
-        </div>
+          </Portal>
+        )}
       </div>
     );
   },
@@ -393,7 +449,7 @@ export default function SearchSettings({ settings }: { settings: Settings }) {
                     +
                   </button>
                 </div>
-                <div style={{ overflowX: 'auto' }}>
+                <div style={{ overflowX: 'auto', overflowY: 'visible', position: 'relative' }}>
                   <table style={{ width: '100%', fontSize: '14px', borderCollapse: 'collapse' }}>
                     <thead>
                       <tr style={{ borderBottom: '1px solid #444' }}>
@@ -414,7 +470,8 @@ export default function SearchSettings({ settings }: { settings: Settings }) {
                       {((weaponSettings.additionalSearchTerms as SearchTerm[]) || []).map(
                         (termObj, index) => (
                           <tr
-                            key={`weapon-term-${termObj.term}-${termObj.logic}`}
+                            // eslint-disable-next-line @eslint-react/no-array-index-key
+                            key={`weapon-row-${index}`}
                             style={{ borderBottom: '1px solid #333' }}
                           >
                             <td style={{ padding: '8px 4px' }}>
@@ -606,7 +663,7 @@ export default function SearchSettings({ settings }: { settings: Settings }) {
                     +
                   </button>
                 </div>
-                <div style={{ overflowX: 'auto' }}>
+                <div style={{ overflowX: 'auto', overflowY: 'visible', position: 'relative' }}>
                   <table style={{ width: '100%', fontSize: '14px', borderCollapse: 'collapse' }}>
                     <thead>
                       <tr style={{ borderBottom: '1px solid #444' }}>
@@ -627,7 +684,8 @@ export default function SearchSettings({ settings }: { settings: Settings }) {
                       {((armorSettings.additionalSearchTerms as SearchTerm[]) || []).map(
                         (termObj, index) => (
                           <tr
-                            key={`armor-term-${termObj.term}-${termObj.logic}`}
+                            // eslint-disable-next-line @eslint-react/no-array-index-key
+                            key={`armor-row-${index}`}
                             style={{ borderBottom: '1px solid #333' }}
                           >
                             <td style={{ padding: '8px 4px' }}>

@@ -279,7 +279,7 @@ export default function Destiny() {
               path="search-filter"
               element={
                 <ErrorBoundary name="searchFilter">
-                  <SearchFilter />
+                  <SearchFilter account={account} />
                 </ErrorBoundary>
               }
             />

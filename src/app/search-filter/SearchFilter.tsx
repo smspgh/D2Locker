@@ -1,4 +1,8 @@
+import { DestinyAccount } from 'app/accounts/destiny-account';
 import { settingsSelector } from 'app/d2l-api/selectors';
+import ShowPageLoading from 'app/d2l-ui/ShowPageLoading';
+import { t } from 'app/i18next-t';
+import { useLoadStores } from 'app/inventory/store/hooks';
 import SearchResults from 'app/search/SearchResults';
 import { filteredItemsSelector, queryValidSelector } from 'app/search/items/item-search-filter';
 import { toggleSearchResults } from 'app/shell/actions';
@@ -11,8 +15,9 @@ import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router';
 import SearchSettings from '../settings/SearchSettings';
 
-export default function SearchFilter() {
+export default function SearchFilter({ account }: { account: DestinyAccount }) {
   usePageTitle('Search / Filter');
+  const storesLoaded = useLoadStores(account);
   const settings = useSelector(settingsSelector);
   const dispatch = useThunkDispatch();
   const navigate = useNavigate();
@@ -31,6 +36,10 @@ export default function SearchFilter() {
   const handleShowSearchHistory = () => {
     navigate('../search-history');
   };
+
+  if (!storesLoaded) {
+    return <ShowPageLoading message={t('Loading.Profile')} />;
+  }
 
   return (
     <div className="d2l-page">
