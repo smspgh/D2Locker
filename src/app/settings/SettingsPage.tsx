@@ -81,7 +81,7 @@ const SETTINGS_VISIBILITY = {
     fixed: false, // Hide "Character age (buggy on PC)"
     custom: true,
   },
-  inventoryColumns: false, // Hide Character inventory width section
+  inventoryColumns: true, // Hide Character inventory width section
   hideCollectPostmaster: false, // Hide "Hide the 'Collect Postmaster' button" section
   badgePostmaster: false, // Hide postmaster badge on app icon
   farmingModeSpaces: false, // Hide farming mode empty spaces
