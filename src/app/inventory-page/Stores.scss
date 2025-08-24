@@ -40,6 +40,13 @@
         outline: none;
       }
     }
+
+    @include phone-portrait {
+      // In mobile view, maintain consistent padding with store-row
+      .store-row & {
+        padding: 0 var(--inventory-column-padding);
+      }
+    }
   }
 
   .store-header {

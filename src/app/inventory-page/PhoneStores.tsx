@@ -193,15 +193,9 @@ function StoresInventory({
       </div>
 
       {/* Render the selected category (Weapons, Armor, etc.) below Engrams/Postmaster */}
-      {buckets.byCategory[selectedCategoryId] && (
-        <>
-          {buckets.byCategory[selectedCategoryId].map((bucket) => (
-            <div className="store-cell" key={bucket.hash}>
-              {renderBucket(bucket)}
-            </div>
-          ))}
-        </>
-      )}
+      {buckets.byCategory[selectedCategoryId] && 
+        buckets.byCategory[selectedCategoryId].map(renderBucket)
+      }
       {store.destinyVersion === 1 && !store.isVault && selectedCategoryId === 'Progress' && (
         <D1ReputationSection stores={[store]} />
       )}
