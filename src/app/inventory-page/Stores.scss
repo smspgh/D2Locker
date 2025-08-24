@@ -33,18 +33,18 @@
     padding: 0 var(--inventory-column-padding);
     box-sizing: border-box;
 
+    @include phone-portrait {
+      // In mobile view, maintain consistent padding with store-row
+      .store-row & {
+        padding: 0 var(--inventory-column-padding);
+      }
+    }
+
     .store-header & {
       padding: 16px var(--inventory-column-padding) 6px var(--inventory-column-padding);
       flex-direction: column;
       &:focus {
         outline: none;
-      }
-    }
-
-    @include phone-portrait {
-      // In mobile view, maintain consistent padding with store-row
-      .store-row & {
-        padding: 0 var(--inventory-column-padding);
       }
     }
   }

@@ -61,7 +61,6 @@ export default function SearchFilter() {
         <SearchSettings settings={settings} />
       </div>
 
-
       {/* Search Results overlay for SearchFilter page */}
       {searchResultsOpen && searchQuery && (
         <SearchResults
