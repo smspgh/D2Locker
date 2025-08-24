@@ -114,13 +114,15 @@ export default function ArmorySearch() {
           <div className={`${styles.armorySearchResults} armory-search-results`}>
             {Array.from(weaponsByType.entries(), ([typeName, weapons]) => (
               <div key={typeName} className={styles.weaponTypeSection}>
-                <CollapsibleTitle
-                  title={`${typeName} (${weapons.length})`}
-                  defaultCollapsed={false}
-                  sectionId={`weapon-type-${typeName.toLowerCase().replace(/\s+/g, '-')}`}
-                >
-                  <ItemGrid items={weapons} directToArmory />
-                </CollapsibleTitle>
+                <div className="store-cell">
+                  <CollapsibleTitle
+                    title={`${typeName} (${weapons.length})`}
+                    defaultCollapsed={false}
+                    sectionId={`weapon-type-${typeName.toLowerCase().replace(/\s+/g, '-')}`}
+                  >
+                    <ItemGrid items={weapons} directToArmory />
+                  </CollapsibleTitle>
+                </div>
               </div>
             ))}
 

@@ -1,3 +1,5 @@
+@use '../variables.scss' as *;
+
 .armorySearchControls {
   padding: 16px;
   border-bottom: 1px solid var(--theme-separator);
@@ -23,13 +25,36 @@
 }
 
 .armorySearchResults {
-  padding: 16px;
+  padding: 8px;
+
+  @include phone-portrait {
+    padding: 4px;
+  }
 
   .weaponTypeSection {
-    margin-bottom: 24px;
+    margin-bottom: 16px;
 
     &:last-child {
       margin-bottom: 0;
+    }
+
+    // Override store-cell to maintain grid layout for items
+    :global(.store-cell) {
+      display: block !important;
+      padding: 8px;
+
+      @include phone-portrait {
+        padding: 4px;
+      }
+    }
+
+    // Ensure sub-bucket maintains proper grid layout
+    :global(.sub-bucket) {
+      display: grid !important;
+      grid-template-columns: repeat(auto-fill, var(--item-size));
+      gap: var(--item-margin);
+      align-content: flex-start;
+      align-items: flex-start;
     }
   }
 

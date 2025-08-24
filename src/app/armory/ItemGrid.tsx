@@ -35,17 +35,19 @@ export default function ItemGrid({
   }, []);
 
   return (
-    <div className="sub-bucket">
-      {items.map((i) => (
-        <BasicItemTrigger
-          item={i}
-          key={i.index}
-          onShowPopup={directToArmory ? undefined : setPopup}
-          onDirectClick={directToArmory ? handleDirectClick : undefined}
-        >
-          {(ref, showPopup) => <ConnectedInventoryItem ref={ref} onClick={showPopup} item={i} />}
-        </BasicItemTrigger>
-      ))}
+    <>
+      <div className="sub-bucket">
+        {items.map((i) => (
+          <BasicItemTrigger
+            item={i}
+            key={i.index}
+            onShowPopup={directToArmory ? undefined : setPopup}
+            onDirectClick={directToArmory ? handleDirectClick : undefined}
+          >
+            {(ref, showPopup) => <ConnectedInventoryItem ref={ref} onClick={showPopup} item={i} />}
+          </BasicItemTrigger>
+        ))}
+      </div>
       {popup && (
         <ItemPopup
           onClose={() => setPopup(undefined)}
@@ -55,7 +57,7 @@ export default function ItemGrid({
         />
       )}
       {armoryItem && <ArmorySheet item={armoryItem} onClose={() => setArmoryItem(undefined)} />}
-    </div>
+    </>
   );
 }
 
