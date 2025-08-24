@@ -3,12 +3,14 @@ import PageWithMenu from 'app/d2l-ui/PageWithMenu';
 import { t } from 'app/i18next-t';
 import { itemTagList } from 'app/inventory/d2l-item-info';
 import Checkbox from 'app/settings/Checkbox';
+import Select from 'app/settings/Select';
 import { useSetSetting } from 'app/settings/hooks';
 import { itemSortSettingsSelector } from 'app/settings/item-sort';
 import { fineprintClass, settingClass } from 'app/settings/SettingsPage';
 import styles from 'app/settings/SettingsPage.m.scss';
 import SortOrderEditor, { SortProperty } from 'app/settings/SortOrderEditor';
 import { AppIcon, faList } from 'app/shell/icons';
+import { range } from 'es-toolkit';
 import { useSelector } from 'react-redux';
 
 // Sort options configuration with fallback labels
@@ -51,6 +53,18 @@ export default function ItemDisplayOptions() {
       sortOrder.filter((o) => o.reversed).map((o) => o.id),
     );
   };
+
+  const onChangeNumeric: React.ChangeEventHandler<HTMLInputElement | HTMLSelectElement> = (e) => {
+    const val = parseInt(e.target.value, 10);
+    if (!isNaN(val)) {
+      setSetting(e.target.name as any, val);
+    }
+  };
+
+  const charColOptions = range(2, 6).map((num) => ({
+    value: num,
+    name: t('Settings.ColumnSize', { num }),
+  }));
 
   // Create tag list string for display
   const tagLabelList = itemTagList.map((tagLabel) => t(tagLabel.label));
@@ -132,6 +146,23 @@ export default function ItemDisplayOptions() {
             <div className={fineprintClass}>
               {t('Settings.ShowNewItemsDescription', {
                 defaultValue: 'Display a green indicator on newly acquired items.',
+              })}
+            </div>
+          </div>
+
+          <div className={settingClass}>
+            <Select
+              label={t('Settings.InventoryColumnsMobile', {
+                defaultValue: 'Character inventory width on mobile portrait',
+              })}
+              name="charColMobile"
+              value={settings.charColMobile}
+              options={charColOptions}
+              onChange={onChangeNumeric}
+            />
+            <div className={fineprintClass}>
+              {t('Settings.InventoryColumnsMobileDescription', {
+                defaultValue: 'Number of columns for character inventory on mobile portrait view.',
               })}
             </div>
           </div>
