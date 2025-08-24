@@ -165,6 +165,10 @@ export default function Header() {
         text: t('Loadouts.Loadouts'),
       },
       account.destinyVersion === 2 && {
+        to: `${path}/armor-search`,
+        text: 'Armor Database',
+      },
+      account.destinyVersion === 2 && {
         to: `${path}/armory-search`,
         text: 'Weapon Database',
       },

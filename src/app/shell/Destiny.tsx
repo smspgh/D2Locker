@@ -6,6 +6,7 @@ import {
   accountsSelector,
   currentAccountSelector,
 } from 'app/accounts/selectors';
+import ArmorSearchPage from 'app/armor/ArmorSearchPage';
 import ArmoryPage from 'app/armory/ArmoryPage';
 import ArmorySearchPage from 'app/armory/ArmorySearchPage';
 import CompareContainer from 'app/compare/CompareContainer';
@@ -211,6 +212,14 @@ export default function Destiny() {
               element={
                 <ErrorBoundary name="loadouts">
                   <Loadouts account={account} />
+                </ErrorBoundary>
+              }
+            />
+            <Route
+              path="armor-search"
+              element={
+                <ErrorBoundary name="armorSearch">
+                  <ArmorSearchPage account={account} />
                 </ErrorBoundary>
               }
             />

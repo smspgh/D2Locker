@@ -76,6 +76,29 @@
     "WishlistedRolls_other": "{{count, number}} Wishlisted Rolls",
     "YourItems": "Your Items"
   },
+  "BestPerks": {
+    "AlreadyOptimal": "Already Optimal",
+    "Applied": "Applied {{count}} optimal perks to your weapon",
+    "BulkAction": "Apply Best Perks",
+    "BulkConfirm": "Apply best trait combinations to {{count}} weapons? This will modify trait columns (3 & 4) on all weapons.",
+    "BulkFailed": "Failed to Apply Perks",
+    "BulkFailedBody": "Could not apply best perks to any weapons",
+    "BulkSuccess": "Best Perks Applied",
+    "BulkSuccessBody": "Successfully applied best perks to {{success}} of {{total}} weapons",
+    "Button": "Best Perks",
+    "ButtonHelp": "Select best trait combination (columns 3 & 4 only)",
+    "Error": "Error Applying Perks",
+    "Info": "Open Item Details",
+    "NoChangesNeeded": "Your weapon already has the best perk combination",
+    "NoWeapons": "No Weapons Found",
+    "NoWeaponsFound": "No weapons found in the current search results",
+    "NotApplicable": "Best perks can only be applied to weapons with trait data",
+    "OpenItemDetails": "Please open the item details to select best perks",
+    "Selected": "Best Perks Selected",
+    "SelectedCount": "Selected {{count}} optimal perks for preview",
+    "Success": "Best Perks Applied",
+    "UnknownError": "An unknown error occurred while applying perks"
+  },
   "Browsercheck": {
     "Samsung": "Samsung Internet can make sites look too dark when dark mode is on. Enable Settings > Labs > Use website dark theme or switch to another browser.",
     "Steam": "The Steam overlay browser is very old and some or all D2L features may not work. We cannot provide support for it.",
@@ -145,29 +168,6 @@
     "InitialItem": "This is the item the Compare tool was launched from",
     "IsVendorItem": "This item is not in your inventory, but {{vendorName}} sells it.",
     "NoModArmor": "Pre-mods"
-  },
-  "BestPerks": {
-    "Button": "Best Perks",
-    "ButtonHelp": "Select best trait combination (columns 3 & 4 only)",
-    "Selected": "Best Perks Selected",
-    "SelectedCount": "Selected {{count}} optimal perks for preview",
-    "Success": "Best Perks Applied",
-    "Applied": "Applied {{count}} optimal perks to your weapon",
-    "AlreadyOptimal": "Already Optimal",
-    "NoChangesNeeded": "Your weapon already has the best perk combination",
-    "Error": "Error Applying Perks",
-    "NotApplicable": "Best perks can only be applied to weapons with trait data",
-    "UnknownError": "An unknown error occurred while applying perks",
-    "Info": "Open Item Details",
-    "OpenItemDetails": "Please open the item details to select best perks",
-    "BulkAction": "Apply Best Perks",
-    "BulkConfirm": "Apply best trait combinations to {{count}} weapons? This will modify trait columns (3 & 4) on all weapons.",
-    "NoWeapons": "No Weapons Found",
-    "NoWeaponsFound": "No weapons found in the current search results",
-    "BulkSuccess": "Best Perks Applied",
-    "BulkSuccessBody": "Successfully applied best perks to {{success}} of {{total}} weapons",
-    "BulkFailed": "Failed to Apply Perks",
-    "BulkFailedBody": "Could not apply best perks to any weapons"
   },
   "Cooldown": {
     "Grenade": "Grenade cooldown: {{cooldown}}",
@@ -708,17 +708,6 @@
       "Name": "Uses Seasonal Mods"
     }
   },
-  "Menu": {
-    "VaultArmorFilter": "Active Class Only",
-    "LockerOptions": "Locker Options"
-  },
-  "LockerOptions": {
-    "Title": "Locker Options",
-    "SortingHeader": "Item Sorting",
-    "SortingDescription": "Drag and drop to reorder. Check to enable. Click arrows to reverse sort direction.",
-    "VaultHeader": "Vault Organization",
-    "DisplayHeader": "Display Options"
-  },
   "LoadoutBuilder": {
     "All": "All",
     "AnyExotic": "Any Exotic",
@@ -1001,10 +990,21 @@
     "UpdateLoadout": "Update Loadout",
     "VendorsCannotEquip": "You don't have these items. Tap to pick a replacement or click the X to remove:"
   },
+  "LockerOptions": {
+    "DisplayHeader": "Display Options",
+    "SortingDescription": "Drag and drop to reorder. Check to enable. Click arrows to reverse sort direction.",
+    "SortingHeader": "Item Sorting",
+    "Title": "Locker Options",
+    "VaultHeader": "Vault Organization"
+  },
   "Manifest": {
     "Download": "Downloading latest Destiny info database from Bungie...",
     "Error": "Error loading Destiny info database:\n{{error}}\nReload to retry.",
     "Load": "Loading Destiny info database..."
+  },
+  "Menu": {
+    "LockerOptions": "Locker Options",
+    "VaultArmorFilter": "Active Class Only"
   },
   "Milestone": {
     "Daily": "Daily Challenge",
@@ -1305,12 +1305,9 @@
     "SetVaultWeaponGrouping": "Group vault weapons by:",
     "Settings": "Settings",
     "ShowNewItems": "Show green dot on new items",
+    "ShowNewItemsDescription": "Display a green indicator on newly acquired items.",
     "SingleCharacter": "Single-Character View",
     "SingleCharacterExplanation": "D2L will show only the most recently played character.\nItems held by hidden characters will appear in the vault, if they can be used by the current character.\nItems specific to other classes will be hidden entirely.",
-    "VaultArmorFilterByClass": {
-      "Title": "Filter vault armor by character class",
-      "Description": "When enabled, the vault will only show armor that can be used by your active character. Disable to see armor for all classes."
-    },
     "SizeItem": "Item size",
     "SortByAmmoType": "Ammo Type",
     "SortByAmount": "Stack Size",
@@ -1318,6 +1315,7 @@
     "SortByCrafted": "Crafted (D2)",
     "SortByDeepsight": "Deepsight (D2)",
     "SortByFeatured": "Featured (D2)",
+    "SortByMasterwork": "Masterworked",
     "SortByPrimary": "Power level",
     "SortByRarity": "Rarity",
     "SortByRating": "Armor Quality (D1)",
@@ -1327,16 +1325,18 @@
     "SortByTier": "Tier (D2)",
     "SortByType": "Type",
     "SortByWeaponElement": "Damage Type",
-    "SortByMasterwork": "Masterworked",
     "SortCustom": "Custom Sort",
     "SortName": "Name",
     "SpacesSize_one": "{{count}} space",
     "SpacesSize_other": "{{count}} spaces",
     "Theme": "Theme",
+    "VaultArmorFilterByClass": {
+      "Description": "When enabled, the vault will only show armor that can be used by your active character. Disable to see armor for all classes.",
+      "Title": "Filter vault armor by character class"
+    },
     "VaultArmorGroupingStyle": "Separate armor on different lines by class",
     "VaultColumns": "Vault columns",
     "VaultColumnsDescription": "Maximum number of items per row in the vault.",
-    "ShowNewItemsDescription": "Display a green indicator on newly acquired items.",
     "VaultGroupingNone": "None",
     "VaultWeaponGroupingStyle": "Separate weapon groups on different lines",
     "WishlistRefreshNotificationBody": "If you do not see any updates, be sure the source (such as GitHub) reflects them!",

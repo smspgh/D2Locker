@@ -1,0 +1,99 @@
+@use '../variables.scss' as *;
+
+.armorSearchControls {
+  padding: 16px;
+  border-bottom: 1px solid var(--theme-separator);
+
+  h1 {
+    margin: 0 0 8px 0;
+    font-size: 24px;
+    color: var(--theme-text);
+  }
+
+  p {
+    margin: 0 0 16px 0;
+    color: var(--theme-text-muted);
+    font-size: 14px;
+    line-height: 1.4;
+  }
+
+  .resultsCount {
+    font-size: 12px;
+    color: var(--theme-text-muted);
+    font-style: italic;
+  }
+}
+
+.armorSearchResults {
+  padding: 8px;
+
+  @include phone-portrait {
+    padding: 4px;
+  }
+
+  .armorTypeSection {
+    margin-bottom: 16px;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+
+    // Override store-cell to maintain grid layout for items
+    :global(.store-cell) {
+      display: block !important;
+      padding: 8px;
+
+      @include phone-portrait {
+        padding: 4px;
+      }
+    }
+
+    // Ensure sub-bucket maintains proper grid layout
+    :global(.sub-bucket) {
+      display: grid !important;
+      grid-template-columns: repeat(auto-fill, var(--item-size));
+      gap: var(--item-margin);
+      align-content: flex-start;
+      align-items: flex-start;
+    }
+  }
+
+  .noResults {
+    text-align: center;
+    color: var(--theme-text-muted);
+    font-style: italic;
+    padding: 48px 16px;
+    font-size: 16px;
+  }
+}
+
+// Enhance the existing item grid for armor search
+:global(.armor-search-results) {
+  .item-grid {
+    .item {
+      position: relative;
+
+      // Add visual indicator for items not owned
+      &:not(.owned)::after {
+        content: '';
+        position: absolute;
+        top: 2px;
+        right: 2px;
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--theme-accent);
+        border: 1px solid var(--theme-background);
+      }
+
+      // Slightly dim items not owned
+      &:not(.owned) {
+        opacity: 0.85;
+      }
+
+      &.owned {
+        box-shadow: inset 0 0 0 2px var(--theme-accent-secondary);
+      }
+    }
+  }
+}
