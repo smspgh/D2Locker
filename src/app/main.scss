@@ -1,5 +1,5 @@
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-// D2L Main stylesheet
+// d2l Main stylesheet
 //
 // The main stylesheet for all of the styles!
 //
@@ -17,6 +17,76 @@
 @use 'app/d2l-ui/d2l-button.scss';
 
 @layer base {
+  @font-face {
+    font-family: 'Destiny Symbols';
+    src: url('../data/font/DestinySymbols.woff2') format('woff2');
+    font-weight: 400;
+    font-style: normal;
+    font-display: fallback;
+  }
+
+  @font-face {
+    font-family: 'd2l Symbols';
+    src: url('../data/font/d2lSymbols.woff2') format('woff2');
+    font-weight: 400;
+    font-style: normal;
+    font-display: fallback;
+  }
+
+  @media (max-width: 1025px) {
+    :root {
+      --item-size: 48px;
+    }
+  }
+
+  @keyframes browser-warning {
+    to {
+      opacity: 0;
+      visibility: hidden;
+    }
+  }
+
+  :root {
+    // Item width including border
+    --item-size: 50px;
+    // Margin on the bottom and right of an item
+    --item-margin: 6px;
+    // Padding at the ends of inventory column
+    --inventory-column-padding: 12px;
+    // ultimately user-determined. default values here
+    --num-characters: 3;
+    --tiles-per-char-column: 3;
+    // equipped item plus character's inventory
+    --character-column-width: calc(
+      (var(--tiles-per-char-column) + 1) * (var(--item-size) + var(--item-margin))
+    );
+    // used for phone portrait mode
+    --column-padding: calc(2 * var(--inventory-column-padding) - var(--item-margin));
+    // The height of the visible viewport, taking into account virtual keyboards on iOS. Set by JS. This is more accurate than 100vh!
+    --viewport-height: 100vh;
+    // The bottom offset of the visual viewport from the layout viewport. Set by JS. This can help attach things to virtual keyboards.
+    --viewport-bottom-offset: 0;
+    // The height of the header including padding that may be added on rounded-corner phones. Set by JS.
+    --header-height: 44px;
+    // The height of the inventory store header section. Set by JS.
+    --store-header-height: 62px;
+
+    // How many desktop mode sidebar trays are open
+    --expanded-sidebars: 0;
+    --sidebar-size: 260px;
+
+    // How big to render each engram in the row of engrams in the Postmaster (on the Inventory screen).
+    --engram-size: calc(var(--character-column-width) / 10);
+
+    // Rumors have it that the Windows scrollbar size is 17px. I always thought
+    // it was 16px. We'll override this with a detected value in JavaScript.
+    --scrollbar-size: 17px;
+
+    // prevents content shift with persistent scroll-y bar
+    overflow-y: scroll;
+  }
+
+  /* stylelint-disable-next-line order/order */
   @include phone-portrait {
     :root {
       --item-margin: 10px;
@@ -57,75 +127,6 @@
     }
   }
 
-  @font-face {
-    font-family: 'Destiny Symbols';
-    src: url('../data/font/DestinySymbols.woff2') format('woff2');
-    font-weight: 400;
-    font-style: normal;
-    font-display: fallback;
-  }
-
-  @font-face {
-    font-family: 'D2L Symbols';
-    src: url('../data/font/D2LSymbols.woff2') format('woff2');
-    font-weight: 400;
-    font-style: normal;
-    font-display: fallback;
-  }
-
-  @media (max-width: 1025px) {
-    :root {
-      --item-size: 52px;
-    }
-  }
-
-  @keyframes browser-warning {
-    to {
-      opacity: 0;
-      visibility: hidden;
-    }
-  }
-
-  :root {
-    // Item width including border
-    --item-size: 54px;
-    // Margin on the bottom and right of an item
-    --item-margin: 6px;
-    // Padding at the ends of inventory column
-    --inventory-column-padding: 12px;
-    // ultimately user-determined. default values here
-    --num-characters: 3;
-    --tiles-per-char-column: 3;
-    // equipped item plus character's inventory
-    --character-column-width: calc(
-      (var(--tiles-per-char-column) + 1) * (var(--item-size) + var(--item-margin))
-    );
-    // used for phone portrait mode
-    --column-padding: calc(2 * var(--inventory-column-padding) - var(--item-margin));
-    // The height of the visible viewport, taking into account virtual keyboards on iOS. Set by JS. This is more accurate than 100vh!
-    --viewport-height: 100vh;
-    // The bottom offset of the visual viewport from the layout viewport. Set by JS. This can help attach things to virtual keyboards.
-    --viewport-bottom-offset: 0;
-    // The height of the header including padding that may be added on rounded-corner phones. Set by JS.
-    --header-height: 44px;
-    // The height of the inventory store header section. Set by JS.
-    --store-header-height: 62px;
-
-    // How many desktop mode sidebar trays are open
-    --expanded-sidebars: 0;
-    --sidebar-size: 260px;
-
-    // How big to render each engram in the row of engrams in the Postmaster (on the Inventory screen).
-    --engram-size: calc(var(--character-column-width) / 10);
-
-    // Rumors have it that the Windows scrollbar size is 17px. I always thought
-    // it was 16px. We'll override this with a detected value in JavaScript.
-    --scrollbar-size: 17px;
-
-    // prevents content shift with persistent scroll-y bar
-    overflow-y: scroll;
-  }
-
   h1,
   h2,
   h3,
@@ -138,7 +139,7 @@
     cursor: inherit;
   }
 
-  // Styles for the warning saying D2L isn't compatible with your browser. Once this CSS loads the warning will fade out after some time.
+  // Styles for the warning saying d2l isn't compatible with your browser. Once this CSS loads the warning will fade out after some time.
   #browser-warning {
     position: fixed;
     bottom: 0;
@@ -181,7 +182,7 @@
     margin: 0 auto;
     background-color: var(--theme-pwa-background);
     color: var(--theme-text);
-    font-family: 'Open Sans', sans-serif, 'Destiny Symbols', 'D2L Symbols';
+    font-family: 'Open Sans', sans-serif, 'Destiny Symbols', 'd2l Symbols';
     font-size: 12px;
     line-height: calc(16 / 12);
     accent-color: var(--theme-accent-primary);
@@ -207,7 +208,7 @@
   input,
   select,
   option {
-    font-family: 'Open Sans', sans-serif, 'Destiny Symbols', 'D2L Symbols';
+    font-family: 'Open Sans', sans-serif, 'Destiny Symbols', 'd2l Symbols';
   }
 
   input[type='text'],
@@ -230,7 +231,7 @@
     outline: none;
     color: var(--theme-text);
     box-sizing: border-box;
-    font-family: monospace, 'Destiny Symbols', 'D2L Symbols';
+    font-family: monospace, 'Destiny Symbols', 'd2l Symbols';
     font-size: inherit;
     // Setting this makes yuku/textcomplete faster because it doesn't need to make a fake element to measure line height (incorrectly, too)
     line-height: calc(16 / 12);
@@ -296,7 +297,7 @@
   }
 
   /**
-    Misc D2L page
+    Misc d2l page
    **/
   .d2l-page {
     // non-inventory page settings
