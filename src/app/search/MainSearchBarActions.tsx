@@ -1,3 +1,4 @@
+import { useOptionalArmorSearch } from 'app/armor/ArmorSearchContext';
 import { useArmorySearch } from 'app/armory/ArmorySearchContext';
 import { t } from 'app/i18next-t';
 import { toggleSearchResults } from 'app/shell/actions';
@@ -23,6 +24,7 @@ export default function MainSearchBarActions() {
   const searchResultsOpen = useSelector(searchResultsOpenSelector);
   const dispatch = useDispatch();
   const isPhonePortrait = useIsPhonePortrait();
+  const armorSearchContext = useOptionalArmorSearch();
   const armorySearchContext = useArmorySearch();
 
   const location = useLocation();
@@ -30,20 +32,29 @@ export default function MainSearchBarActions() {
   const onProgress = location.pathname.endsWith('progress');
   const onRecords = location.pathname.endsWith('records');
   const onVendors = location.pathname.endsWith('vendors');
+  const onArmorSearch = location.pathname.endsWith('armor-search');
   const onArmorySearch = location.pathname.endsWith('armory-search');
   const onFilterOptions = location.pathname.endsWith('filter-options');
 
-  // Use armory filtered items when on armory search page, otherwise use inventory items
+  // Use context-specific filtered items when on database pages, otherwise use inventory items
   const filteredItems =
-    onArmorySearch && armorySearchContext
-      ? armorySearchContext.filteredWeapons
-      : inventoryFilteredItems;
+    onArmorSearch && armorSearchContext
+      ? armorSearchContext.filteredArmor
+      : onArmorySearch && armorySearchContext
+        ? armorySearchContext.filteredWeapons
+        : inventoryFilteredItems;
 
   // We don't have access to the selected store so we'd match multiple characters' worth.
   // Just suppress the count for now
   const showSearchResults = (onInventory || onFilterOptions) && !isPhonePortrait;
   const showSearchCount = Boolean(
-    queryValid && searchQuery && !onProgress && !onRecords && !onVendors && !onArmorySearch,
+    queryValid &&
+      searchQuery &&
+      !onProgress &&
+      !onRecords &&
+      !onVendors &&
+      !onArmorSearch &&
+      !onArmorySearch,
   );
   const handleCloseSearchResults = useCallback(
     () => dispatch(toggleSearchResults(false)),
@@ -80,7 +91,7 @@ export default function MainSearchBarActions() {
         </motion.div>
       )}
 
-      {searchResultsOpen && !onArmorySearch && (
+      {searchResultsOpen && !onArmorSearch && !onArmorySearch && (
         <SearchResults
           items={queryValid ? filteredItems : emptyArray()}
           onClose={handleCloseSearchResults}

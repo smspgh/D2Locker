@@ -29,3 +29,7 @@ export function useArmorSearch() {
   }
   return context;
 }
+
+export function useOptionalArmorSearch() {
+  return use(ArmorSearchContext);
+}
