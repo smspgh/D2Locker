@@ -29,7 +29,7 @@ export default function ItemLocation({ item }: { item: DimItem }) {
     <div className={styles.itemLocation} style={{ paddingTop: '5px' }}>
       {locationPrefix}
       <ClassIcon classType={itemStore.classType} className={styles.classIcon} />(
-      {itemStore.className})
+      <span className={styles.className}>{itemStore.className}</span>)
     </div>
   );
 }
