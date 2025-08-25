@@ -27,6 +27,7 @@ import { D2EventInfo } from 'data/d2/d2-event-info-v2';
 import { useMemo, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import DesktopItemActions, { menuClassName } from './DesktopItemActions';
+import ItemLocation from './ItemLocation';
 import styles from './ItemPopup.m.scss';
 import { useItemPopupTabs } from './ItemPopupTabs';
 import ItemTagHotkeys from './ItemTagHotkeys';
@@ -154,6 +155,7 @@ export default function ItemPopup({
                 )}
                 <span>{itemTypeName(item)}</span>
               </div>
+              <ItemLocation item={item} />
             </div>
           </div>
           <div className={styles.mobileHeaderBottom}>

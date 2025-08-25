@@ -45,6 +45,7 @@ import EnergyMeter from './EnergyMeter';
 import ItemDescription from './ItemDescription';
 import styles from './ItemDetails.m.scss';
 import ItemExpiration from './ItemExpiration';
+import ItemLocation from './ItemLocation';
 import ItemPerks from './ItemPerks';
 import './ItemPopupBody.scss';
 import ItemSockets from './ItemSockets';
@@ -170,6 +171,7 @@ export default function ItemDetails({
               <BreakerType item={item} />
               {item.destinyVersion === 2 && item.ammoType > 0 && <AmmoIcon type={item.ammoType} />}
               <div>{itemTypeName(item)}</div>
+              <ItemLocation item={item} />
               {item.pursuit?.questLine && (
                 <div>
                   {t('MovePopup.Subtitle.QuestProgress', {

@@ -8,6 +8,7 @@ import { sortedStoresSelector } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
 import { getStore, getVault } from 'app/inventory/stores-helpers';
 import ActionButton from 'app/item-actions/ActionButton';
+import ClassOverlay from 'app/item-actions/ClassOverlay';
 import ItemMoveAmount from 'app/item-popup/ItemMoveAmount';
 import { hideItemPopup } from 'app/item-popup/item-popup';
 import { ItemActionsModel, StoreButtonInfo } from 'app/item-popup/item-popup-actions';
@@ -175,6 +176,7 @@ function MoveLocations({
         disabled={!enabled}
       >
         <StoreIcon store={store} useBackground={true} />
+        <ClassOverlay store={store} />
       </button>
     );
 
@@ -241,6 +243,7 @@ function PullButtons({
               onClick={() => handlePullTo(itemOwner, 1)}
             >
               <StoreIcon store={itemOwner} useBackground={true} label="1" />
+              <ClassOverlay store={itemOwner} />
             </button>
           )}
           {showAmounts ? (
@@ -251,6 +254,7 @@ function PullButtons({
                 onClick={() => handlePullTo(itemOwner, actionsModel.maximumMoveAmount)}
               >
                 <StoreIcon store={itemOwner} useBackground={true} label={moveMaxLabel} />
+                <ClassOverlay store={itemOwner} />
               </button>
             )
           ) : (
@@ -260,6 +264,7 @@ function PullButtons({
               onClick={() => handlePullTo(itemOwner, item.amount)}
             >
               <StoreIcon store={itemOwner} useBackground={true} label={moveAllLabel} />
+              <ClassOverlay store={itemOwner} />
             </button>
           )}
 

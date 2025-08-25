@@ -1,0 +1,20 @@
+@use '../variables.scss' as *;
+
+.classOverlay {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  width: 14px;
+  height: 14px;
+  border-radius: 2px;
+  background: var(--theme-accent-primary);
+  color: var(--theme-text-invert);
+  font-size: 10px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-shadow: 0 1px 1px rgb(0, 0, 0, 0.5);
+  border: 1px solid var(--theme-border);
+  z-index: 1;
+}

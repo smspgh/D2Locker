@@ -525,7 +525,7 @@ export default (env: Env) => {
         {
           from: './backend/light',
           to: 'backend/light/',
-          filter: (resourcePath) => !resourcePath.includes('rollAppraiserData.json'),
+          // Copy both the compressed .br file and the original .json file for express-static-gzip
         },
         { from: './src/safari-pinned-tab.svg' },
         { from: './src/nuke.php' },

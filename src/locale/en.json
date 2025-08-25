@@ -1110,6 +1110,11 @@
     "TriageTab": "Triage",
     "UnreliablePerkOption": "This perk appears only in the collections view. It might not roll randomly on this item.",
     "Vault": "Vault",
+    "InVault": "In Vault",
+    "EquippedOn": "Equipped on {{character}}",
+    "EquippedOnShort": "Equipped On:",
+    "AllocatedTo": "Allocated to {{character}}",
+    "AllocatedOnShort": "Allocated On:",
     "WeaponLevel": "Weapon Level {{level}}"
   },
   "Notes": {

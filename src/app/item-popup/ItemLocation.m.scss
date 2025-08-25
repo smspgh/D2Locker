@@ -1,0 +1,15 @@
+@use '../variables.scss' as *;
+
+.itemLocation {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.875rem;
+  color: var(--theme-text-secondary);
+}
+
+.classIcon {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+}

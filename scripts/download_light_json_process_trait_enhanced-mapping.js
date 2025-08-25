@@ -2,6 +2,7 @@ import { execFileSync } from 'child_process';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import zlib from 'zlib';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -46,6 +47,9 @@ class TraitEnhancedMappingGenerator {
 
       console.log(`Generated ${Object.keys(mapping).length} standard-to-enhanced perk mappings`);
       console.log('Mapping generation complete!');
+
+      // Compress the rollAppraiserData.json file for production serving
+      await this.compressRollAppraiserData();
     } catch (error) {
       console.error('Error generating mapping:', error);
       process.exit(1);
@@ -106,6 +110,41 @@ class TraitEnhancedMappingGenerator {
     console.log(`Processed ${processed} weapons with random rolls.`);
     console.log(`Found ${mappingsFound} unique standard-to-enhanced mappings.`);
     return mapping;
+  }
+
+  async compressRollAppraiserData() {
+    try {
+      console.log('\nCompressing rollAppraiserData.json for production serving...');
+
+      const inputFile = this.inputPath;
+      const outputFile = inputFile + '.br';
+
+      if (!fs.existsSync(inputFile)) {
+        console.warn(`Input file not found for compression: ${inputFile}`);
+        return;
+      }
+
+      const inputData = fs.readFileSync(inputFile);
+      const compressed = zlib.brotliCompressSync(inputData, {
+        params: {
+          [zlib.constants.BROTLI_PARAM_QUALITY]: 5, // Same quality as webpack config
+        },
+      });
+
+      fs.writeFileSync(outputFile, compressed);
+
+      const originalSize = inputData.length;
+      const compressedSize = compressed.length;
+      const compressionRatio = (((originalSize - compressedSize) / originalSize) * 100).toFixed(1);
+
+      console.log(`Compressed ${inputFile} -> ${outputFile}`);
+      console.log(`Original size: ${(originalSize / 1024 / 1024).toFixed(2)} MB`);
+      console.log(`Compressed size: ${(compressedSize / 1024 / 1024).toFixed(2)} MB`);
+      console.log(`Compression ratio: ${compressionRatio}% reduction`);
+    } catch (error) {
+      console.error('Error compressing rollAppraiserData.json:', error);
+      // Don't fail the entire process for compression errors
+    }
   }
 }
 
