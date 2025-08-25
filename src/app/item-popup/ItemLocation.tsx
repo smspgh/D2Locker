@@ -26,7 +26,7 @@ export default function ItemLocation({ item }: { item: DimItem }) {
     : t('MovePopup.AllocatedOnShort');
 
   return (
-    <div className={styles.itemLocation}>
+    <div className={styles.itemLocation} style={{ paddingTop: '5px' }}>
       {locationPrefix}
       <ClassIcon classType={itemStore.classType} className={styles.classIcon} />(
       {itemStore.className})
