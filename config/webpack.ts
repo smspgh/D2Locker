@@ -522,7 +522,13 @@ export default (env: Env) => {
         { from: `./icons/${env.name}/` },
         { from: `./icons/splash`, to: 'splash/' },
         { from: `./icons/screenshots`, to: 'screenshots/' },
-        { from: './backend/light', to: 'backend/light/' },
+        { 
+          from: './backend/light', 
+          to: 'backend/light/',
+          filter: (resourcePath) => {
+            return !resourcePath.includes('rollAppraiserData.json');
+          }
+        },
         { from: './src/safari-pinned-tab.svg' },
         { from: './src/nuke.php' },
         { from: './src/robots.txt' },
