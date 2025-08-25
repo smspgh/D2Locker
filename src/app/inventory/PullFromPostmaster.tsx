@@ -1,4 +1,5 @@
 import { settingSelector } from 'app/d2l-api/selectors';
+import useConfirm from 'app/d2l-ui/useConfirm';
 import { t } from 'app/i18next-t';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { RootState } from 'app/store/types';
@@ -14,6 +15,7 @@ import { DimStore } from './store-types';
 export function PullFromPostmaster({ store }: { store: DimStore }) {
   const [working, setWorking] = useState(false);
   const dispatch = useThunkDispatch();
+  const [confirmDialog, confirm] = useConfirm();
   const hidePullFromPostmaster = useSelector(settingSelector('hidePullFromPostmaster'));
   const numPullablePostmasterItems = useSelector(
     (state: RootState) => pullablePostmasterItems(store, storesSelector(state)).length,
@@ -22,7 +24,15 @@ export function PullFromPostmaster({ store }: { store: DimStore }) {
     return null;
   }
 
-  const onClick = () => {
+  const onClick = async () => {
+    const confirmMessage = t('MovePopup.ConfirmPullFromPostmaster', {
+      count: numPullablePostmasterItems,
+      character: store.name,
+    });
+    if (!(await confirm(confirmMessage))) {
+      return;
+    }
+
     queueAction(async () => {
       setWorking(true);
       try {
@@ -34,10 +44,13 @@ export function PullFromPostmaster({ store }: { store: DimStore }) {
   };
 
   return (
-    <button type="button" className={styles.button} onClick={onClick}>
-      <AppIcon spinning={working} icon={working ? refreshIcon : sendIcon} />
-      <span className={styles.badge}>{numPullablePostmasterItems}</span>
-      <span>{t('Loadouts.PullFromPostmaster')}</span>
-    </button>
+    <>
+      {confirmDialog}
+      <button type="button" className={styles.button} onClick={onClick}>
+        <AppIcon spinning={working} icon={working ? refreshIcon : sendIcon} />
+        <span className={styles.badge}>{numPullablePostmasterItems}</span>
+        <span>{t('Loadouts.PullFromPostmaster')}</span>
+      </button>
+    </>
   );
 }

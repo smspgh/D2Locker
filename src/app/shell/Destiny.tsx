@@ -9,7 +9,6 @@ import {
 import ArmorSearchPage from 'app/armor/ArmorSearchPage';
 import ArmoryPage from 'app/armory/ArmoryPage';
 import ArmorySearchPage from 'app/armory/ArmorySearchPage';
-import ShaderBulkApplyPage from 'app/shader-bulk-apply/ShaderBulkApplyPage';
 import CompareContainer from 'app/compare/CompareContainer';
 import { settingSelector } from 'app/d2l-api/selectors';
 import ErrorBoundary from 'app/d2l-ui/ErrorBoundary';
@@ -24,6 +23,7 @@ import { blockingProfileErrorSelector, storesSelector } from 'app/inventory/sele
 import { getCurrentStore } from 'app/inventory/stores-helpers';
 import LoadoutDrawerContainer from 'app/loadout-drawer/LoadoutDrawerContainer';
 import { totalPostmasterItems } from 'app/loadout-drawer/postmaster';
+import ShaderBulkApplyPage from 'app/shader-bulk-apply/ShaderBulkApplyPage';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { RootState } from 'app/store/types';
 import StripSockets from 'app/strip-sockets/StripSockets';

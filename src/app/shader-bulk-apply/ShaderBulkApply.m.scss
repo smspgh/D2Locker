@@ -21,12 +21,13 @@
 
   .shader-search {
     margin-bottom: 20px;
-    
+
     :global(.search-filter) {
       max-width: 400px;
     }
   }
 
+  // All basic span selectors first
   .class-selection {
     margin-bottom: 20px;
 
@@ -47,24 +48,53 @@
         background: var(--theme-item-lowlight);
         transition: all 0.2s;
 
-        &:hover {
-          background: var(--theme-accent-secondary);
-          border-color: var(--theme-accent-primary);
-        }
-
-        input[type="radio"] {
-          margin: 0;
-          width: 16px;
-          height: 16px;
-        }
-
         span {
           color: var(--theme-text);
           font-size: 14px;
           font-weight: 500;
         }
 
-        input[type="radio"]:checked ~ span {
+        input[type='radio'] {
+          margin: 0;
+          width: 16px;
+          height: 16px;
+        }
+
+        &:hover {
+          background: var(--theme-accent-secondary);
+          border-color: var(--theme-accent-primary);
+        }
+      }
+    }
+  }
+
+  .item-type-selection {
+    margin-bottom: 24px;
+
+    .item-type-checkboxes {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+
+      .item-type-option {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        cursor: pointer;
+        padding: 4px 0;
+
+        span {
+          color: var(--theme-text);
+          font-size: 14px;
+        }
+
+        input[type='checkbox'] {
+          margin: 0;
+          width: 16px;
+          height: 16px;
+        }
+
+        &:hover span {
           color: var(--theme-accent-primary);
         }
       }
@@ -116,39 +146,6 @@
     }
   }
 
-  .item-type-selection {
-    margin-bottom: 24px;
-
-    .item-type-checkboxes {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-
-      .item-type-option {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        cursor: pointer;
-        padding: 4px 0;
-
-        input[type="checkbox"] {
-          margin: 0;
-          width: 16px;
-          height: 16px;
-        }
-
-        span {
-          color: var(--theme-text);
-          font-size: 14px;
-        }
-
-        &:hover span {
-          color: var(--theme-accent-primary);
-        }
-      }
-    }
-  }
-
   .preview {
     margin-bottom: 24px;
     padding: 16px;
@@ -183,5 +180,10 @@
         cursor: not-allowed;
       }
     }
+  }
+
+  // High-specificity selectors placed at the end to maintain CSS order
+  .class-selection .class-options .class-option input[type='radio']:checked ~ span {
+    color: var(--theme-accent-primary);
   }
 }

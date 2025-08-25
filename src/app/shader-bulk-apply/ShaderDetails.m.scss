@@ -6,12 +6,12 @@
 
 .shaderInfo {
   flex: 1;
-  
+
   h2 {
     margin: 0;
     font-size: 1.2rem;
   }
-  
+
   p {
     margin: 4px 0 0 0;
     opacity: 0.8;
@@ -31,7 +31,7 @@
     margin: 0 0 8px 0;
     font-size: 1rem;
   }
-  
+
   p {
     margin: 0;
     line-height: 1.4;
@@ -44,7 +44,7 @@
     margin: 0 0 12px 0;
     font-size: 1rem;
   }
-  
+
   img {
     max-width: 100%;
     height: auto;
@@ -74,15 +74,15 @@
   padding: 4px;
   border-radius: 4px;
   transition: background-color 0.2s;
-  
+
   &:hover {
     background-color: var(--theme-accent-secondary);
   }
-  
-  input[type="checkbox"] {
+
+  input[type='checkbox'] {
     margin: 0;
   }
-  
+
   span {
     font-size: 0.95rem;
   }
@@ -92,12 +92,12 @@
   background: var(--theme-accent-secondary);
   padding: 12px;
   border-radius: 6px;
-  
+
   h3 {
     margin: 0 0 8px 0;
     font-size: 1rem;
   }
-  
+
   p {
     margin: 0;
     font-size: 0.9rem;
@@ -118,7 +118,7 @@
   padding: 12px 24px;
   font-size: 1rem;
   font-weight: 500;
-  
+
   &:disabled {
     opacity: 0.5;
     cursor: not-allowed;

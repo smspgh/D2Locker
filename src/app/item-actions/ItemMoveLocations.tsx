@@ -1,4 +1,5 @@
 import { StoreIcon } from 'app/character-tile/StoreIcon';
+import useConfirm from 'app/d2l-ui/useConfirm';
 import { symbolize } from 'app/hotkeys/hotkeys';
 import { t } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
@@ -18,7 +19,7 @@ import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import styles from './ItemMoveLocations.m.scss';
 
-type MoveSubmit = (store: DimStore, equip?: boolean, moveAmount?: number) => void;
+type MoveSubmit = (store: DimStore, equip?: boolean, moveAmount?: number) => void | Promise<void>;
 
 export default function ItemMoveLocations({
   item,
@@ -36,8 +37,24 @@ export default function ItemMoveLocations({
   const [amount, setAmount] = useState(item.amount);
   const itemOwner = getStore(stores, item.owner);
   const dispatch = useThunkDispatch();
+  const [confirmDialog, confirm] = useConfirm();
 
-  const submitMoveTo = (store: DimStore, equip = false, moveAmount = amount) => {
+  const submitMoveTo = async (store: DimStore, equip = false, moveAmount = amount) => {
+    // Show confirmation dialog for both equip and store actions
+    const confirmMessage = equip
+      ? t('MovePopup.ConfirmEquip', {
+          item: item.name,
+          character: store.name,
+        })
+      : t('MovePopup.ConfirmStore', {
+          item: item.name,
+          character: store.name,
+        });
+
+    if (!(await confirm(confirmMessage))) {
+      return;
+    }
+
     dispatch(moveItemTo(item, store, equip, moveAmount));
     hideItemPopup();
   };
@@ -48,6 +65,7 @@ export default function ItemMoveLocations({
 
   return (
     <>
+      {confirmDialog}
       {actionsModel.inPostmaster ? (
         actionsModel.pullFromPostmaster && (
           <PullButtons
@@ -191,6 +209,7 @@ function PullButtons({
   actionsModel: ItemActionsModel;
   vault?: DimStore;
 }) {
+  const [confirmDialog, confirm] = useConfirm();
   const showAmounts = item.maxStackSize > 1 || item.bucket.hash === BucketHashes.Consumables;
   const moveAllLabel = showAmounts ? t('MovePopup.All') : undefined;
   const moveMaxLabel =
@@ -198,49 +217,63 @@ function PullButtons({
       ? moveAllLabel
       : `${actionsModel.maximumMoveAmount}`;
 
+  const handlePullTo = async (store: DimStore, amount: number) => {
+    const confirmMessage = t('MovePopup.ConfirmPullToCharacter', {
+      item: item.name,
+      character: store.name,
+      amount: amount > 1 ? ` (${amount})` : '',
+    });
+    if (await confirm(confirmMessage)) {
+      submitMoveTo(store, false, amount);
+    }
+  };
+
   return (
-    <div className={clsx(styles.moveLocations, styles.moveLocationPadding)}>
-      {t('MovePopup.PullPostmaster')}
-      <div className={styles.moveLocationIcons}>
-        {showAmounts && (
-          <button
-            type="button"
-            className={styles.move}
-            onClick={() => submitMoveTo(itemOwner, false, 1)}
-          >
-            <StoreIcon store={itemOwner} useBackground={true} label="1" />
-          </button>
-        )}
-        {showAmounts ? (
-          actionsModel.maximumMoveAmount !== 1 && (
+    <>
+      {confirmDialog}
+      <div className={clsx(styles.moveLocations, styles.moveLocationPadding)}>
+        {t('MovePopup.PullPostmaster')}
+        <div className={styles.moveLocationIcons}>
+          {showAmounts && (
             <button
               type="button"
               className={styles.move}
-              onClick={() => submitMoveTo(itemOwner, false, actionsModel.maximumMoveAmount)}
+              onClick={() => handlePullTo(itemOwner, 1)}
             >
-              <StoreIcon store={itemOwner} useBackground={true} label={moveMaxLabel} />
+              <StoreIcon store={itemOwner} useBackground={true} label="1" />
             </button>
-          )
-        ) : (
-          <button
-            type="button"
-            className={styles.move}
-            onClick={() => submitMoveTo(itemOwner, false, item.amount)}
-          >
-            <StoreIcon store={itemOwner} useBackground={true} label={moveAllLabel} />
-          </button>
-        )}
+          )}
+          {showAmounts ? (
+            actionsModel.maximumMoveAmount !== 1 && (
+              <button
+                type="button"
+                className={styles.move}
+                onClick={() => handlePullTo(itemOwner, actionsModel.maximumMoveAmount)}
+              >
+                <StoreIcon store={itemOwner} useBackground={true} label={moveMaxLabel} />
+              </button>
+            )
+          ) : (
+            <button
+              type="button"
+              className={styles.move}
+              onClick={() => handlePullTo(itemOwner, item.amount)}
+            >
+              <StoreIcon store={itemOwner} useBackground={true} label={moveAllLabel} />
+            </button>
+          )}
 
-        {actionsModel.canVault && (
-          <button
-            type="button"
-            className={styles.move}
-            onClick={() => submitMoveTo(vault!, false, item.amount)}
-          >
-            <StoreIcon store={vault!} label={moveAllLabel} />
-          </button>
-        )}
+          {actionsModel.canVault && (
+            <button
+              type="button"
+              className={styles.move}
+              onClick={() => handlePullTo(vault!, item.amount)}
+            >
+              <StoreIcon store={vault!} label={moveAllLabel} />
+            </button>
+          )}
+        </div>
       </div>
-    </div>
+    </>
   );
 }

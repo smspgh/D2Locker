@@ -4,6 +4,7 @@ import { compareFilteredItems } from 'app/compare/actions';
 import { saveSearch } from 'app/d2l-api/basic-actions';
 import { recentSearchesSelector } from 'app/d2l-api/selectors';
 import Dropdown, { Option } from 'app/d2l-ui/Dropdown';
+import useConfirm from 'app/d2l-ui/useConfirm';
 import { t } from 'app/i18next-t';
 import { insertPlug } from 'app/inventory/advanced-write-actions';
 import { bulkLockItems, bulkTagItems } from 'app/inventory/bulk-actions';
@@ -65,6 +66,7 @@ export default memo(function ItemActionsDropdown({
   const isPhonePortrait = useIsPhonePortrait();
   const stores = useSelector(storesSortedByImportanceSelector);
   const destinyVersion = useSelector(destinyVersionSelector);
+  const [confirmDialog, confirm] = useConfirm();
 
   let isComparable = false;
   if (filteredItems.length) {
@@ -81,6 +83,20 @@ export default memo(function ItemActionsDropdown({
   const bulkTag = loadingTracker.trackPromise(async (selectedTag: TagCommand) => {
     // Bulk tagging
     const tagItems = filteredItems.filter((i) => i.taggable);
+    const tagLabel =
+      selectedTag === 'clear'
+        ? t('Tags.ClearTag')
+        : itemTagSelectorList.find((t) => t.type === selectedTag)?.label || selectedTag;
+
+    const confirmMessage = t('MovePopup.ConfirmBulkTag', {
+      count: tagItems.length,
+      tag: tagLabel,
+    });
+
+    if (!(await confirm(confirmMessage))) {
+      return;
+    }
+
     dispatch(bulkTagItems(tagItems, selectedTag));
   });
 
@@ -88,6 +104,15 @@ export default memo(function ItemActionsDropdown({
     // Bulk locking/unlocking
     const state = selectedTag === 'lock';
     const lockables = filteredItems.filter((i) => i.lockable);
+
+    const confirmMessage = state
+      ? t('MovePopup.ConfirmBulkLock', { count: lockables.length })
+      : t('MovePopup.ConfirmBulkUnlock', { count: lockables.length });
+
+    if (!(await confirm(confirmMessage))) {
+      return;
+    }
+
     dispatch(bulkLockItems(lockables, state));
   });
 
@@ -114,8 +139,8 @@ export default memo(function ItemActionsDropdown({
     }
 
     // Show confirmation dialog
-    // eslint-disable-next-line no-alert
-    if (!window.confirm(t('BestPerks.BulkConfirm', { count: weapons.length }))) {
+    const confirmMessage = t('BestPerks.BulkConfirm', { count: weapons.length });
+    if (!(await confirm(confirmMessage))) {
       return;
     }
 
@@ -239,12 +264,65 @@ export default memo(function ItemActionsDropdown({
     }
   });
 
-  const compareMatching = () => {
+  const compareMatching = async () => {
+    const confirmMessage = t('MovePopup.ConfirmBulkCompare', {
+      count: filteredItems.length,
+    });
+
+    if (!(await confirm(confirmMessage))) {
+      return;
+    }
+
     dispatch(compareFilteredItems(searchQuery, filteredItems, undefined));
+  };
+
+  const handleStripSockets = async () => {
+    const socketsToStrip = filteredItems.filter((i) =>
+      i.sockets?.allSockets.some(
+        (s) => s.emptyPlugItemHash && s.plugged?.plugDef.hash !== s.emptyPlugItemHash,
+      ),
+    );
+
+    const confirmMessage = t('MovePopup.ConfirmBulkStripSockets', {
+      count: socketsToStrip.length,
+    });
+
+    if (!(await confirm(confirmMessage))) {
+      return;
+    }
+
+    stripSockets(searchQuery);
+  };
+
+  const handleBulkNote = async () => {
+    const confirmMessage = t('MovePopup.ConfirmBulkNote', {
+      count: filteredItems.length,
+    });
+
+    if (!(await confirm(confirmMessage))) {
+      return;
+    }
+
+    bulkNote(filteredItems);
   };
 
   // Move items matching the current search. Max 9 per type.
   const applySearchLoadout = async (store: DimStore) => {
+    const itemCount = filteredItems.length;
+    const confirmMessage = store.isVault
+      ? t('MovePopup.ConfirmBulkStore', {
+          count: itemCount,
+          character: 'Vault',
+        })
+      : t('MovePopup.ConfirmBulkStore', {
+          count: itemCount,
+          character: store.name,
+        });
+
+    if (!(await confirm(confirmMessage))) {
+      return;
+    }
+
     const loadout = itemMoveLoadout(filteredItems, store);
     dispatch(applyLoadout(store, loadout, { allowUndo: true }));
   };
@@ -344,7 +422,7 @@ export default memo(function ItemActionsDropdown({
     },
     destinyVersion === 2 && {
       key: 'strip-sockets',
-      onSelected: () => stripSockets(searchQuery),
+      onSelected: handleStripSockets,
       disabled: !canStrip || !searchActive,
       content: (
         <>
@@ -354,7 +432,7 @@ export default memo(function ItemActionsDropdown({
     },
     {
       key: 'note',
-      onSelected: () => bulkNote(filteredItems),
+      onSelected: handleBulkNote,
       disabled: !searchActive,
       content: (
         <>
@@ -396,13 +474,16 @@ export default memo(function ItemActionsDropdown({
   ]);
 
   return (
-    <Dropdown
-      options={dropdownOptions}
-      kebab={true}
-      className={styles.dropdownButton}
-      offset={isPhonePortrait ? 6 : 2}
-      fixed={fixed}
-      label={t('Header.SearchActions')}
-    />
+    <>
+      {confirmDialog}
+      <Dropdown
+        options={dropdownOptions}
+        kebab={true}
+        className={styles.dropdownButton}
+        offset={isPhonePortrait ? 6 : 2}
+        fixed={fixed}
+        label={t('Header.SearchActions')}
+      />
+    </>
   );
 });
