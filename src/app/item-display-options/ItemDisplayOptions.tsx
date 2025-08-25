@@ -4,12 +4,14 @@ import { t } from 'app/i18next-t';
 import { itemTagList } from 'app/inventory/d2l-item-info';
 import Checkbox from 'app/settings/Checkbox';
 import { useSetSetting } from 'app/settings/hooks';
+import { IconQuality, IconQualityApplyTo } from 'app/settings/initial-settings';
 import { itemSortSettingsSelector } from 'app/settings/item-sort';
-import Select from 'app/settings/Select';
+import Select, { mapToOptions } from 'app/settings/Select';
 import { fineprintClass, settingClass } from 'app/settings/SettingsPage';
 import styles from 'app/settings/SettingsPage.m.scss';
 import SortOrderEditor, { SortProperty } from 'app/settings/SortOrderEditor';
-import { AppIcon, faList } from 'app/shell/icons';
+import { AppIcon, faList, settingsIcon } from 'app/shell/icons';
+import { TierType } from 'bungie-api-ts/destiny2';
 import { range } from 'es-toolkit';
 import { useSelector } from 'react-redux';
 
@@ -112,6 +114,42 @@ export default function ItemDisplayOptions() {
 
   const sortOrder: SortProperty[] = [...enabledOptions, ...disabledOptions];
 
+  // Icon quality options
+  const iconQualityOptions = mapToOptions({
+    standard: 'Standard',
+    highres: 'High Resolution',
+    screenshot: 'Screenshot',
+  });
+
+  const iconApplyToOptions = mapToOptions({
+    all: 'All Items',
+    weapons: 'Weapons Only',
+    armor: 'Armor Only',
+  });
+
+  // Tier options for filtering
+  const tierOptions = [
+    { value: TierType.Basic, label: 'Common' },
+    { value: TierType.Common, label: 'Uncommon' },
+    { value: TierType.Rare, label: 'Rare' },
+    { value: TierType.Superior, label: 'Legendary' },
+    { value: TierType.Exotic, label: 'Exotic' },
+  ];
+
+  const handleTierChange = (tier: TierType, checked: boolean) => {
+    const currentTiers = settings.iconQualityTiers || [
+      TierType.Basic,
+      TierType.Common,
+      TierType.Rare,
+      TierType.Superior,
+      TierType.Exotic,
+    ];
+
+    const newTiers = checked ? [...currentTiers, tier] : currentTiers.filter((t) => t !== tier);
+
+    setSetting('iconQualityTiers', newTiers);
+  };
+
   return (
     <PageWithMenu>
       <div className={styles.settings}>
@@ -128,6 +166,97 @@ export default function ItemDisplayOptions() {
               {t('LockerOptions.SortingDescription', {
                 defaultValue:
                   'Drag and drop to reorder. Check to enable. Click arrows to reverse sort direction.',
+              })}
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <h2>
+            <AppIcon icon={settingsIcon} /> Icon Quality Settings
+          </h2>
+
+          <div className={settingClass}>
+            <Select
+              label={t('LockerOptions.IconQuality', { defaultValue: 'Icon Quality' })}
+              name="iconQuality"
+              value={settings.iconQuality || 'highres'}
+              options={iconQualityOptions}
+              onChange={(e) => setSetting('iconQuality', e.target.value as IconQuality)}
+            />
+            <div className={fineprintClass}>
+              {t('LockerOptions.IconQualityDescription', {
+                defaultValue: 'Choose the quality of icons to display for items.',
+              })}
+              <ul style={{ marginTop: '8px', marginBottom: 0 }}>
+                <li>
+                  <strong>
+                    {t('LockerOptions.IconQualityStandard', { defaultValue: 'Standard' })}:
+                  </strong>{' '}
+                  {t('LockerOptions.IconQualityStandardDesc', {
+                    defaultValue: 'Use regular icons (smaller file size)',
+                  })}
+                </li>
+                <li>
+                  <strong>
+                    {t('LockerOptions.IconQualityHighRes', { defaultValue: 'High Resolution' })}:
+                  </strong>{' '}
+                  {t('LockerOptions.IconQualityHighResDesc', {
+                    defaultValue: 'Use high-res icons when available (current default)',
+                  })}
+                </li>
+                <li>
+                  <strong>
+                    {t('LockerOptions.IconQualityScreenshot', { defaultValue: 'Screenshot' })}:
+                  </strong>{' '}
+                  {t('LockerOptions.IconQualityScreenshotDesc', {
+                    defaultValue:
+                      'Use item screenshots as icons (experimental, may look inconsistent)',
+                  })}
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <div className={settingClass}>
+            <Select
+              label={t('LockerOptions.IconQualityApplyTo', { defaultValue: 'Apply To' })}
+              name="iconQualityApplyTo"
+              value={settings.iconQualityApplyTo || 'all'}
+              options={iconApplyToOptions}
+              onChange={(e) =>
+                setSetting('iconQualityApplyTo', e.target.value as IconQualityApplyTo)
+              }
+            />
+            <div className={fineprintClass}>
+              Choose which items should use the selected icon quality.
+            </div>
+          </div>
+
+          <div className={settingClass}>
+            <label>{t('LockerOptions.IconQualityTiers', { defaultValue: 'Item Tiers' })}</label>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+              {tierOptions.map((tier) => (
+                <Checkbox
+                  key={tier.value}
+                  label={tier.label}
+                  name={`tier-${tier.value}`}
+                  value={(
+                    settings.iconQualityTiers || [
+                      TierType.Basic,
+                      TierType.Common,
+                      TierType.Rare,
+                      TierType.Superior,
+                      TierType.Exotic,
+                    ]
+                  ).includes(tier.value)}
+                  onChange={(checked) => handleTierChange(tier.value, checked)}
+                />
+              ))}
+            </div>
+            <div className={fineprintClass}>
+              {t('LockerOptions.IconQualityTiersDesc', {
+                defaultValue: 'Select which item tiers should use the custom icon quality setting.',
               })}
             </div>
           </div>

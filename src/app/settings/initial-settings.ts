@@ -1,11 +1,19 @@
 import { defaultSettings, Settings as DimApiSettings } from '@destinyitemmanager/dim-api-types';
 import { defaultLanguage, DimLanguage } from 'app/i18n';
+import { TierType } from 'bungie-api-ts/destiny2';
+
+export type IconQuality = 'standard' | 'highres' | 'screenshot';
+export type IconQualityApplyTo = 'all' | 'weapons' | 'armor';
 
 /**
  * We extend the settings interface so we can try out new settings before committing them to d2l-api-types
  */
 export interface Settings extends DimApiSettings {
   language: DimLanguage;
+  // Icon display settings
+  iconQuality?: IconQuality;
+  iconQualityApplyTo?: IconQualityApplyTo;
+  iconQualityTiers?: TierType[];
   // Search filter settings
   searchFilterSettings?: {
     keepWeapon?: {
@@ -32,6 +40,15 @@ export interface Settings extends DimApiSettings {
 export const initialSettingsState: Settings = {
   ...defaultSettings,
   language: defaultLanguage(),
+  iconQuality: 'highres',
+  iconQualityApplyTo: 'all',
+  iconQualityTiers: [
+    TierType.Basic,
+    TierType.Common,
+    TierType.Rare,
+    TierType.Superior,
+    TierType.Exotic,
+  ],
   searchFilterSettings: {
     keepWeapon: {
       enabled: true,

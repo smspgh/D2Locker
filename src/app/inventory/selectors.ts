@@ -187,11 +187,13 @@ export const createItemContextSelector = createSelector(
   profileResponseSelector,
   bucketsSelector,
   customStatsSelector,
-  (defs, profileResponse, buckets, customStats): ItemCreationContext => ({
+  settingsSelector,
+  (defs, profileResponse, buckets, customStats, settings): ItemCreationContext => ({
     defs: defs!,
     buckets: buckets!,
     profileResponse: profileResponse!,
     customStats,
+    settings,
   }),
 );
 

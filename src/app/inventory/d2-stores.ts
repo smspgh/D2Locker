@@ -3,7 +3,7 @@ import { compareAccounts, DestinyAccount } from 'app/accounts/destiny-account';
 import { getPlatforms } from 'app/accounts/platforms';
 import { currentAccountSelector } from 'app/accounts/selectors';
 import { loadClarity } from 'app/clarity/descriptions/loadDescriptions';
-import { customStatsSelector, offlineModeSelector } from 'app/d2l-api/selectors';
+import { customStatsSelector, offlineModeSelector, settingsSelector } from 'app/d2l-api/selectors';
 import { t } from 'app/i18next-t';
 import { inGameLoadoutLoaded } from 'app/loadout/ingame/actions';
 import { processInGameLoadouts } from 'app/loadout/loadout-type-converters';
@@ -401,11 +401,13 @@ function loadStoresData(
 
             const buckets = d2BucketsSelector(getState())!;
             const customStats = customStatsSelector(getState());
+            const settings = settingsSelector(getState());
             const stores = buildStores({
               defs,
               buckets,
               customStats,
               profileResponse,
+              settings,
             });
 
             // One reason stores could have errors is if the manifest was not up

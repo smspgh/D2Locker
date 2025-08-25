@@ -10,6 +10,7 @@ import {
   uniqueEquipBuckets,
 } from 'app/search/d2-known-values';
 import { lightStats } from 'app/search/search-filter-values';
+import { Settings } from 'app/settings/initial-settings';
 import { sumBy } from 'app/utils/collections';
 import { emptyArray, emptyObject } from 'app/utils/empty';
 import { errorLog, warnLog } from 'app/utils/log';
@@ -243,13 +244,107 @@ export interface ItemCreationContext {
    * If not present, the itemComponents from the DestinyProfileResponse should be used.
    */
   itemComponents?: Partial<DestinyItemComponentSetOfint64>;
+  /** Optional settings for icon quality preferences */
+  settings?: Settings;
+}
+
+/**
+ * Determines which icon to use based on user settings
+ */
+function selectItemIcon(
+  itemDef: DestinyInventoryItemDefinition,
+  displayProperties: DestinyDisplayPropertiesDefinition,
+  overrideStyleItem: DestinyInventoryItemDefinition | undefined,
+  settings: Settings | undefined,
+  itemTierType: TierType,
+  itemCategoryHashes: number[],
+): string {
+  // If no settings, use current default behavior (highres with fallback)
+  if (!settings) {
+    return (
+      overrideStyleItem?.displayProperties.highResIcon ||
+      overrideStyleItem?.displayProperties.icon ||
+      displayProperties.highResIcon ||
+      displayProperties.icon ||
+      d2MissingIcon
+    );
+  }
+
+  const iconQuality = settings.iconQuality || 'highres';
+  const applyTo = settings.iconQualityApplyTo || 'all';
+  const enabledTiers = settings.iconQualityTiers || [
+    TierType.Basic,
+    TierType.Common,
+    TierType.Rare,
+    TierType.Superior,
+    TierType.Exotic,
+  ];
+
+  // Check if this item's tier is enabled for custom icon quality
+  if (!enabledTiers.includes(itemTierType)) {
+    // Use default behavior if tier not enabled
+    return (
+      overrideStyleItem?.displayProperties.highResIcon ||
+      overrideStyleItem?.displayProperties.icon ||
+      displayProperties.highResIcon ||
+      displayProperties.icon ||
+      d2MissingIcon
+    );
+  }
+
+  // Check if this item type should use custom icon quality
+  const isWeapon = itemCategoryHashes.includes(ItemCategoryHashes.Weapon);
+  const isArmor = itemCategoryHashes.includes(ItemCategoryHashes.Armor);
+
+  const shouldApplySettings =
+    applyTo === 'all' || (applyTo === 'weapons' && isWeapon) || (applyTo === 'armor' && isArmor);
+
+  if (!shouldApplySettings) {
+    // Use default behavior if category doesn't match
+    return (
+      overrideStyleItem?.displayProperties.highResIcon ||
+      overrideStyleItem?.displayProperties.icon ||
+      displayProperties.highResIcon ||
+      displayProperties.icon ||
+      d2MissingIcon
+    );
+  }
+
+  // Apply user's icon quality preference
+  switch (iconQuality) {
+    case 'standard':
+      // Use only standard icons
+      return overrideStyleItem?.displayProperties.icon || displayProperties.icon || d2MissingIcon;
+
+    case 'screenshot':
+      // Try screenshot first, then fall back to highres, then standard
+      return (
+        itemDef.screenshot ||
+        overrideStyleItem?.displayProperties.highResIcon ||
+        overrideStyleItem?.displayProperties.icon ||
+        displayProperties.highResIcon ||
+        displayProperties.icon ||
+        d2MissingIcon
+      );
+
+    case 'highres':
+    default:
+      // Current default behavior - try highres first, then standard
+      return (
+        overrideStyleItem?.displayProperties.highResIcon ||
+        overrideStyleItem?.displayProperties.icon ||
+        displayProperties.highResIcon ||
+        displayProperties.icon ||
+        d2MissingIcon
+      );
+  }
 }
 
 /**
  * Process a single raw item into a D2L item.
  */
 export function makeItem(
-  { defs, buckets, itemComponents, customStats, profileResponse }: ItemCreationContext,
+  { defs, buckets, itemComponents, customStats, profileResponse, settings }: ItemCreationContext,
   item: DestinyItemComponent,
   /** the ID of the owning store - can be undefined for fake collections items */
   owner: DimStore | undefined,
@@ -467,12 +562,14 @@ export function makeItem(
     isExotic: itemDef.inventory!.tierType === TierType.Exotic,
     name,
     description: displayProperties.description,
-    icon:
-      overrideStyleItem?.displayProperties.highResIcon ||
-      overrideStyleItem?.displayProperties.icon ||
-      displayProperties.highResIcon ||
-      displayProperties.icon ||
-      d2MissingIcon,
+    icon: selectItemIcon(
+      itemDef,
+      displayProperties,
+      overrideStyleItem,
+      settings,
+      itemDef.inventory!.tierType,
+      itemCategoryHashes,
+    ),
     hiddenOverlay,
     iconOverlay,
     secondaryIcon: overrideStyleItem?.secondaryIcon || itemDef.secondaryIcon || itemDef.screenshot,

@@ -1,4 +1,4 @@
-import BungieImage, { bungieBackgroundStyle } from 'app/d2l-ui/BungieImage';
+import BungieImage, { bungieBackgroundStyle, bungieNetPath } from 'app/d2l-ui/BungieImage';
 import BucketIcon from 'app/d2l-ui/svgs/BucketIcon';
 import { getBucketSvgIcon } from 'app/d2l-ui/svgs/itemCategory';
 import { d2MissingIcon, ItemRarityMap, ItemRarityName } from 'app/search/d2-known-values';
@@ -69,6 +69,16 @@ export default function ItemIcon({ item, className }: { item: DimItem; className
           className={clsx(itemImageStyles, {
             [styles.inverted]: !classifiedPlaceholder.colorized,
           })}
+        />
+      ) : item.icon?.includes('/common/destiny2_content/screenshots/') ? (
+        // Screenshots need special handling - they're wider images
+        <div
+          className={itemImageStyles}
+          style={{
+            backgroundImage: `url(${bungieNetPath(item.icon)})`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+          }}
         />
       ) : (
         <div style={bungieBackgroundStyle(item.icon)} className={itemImageStyles} />
