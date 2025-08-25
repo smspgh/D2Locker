@@ -25,7 +25,7 @@ import { compact } from 'app/utils/collections';
 import { getSocketsByIndexes, getWeaponSockets } from 'app/utils/socket-utils';
 import { memo } from 'react';
 import { useSelector } from 'react-redux';
-import { useLocation } from 'react-router';
+import { useLocation, useNavigate } from 'react-router';
 import { TagCommand, itemTagSelectorList } from '../inventory/d2l-item-info';
 import { DimItem } from '../inventory/item-types';
 import {
@@ -33,6 +33,7 @@ import {
   clearIcon,
   compareIcon,
   faList,
+  faTshirt,
   faWindowClose,
   lockIcon,
   starIcon,
@@ -60,6 +61,7 @@ export default memo(function ItemActionsDropdown({
   bulkNote: (items: DimItem[]) => Promise<void>;
 }) {
   const dispatch = useThunkDispatch();
+  const navigate = useNavigate();
   const isPhonePortrait = useIsPhonePortrait();
   const stores = useSelector(storesSortedByImportanceSelector);
   const destinyVersion = useSelector(destinyVersionSelector);
@@ -316,6 +318,16 @@ export default memo(function ItemActionsDropdown({
         <>
           <span style={{ fontWeight: 'bold', fontSize: '11px', marginRight: '6px' }}>BP</span>
           {t('BestPerks.BulkAction')}
+        </>
+      ),
+    },
+    destinyVersion === 2 && {
+      key: 'shader-bulk-apply',
+      onSelected: () => navigate('shader-bulk-apply'),
+      disabled: false,
+      content: (
+        <>
+          <AppIcon icon={faTshirt} /> {t('ShaderBulkApply.Title')}
         </>
       ),
     },

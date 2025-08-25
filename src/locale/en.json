@@ -1626,6 +1626,30 @@
     "WorstRatedTip_one": "This perk exactly matches a weapon roll on your trashlist.",
     "WorstRatedTip_other": "These perks exactly match a weapon roll on your trashlist."
   },
+  "ShaderBulkApply": {
+    "Title": "Throw Some Shade",
+    "SelectShader": "Select Shader to Apply",
+    "SelectItemTypes": "Select Item Types to Apply To",
+    "Preview": "Preview",
+    "Apply": "Apply Shader",
+    "NoShaderSelected": "No Shader Selected",
+    "SelectShaderFirst": "Please select a shader first.",
+    "NoItems": "No Items Found",
+    "NoEquippedItems": "No equipped items found for the selected types.",
+    "NoShaders": "No shaders found in your inventory.",
+    "ConfirmApply": "Apply {{shader}} to {{count}} equipped items?",
+    "Success": "Shader Applied Successfully",
+    "SuccessBody": "Applied {{shader}} to {{success}} out of {{total}} items.",
+    "PartialSuccess": "Shader Partially Applied",
+    "PartialSuccessBody": "Successfully applied to {{success}} items, {{failed}} items could not be changed.",
+    "WillApply": "Will apply {{shader}} to {{count}} equipped items.",
+    "SelectShaderToPreview": "Select a shader to see how many items will be affected.",
+    "Description": "Description",
+    "CurrentSelection": "Current Selection",
+    "SearchShaders": "Search shaders...",
+    "SelectClass": "Select Class",
+    "AllClasses": "All Classes"
+  },
   "no-space": "no-space",
   "wrong-level": "wrong-level"
 }

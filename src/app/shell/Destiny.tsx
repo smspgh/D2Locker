@@ -9,6 +9,7 @@ import {
 import ArmorSearchPage from 'app/armor/ArmorSearchPage';
 import ArmoryPage from 'app/armory/ArmoryPage';
 import ArmorySearchPage from 'app/armory/ArmorySearchPage';
+import ShaderBulkApplyPage from 'app/shader-bulk-apply/ShaderBulkApplyPage';
 import CompareContainer from 'app/compare/CompareContainer';
 import { settingSelector } from 'app/d2l-api/selectors';
 import ErrorBoundary from 'app/d2l-ui/ErrorBoundary';
@@ -264,6 +265,14 @@ export default function Destiny() {
               element={
                 <ErrorBoundary name="armorySearch">
                   <ArmorySearchPage account={account} />
+                </ErrorBoundary>
+              }
+            />
+            <Route
+              path="shader-bulk-apply"
+              element={
+                <ErrorBoundary name="shaderBulkApply">
+                  <ShaderBulkApplyPage account={account} />
                 </ErrorBoundary>
               }
             />

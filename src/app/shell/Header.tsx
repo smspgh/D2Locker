@@ -172,6 +172,10 @@ export default function Header() {
         to: `${path}/armory-search`,
         text: 'Weapon Database',
       },
+      account.destinyVersion === 2 && {
+        to: `${path}/shader-bulk-apply`,
+        text: 'Shader Database',
+      },
     ]);
   }
 
