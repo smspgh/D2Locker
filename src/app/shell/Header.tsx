@@ -25,6 +25,7 @@ import { NavLink, useLocation } from 'react-router';
 import { useSubscription } from 'use-subscription';
 import ClickOutside from '../d2l-ui/ClickOutside';
 import SearchFilter from '../search/SearchFilter';
+import BungieAlertsDisplay from './BungieAlertsDisplay';
 import styles from './Header.m.scss';
 import MenuBadge from './MenuBadge';
 import PostmasterWarningBanner from './PostmasterWarningBanner';
@@ -32,7 +33,7 @@ import RefreshButton from './RefreshButton';
 import { setSearchQuery } from './actions';
 import { installPrompt$ } from './app-install';
 import { AppIcon, searchIcon } from './icons';
-import { useIsPhonePortrait } from './selectors';
+import { bungieAlertsSelector, useIsPhonePortrait } from './selectors';
 
 const menuAnimateVariants: Variants = {
   open: { x: 0 },
@@ -55,10 +56,14 @@ export default function Header() {
   const settings = useSelector(settingsSelector);
   const vaultArmorFilterByClass = useSelector(settingSelector('vaultArmorFilterByClass'));
   const setSetting = useSetSetting();
+  const bungieAlerts = useSelector(bungieAlertsSelector);
 
   // Hamburger menu
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownToggler = useRef<HTMLButtonElement>(null);
+
+  // Bungie Alerts Sheet
+  const [showBungieAlerts, setShowBungieAlerts] = useState(false);
 
   // Theme dropdown
   const [themeDropdownOpen, setThemeDropdownOpen] = useState(false);
@@ -254,6 +259,12 @@ export default function Header() {
     setSetting('vaultArmorFilterByClass', !vaultArmorFilterByClass);
   };
 
+  const showBungieAlertsHandler = (e: React.MouseEvent) => {
+    e.preventDefault();
+    setShowBungieAlerts(true);
+    setDropdownOpen(false);
+  };
+
   // Calculate the true height of the header, for use in other things
   const headerRef = useRef<HTMLDivElement>(null);
   useSetCSSVarToHeight(headerRef, '--header-height');
@@ -305,6 +316,33 @@ export default function Header() {
                 >
                   {destinyLinks}
                   <hr />
+                  {bungieAlerts.length > 0 && (
+                    <button
+                      type="button"
+                      className={styles.menuItem}
+                      onClick={showBungieAlertsHandler}
+                      style={{
+                        width: '100%',
+                        textAlign: 'left',
+                        background: 'transparent',
+                        border: 'none',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '8px',
+                      }}
+                    >
+                      <span
+                        style={{
+                          width: '8px',
+                          height: '8px',
+                          borderRadius: '50%',
+                          backgroundColor: '#ff3939',
+                          flexShrink: 0,
+                        }}
+                      />
+                      Bungie Alerts
+                    </button>
+                  )}
                   {account && (
                     <NavLink
                       className={navLinkClassName}
@@ -451,6 +489,15 @@ export default function Header() {
         {promptIosPwa && (
           <Sheet header={<h1>{t('Header.InstallD2L')}</h1>} onClose={() => setPromptIosPwa(false)}>
             <p className={styles.pwaPrompt}>{t('Header.IosPwaPrompt')}</p>
+          </Sheet>
+        )}
+        {showBungieAlerts && (
+          <Sheet
+            header={<h1>Bungie Alerts</h1>}
+            onClose={() => setShowBungieAlerts(false)}
+            sheetClassName={styles.bungieAlertsSheet}
+          >
+            <BungieAlertsDisplay alerts={bungieAlerts} />
           </Sheet>
         )}
       </header>

@@ -2,6 +2,7 @@
 // Please do not change this file!
 interface CssExports {
   'active': string;
+  'bungieAlertsSheet': string;
   'container': string;
   'dropdown': string;
   'header': string;
